@@ -1,0 +1,18 @@
+package demo;
+
+message Part
+{
+	optional string name = 1;
+	optional string effect_class = 2;
+	optional string config = 3;
+
+	// in ms
+	optional uint32 start = 4;
+	optional uint32 end = 5;
+}
+
+message Config
+{
+	repeated Part part = 1;
+	optional string soundtrack = 2;
+}
