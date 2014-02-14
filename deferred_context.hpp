@@ -17,18 +17,18 @@ namespace boba
     void BeginFrame();
     void EndFrame();
 
-    void SetVb(ID3D11Buffer *buf, uint32_t stride);
-    void SetVs(GraphicsObjectHandle vs);
-    void SetPs(GraphicsObjectHandle ps);
-    void SetCs(GraphicsObjectHandle cs);
-    void SetGs(GraphicsObjectHandle cs);
+    void SetVB(ID3D11Buffer *buf, uint32_t stride);
+    void SetVS(GraphicsObjectHandle vs);
+    void SetPS(GraphicsObjectHandle ps);
+    void SetCS(GraphicsObjectHandle cs);
+    void SetGS(GraphicsObjectHandle cs);
     void SetLayout(GraphicsObjectHandle layout);
-    void SetVb(GraphicsObjectHandle vb);
-    void SetIb(GraphicsObjectHandle ib);
+    void SetVB(GraphicsObjectHandle vb);
+    void SetIB(GraphicsObjectHandle ib);
     void SetTopology(D3D11_PRIMITIVE_TOPOLOGY top);
-    void SetRs(GraphicsObjectHandle rs);
-    void SetDss(GraphicsObjectHandle dss, UINT stencil_ref);
-    void SetBs(GraphicsObjectHandle bs, const float *blend_factors, UINT sample_mask);
+    void SetRS(GraphicsObjectHandle rs);
+    void SetDSS(GraphicsObjectHandle dss, UINT stencil_ref);
+    void SetBS(GraphicsObjectHandle bs, const float *blend_factors, UINT sample_mask);
     void UnsetUavs(int first, int count);
     void UnsetRenderTargets(int first, int count);
     void DrawIndexed(int count, int start_index, int base_vertex);

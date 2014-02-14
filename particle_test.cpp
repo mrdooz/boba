@@ -4,6 +4,7 @@
 #include "app.hpp"
 #include "demo_engine.hpp"
 #include "proto_helpers.hpp"
+#include "resource_manager.hpp"
 
 using namespace boba;
 
@@ -24,6 +25,25 @@ bool ParticleTest::Init()
   int w = GRAPHICS.GetSwapChain(_swapChain)->_desc.BufferDesc.Width;
   int h = GRAPHICS.GetSwapChain(_swapChain)->_desc.BufferDesc.Height;
 
+  _texture = RESOURCE_MANAGER.LoadTexture("gfx/Abstract_BG_Texture2.jpg");
+  if (!_texture.IsValid())
+    return false;
+
+  vector<char> buf;
+  if (!RESOURCE_MANAGER.LoadFile("shaders/fullscreen.vso", &buf))
+    return false;
+
+  _vs = GRAPHICS.CreateVertexShader(buf, "VSQuad");
+  if (!_vs.IsValid())
+    return false;
+
+  if (!RESOURCE_MANAGER.LoadFile("shaders/fullscreen.pso", &buf))
+    return false;
+
+  _ps = GRAPHICS.CreatePixelShader(buf, "PSQuad");
+  if (!_ps.IsValid())
+    return false;
+
   return true;
 }
 
@@ -36,10 +56,17 @@ bool ParticleTest::Update(const UpdateState& state)
 //------------------------------------------------------------------------------
 bool ParticleTest::Render()
 {
+  _ctx->SetSwapChain(_swapChain, true);
+
   _ctx->BeginFrame();
 
   int w = GRAPHICS.GetSwapChain(_swapChain)->_desc.BufferDesc.Width;
   int h = GRAPHICS.GetSwapChain(_swapChain)->_desc.BufferDesc.Height;
+
+  _ctx->SetVS(_vs);
+  _ctx->SetPS(_ps);
+  _ctx->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  _ctx->Draw(3,0);
 
   _ctx->EndFrame();
 

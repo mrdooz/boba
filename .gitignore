@@ -30,3 +30,8 @@ ipch/
 _win32/My Inspector XE Results - */*
 _win32/My Amplifier XE Results - */*
 *.mp3
+shaders/*.pso
+shaders/*.vso
+shaders/*.psa
+shaders/*.vsa
+

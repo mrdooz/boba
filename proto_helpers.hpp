@@ -1,5 +1,6 @@
 #pragma once
 #include "file_utils.hpp"
+#include "resource_manager.hpp"
 
 namespace boba
 {
@@ -8,7 +9,7 @@ namespace boba
   bool LoadProto(const char* filename, T* msg)
   {
     vector<char> buf;
-    if (!LoadFile(filename, &buf))
+    if (!RESOURCE_MANAGER.LoadFile(filename, &buf))
     {
       return false;
     }

@@ -25,6 +25,9 @@ namespace boba
 
   private:
     particle::Config _config;
+    GraphicsObjectHandle _texture;
+    GraphicsObjectHandle _vs;
+    GraphicsObjectHandle _ps;
   };
 
 }

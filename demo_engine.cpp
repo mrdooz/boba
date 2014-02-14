@@ -4,6 +4,7 @@
 #include "graphics.hpp"
 #include "utils.hpp"
 #include "proto_helpers.hpp"
+#include "resource_manager.hpp"
 
 using namespace boba;
 

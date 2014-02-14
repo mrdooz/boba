@@ -1,11 +1,6 @@
 #pragma once
-
-
-//#include "utils.hpp"
-//#include "id_buffer.hpp"
 #include "graphics_object_handle.hpp"
 #include "id_buffer.hpp"
-//#include "technique.hpp"
 
 namespace boba
 {
@@ -142,6 +137,18 @@ namespace boba
       return *_instance;
     }
 
+    GraphicsObjectHandle LoadTexture(
+        const char* filename,
+        const char* friendlyName = nullptr,
+        bool srgb = false,
+        D3DX11_IMAGE_INFO* info = nullptr);
+
+    GraphicsObjectHandle LoadTextureFromMemory(
+        const void* buf,
+        size_t len,
+        const char* friendlyName = nullptr,
+        bool srgb = false,
+        D3DX11_IMAGE_INFO* info = nullptr);
 
     const Setup& CurSetup() const { return _curSetup; }
 
@@ -156,8 +163,8 @@ namespace boba
 
     GraphicsObjectHandle CreateBuffer(D3D11_BIND_FLAG bind, int size, bool dynamic, const void* buf, int data);
 
-    GraphicsObjectHandle CreateVertexShader(const vector<char> &shader_bytecode, const string   &id);
-    GraphicsObjectHandle CreatePixelShader(const vector<char> &shader_bytecode, const string &id);
+    GraphicsObjectHandle CreateVertexShader(const vector<char> &shader_bytecode, const string& id);
+    GraphicsObjectHandle CreatePixelShader(const vector<char> &shader_bytecode, const string& id);
     GraphicsObjectHandle CreateComputeShader(const vector<char> &shader_bytecode, const string &id);
     GraphicsObjectHandle CreateGeometryShader(const vector<char> &shader_bytecode, const string &id);
 
@@ -200,10 +207,8 @@ namespace boba
 
     // Create a texture, and fill it with data
     bool CreateTexture(int width, int height, DXGI_FORMAT fmt, void *data, int data_width, int data_height, int data_pitch, TextureResource *out);
-    GraphicsObjectHandle CreateTexture(int width, int height, DXGI_FORMAT fmt, void *data, int data_width, int data_height, int data_pitch, const char *friendly_name);
+    GraphicsObjectHandle CreateTexture(int width, int height, DXGI_FORMAT fmt, void *data, int data_width, int data_height, int data_pitch, const char *friendlyName);
 
-    bool LoadTechniques(const string& filename);
-    //Technique *GetTechnique(GraphicsObjectHandle h);
     SwapChain* GetSwapChain(GraphicsObjectHandle h);
 
     GraphicsObjectHandle FindTechnique(const string &name);
@@ -255,17 +260,8 @@ namespace boba
 
     bool CreateDefaultGeometry();
 
-    bool TechniqueFileChanged(const char *filename, void *token);
-    bool ShaderFileChanged(const char *filename, void *token);
-
     // given texture data and a name, insert it into the GOH chain
-    GraphicsObjectHandle InsertTexture(TextureResource *data, const char *friendly_name);
-
-    //void FillSystemResourceViews(const ResourceViewArray &props, TextureArray *out) const;
-
-    GraphicsObjectHandle LoadTexture(const char *filename, const char *friendly_name, bool srgb, D3DX11_IMAGE_INFO *info);
-    GraphicsObjectHandle LoadTextureFromMemory(const void *buf, size_t len, const char *friendly_name, bool srgb, D3DX11_IMAGE_INFO *info);
-
+    GraphicsObjectHandle InsertTexture(TextureResource *data, const char *friendlyName);
 
     static INT_PTR CALLBACK dialogWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     static bool EnumerateDisplayModes(HWND hWnd);
@@ -287,14 +283,14 @@ namespace boba
     IdBuffer<ID3D11ComputeShader *, IdCount> _compute_shaders;
     IdBuffer<ID3D11GeometryShader *, IdCount> _geometry_shaders;
     IdBuffer<ID3D11InputLayout *, IdCount> _input_layouts;
-    IdBuffer<ID3D11Buffer *, IdCount> _vertex_buffers;
-    IdBuffer<ID3D11Buffer *, IdCount> _index_buffers;
+    IdBuffer<ID3D11Buffer *, IdCount> _vertexBuffers;
+    IdBuffer<ID3D11Buffer *, IdCount> _indexBuffers;
     IdBuffer<ID3D11Buffer *, IdCount> _constant_buffers;
     //IdBuffer<Technique *, IdCount> _techniques;
 
-    IdBuffer<ID3D11BlendState *, IdCount> _blend_states;
-    IdBuffer<ID3D11DepthStencilState *, IdCount> _depth_stencil_states;
-    IdBuffer<ID3D11RasterizerState *, IdCount> _rasterizer_states;
+    IdBuffer<ID3D11BlendState *, IdCount> _blendStates;
+    IdBuffer<ID3D11DepthStencilState *, IdCount> _depthStencilStates;
+    IdBuffer<ID3D11RasterizerState *, IdCount> _rasterizerStates;
     IdBuffer<ID3D11SamplerState *, IdCount> _sampler_states;
 
     IdBuffer<TextureResource *, IdCount> _textures;

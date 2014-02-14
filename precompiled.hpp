@@ -34,6 +34,7 @@
 #include <google/protobuf/text_format.h>
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 #include "DirectXTK/SimpleMath.h"
 
@@ -73,6 +74,8 @@ namespace boba
   using boost::posix_time::seconds;
   using boost::posix_time::milliseconds;
   using boost::posix_time::microseconds;
+
+  using boost::algorithm::replace_all;
 
   using namespace std::tr1::placeholders;
 }

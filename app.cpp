@@ -4,6 +4,7 @@
 #include "file_utils.hpp"
 #include "demo_engine.hpp"
 #include "particle_test.hpp"
+#include "resource_manager.hpp"
 
 static const int WM_LOG_NEW_MSG = WM_APP + 1;
 static const int WM_APP_CLOSE = WM_APP + 2;
@@ -89,6 +90,9 @@ bool App::Destroy()
   TwTerminate();
 #endif
 
+  if (!ResourceManager::Destroy())
+    return false;
+
   if (!DemoEngine::Destroy())
     return false;
 
@@ -115,6 +119,9 @@ bool App::Init(HINSTANCE hinstance)
   }
 
   _hinstance = hinstance;
+  if (!ResourceManager::Create("resources.txt"))
+    return false;
+
   if (!Graphics::Create(_hinstance))
     return false;
 

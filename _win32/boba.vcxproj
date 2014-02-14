@@ -25,6 +25,7 @@
     </ClCompile>
     <ClCompile Include="..\protocol\demo.pb.cc" />
     <ClCompile Include="..\protocol\particle.pb.cc" />
+    <ClCompile Include="..\resource_manager.cpp" />
     <ClCompile Include="..\string_utils.cpp" />
     <ClCompile Include="..\utils.cpp" />
   </ItemGroup>
@@ -42,6 +43,7 @@
     <ClInclude Include="..\protocol\demo.pb.h" />
     <ClInclude Include="..\protocol\particle.pb.h" />
     <ClInclude Include="..\proto_helpers.hpp" />
+    <ClInclude Include="..\resource_manager.hpp" />
     <ClInclude Include="..\string_utils.hpp" />
     <ClInclude Include="..\utils.hpp" />
     <ClInclude Include="..\vertex_types.hpp" />

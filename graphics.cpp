@@ -325,13 +325,13 @@ Graphics::Graphics()
   , _pixel_shaders(ReleaseObj<ID3D11PixelShader *>)
   , _compute_shaders(ReleaseObj<ID3D11ComputeShader *>)
   , _geometry_shaders(ReleaseObj<ID3D11GeometryShader *>)
-  , _vertex_buffers(ReleaseObj<ID3D11Buffer *>)
-  , _index_buffers(ReleaseObj<ID3D11Buffer *>)
+  , _vertexBuffers(ReleaseObj<ID3D11Buffer *>)
+  , _indexBuffers(ReleaseObj<ID3D11Buffer *>)
   , _constant_buffers(ReleaseObj<ID3D11Buffer *>)
   , _input_layouts(ReleaseObj<ID3D11InputLayout *>)
-  , _blend_states(ReleaseObj<ID3D11BlendState *>)
-  , _depth_stencil_states(ReleaseObj<ID3D11DepthStencilState *>)
-  , _rasterizer_states(ReleaseObj<ID3D11RasterizerState *>)
+  , _blendStates(ReleaseObj<ID3D11BlendState *>)
+  , _depthStencilStates(ReleaseObj<ID3D11DepthStencilState *>)
+  , _rasterizerStates(ReleaseObj<ID3D11RasterizerState *>)
   , _sampler_states(ReleaseObj<ID3D11SamplerState *>)
   , _shader_resource_views(ReleaseObj<ID3D11ShaderResourceView *>)
   , _textures(DeleteObj<TextureResource *>)
@@ -476,13 +476,13 @@ GraphicsObjectHandle Graphics::CreateBuffer(
   {
     if (bind == D3D11_BIND_INDEX_BUFFER)
     {
-      const int idx = _index_buffers.Insert(buffer);
+      const int idx = _indexBuffers.Insert(buffer);
       assert(data == DXGI_FORMAT_R16_UINT || data == DXGI_FORMAT_R32_UINT);
       return MakeObjectHandle(GraphicsObjectHandle::kIndexBuffer, idx, data);
     } 
     else if (bind == D3D11_BIND_VERTEX_BUFFER)
     {
-      const int idx = _vertex_buffers.Insert(buffer);
+      const int idx = _vertexBuffers.Insert(buffer);
       assert(data > 0);
       return MakeObjectHandle(GraphicsObjectHandle::kVertexBuffer, idx, data);
     } 
@@ -761,8 +761,8 @@ GraphicsObjectHandle Graphics::GetTexture(const char *filename)
 
 //------------------------------------------------------------------------------
 GraphicsObjectHandle Graphics::LoadTexture(
-    const char *filename,
-    const char *friendly_name,
+    const char* filename,
+    const char* friendlyName,
     bool srgb,
     D3DX11_IMAGE_INFO *info)
 {
@@ -785,15 +785,15 @@ GraphicsObjectHandle Graphics::LoadTexture(
   if (FAILED(_device->CreateShaderResourceView(data->resource, &desc, &data->view.resource)))
     return emptyGoh;
 
-  return MakeObjectHandle(
-      GraphicsObjectHandle::kResource, _resources.Insert(friendly_name, data.release()));
+  return MakeObjectHandle(GraphicsObjectHandle::kResource, 
+    _resources.Insert(friendlyName ? friendlyName : filename, data.release()));
 }
 
 //------------------------------------------------------------------------------
 GraphicsObjectHandle Graphics::LoadTextureFromMemory(
     const void *buf,
     size_t len,
-    const char *friendly_name,
+    const char *friendlyName,
     bool srgb,
     D3DX11_IMAGE_INFO *info)
 {
@@ -814,16 +814,16 @@ GraphicsObjectHandle Graphics::LoadTextureFromMemory(
     return emptyGoh;
 
   return MakeObjectHandle(
-      GraphicsObjectHandle::kResource, _resources.Insert(friendly_name, data.release()));
+      GraphicsObjectHandle::kResource, _resources.Insert(friendlyName, data.release()));
 }
 
 //------------------------------------------------------------------------------
 GraphicsObjectHandle Graphics::InsertTexture(
     TextureResource *data,
-    const char *friendly_name)
+    const char *friendlyName)
 {
   return MakeObjectHandle(
-      GraphicsObjectHandle::kTexture, _textures.Insert(friendly_name, data));
+      GraphicsObjectHandle::kTexture, _textures.Insert(friendlyName, data));
 }
 
 //------------------------------------------------------------------------------
@@ -875,7 +875,7 @@ GraphicsObjectHandle Graphics::CreateTexture(
     int data_width,
     int data_height,
     int data_pitch,
-    const char *friendly_name)
+    const char *friendlyName)
 {
   TextureResource *data = new TextureResource;
   if (!CreateTexture(width, height, fmt, data_bits, data_width, data_height, data_pitch, data))
@@ -883,7 +883,7 @@ GraphicsObjectHandle Graphics::CreateTexture(
     delete exch_null(data);
     return emptyGoh;
   }
-  return InsertTexture(data, friendly_name);
+  return InsertTexture(data, friendlyName);
 }
 
 //------------------------------------------------------------------------------
@@ -1046,8 +1046,8 @@ GraphicsObjectHandle Graphics::CreateRasterizerState(
   {
     return MakeObjectHandle(GraphicsObjectHandle::kRasterizerState,
         name 
-          ? _rasterizer_states.Insert(name, rs)
-          : _rasterizer_states.Insert(rs));
+          ? _rasterizerStates.Insert(name, rs)
+          : _rasterizerStates.Insert(rs));
   }
   return emptyGoh;
 }
@@ -1062,8 +1062,8 @@ GraphicsObjectHandle Graphics::CreateBlendState(
   {
     return MakeObjectHandle(GraphicsObjectHandle::kBlendState,
         name 
-          ? _blend_states.Insert(name, bs)
-          : _blend_states.Insert(bs));
+          ? _blendStates.Insert(name, bs)
+          : _blendStates.Insert(bs));
   }
   return emptyGoh;
 }
@@ -1078,8 +1078,8 @@ GraphicsObjectHandle Graphics::CreateDepthStencilState(
   {
     return MakeObjectHandle(GraphicsObjectHandle::kDepthStencilState,
         name 
-          ? _depth_stencil_states.Insert(name, dss)
-          : _depth_stencil_states.Insert(dss));
+          ? _depthStencilStates.Insert(name, dss)
+          : _depthStencilStates.Insert(dss));
   }
   return emptyGoh;
 }
@@ -1194,19 +1194,19 @@ GraphicsObjectHandle Graphics::FindSampler(const string &name)
 //------------------------------------------------------------------------------
 GraphicsObjectHandle Graphics::FindBlendState(const string &name)
 {
-  return MakeObjectHandle(GraphicsObjectHandle::kBlendState, _blend_states.IndexFromKey(name));
+  return MakeObjectHandle(GraphicsObjectHandle::kBlendState, _blendStates.IndexFromKey(name));
 }
 
 //------------------------------------------------------------------------------
 GraphicsObjectHandle Graphics::FindRasterizerState(const string &name)
 {
-  return MakeObjectHandle(GraphicsObjectHandle::kRasterizerState, _rasterizer_states.IndexFromKey(name));
+  return MakeObjectHandle(GraphicsObjectHandle::kRasterizerState, _rasterizerStates.IndexFromKey(name));
 }
 
 //------------------------------------------------------------------------------
 GraphicsObjectHandle Graphics::FindDepthStencilState(const string &name)
 {
-  return MakeObjectHandle(GraphicsObjectHandle::kDepthStencilState, _depth_stencil_states.IndexFromKey(name));
+  return MakeObjectHandle(GraphicsObjectHandle::kDepthStencilState, _depthStencilStates.IndexFromKey(name));
 }
 
 //------------------------------------------------------------------------------

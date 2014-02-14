@@ -95,7 +95,7 @@ void DeferredContext::SetSwapChain(GraphicsObjectHandle h, bool clear)
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetVs(GraphicsObjectHandle vs)
+void DeferredContext::SetVS(GraphicsObjectHandle vs)
 {
   assert(vs.type() == GraphicsObjectHandle::kVertexShader || !vs.IsValid());
   assert(GRAPHICS._vertex_shaders.Get(vs));
@@ -103,21 +103,21 @@ void DeferredContext::SetVs(GraphicsObjectHandle vs)
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetCs(GraphicsObjectHandle cs)
+void DeferredContext::SetCS(GraphicsObjectHandle cs)
 {
   assert(cs.type() == GraphicsObjectHandle::kComputeShader || !cs.IsValid());
   _ctx->CSSetShader(cs.IsValid() ? GRAPHICS._compute_shaders.Get(cs) : NULL, NULL, 0);
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetGs(GraphicsObjectHandle gs)
+void DeferredContext::SetGS(GraphicsObjectHandle gs)
 {
   assert(gs.type() == GraphicsObjectHandle::kGeometryShader || !gs.IsValid());
   _ctx->GSSetShader(gs.IsValid() ? GRAPHICS._geometry_shaders.Get(gs) : NULL, NULL, 0);
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetPs(GraphicsObjectHandle ps)
+void DeferredContext::SetPS(GraphicsObjectHandle ps)
 {
   assert(ps.type() == GraphicsObjectHandle::kPixelShader || !ps.IsValid());
   assert(GRAPHICS._pixel_shaders.Get(ps));
@@ -131,7 +131,7 @@ void DeferredContext::SetLayout(GraphicsObjectHandle layout)
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetVb(ID3D11Buffer *buf, u32 stride)
+void DeferredContext::SetVB(ID3D11Buffer *buf, u32 stride)
 {
   UINT ofs[] = { 0 };
   ID3D11Buffer* bufs[] = { buf };
@@ -140,15 +140,15 @@ void DeferredContext::SetVb(ID3D11Buffer *buf, u32 stride)
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetVb(GraphicsObjectHandle vb) 
+void DeferredContext::SetVB(GraphicsObjectHandle vb) 
 {
-  SetVb(GRAPHICS._vertex_buffers.Get(vb), vb.data());
+  SetVB(GRAPHICS._vertexBuffers.Get(vb), vb.data());
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetIb(GraphicsObjectHandle ib)
+void DeferredContext::SetIB(GraphicsObjectHandle ib)
 {
-  _ctx->IASetIndexBuffer(GRAPHICS._index_buffers.Get(ib), (DXGI_FORMAT)ib.data(), 0);
+  _ctx->IASetIndexBuffer(GRAPHICS._indexBuffers.Get(ib), (DXGI_FORMAT)ib.data(), 0);
 }
 
 //------------------------------------------------------------------------------
@@ -158,21 +158,21 @@ void DeferredContext::SetTopology(D3D11_PRIMITIVE_TOPOLOGY top)
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetRs(GraphicsObjectHandle rs)
+void DeferredContext::SetRS(GraphicsObjectHandle rs)
 {
-  _ctx->RSSetState(GRAPHICS._rasterizer_states.Get(rs));
+  _ctx->RSSetState(GRAPHICS._rasterizerStates.Get(rs));
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetDss(GraphicsObjectHandle dss, UINT stencil_ref)
+void DeferredContext::SetDSS(GraphicsObjectHandle dss, UINT stencil_ref)
 {
-  _ctx->OMSetDepthStencilState(GRAPHICS._depth_stencil_states.Get(dss), stencil_ref);
+  _ctx->OMSetDepthStencilState(GRAPHICS._depthStencilStates.Get(dss), stencil_ref);
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetBs(GraphicsObjectHandle bs, const float *blend_factors, UINT sample_mask)
+void DeferredContext::SetBS(GraphicsObjectHandle bs, const float *blend_factors, UINT sample_mask)
 {
-  _ctx->OMSetBlendState(GRAPHICS._blend_states.Get(bs), blend_factors, sample_mask);
+  _ctx->OMSetBlendState(GRAPHICS._blendStates.Get(bs), blend_factors, sample_mask);
 }
 
 //------------------------------------------------------------------------------
@@ -204,10 +204,10 @@ bool DeferredContext::Map(
     return SUCCEEDED(_ctx->Map(GRAPHICS._textures.Get(h)->texture.resource, sub, type, flags, res));
 
   case GraphicsObjectHandle::kVertexBuffer:
-    return SUCCEEDED(_ctx->Map(GRAPHICS._vertex_buffers.Get(h), sub, type, flags, res));
+    return SUCCEEDED(_ctx->Map(GRAPHICS._vertexBuffers.Get(h), sub, type, flags, res));
 
   case GraphicsObjectHandle::kIndexBuffer:
-    return SUCCEEDED(_ctx->Map(GRAPHICS._index_buffers.Get(h), sub, type, flags, res));
+    return SUCCEEDED(_ctx->Map(GRAPHICS._indexBuffers.Get(h), sub, type, flags, res));
 
   default:
     //LOG_ERROR_LN("Invalid resource type passed to %s", __FUNCTION__);
@@ -225,11 +225,11 @@ void DeferredContext::Unmap(GraphicsObjectHandle h, UINT sub)
     break;
 
   case GraphicsObjectHandle::kVertexBuffer:
-    _ctx->Unmap(GRAPHICS._vertex_buffers.Get(h), sub);
+    _ctx->Unmap(GRAPHICS._vertexBuffers.Get(h), sub);
     break;
 
   case GraphicsObjectHandle::kIndexBuffer:
-    _ctx->Unmap(GRAPHICS._index_buffers.Get(h), sub);
+    _ctx->Unmap(GRAPHICS._indexBuffers.Get(h), sub);
     break;
 
   default:
