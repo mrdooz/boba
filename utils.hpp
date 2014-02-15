@@ -157,6 +157,8 @@ namespace boba
     return value < minValue ? minValue : value > maxValue ? maxValue : value;
   }
 
-  float gaussianRand(float mean, float variance);
+  float GaussianRand(float mean, float variance);
+  string ToString(const char* format, ...);
+  void DebugOutput(const char* fmt, ...);
 }
 

@@ -45,9 +45,12 @@ namespace boba
         bool* initial_result);
     void RemoveFileWatch(const cbFileChanged &cb);
 
+    void Tick();
+
   private:
     string ResolveFilename(const char *filename, bool fullPath);
 
+    ptime _lastTickTime;
     vector<string> _paths;
     unordered_map<string, string> _resolvedPaths;
     unordered_map<string, vector<pair<cbFileChanged, void*>>> _watchedFiles;

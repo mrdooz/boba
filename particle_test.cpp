@@ -9,8 +9,8 @@
 using namespace boba;
 
 //------------------------------------------------------------------------------
-ParticleTest::ParticleTest(const string &name, GraphicsObjectHandle swapChain)
-  : Effect(name, swapChain)
+ParticleTest::ParticleTest(const string &name)
+  : Effect(name)
 {
 }
 
@@ -22,8 +22,8 @@ ParticleTest::~ParticleTest()
 //------------------------------------------------------------------------------
 bool ParticleTest::Init()
 {
-  int w = GRAPHICS.GetSwapChain(_swapChain)->_desc.BufferDesc.Width;
-  int h = GRAPHICS.GetSwapChain(_swapChain)->_desc.BufferDesc.Height;
+  if (!LoadProto("config/particles1.pb", &_config))
+    return false;
 
   _texture = RESOURCE_MANAGER.LoadTexture("gfx/Abstract_BG_Texture2.jpg");
   if (!_texture.IsValid())
@@ -44,6 +44,11 @@ bool ParticleTest::Init()
   if (!_ps.IsValid())
     return false;
 
+  CD3D11_SAMPLER_DESC sampler = CD3D11_SAMPLER_DESC(CD3D11_DEFAULT());
+  _samplerState = GRAPHICS.CreateSamplerState(sampler);
+  if (!_samplerState.IsValid())
+    return false;
+
   return true;
 }
 
@@ -56,16 +61,14 @@ bool ParticleTest::Update(const UpdateState& state)
 //------------------------------------------------------------------------------
 bool ParticleTest::Render()
 {
-  _ctx->SetSwapChain(_swapChain, true);
-
+  _ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), true);
   _ctx->BeginFrame();
-
-  int w = GRAPHICS.GetSwapChain(_swapChain)->_desc.BufferDesc.Width;
-  int h = GRAPHICS.GetSwapChain(_swapChain)->_desc.BufferDesc.Height;
 
   _ctx->SetVS(_vs);
   _ctx->SetPS(_ps);
   _ctx->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  _ctx->SetShaderResource(_texture, ShaderType::PixelShader);
+  _ctx->SetSamplerState(_samplerState, ShaderType::PixelShader);
   _ctx->Draw(3,0);
 
   _ctx->EndFrame();
@@ -86,9 +89,9 @@ bool ParticleTest::Init(const char* config)
 }
 
 //------------------------------------------------------------------------------
-Effect* ParticleTest::Create(const char* name, GraphicsObjectHandle swapChain)
+Effect* ParticleTest::Create(const char* name)
 {
-  return new ParticleTest(name, swapChain);
+  return new ParticleTest(name);
 }
 
 //------------------------------------------------------------------------------

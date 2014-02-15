@@ -2,7 +2,12 @@
 
 #ifdef _DEBUG
 #define WITH_UNPACKED_RESOUCES 1
+#define WITH_ANT_TWEAK_BAR 1
+#define WITH_PROTOBUF_TEXTFORMAT 1
 #else
+#define WITH_UNPACKED_RESOUCES 0
+#define WITH_ANT_TWEAK_BAR 0
+#define WITH_PROTOBUF_TEXTFORMAT 0
 #endif
 
 #include <stdint.h>
@@ -33,10 +38,16 @@
 
 #include <google/protobuf/text_format.h>
 
+#define BOOST_ALL_NO_LIB
+#include <boost/date_time.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
 #include "DirectXTK/SimpleMath.h"
+
+#if WITH_ANT_TWEAK_BAR
+#include <AntTweakBar.h>
+#endif
 
 typedef uint8_t u8;
 typedef uint16_t u16;
@@ -70,10 +81,13 @@ namespace boba
   using DirectX::SimpleMath::Vector4;
   using DirectX::SimpleMath::Matrix;
 
+  using boost::posix_time::ptime;
   using boost::posix_time::time_duration;
   using boost::posix_time::seconds;
   using boost::posix_time::milliseconds;
   using boost::posix_time::microseconds;
+  using boost::posix_time::microsec_clock;
+
 
   using boost::algorithm::replace_all;
 
@@ -85,3 +99,13 @@ namespace boba
 #pragma comment(lib, "D3D11.lib")
 #pragma comment(lib, "D3DX11.lib")
 #pragma comment(lib, "psapi.lib")
+
+#ifdef _DEBUG
+#pragma comment(lib, "libboost_date_time-vc120-mt-sgd-1_55.lib")
+#else
+#pragma comment(lib, "libboost_date_time-vc120-mt-sg-1_55.lib")
+#endif
+
+#if WITH_ANT_TWEAK_BAR
+#pragma comment(lib, "AntTweakBar.lib")
+#endif

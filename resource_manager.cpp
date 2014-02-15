@@ -229,12 +229,12 @@ void ResourceManager::AddFileWatch(
 //------------------------------------------------------------------------------
 void ResourceManager::RemoveFileWatch(const cbFileChanged &cb)
 {
-  for (auto i = begin(_watchedFiles); i != end(_watchedFiles); ++i)
-  {
-    auto &v = i->second;
-    v.erase(remove_if(begin(v), end(v), [&](const pair<cbFileChanged, void*> &x)
-      { return cb == x.first; }), end(v));
-  }
+//   for (auto i = begin(_watchedFiles); i != end(_watchedFiles); ++i)
+//   {
+//     auto &v = i->second;
+//     v.erase(remove_if(begin(v), end(v), [&](const pair<cbFileChanged, void*> &x)
+//       { return cb == x.first; }), end(v));
+//   }
 }
 
 //------------------------------------------------------------------------------
@@ -259,6 +259,16 @@ GraphicsObjectHandle ResourceManager::LoadTextureFromMemory(
     D3DX11_IMAGE_INFO* info)
 {
   return GRAPHICS.LoadTextureFromMemory(buf, len, friendlyName, srgb, info);
+}
+
+//------------------------------------------------------------------------------
+void ResourceManager::Tick()
+{
+  ptime now = microsec_clock::local_time();
+  if (_lastTickTime.is_not_a_date_time() || (now - _lastTickTime) > seconds(1))
+  {
+    //
+  }
 }
 
 #else

@@ -7,7 +7,7 @@ namespace boba
 {
   class Effect;
 
-  typedef function<Effect*(const char*, GraphicsObjectHandle)> EffectFactory;
+  typedef function<Effect*(const char*)> EffectFactory;
 
   class Timer
   {
@@ -58,11 +58,6 @@ namespace boba
     ~DemoEngine();
     static DemoEngine *_instance;
 
-    struct EffectData
-    {
-      //GraphicsObjectHandle swapChain;
-    };
-
     void ReclassifyEffects();
     void KillEffects();
 
@@ -81,9 +76,6 @@ namespace boba
 
     demo::Config _config;
     unordered_map<string, EffectFactory> _effectFactories;
-    unordered_map<Effect*, EffectData> _effectToData;
-
-    GraphicsObjectHandle _swapChain;
   };
 
 #define DEMO_ENGINE DemoEngine::Instance()

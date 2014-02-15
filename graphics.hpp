@@ -9,6 +9,14 @@ namespace boba
 
   enum FileEvent;
 
+  enum class ShaderType
+  {
+    VertexShader,
+    PixelShader,
+    GeometryShader,
+    ComputeShader,
+  };
+
   class Graphics
   {
     friend class DeferredContext;
@@ -241,6 +249,19 @@ namespace boba
 
     ID3D11Device* Device() { return _device.p; }
 
+    void CreateDefaultSwapChain(
+        size_t width,
+        size_t height,
+        DXGI_FORMAT format,
+        WNDPROC wndProc,
+        HINSTANCE instance);
+
+    void Clear();
+    void Present();
+    
+    void ScreenSize(int* width, int* height);
+    GraphicsObjectHandle DefaultSwapChain();
+
   private:
 
     bool CreateDevice();
@@ -324,6 +345,8 @@ namespace boba
     int _totalBytesAllocated;
 
     map<PredefinedGeometry, pair<GraphicsObjectHandle, GraphicsObjectHandle> > _predefined_geometry;
+
+    GraphicsObjectHandle _swapChain;
 
     HWND _hwnd;
     HINSTANCE _hInstance;

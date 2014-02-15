@@ -253,7 +253,6 @@ bool DemoEngine::Tick()
     effect->Render();
   }
 
-  GRAPHICS.GetSwapChain(_swapChain)->Present();
 
   return true;
 }
@@ -306,7 +305,6 @@ bool DemoEngine::Init(const char* config, HINSTANCE instance)
   if (!LoadProto(config, &_config))
     return false;
 
-  _swapChain = GRAPHICS.CreateSwapChain("demoengine", 512, 512, DXGI_FORMAT_R8G8B8A8_UNORM, WndProc, instance);
 
   for (auto& part : _config.part())
   {
@@ -317,7 +315,7 @@ bool DemoEngine::Init(const char* config, HINSTANCE instance)
       const char* name = part.name().c_str();
 
       EffectFactory factory = factoryIt->second;
-      Effect* effect = factory(name, _swapChain);
+      Effect* effect = factory(name);
       effect->SetDuration(milliseconds(part.start()), milliseconds(part.end()));
       if (!effect->Init())
       {

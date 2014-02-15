@@ -4,16 +4,15 @@
 using namespace boba;
 
 //------------------------------------------------------------------------------
-Effect::Effect(const string& name, GraphicsObjectHandle swapChain)
+Effect::Effect(const string& name)
   : _name(name)
-  , _swapChain(swapChain)
   , _running(false)
   , _mouse_horiz(0)
   , _mouse_vert(0)
   , _mouse_lbutton(false)
   , _mouse_rbutton(false)
   , _mouse_pos_prev(~0)
-  , _ctx(GRAPHICS.CreateDeferredContext(false))
+  , _ctx(GRAPHICS.CreateDeferredContext(true))
   , _first_tick(true)
 {
   ZeroMemory(_keystate, sizeof(_keystate));

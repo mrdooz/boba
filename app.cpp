@@ -9,12 +9,6 @@
 static const int WM_LOG_NEW_MSG = WM_APP + 1;
 static const int WM_APP_CLOSE = WM_APP + 2;
 
-#define WITH_ANT_TWEAK_BAR 0
-
-#if WITH_ANT_TWEAK_BAR
-#include <AntTweakBar.h>
-#endif
-
 #define FMOD_CHECKED(x) { \
   FMOD_RESULT result = x; \
   if (result != FMOD_OK) { \
@@ -125,6 +119,9 @@ bool App::Init(HINSTANCE hinstance)
   if (!Graphics::Create(_hinstance))
     return false;
 
+  GRAPHICS.CreateDefaultSwapChain(512, 512, DXGI_FORMAT_R8G8B8A8_UNORM, WndProc, hinstance);
+
+
   if (!DemoEngine::Create())
     return false;
 
@@ -134,7 +131,10 @@ bool App::Init(HINSTANCE hinstance)
 
 #if WITH_ANT_TWEAK_BAR
   TwInit(TW_DIRECT3D11, GRAPHICS.Device());
-  TwWindowSize(GRAPHICS.width(), GRAPHICS.height());
+  int width, height;
+  GRAPHICS.ScreenSize(&width, &height);
+  TwWindowSize(width, height);
+  static int xx;
   TwBar *myBar;
   myBar = TwNewBar("NameOfMyTweakBar");
   TwAddVarRW(myBar, "xx", TW_TYPE_INT32, &xx, 0);
@@ -181,11 +181,18 @@ void App::Run()
     }
     else
     {
+
       DEMO_ENGINE.Tick();
+
+#if WITH_UNPACKED_RESOUCES
+      RESOURCE_MANAGER.Tick();
+#endif
 
 #if WITH_MUSIC
       _system->update();
 #endif
+      TwDraw();
+      GRAPHICS.Present();
     }
   }
 

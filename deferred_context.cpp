@@ -279,6 +279,84 @@ void DeferredContext::Flush()
 }
 
 //------------------------------------------------------------------------------
+void DeferredContext::SetShaderResource(GraphicsObjectHandle h, ShaderType shaderType)
+{
+  GraphicsObjectHandle::Type type = h.type();
+  ID3D11ShaderResourceView* view = nullptr;
+
+  if (type == GraphicsObjectHandle::kTexture)
+  {
+    view = GRAPHICS._textures.Get(h)->view.resource;
+  }
+  else if (type == GraphicsObjectHandle::kResource)
+  {
+    view = GRAPHICS._resources.Get(h)->view.resource;
+  }
+  else if (type == GraphicsObjectHandle::kRenderTarget)
+  {
+    view = GRAPHICS._render_targets.Get(h)->srv.resource;
+  }
+  else if (type == GraphicsObjectHandle::kStructuredBuffer)
+  {
+    view = GRAPHICS._structured_buffers.Get(h)->srv.resource;
+  }
+  else
+  {
+    //LOG_ERROR_LN("Trying to set invalid resource type!");
+  }
+
+  if (shaderType == ShaderType::VertexShader)
+    _ctx->VSSetShaderResources(0, 1, &view);
+  else if (shaderType == ShaderType::PixelShader)
+    _ctx->PSSetShaderResources(0, 1, &view);
+  else if (shaderType == ShaderType::ComputeShader)
+    _ctx->CSSetShaderResources(0, 1, &view);
+  else if (shaderType == ShaderType::GeometryShader)
+    _ctx->GSSetShaderResources(0, 1, &view);
+  else
+    assert(false);
+    //LOG_ERROR_LN("Implement me!");
+}
+
+//------------------------------------------------------------------------------
+void DeferredContext::SetSamplerState(GraphicsObjectHandle h, ShaderType shaderType)
+{
+  ID3D11SamplerState* samplerState = GRAPHICS._sampler_states.Get(h);
+
+  if (shaderType == ShaderType::VertexShader)
+    _ctx->VSSetSamplers(0, 1, &samplerState);
+  else if (shaderType == ShaderType::PixelShader)
+    _ctx->PSSetSamplers(0, 1, &samplerState);
+  else if (shaderType == ShaderType::ComputeShader)
+    _ctx->CSSetSamplers(0, 1, &samplerState);
+  else if (shaderType == ShaderType::GeometryShader)
+    _ctx->GSSetSamplers(0, 1, &samplerState);
+}
+
+//------------------------------------------------------------------------------
+void DeferredContext::SetCBuffer(
+    GraphicsObjectHandle h,
+    const void* buf,
+    size_t len,
+    ShaderType shaderType)
+{
+  ID3D11Buffer *buffer = GRAPHICS._constant_buffers.Get(h);
+  D3D11_MAPPED_SUBRESOURCE sub;
+  _ctx->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub);
+  memcpy(sub.pData, buf, len);
+  _ctx->Unmap(buffer, 0);
+
+  if (shaderType == ShaderType::VertexShader)
+    _ctx->VSSetConstantBuffers(0, 1, &buffer);
+  else if (shaderType == ShaderType::PixelShader)
+    _ctx->PSSetConstantBuffers(0, 1, &buffer);
+  else if (shaderType == ShaderType::ComputeShader)
+    _ctx->CSSetConstantBuffers(0, 1, &buffer);
+  else if (shaderType == ShaderType::GeometryShader)
+    _ctx->GSSetConstantBuffers(0, 1, &buffer);
+}
+
+//------------------------------------------------------------------------------
 /*
 void DeferredContext::set_samplers(const SamplerArray &samplers)
 {

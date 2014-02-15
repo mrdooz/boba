@@ -21,7 +21,7 @@ namespace boba
       bool paused;
     };
 
-    Effect(const string& name, GraphicsObjectHandle swapChain);
+    Effect(const string& name);
     virtual ~Effect();
     virtual bool Init();
     virtual bool Update(const UpdateState& state);
@@ -42,7 +42,6 @@ namespace boba
   protected:
 
     string _name;
-    GraphicsObjectHandle _swapChain;
 
     int _mouse_horiz;
     int _mouse_vert;

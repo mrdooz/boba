@@ -60,7 +60,6 @@ namespace
 
     SetWindowPos(hwnd, NULL, -1, -1, width + dx, height + dy, SWP_NOZORDER | SWP_NOREPOSITION);
   }
-
 }
 
 //------------------------------------------------------------------------------
@@ -808,8 +807,7 @@ GraphicsObjectHandle Graphics::LoadTextureFromMemory(
   }
 
   // TODO: allow for srgb loading
-  auto fmt = DXGI_FORMAT_R8G8B8A8_UNORM;
-  auto desc = CD3D11_SHADER_RESOURCE_VIEW_DESC(D3D11_SRV_DIMENSION_TEXTURE2D, fmt);
+  auto desc = CD3D11_SHADER_RESOURCE_VIEW_DESC(D3D11_SRV_DIMENSION_TEXTURE2D, DXGI_FORMAT_R8G8B8A8_UNORM);
   if (FAILED(_device->CreateShaderResourceView(data->resource, &desc, &data->view.resource)))
     return emptyGoh;
 
@@ -1283,4 +1281,36 @@ void Graphics::AddCommandList(ID3D11CommandList *cmd_list)
 {
   _immediate_context->ExecuteCommandList(cmd_list, FALSE);
   cmd_list->Release();
+}
+
+//------------------------------------------------------------------------------
+void Graphics::CreateDefaultSwapChain(
+  size_t width,
+  size_t height,
+  DXGI_FORMAT format,
+  WNDPROC wndProc,
+  HINSTANCE instance)
+{
+  _swapChain = CreateSwapChain("default", width, height, format, wndProc, instance);
+}
+
+//------------------------------------------------------------------------------
+void Graphics::Present()
+{
+  _swapChains.Get(_swapChain)->Present();
+}
+
+//------------------------------------------------------------------------------
+void Graphics::ScreenSize(int* width, int* height)
+{
+  const Graphics::SwapChain* swapChain = _swapChains.Get(_swapChain);
+  *width = (int)swapChain->_viewport.Width;
+  *height = (int)swapChain->_viewport.Height;
+
+}
+
+//------------------------------------------------------------------------------
+GraphicsObjectHandle Graphics::DefaultSwapChain()
+{
+  return _swapChain;
 }
