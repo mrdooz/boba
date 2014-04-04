@@ -1,0 +1,10 @@
+package anttweak;
+
+import "google/protobuf/descriptor.proto";
+extend google.protobuf.FieldOptions
+{
+  // used to specify types that are specially interpreted by ant
+  optional bool color3f = 50000;
+  optional bool color4f = 50001;
+  optional bool dir3f 	= 50002;
+}

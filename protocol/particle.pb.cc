@@ -34,8 +34,12 @@ void protobuf_AssignDesc_particle_2eproto() {
       "particle.proto");
   GOOGLE_CHECK(file != NULL);
   Config_descriptor_ = file->message_type(0);
-  static const int Config_offsets_[1] = {
+  static const int Config_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, num_particles_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, bb_col3f_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, bb_col4f_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, bb_dir3f_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, cc_),
   };
   Config_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -77,9 +81,12 @@ void protobuf_AddDesc_particle_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+  ::anttweak::protobuf_AddDesc_anttweak_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016particle.proto\022\010particle\"\037\n\006Config\022\025\n\r"
-    "num_particles\030\001 \001(\r", 59);
+    "\n\016particle.proto\022\010particle\032\016anttweak.pro"
+    "to\"s\n\006Config\022\025\n\rnum_particles\030\001 \001(\r\022\026\n\010b"
+    "b_col3f\030\003 \003(\002B\004\200\265\030\001\022\026\n\010bb_col4f\030\004 \003(\002B\004\210"
+    "\265\030\001\022\026\n\010bb_dir3f\030\005 \003(\002B\004\220\265\030\001\022\n\n\002cc\030\006 \001(\010", 159);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "particle.proto", &protobuf_RegisterTypes);
   Config::default_instance_ = new Config();
@@ -98,6 +105,10 @@ struct StaticDescriptorInitializer_particle_2eproto {
 
 #ifndef _MSC_VER
 const int Config::kNumParticlesFieldNumber;
+const int Config::kBbCol3FFieldNumber;
+const int Config::kBbCol4FFieldNumber;
+const int Config::kBbDir3FFieldNumber;
+const int Config::kCcFieldNumber;
 #endif  // !_MSC_VER
 
 Config::Config()
@@ -117,6 +128,7 @@ Config::Config(const Config& from)
 void Config::SharedCtor() {
   _cached_size_ = 0;
   num_particles_ = 0u;
+  cc_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -153,7 +165,11 @@ Config* Config::New() const {
 void Config::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     num_particles_ = 0u;
+    cc_ = false;
   }
+  bb_col3f_.Clear();
+  bb_col4f_.Clear();
+  bb_dir3f_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -172,6 +188,88 @@ bool Config::MergePartialFromCodedStream(
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &num_particles_)));
           set_has_num_particles();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(29)) goto parse_bb_col3f;
+        break;
+      }
+
+      // repeated float bb_col3f = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_bb_col3f:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 1, 29, input, this->mutable_bb_col3f())));
+        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
+                   == ::google::protobuf::internal::WireFormatLite::
+                      WIRETYPE_LENGTH_DELIMITED) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, this->mutable_bb_col3f())));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(29)) goto parse_bb_col3f;
+        if (input->ExpectTag(37)) goto parse_bb_col4f;
+        break;
+      }
+
+      // repeated float bb_col4f = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_bb_col4f:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 1, 37, input, this->mutable_bb_col4f())));
+        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
+                   == ::google::protobuf::internal::WireFormatLite::
+                      WIRETYPE_LENGTH_DELIMITED) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, this->mutable_bb_col4f())));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(37)) goto parse_bb_col4f;
+        if (input->ExpectTag(45)) goto parse_bb_dir3f;
+        break;
+      }
+
+      // repeated float bb_dir3f = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_bb_dir3f:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 1, 45, input, this->mutable_bb_dir3f())));
+        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
+                   == ::google::protobuf::internal::WireFormatLite::
+                      WIRETYPE_LENGTH_DELIMITED) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, this->mutable_bb_dir3f())));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(45)) goto parse_bb_dir3f;
+        if (input->ExpectTag(48)) goto parse_cc;
+        break;
+      }
+
+      // optional bool cc = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_cc:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &cc_)));
+          set_has_cc();
         } else {
           goto handle_uninterpreted;
         }
@@ -202,6 +300,29 @@ void Config::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->num_particles(), output);
   }
 
+  // repeated float bb_col3f = 3;
+  for (int i = 0; i < this->bb_col3f_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(
+      3, this->bb_col3f(i), output);
+  }
+
+  // repeated float bb_col4f = 4;
+  for (int i = 0; i < this->bb_col4f_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(
+      4, this->bb_col4f(i), output);
+  }
+
+  // repeated float bb_dir3f = 5;
+  for (int i = 0; i < this->bb_dir3f_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(
+      5, this->bb_dir3f(i), output);
+  }
+
+  // optional bool cc = 6;
+  if (has_cc()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->cc(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -213,6 +334,29 @@ void Config::SerializeWithCachedSizes(
   // optional uint32 num_particles = 1;
   if (has_num_particles()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->num_particles(), target);
+  }
+
+  // repeated float bb_col3f = 3;
+  for (int i = 0; i < this->bb_col3f_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteFloatToArray(3, this->bb_col3f(i), target);
+  }
+
+  // repeated float bb_col4f = 4;
+  for (int i = 0; i < this->bb_col4f_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteFloatToArray(4, this->bb_col4f(i), target);
+  }
+
+  // repeated float bb_dir3f = 5;
+  for (int i = 0; i < this->bb_dir3f_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteFloatToArray(5, this->bb_dir3f(i), target);
+  }
+
+  // optional bool cc = 6;
+  if (has_cc()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(6, this->cc(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -233,7 +377,33 @@ int Config::ByteSize() const {
           this->num_particles());
     }
 
+    // optional bool cc = 6;
+    if (has_cc()) {
+      total_size += 1 + 1;
+    }
+
   }
+  // repeated float bb_col3f = 3;
+  {
+    int data_size = 0;
+    data_size = 4 * this->bb_col3f_size();
+    total_size += 1 * this->bb_col3f_size() + data_size;
+  }
+
+  // repeated float bb_col4f = 4;
+  {
+    int data_size = 0;
+    data_size = 4 * this->bb_col4f_size();
+    total_size += 1 * this->bb_col4f_size() + data_size;
+  }
+
+  // repeated float bb_dir3f = 5;
+  {
+    int data_size = 0;
+    data_size = 4 * this->bb_dir3f_size();
+    total_size += 1 * this->bb_dir3f_size() + data_size;
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -259,9 +429,15 @@ void Config::MergeFrom(const ::google::protobuf::Message& from) {
 
 void Config::MergeFrom(const Config& from) {
   GOOGLE_CHECK_NE(&from, this);
+  bb_col3f_.MergeFrom(from.bb_col3f_);
+  bb_col4f_.MergeFrom(from.bb_col4f_);
+  bb_dir3f_.MergeFrom(from.bb_dir3f_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_num_particles()) {
       set_num_particles(from.num_particles());
+    }
+    if (from.has_cc()) {
+      set_cc(from.cc());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -287,6 +463,10 @@ bool Config::IsInitialized() const {
 void Config::Swap(Config* other) {
   if (other != this) {
     std::swap(num_particles_, other->num_particles_);
+    bb_col3f_.Swap(&other->bb_col3f_);
+    bb_col4f_.Swap(&other->bb_col4f_);
+    bb_dir3f_.Swap(&other->bb_dir3f_);
+    std::swap(cc_, other->cc_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

@@ -11,15 +11,15 @@ DeferredContext::DeferredContext()
   : _ctx(nullptr)
   , _is_immediate_context(false)
 {
-    _default_stencil_ref = GRAPHICS.default_stencil_ref();
-    memcpy(_default_blend_factors, GRAPHICS.default_blend_factors(), sizeof(_default_blend_factors));
-    _default_sample_mask = GRAPHICS.default_sample_mask();
+    _default_stencil_ref = GRAPHICS.DefaultStencilRef();
+    memcpy(_default_blend_factors, GRAPHICS.DefaultBlendFactors(), sizeof(_default_blend_factors));
+    _default_sample_mask = GRAPHICS.DefaultSampleMask();
 }
 
 //------------------------------------------------------------------------------
 void DeferredContext::GenerateMips(GraphicsObjectHandle h)
 {
-  _ctx->GenerateMips(GRAPHICS._render_targets.Get(h)->srv.resource);
+  _ctx->GenerateMips(GRAPHICS._renderTargets.Get(h)->srv.resource);
 }
 
 //------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ void DeferredContext::SetRenderTargets(
   {
     GraphicsObjectHandle h = render_targets[i];
     assert(h.IsValid());
-    Graphics::RenderTargetResource* rt = GRAPHICS._render_targets.Get(h);
+    Graphics::RenderTargetResource* rt = GRAPHICS._renderTargets.Get(h);
     texture_desc = rt->texture.desc;
     if (!dsv && rt->dsv.resource)
     {
@@ -73,8 +73,8 @@ void DeferredContext::GetRenderTargetTextureDesc(
     GraphicsObjectHandle handle,
     D3D11_TEXTURE2D_DESC* desc)
 {
-  auto rt = GRAPHICS._render_targets.Get(
-      handle.IsValid() ? handle : GRAPHICS._default_render_target);
+  auto rt = GRAPHICS._renderTargets.Get(
+      handle.IsValid() ? handle : GRAPHICS._defaultRenderTarget);
   *desc = rt->texture.desc;
 }
 
@@ -83,7 +83,7 @@ void DeferredContext::SetSwapChain(GraphicsObjectHandle h, bool clear)
 {
   Graphics& g = GRAPHICS;
   auto swapChain  = g._swapChains.Get(h);
-  auto rt         = g._render_targets.Get(swapChain->_renderTarget);
+  auto rt         = g._renderTargets.Get(swapChain->_renderTarget);
   _ctx->OMSetRenderTargets(1, &rt->rtv.resource.p, rt->dsv.resource);
   if (clear)
   {
@@ -98,36 +98,36 @@ void DeferredContext::SetSwapChain(GraphicsObjectHandle h, bool clear)
 void DeferredContext::SetVS(GraphicsObjectHandle vs)
 {
   assert(vs.type() == GraphicsObjectHandle::kVertexShader || !vs.IsValid());
-  assert(GRAPHICS._vertex_shaders.Get(vs));
-  _ctx->VSSetShader(GRAPHICS._vertex_shaders.Get(vs), NULL, 0);
+  assert(GRAPHICS._vertexShaders.Get(vs));
+  _ctx->VSSetShader(GRAPHICS._vertexShaders.Get(vs), NULL, 0);
 }
 
 //------------------------------------------------------------------------------
 void DeferredContext::SetCS(GraphicsObjectHandle cs)
 {
   assert(cs.type() == GraphicsObjectHandle::kComputeShader || !cs.IsValid());
-  _ctx->CSSetShader(cs.IsValid() ? GRAPHICS._compute_shaders.Get(cs) : NULL, NULL, 0);
+  _ctx->CSSetShader(cs.IsValid() ? GRAPHICS._computeShaders.Get(cs) : NULL, NULL, 0);
 }
 
 //------------------------------------------------------------------------------
 void DeferredContext::SetGS(GraphicsObjectHandle gs)
 {
   assert(gs.type() == GraphicsObjectHandle::kGeometryShader || !gs.IsValid());
-  _ctx->GSSetShader(gs.IsValid() ? GRAPHICS._geometry_shaders.Get(gs) : NULL, NULL, 0);
+  _ctx->GSSetShader(gs.IsValid() ? GRAPHICS._geometryShaders.Get(gs) : NULL, NULL, 0);
 }
 
 //------------------------------------------------------------------------------
 void DeferredContext::SetPS(GraphicsObjectHandle ps)
 {
   assert(ps.type() == GraphicsObjectHandle::kPixelShader || !ps.IsValid());
-  assert(GRAPHICS._pixel_shaders.Get(ps));
-  _ctx->PSSetShader(ps.IsValid() ? GRAPHICS._pixel_shaders.Get(ps) : NULL, NULL, 0);
+  assert(GRAPHICS._pixelShaders.Get(ps));
+  _ctx->PSSetShader(ps.IsValid() ? GRAPHICS._pixelShaders.Get(ps) : NULL, NULL, 0);
 }
 
 //------------------------------------------------------------------------------
 void DeferredContext::SetLayout(GraphicsObjectHandle layout)
 {
-  _ctx->IASetInputLayout(GRAPHICS._input_layouts.Get(layout));
+  _ctx->IASetInputLayout(GRAPHICS._inputLayouts.Get(layout));
 }
 
 //------------------------------------------------------------------------------
@@ -294,11 +294,11 @@ void DeferredContext::SetShaderResource(GraphicsObjectHandle h, ShaderType shade
   }
   else if (type == GraphicsObjectHandle::kRenderTarget)
   {
-    view = GRAPHICS._render_targets.Get(h)->srv.resource;
+    view = GRAPHICS._renderTargets.Get(h)->srv.resource;
   }
   else if (type == GraphicsObjectHandle::kStructuredBuffer)
   {
-    view = GRAPHICS._structured_buffers.Get(h)->srv.resource;
+    view = GRAPHICS._structuredBuffers.Get(h)->srv.resource;
   }
   else
   {
@@ -340,7 +340,7 @@ void DeferredContext::SetCBuffer(
     size_t len,
     ShaderType shaderType)
 {
-  ID3D11Buffer *buffer = GRAPHICS._constant_buffers.Get(h);
+  ID3D11Buffer *buffer = GRAPHICS._constantBuffers.Get(h);
   D3D11_MAPPED_SUBRESOURCE sub;
   _ctx->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub);
   memcpy(sub.pData, buf, len);

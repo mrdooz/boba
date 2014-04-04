@@ -160,16 +160,29 @@ namespace boba
 
     const Setup& CurSetup() const { return _curSetup; }
 
-    const char *vs_profile() const { return _vs_profile; }
-    const char *ps_profile() const { return _ps_profile; }
-    const char *cs_profile() const { return _cs_profile; }
-    const char *gs_profile() const { return _gs_profile; }
+    const char *vs_profile() const { return _vsProfile; }
+    const char *ps_profile() const { return _psProfile; }
+    const char *cs_profile() const { return _csProfile; }
+    const char *gs_profile() const { return _gsProfile; }
 
-    void GetPredefinedGeometry(PredefinedGeometry geom, GraphicsObjectHandle *vb, int *vertex_size, GraphicsObjectHandle *ib, DXGI_FORMAT *index_format, int *index_count);
+    void GetPredefinedGeometry(
+        PredefinedGeometry geom,
+        GraphicsObjectHandle *vb,
+        int *vertex_size,
+        GraphicsObjectHandle *ib,
+        DXGI_FORMAT *index_format,
+        int *index_count);
 
-    GraphicsObjectHandle CreateInputLayout(const vector<D3D11_INPUT_ELEMENT_DESC> &desc, const vector<char> &shader_bytecode);
+    GraphicsObjectHandle CreateInputLayout(
+        const vector<D3D11_INPUT_ELEMENT_DESC> &desc,
+        const vector<char> &shader_bytecode);
 
-    GraphicsObjectHandle CreateBuffer(D3D11_BIND_FLAG bind, int size, bool dynamic, const void* buf, int data);
+    GraphicsObjectHandle CreateBuffer(
+        D3D11_BIND_FLAG bind,
+        int size,
+        bool dynamic,
+        const void* buf = nullptr,
+        int userData = 0);
 
     GraphicsObjectHandle CreateVertexShader(const vector<char> &shader_bytecode, const string& id);
     GraphicsObjectHandle CreatePixelShader(const vector<char> &shader_bytecode, const string& id);
@@ -188,7 +201,7 @@ namespace boba
         WNDPROC wndProc,
         HINSTANCE instance);
 
-    D3D_FEATURE_LEVEL FeatureLevel() const { return _feature_level; }
+    D3D_FEATURE_LEVEL FeatureLevel() const { return _featureLevel; }
 
     GraphicsObjectHandle GetTempRenderTarget(
         DeferredContext* ctx,
@@ -226,12 +239,12 @@ namespace boba
     GraphicsObjectHandle FindRasterizerState(const string &name);
     GraphicsObjectHandle FindDepthStencilState(const string &name);
 
-    GraphicsObjectHandle default_rasterizer_state() const { return _default_rasterizer_state; }
-    GraphicsObjectHandle default_depth_stencil_state() const { return _default_depth_stencil_state; }
-    uint32_t default_stencil_ref() const { return 0; }
-    GraphicsObjectHandle  default_blend_state() const { return _default_blend_state; }
-    const float *default_blend_factors() const { return _default_blend_factors; }
-    uint32_t default_sample_mask() const { return 0xffffffff; }
+    GraphicsObjectHandle DefaultRasterizerState() const { return _defaultRasterizerState; }
+    GraphicsObjectHandle DefaultDepthStencilState() const { return _defaultDepthStencilState; }
+    uint32_t DefaultStencilRef() const { return 0; }
+    GraphicsObjectHandle  DefaultBlendState() const { return _defaultBlendState; }
+    const float *DefaultBlendFactors() const { return _defaultBlendFactors; }
+    uint32_t DefaultSampleMask() const { return 0xffffffff; }
 
     DeferredContext *CreateDeferredContext(bool canUseImmediate);
     void DestroyDeferredContext(DeferredContext *ctx);
@@ -242,8 +255,8 @@ namespace boba
 
     static GraphicsObjectHandle MakeObjectHandle(GraphicsObjectHandle::Type type, int idx, int data = 0);
 
-    void setDisplayAllModes(bool value) { _displayAllModes = value; }
-    bool displayAllModes() const { return _displayAllModes; }
+    void SetDisplayAllModes(bool value) { _displayAllModes = value; }
+    bool DisplayAllModes() const { return _displayAllModes; }
 
     const DXGI_MODE_DESC &selectedDisplayMode() const;
 
@@ -291,22 +304,22 @@ namespace boba
 
     CComPtr<ID3D11Device> _device;
 
-    CComPtr<ID3D11DeviceContext> _immediate_context;
+    CComPtr<ID3D11DeviceContext> _immediateContext;
 
 #ifdef _DEBUG
-    CComPtr<ID3D11Debug> _d3d_debug;
+    CComPtr<ID3D11Debug> _d3dDebug;
 #endif
 
     // resources
     enum { IdCount = 1 << GraphicsObjectHandle::cIdBits };
-    IdBuffer<ID3D11VertexShader *, IdCount> _vertex_shaders;
-    IdBuffer<ID3D11PixelShader *, IdCount> _pixel_shaders;
-    IdBuffer<ID3D11ComputeShader *, IdCount> _compute_shaders;
-    IdBuffer<ID3D11GeometryShader *, IdCount> _geometry_shaders;
-    IdBuffer<ID3D11InputLayout *, IdCount> _input_layouts;
+    IdBuffer<ID3D11VertexShader *, IdCount> _vertexShaders;
+    IdBuffer<ID3D11PixelShader *, IdCount> _pixelShaders;
+    IdBuffer<ID3D11ComputeShader *, IdCount> _computeShaders;
+    IdBuffer<ID3D11GeometryShader *, IdCount> _geometryShaders;
+    IdBuffer<ID3D11InputLayout *, IdCount> _inputLayouts;
     IdBuffer<ID3D11Buffer *, IdCount> _vertexBuffers;
     IdBuffer<ID3D11Buffer *, IdCount> _indexBuffers;
-    IdBuffer<ID3D11Buffer *, IdCount> _constant_buffers;
+    IdBuffer<ID3D11Buffer *, IdCount> _constantBuffers;
     //IdBuffer<Technique *, IdCount> _techniques;
 
     IdBuffer<ID3D11BlendState *, IdCount> _blendStates;
@@ -315,36 +328,36 @@ namespace boba
     IdBuffer<ID3D11SamplerState *, IdCount> _sampler_states;
 
     IdBuffer<TextureResource *, IdCount> _textures;
-    IdBuffer<RenderTargetResource *, IdCount> _render_targets;
+    IdBuffer<RenderTargetResource *, IdCount> _renderTargets;
     IdBuffer<SimpleResource *, IdCount> _resources;
-    IdBuffer<ID3D11ShaderResourceView *, IdCount> _shader_resource_views;
-    IdBuffer<StructuredBuffer *, IdCount> _structured_buffers;
+    IdBuffer<ID3D11ShaderResourceView *, IdCount> _shaderResourceViews;
+    IdBuffer<StructuredBuffer *, IdCount> _structuredBuffers;
     IdBuffer<SwapChain*, 16> _swapChains;
 
     static Graphics* _instance;
     static IDXGIDebug* _debugInterface;
     static HMODULE _debugModule;
 
-    D3D_FEATURE_LEVEL _feature_level;
+    D3D_FEATURE_LEVEL _featureLevel;
 
-    GraphicsObjectHandle _default_render_target;
-    GraphicsObjectHandle _dummy_texture;
+    GraphicsObjectHandle _defaultRenderTarget;
+    GraphicsObjectHandle _dummyTexture;
 
-    GraphicsObjectHandle _default_rasterizer_state;
-    GraphicsObjectHandle _default_depth_stencil_state;
-    CComPtr<ID3D11SamplerState> _default_sampler_state;
-    float _default_blend_factors[4];
-    GraphicsObjectHandle _default_blend_state;
+    GraphicsObjectHandle _defaultRasterizerState;
+    GraphicsObjectHandle _defaultDepthStencilState;
+    CComPtr<ID3D11SamplerState> _defaultSamplerState;
+    float _defaultBlendFactors[4];
+    GraphicsObjectHandle _defaultBlendState;
 
-    const char *_vs_profile;
-    const char *_ps_profile;
-    const char *_cs_profile;
-    const char *_gs_profile;
+    const char *_vsProfile;
+    const char *_psProfile;
+    const char *_csProfile;
+    const char *_gsProfile;
 
     bool _vsync;
     int _totalBytesAllocated;
 
-    map<PredefinedGeometry, pair<GraphicsObjectHandle, GraphicsObjectHandle> > _predefined_geometry;
+    map<PredefinedGeometry, pair<GraphicsObjectHandle, GraphicsObjectHandle> > _predefinedGeometry;
 
     GraphicsObjectHandle _swapChain;
 

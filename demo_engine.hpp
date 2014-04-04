@@ -37,7 +37,7 @@ namespace boba
     bool Init(const char* config, HINSTANCE instance);
     void RegisterFactory(const char* demoClass, const EffectFactory& factory);
 
-    bool AddEffect(Effect *effect, time_duration startTime, time_duration endTime);
+    void SaveSettings();
 
     bool Start();
     void SetPaused(bool pause);

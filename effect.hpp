@@ -23,8 +23,11 @@ namespace boba
 
     Effect(const string& name);
     virtual ~Effect();
-    virtual bool Init();
+    virtual bool Show();
+    virtual bool Hide();
+    virtual bool Init(const char* config);
     virtual bool Update(const UpdateState& state);
+    virtual bool SaveSettings();
     virtual bool Render();
     virtual bool Close();
     virtual bool Reset();

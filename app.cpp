@@ -4,6 +4,7 @@
 #include "file_utils.hpp"
 #include "demo_engine.hpp"
 #include "particle_test.hpp"
+#include "scene_test.hpp"
 #include "resource_manager.hpp"
 
 static const int WM_LOG_NEW_MSG = WM_APP + 1;
@@ -119,28 +120,27 @@ bool App::Init(HINSTANCE hinstance)
   if (!Graphics::Create(_hinstance))
     return false;
 
-  GRAPHICS.CreateDefaultSwapChain(512, 512, DXGI_FORMAT_R8G8B8A8_UNORM, WndProc, hinstance);
+  int width = GetSystemMetrics(SM_CXFULLSCREEN);
+  int height = GetSystemMetrics(SM_CYFULLSCREEN);
 
+  GRAPHICS.CreateDefaultSwapChain(3 * width / 4, 3 * height / 4, DXGI_FORMAT_R8G8B8A8_UNORM, WndProc, hinstance);
 
   if (!DemoEngine::Create())
     return false;
 
   DEMO_ENGINE.RegisterFactory(ParticleTest::Name(), ParticleTest::Create);
-  if (!DEMO_ENGINE.Init("config/demo.pb", hinstance))
-    return false;
+  DEMO_ENGINE.RegisterFactory(SceneTest::Name(), SceneTest::Create);
 
 #if WITH_ANT_TWEAK_BAR
   TwInit(TW_DIRECT3D11, GRAPHICS.Device());
-  int width, height;
-  GRAPHICS.ScreenSize(&width, &height);
   TwWindowSize(width, height);
-  static int xx;
-  TwBar *myBar;
-  myBar = TwNewBar("NameOfMyTweakBar");
-  TwAddVarRW(myBar, "xx", TW_TYPE_INT32, &xx, 0);
 #endif
 
   LoadSettings();
+
+  if (!DEMO_ENGINE.Init("config/demo.pb", hinstance))
+    return false;
+
 
 #if WITH_MUSIC
   FMOD_CHECKED(FMOD::System_Create(&_system));
@@ -267,6 +267,7 @@ LRESULT App::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         if (GetKeyState(VK_CONTROL) & (1 << 15))
         {
           APP.SaveSettings();
+          DEMO_ENGINE.SaveSettings();
         }
 #endif
         break;

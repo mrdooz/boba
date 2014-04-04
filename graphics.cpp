@@ -69,7 +69,7 @@ bool Graphics::SwapChain::CreateBackBuffers(size_t width, size_t height, DXGI_FO
 
   // Reset the buffers if the swap chain is already registered
   RenderTargetResource* rt;
-  if (g._render_targets.Get(_name, &rt))
+  if (g._renderTargets.Get(_name, &rt))
   {
     rt->reset();
     _swapChain->ResizeBuffers(0, width, height, format, 0);
@@ -113,7 +113,7 @@ bool Graphics::SwapChain::CreateBackBuffers(size_t width, size_t height, DXGI_FO
   rt->dsv.resource->GetDesc(&rt->dsv.desc);
 
   // Register the buffer with GRAPHICS
-  u32 idx = g._render_targets.Insert(_name, rt);
+  u32 idx = g._renderTargets.Insert(_name, rt);
   _renderTarget = GraphicsObjectHandle(GraphicsObjectHandle::kRenderTarget, idx);
 
   _viewport = CD3D11_VIEWPORT (0.0f, 0.0f, (float)width, (float)height);
@@ -177,7 +177,7 @@ bool Graphics::EnumerateDisplayModes(HWND hWnd)
 
     // Only keep the version of each display mode with the highest refresh rate
     auto &safeRational = [](const DXGI_RATIONAL &r) { return r.Denominator == 0 ? 0 : r.Numerator / r.Denominator; };
-    if (GRAPHICS.displayAllModes())
+    if (GRAPHICS.DisplayAllModes())
     {
       curAdapter.displayModes = displayModes;
     }
@@ -316,27 +316,27 @@ INT_PTR CALLBACK Graphics::dialogWndProc(HWND hWnd, UINT message, WPARAM wParam,
 
 //------------------------------------------------------------------------------
 Graphics::Graphics()
-  : _vs_profile("vs_4_0")
-  , _ps_profile("ps_4_0")
-  , _cs_profile("cs_4_0")
-  , _gs_profile("gs_4_0")
-  , _vertex_shaders(ReleaseObj<ID3D11VertexShader *>)
-  , _pixel_shaders(ReleaseObj<ID3D11PixelShader *>)
-  , _compute_shaders(ReleaseObj<ID3D11ComputeShader *>)
-  , _geometry_shaders(ReleaseObj<ID3D11GeometryShader *>)
+  : _vsProfile("vs_4_0")
+  , _psProfile("ps_4_0")
+  , _csProfile("cs_4_0")
+  , _gsProfile("gs_4_0")
+  , _vertexShaders(ReleaseObj<ID3D11VertexShader *>)
+  , _pixelShaders(ReleaseObj<ID3D11PixelShader *>)
+  , _computeShaders(ReleaseObj<ID3D11ComputeShader *>)
+  , _geometryShaders(ReleaseObj<ID3D11GeometryShader *>)
   , _vertexBuffers(ReleaseObj<ID3D11Buffer *>)
   , _indexBuffers(ReleaseObj<ID3D11Buffer *>)
-  , _constant_buffers(ReleaseObj<ID3D11Buffer *>)
-  , _input_layouts(ReleaseObj<ID3D11InputLayout *>)
+  , _constantBuffers(ReleaseObj<ID3D11Buffer *>)
+  , _inputLayouts(ReleaseObj<ID3D11InputLayout *>)
   , _blendStates(ReleaseObj<ID3D11BlendState *>)
   , _depthStencilStates(ReleaseObj<ID3D11DepthStencilState *>)
   , _rasterizerStates(ReleaseObj<ID3D11RasterizerState *>)
   , _sampler_states(ReleaseObj<ID3D11SamplerState *>)
-  , _shader_resource_views(ReleaseObj<ID3D11ShaderResourceView *>)
+  , _shaderResourceViews(ReleaseObj<ID3D11ShaderResourceView *>)
   , _textures(DeleteObj<TextureResource *>)
-  , _render_targets(DeleteObj<RenderTargetResource *>)
+  , _renderTargets(DeleteObj<RenderTargetResource *>)
   , _resources(DeleteObj<SimpleResource *>)
-  , _structured_buffers(DeleteObj<StructuredBuffer *>)
+  , _structuredBuffers(DeleteObj<StructuredBuffer *>)
   , _swapChains(DeleteObj<SwapChain*>)
   , _vsync(false)
   , _totalBytesAllocated(0)
@@ -383,19 +383,19 @@ bool Graphics::Init(HINSTANCE hInstance)
   if (!CreateDevice())
     return false;
 
-  _default_depth_stencil_state = CreateDepthStencilState(CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT()));
-  _default_rasterizer_state = CreateRasterizerState(CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT()));
-  _default_blend_state = CreateBlendState(CD3D11_BLEND_DESC(CD3D11_DEFAULT()));
+  _defaultDepthStencilState = CreateDepthStencilState(CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT()));
+  _defaultRasterizerState = CreateRasterizerState(CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT()));
+  _defaultBlendState = CreateBlendState(CD3D11_BLEND_DESC(CD3D11_DEFAULT()));
 
   CreateDefaultGeometry();
 
   // Create a dummy texture
   DWORD black = 0;
-  _dummy_texture = CreateTexture(1, 1, DXGI_FORMAT_R8G8B8A8_UNORM, &black, 1, 1, 1, "dummy_texture");
-  _immediate_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  _dummyTexture = CreateTexture(1, 1, DXGI_FORMAT_R8G8B8A8_UNORM, &black, 1, 1, 1, "dummy_texture");
+  _immediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
   for (int i = 0; i < 4; ++i)
-    _default_blend_factors[i] = 1.0f;
+    _defaultBlendFactors[i] = 1.0f;
 
   return true;
 }
@@ -445,17 +445,17 @@ bool Graphics::CreateDevice()
   CComPtr<IDXGIAdapter> adapter = _curSetup.videoAdapters[_curSetup.selectedAdapter].adapter;
   if (FAILED(D3D11CreateDevice(
       adapter,D3D_DRIVER_TYPE_UNKNOWN, NULL, flags, NULL, 0, D3D11_SDK_VERSION,
-      &_device, &_feature_level, &_immediate_context)))
+      &_device, &_featureLevel, &_immediateContext)))
     return false;
 
-  if (_feature_level < D3D_FEATURE_LEVEL_9_3)
+  if (_featureLevel < D3D_FEATURE_LEVEL_9_3)
     return false;
 
-  SetPrivateData(_immediate_context.p);
+  SetPrivateData(_immediateContext.p);
 
   if (createDebugDevice)
   {
-    if (FAILED(_device->QueryInterface(IID_ID3D11Debug, (void **)&(_d3d_debug.p))))
+    if (FAILED(_device->QueryInterface(IID_ID3D11Debug, (void **)&(_d3dDebug.p))))
       return false;
   }
 
@@ -468,7 +468,7 @@ GraphicsObjectHandle Graphics::CreateBuffer(
     int size,
     bool dynamic,
     const void* buf,
-    int data)
+    int userData)
 {
   ID3D11Buffer* buffer = 0;
   if (CreateBufferInner(bind, size, dynamic, buf, &buffer))
@@ -476,18 +476,19 @@ GraphicsObjectHandle Graphics::CreateBuffer(
     if (bind == D3D11_BIND_INDEX_BUFFER)
     {
       const int idx = _indexBuffers.Insert(buffer);
-      assert(data == DXGI_FORMAT_R16_UINT || data == DXGI_FORMAT_R32_UINT);
-      return MakeObjectHandle(GraphicsObjectHandle::kIndexBuffer, idx, data);
+      assert(userData == DXGI_FORMAT_R16_UINT || userData == DXGI_FORMAT_R32_UINT);
+      return MakeObjectHandle(GraphicsObjectHandle::kIndexBuffer, idx, userData);
     } 
     else if (bind == D3D11_BIND_VERTEX_BUFFER)
     {
       const int idx = _vertexBuffers.Insert(buffer);
-      assert(data > 0);
-      return MakeObjectHandle(GraphicsObjectHandle::kVertexBuffer, idx, data);
+      // userdata is vertex size
+      assert(userData > 0);
+      return MakeObjectHandle(GraphicsObjectHandle::kVertexBuffer, idx, userData);
     } 
     else if (bind == D3D11_BIND_CONSTANT_BUFFER)
     {
-      const int idx = _constant_buffers.Insert(buffer);
+      const int idx = _constantBuffers.Insert(buffer);
       return MakeObjectHandle(GraphicsObjectHandle::kConstantBuffer, idx, size);
     }
     else
@@ -532,7 +533,7 @@ GraphicsObjectHandle Graphics::GetTempRenderTarget(
   u32 bufferFlags,
   const string &name)
 {
-  assert(!_render_targets.HasKey(name));
+  assert(!_renderTargets.HasKey(name));
 
   // look for a free render target with the wanted properties
   UINT flags = (bufferFlags & kCreateMipMaps) ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0;
@@ -549,10 +550,10 @@ GraphicsObjectHandle Graphics::GetTempRenderTarget(
       && !!(bufferFlags & kCreateDepthBuffer) == !!res->depth_stencil.resource.p;
   };
 
-  int idx = _render_targets.Find(rtComp);
+  int idx = _renderTargets.Find(rtComp);
   if (idx != ~0)
   {
-    RenderTargetResource* rt = _render_targets.Get(idx);
+    RenderTargetResource* rt = _renderTargets.Get(idx);
     rt->in_use = true;
     return MakeObjectHandle(GraphicsObjectHandle::kRenderTarget, idx);
   }
@@ -564,7 +565,7 @@ GraphicsObjectHandle Graphics::GetTempRenderTarget(
 //------------------------------------------------------------------------------
 void Graphics::ReleaseTempRenderTarget(GraphicsObjectHandle h)
 {
-  RenderTargetResource* rt = _render_targets.Get(h);
+  RenderTargetResource* rt = _renderTargets.Get(h);
   assert(rt->in_use);
   rt->in_use = false;
 }
@@ -620,7 +621,7 @@ GraphicsObjectHandle Graphics::CreateStructuredBuffer(
   }
 
   return MakeObjectHandle(
-      GraphicsObjectHandle::kStructuredBuffer, _structured_buffers.Insert(sb.release()));
+      GraphicsObjectHandle::kStructuredBuffer, _structuredBuffers.Insert(sb.release()));
 }
 
 //------------------------------------------------------------------------------
@@ -637,8 +638,8 @@ GraphicsObjectHandle Graphics::CreateRenderTarget(
   if (CreateRenderTarget(ctx, width, height, format, bufferFlags, data.get()))
   {
     int idx = name.empty()
-      ? _render_targets.Insert(data.release())
-      : _render_targets.Insert(name, data.release());
+      ? _renderTargets.Insert(data.release())
+      : _renderTargets.Insert(name, data.release());
     return MakeObjectHandle(GraphicsObjectHandle::kRenderTarget, idx);
   }
   return emptyGoh;
@@ -734,7 +735,7 @@ bool Graphics::ReadTexture(
     return false;
 
   D3D11_MAPPED_SUBRESOURCE sub;
-  if (FAILED(_immediate_context->Map(resource, 0, D3D11_MAP_READ, 0, &sub)))
+  if (FAILED(_immediateContext->Map(resource, 0, D3D11_MAP_READ, 0, &sub)))
     return false;
 
   u8 *src = (u8 *)sub.pData;
@@ -747,7 +748,7 @@ bool Graphics::ReadTexture(
     memcpy(&dst[i*sub.RowPitch], &src[i*sub.RowPitch], row_size);
   }
 
-  _immediate_context->Unmap(resource, 0);
+  _immediateContext->Unmap(resource, 0);
   *pitch = sub.RowPitch;
   return true;
 }
@@ -899,7 +900,7 @@ bool Graphics::CreateTexture(
     return false;
 
   D3D11_MAPPED_SUBRESOURCE resource;
-  if (FAILED(_immediate_context->Map(out->texture.resource, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource)))
+  if (FAILED(_immediateContext->Map(out->texture.resource, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource)))
     return false;
 
   uint8_t *src = (uint8_t *)data;
@@ -912,7 +913,7 @@ bool Graphics::CreateTexture(
     src += data_pitch;
     dst += resource.RowPitch;
   }
-  _immediate_context->Unmap(out->texture.resource, 0);
+  _immediateContext->Unmap(out->texture.resource, 0);
   return true;
 }
 
@@ -937,7 +938,7 @@ bool Graphics::CreateDefaultGeometry()
 
     auto vb = CreateBuffer(D3D11_BIND_VERTEX_BUFFER, sizeof(verts), false, verts, sizeof(Pos4Tex));
     auto ib = CreateBuffer(D3D11_BIND_INDEX_BUFFER, sizeof(quadIndices), false, quadIndices, DXGI_FORMAT_R16_UINT);
-    _predefined_geometry.insert(make_pair(kGeomFsQuadPosTex, make_pair(vb, ib)));
+    _predefinedGeometry.insert(make_pair(kGeomFsQuadPosTex, make_pair(vb, ib)));
   }
 
   // fullscreen pos quad
@@ -952,7 +953,7 @@ bool Graphics::CreateDefaultGeometry()
 
     auto vb = CreateBuffer(D3D11_BIND_VERTEX_BUFFER, sizeof(verts), false, verts, sizeof(Vector4));
     auto ib = CreateBuffer(D3D11_BIND_INDEX_BUFFER, sizeof(quadIndices), false, quadIndices, DXGI_FORMAT_R16_UINT);
-    _predefined_geometry.insert(make_pair(kGeomFsQuadPos, make_pair(vb, ib)));
+    _predefinedGeometry.insert(make_pair(kGeomFsQuadPos, make_pair(vb, ib)));
   }
 
   return true;
@@ -967,7 +968,7 @@ GraphicsObjectHandle Graphics::CreateInputLayout(
   if (FAILED(_device->CreateInputLayout(&desc[0], desc.size(), &shader_bytecode[0], shader_bytecode.size(), &layout)))
     return emptyGoh;
 
-  return GraphicsObjectHandle(GraphicsObjectHandle::kInputLayout, _input_layouts.Insert(layout));
+  return GraphicsObjectHandle(GraphicsObjectHandle::kInputLayout, _inputLayouts.Insert(layout));
 }
 
 //------------------------------------------------------------------------------
@@ -990,7 +991,7 @@ GraphicsObjectHandle Graphics::CreateVertexShader(
   ID3D11VertexShader *vs = nullptr;
   if (SUCCEEDED(_device->CreateVertexShader(&shader_bytecode[0], shader_bytecode.size(), NULL, &vs)))
   {
-    return AddShader(_vertex_shaders, vs, id, GraphicsObjectHandle::kVertexShader);
+    return AddShader(_vertexShaders, vs, id, GraphicsObjectHandle::kVertexShader);
   }
   return emptyGoh;
 }
@@ -1003,7 +1004,7 @@ GraphicsObjectHandle Graphics::CreatePixelShader(
   ID3D11PixelShader *ps = nullptr;
   if (SUCCEEDED(_device->CreatePixelShader(&shader_bytecode[0], shader_bytecode.size(), NULL, &ps)))
   {
-    return AddShader(_pixel_shaders, ps, id, GraphicsObjectHandle::kPixelShader);
+    return AddShader(_pixelShaders, ps, id, GraphicsObjectHandle::kPixelShader);
   }
   return emptyGoh;
 }
@@ -1016,7 +1017,7 @@ GraphicsObjectHandle Graphics::CreateComputeShader(
   ID3D11ComputeShader *cs = nullptr;
   if (SUCCEEDED(_device->CreateComputeShader(&shader_bytecode[0], shader_bytecode.size(), NULL, &cs)))
   {
-    return AddShader(_compute_shaders, cs, id, GraphicsObjectHandle::kComputeShader);
+    return AddShader(_computeShaders, cs, id, GraphicsObjectHandle::kComputeShader);
   }
   return emptyGoh;
 }
@@ -1029,7 +1030,7 @@ GraphicsObjectHandle Graphics::CreateGeometryShader(
   ID3D11GeometryShader *cs = nullptr;
   if (SUCCEEDED(_device->CreateGeometryShader(&shader_bytecode[0], shader_bytecode.size(), NULL, &cs)))
   {
-    return AddShader(_geometry_shaders, cs, id, GraphicsObjectHandle::kGeometryShader);
+    return AddShader(_geometryShaders, cs, id, GraphicsObjectHandle::kGeometryShader);
   }
   return emptyGoh;
 }
@@ -1168,7 +1169,7 @@ GraphicsObjectHandle Graphics::CreateSwapChain(
 GraphicsObjectHandle Graphics::FindResource(const string &name)
 {
   if (name.empty())
-    return _dummy_texture;
+    return _dummyTexture;
 
   // check textures, then resources, then render targets
   int idx = _textures.IndexFromKey(name);
@@ -1179,7 +1180,7 @@ GraphicsObjectHandle Graphics::FindResource(const string &name)
   if (idx != -1)
     return GraphicsObjectHandle(GraphicsObjectHandle::kResource, idx);
 
-  idx = _render_targets.IndexFromKey(name);
+  idx = _renderTargets.IndexFromKey(name);
   return MakeObjectHandle(GraphicsObjectHandle::kRenderTarget, idx);
 }
 
@@ -1239,7 +1240,7 @@ DeferredContext *Graphics::CreateDeferredContext(bool canUseImmediate)
   if (canUseImmediate)
   {
     dc->_is_immediate_context = true;
-    dc->_ctx = _immediate_context;
+    dc->_ctx = _immediateContext;
   } else {
     _device->CreateDeferredContext(0, &dc->_ctx);
   }
@@ -1256,20 +1257,20 @@ void Graphics::GetPredefinedGeometry(
     int *index_count)
 {
   *index_format = DXGI_FORMAT_R16_UINT;
-  assert(_predefined_geometry.find(geom) != _predefined_geometry.end());
+  assert(_predefinedGeometry.find(geom) != _predefinedGeometry.end());
 
   switch (geom)
   {
     case kGeomFsQuadPos:
-      *vb = _predefined_geometry[kGeomFsQuadPos].first;
-      *ib = _predefined_geometry[kGeomFsQuadPos].second;
+      *vb = _predefinedGeometry[kGeomFsQuadPos].first;
+      *ib = _predefinedGeometry[kGeomFsQuadPos].second;
       *vertex_size = sizeof(Vector4);
       *index_count = 6;
       break;
 
     case kGeomFsQuadPosTex:
-      *vb = _predefined_geometry[kGeomFsQuadPosTex].first;
-      *ib = _predefined_geometry[kGeomFsQuadPosTex].second;
+      *vb = _predefinedGeometry[kGeomFsQuadPosTex].first;
+      *ib = _predefinedGeometry[kGeomFsQuadPosTex].second;
       *vertex_size = sizeof(Pos4Tex);
       *index_count = 6;
       break;
@@ -1279,7 +1280,7 @@ void Graphics::GetPredefinedGeometry(
 //------------------------------------------------------------------------------
 void Graphics::AddCommandList(ID3D11CommandList *cmd_list)
 {
-  _immediate_context->ExecuteCommandList(cmd_list, FALSE);
+  _immediateContext->ExecuteCommandList(cmd_list, FALSE);
   cmd_list->Release();
 }
 

@@ -7,14 +7,12 @@ namespace boba
 {
   class DeferredContext;
 
-  class ParticleTest : public Effect
+  class SceneTest : public Effect
   {
   public:
 
-    ParticleTest(const string &name);
-    ~ParticleTest();
-    virtual bool Show();
-    virtual bool Hide();
+    SceneTest(const string &name);
+    ~SceneTest();
     virtual bool Init(const char* config) override;
     virtual bool Update(const UpdateState& state) override;
     virtual bool Render() override;

@@ -37,6 +37,7 @@
 #include <memory>
 
 #include <google/protobuf/text_format.h>
+#include <google/protobuf/repeated_field.h>
 
 #define BOOST_ALL_NO_LIB
 #include <boost/date_time.hpp>

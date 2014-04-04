@@ -18,4 +18,8 @@ namespace boba
     return google::protobuf::TextFormat::ParseFromString(str, msg);
   }
 
+  //------------------------------------------------------------------------------
+  void FromProtocol(const ::google::protobuf::RepeatedField<float>& protocol, Vector3* out);
+  void FromProtocol(const ::google::protobuf::RepeatedField<float>& protocol, Vector4* out);
+
 }

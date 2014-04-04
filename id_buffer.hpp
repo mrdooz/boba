@@ -32,8 +32,7 @@ namespace boba
     {
       for (size_t i = 0; i < Size; ++i)
       {
-        // Call the deleter on the element if it's free
-        if (IsFree(i))
+        if (!IsFree(i))
           _deleter(_elems[i]);
       }
     }

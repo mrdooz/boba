@@ -1,6 +1,12 @@
 Texture2D Texture0 : register(t0);
 sampler LinearSampler : register(s0);
 
+cbuffer PerFrame : register(b0)
+{
+	float4 col;
+	uint4 msg[1024];
+};
+
 struct VSQuadOut
 {
     float4 pos : SV_Position;
@@ -23,5 +29,21 @@ VSQuadOut VSQuad(uint vertexID : SV_VertexID)
 float4 PSQuad(VSQuadOut input) : SV_TARGET
 {
     float4 background = Texture0.Sample(LinearSampler, input.uv);
-	return input.uv.x * input.uv.y * background;
+	return col + input.uv.x * input.uv.y * background;
+}
+
+float4 TextPSQuad(VSQuadOut input) : SV_TARGET
+{
+	uint x = input.pos.x;
+	uint y = input.pos.y;
+	
+	if (x >= 8 || y >= 8)
+		return float4(1,0,0,0);
+	
+	//uint b = vincent_data[65][y];
+	//return ((b >> (7 - x)) & 1) ? float4(1,1,1,1) : float4(0,0,0,0);
+		
+	return msg[0].x;
+    float4 background = Texture0.Sample(LinearSampler, input.uv);
+	return col + input.uv.x * input.uv.y * background;
 }

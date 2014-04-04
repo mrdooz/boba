@@ -24,9 +24,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\protocol\anttweak.pb.cc" />
     <ClCompile Include="..\protocol\demo.pb.cc" />
     <ClCompile Include="..\protocol\particle.pb.cc" />
+    <ClCompile Include="..\proto_helpers.cpp" />
     <ClCompile Include="..\resource_manager.cpp" />
+    <ClCompile Include="..\scene_test.cpp" />
     <ClCompile Include="..\string_utils.cpp" />
     <ClCompile Include="..\utils.cpp" />
   </ItemGroup>
@@ -42,10 +45,12 @@
     <ClInclude Include="..\id_buffer.hpp" />
     <ClInclude Include="..\particle_test.hpp" />
     <ClInclude Include="..\precompiled.hpp" />
+    <ClInclude Include="..\protocol\anttweak.pb.h" />
     <ClInclude Include="..\protocol\demo.pb.h" />
     <ClInclude Include="..\protocol\particle.pb.h" />
     <ClInclude Include="..\proto_helpers.hpp" />
     <ClInclude Include="..\resource_manager.hpp" />
+    <ClInclude Include="..\scene_test.hpp" />
     <ClInclude Include="..\string_utils.hpp" />
     <ClInclude Include="..\utils.hpp" />
     <ClInclude Include="..\vertex_types.hpp" />
@@ -55,6 +60,7 @@
     <ResourceCompile Include="boba.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\protocol\anttweak.proto" />
     <None Include="..\protocol\demo.proto" />
     <None Include="..\protocol\particle.proto" />
   </ItemGroup>

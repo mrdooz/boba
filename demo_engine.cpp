@@ -265,24 +265,6 @@ bool DemoEngine::Destroy()
 }
 
 //------------------------------------------------------------------------------
-bool DemoEngine::AddEffect(Effect *effect, time_duration startTime, time_duration endTime)
-{
-  effect->SetDuration(startTime, endTime);
-  _effects.push_back(effect);
-
-  sort(_effects.begin(), _effects.end(), [](const Effect *a, const Effect *b){ return a->StartTime() < b->StartTime(); });
-
-  for (size_t i = 0; i < _effects.size(); ++i)
-  {
-    if (!_effects[i]->Init())
-      return false;
-    _inactiveEffects.push_back(_effects[i]);
-  }
-
-  return true;
-}
-
-//------------------------------------------------------------------------------
 Effect *DemoEngine::FindEffectByName(const string &name)
 {
   auto it = find_if(_effects.begin(), _effects.end(),
@@ -306,7 +288,7 @@ bool DemoEngine::Init(const char* config, HINSTANCE instance)
     return false;
 
 
-  for (auto& part : _config.part())
+  for (const demo::Part& part : _config.part())
   {
     // Look up the factory
     auto factoryIt = _effectFactories.find(part.effect_class());
@@ -317,7 +299,7 @@ bool DemoEngine::Init(const char* config, HINSTANCE instance)
       EffectFactory factory = factoryIt->second;
       Effect* effect = factory(name);
       effect->SetDuration(milliseconds(part.start()), milliseconds(part.end()));
-      if (!effect->Init())
+      if (!effect->Init(part.config().c_str()))
       {
         return false;
       }
@@ -344,4 +326,13 @@ void DemoEngine::RegisterFactory(const char* demoClass, const EffectFactory& fac
 LRESULT DemoEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
   return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+//------------------------------------------------------------------------------
+void DemoEngine::SaveSettings()
+{
+  for (Effect* effect : _effects)
+  {
+    effect->SaveSettings();
+  }
 }

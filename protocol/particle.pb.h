@@ -24,6 +24,7 @@
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/unknown_field_set.h>
+#include "anttweak.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace particle {
@@ -98,17 +99,66 @@ class Config : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 num_particles() const;
   inline void set_num_particles(::google::protobuf::uint32 value);
 
+  // repeated float bb_col3f = 3;
+  inline int bb_col3f_size() const;
+  inline void clear_bb_col3f();
+  static const int kBbCol3FFieldNumber = 3;
+  inline float bb_col3f(int index) const;
+  inline void set_bb_col3f(int index, float value);
+  inline void add_bb_col3f(float value);
+  inline const ::google::protobuf::RepeatedField< float >&
+      bb_col3f() const;
+  inline ::google::protobuf::RepeatedField< float >*
+      mutable_bb_col3f();
+
+  // repeated float bb_col4f = 4;
+  inline int bb_col4f_size() const;
+  inline void clear_bb_col4f();
+  static const int kBbCol4FFieldNumber = 4;
+  inline float bb_col4f(int index) const;
+  inline void set_bb_col4f(int index, float value);
+  inline void add_bb_col4f(float value);
+  inline const ::google::protobuf::RepeatedField< float >&
+      bb_col4f() const;
+  inline ::google::protobuf::RepeatedField< float >*
+      mutable_bb_col4f();
+
+  // repeated float bb_dir3f = 5;
+  inline int bb_dir3f_size() const;
+  inline void clear_bb_dir3f();
+  static const int kBbDir3FFieldNumber = 5;
+  inline float bb_dir3f(int index) const;
+  inline void set_bb_dir3f(int index, float value);
+  inline void add_bb_dir3f(float value);
+  inline const ::google::protobuf::RepeatedField< float >&
+      bb_dir3f() const;
+  inline ::google::protobuf::RepeatedField< float >*
+      mutable_bb_dir3f();
+
+  // optional bool cc = 6;
+  inline bool has_cc() const;
+  inline void clear_cc();
+  static const int kCcFieldNumber = 6;
+  inline bool cc() const;
+  inline void set_cc(bool value);
+
   // @@protoc_insertion_point(class_scope:particle.Config)
  private:
   inline void set_has_num_particles();
   inline void clear_has_num_particles();
+  inline void set_has_cc();
+  inline void clear_has_cc();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::google::protobuf::RepeatedField< float > bb_col3f_;
+  ::google::protobuf::RepeatedField< float > bb_col4f_;
   ::google::protobuf::uint32 num_particles_;
+  bool cc_;
+  ::google::protobuf::RepeatedField< float > bb_dir3f_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_particle_2eproto();
   friend void protobuf_AssignDesc_particle_2eproto();
@@ -144,6 +194,103 @@ inline ::google::protobuf::uint32 Config::num_particles() const {
 inline void Config::set_num_particles(::google::protobuf::uint32 value) {
   set_has_num_particles();
   num_particles_ = value;
+}
+
+// repeated float bb_col3f = 3;
+inline int Config::bb_col3f_size() const {
+  return bb_col3f_.size();
+}
+inline void Config::clear_bb_col3f() {
+  bb_col3f_.Clear();
+}
+inline float Config::bb_col3f(int index) const {
+  return bb_col3f_.Get(index);
+}
+inline void Config::set_bb_col3f(int index, float value) {
+  bb_col3f_.Set(index, value);
+}
+inline void Config::add_bb_col3f(float value) {
+  bb_col3f_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< float >&
+Config::bb_col3f() const {
+  return bb_col3f_;
+}
+inline ::google::protobuf::RepeatedField< float >*
+Config::mutable_bb_col3f() {
+  return &bb_col3f_;
+}
+
+// repeated float bb_col4f = 4;
+inline int Config::bb_col4f_size() const {
+  return bb_col4f_.size();
+}
+inline void Config::clear_bb_col4f() {
+  bb_col4f_.Clear();
+}
+inline float Config::bb_col4f(int index) const {
+  return bb_col4f_.Get(index);
+}
+inline void Config::set_bb_col4f(int index, float value) {
+  bb_col4f_.Set(index, value);
+}
+inline void Config::add_bb_col4f(float value) {
+  bb_col4f_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< float >&
+Config::bb_col4f() const {
+  return bb_col4f_;
+}
+inline ::google::protobuf::RepeatedField< float >*
+Config::mutable_bb_col4f() {
+  return &bb_col4f_;
+}
+
+// repeated float bb_dir3f = 5;
+inline int Config::bb_dir3f_size() const {
+  return bb_dir3f_.size();
+}
+inline void Config::clear_bb_dir3f() {
+  bb_dir3f_.Clear();
+}
+inline float Config::bb_dir3f(int index) const {
+  return bb_dir3f_.Get(index);
+}
+inline void Config::set_bb_dir3f(int index, float value) {
+  bb_dir3f_.Set(index, value);
+}
+inline void Config::add_bb_dir3f(float value) {
+  bb_dir3f_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< float >&
+Config::bb_dir3f() const {
+  return bb_dir3f_;
+}
+inline ::google::protobuf::RepeatedField< float >*
+Config::mutable_bb_dir3f() {
+  return &bb_dir3f_;
+}
+
+// optional bool cc = 6;
+inline bool Config::has_cc() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Config::set_has_cc() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Config::clear_has_cc() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Config::clear_cc() {
+  cc_ = false;
+  clear_has_cc();
+}
+inline bool Config::cc() const {
+  return cc_;
+}
+inline void Config::set_cc(bool value) {
+  set_has_cc();
+  cc_ = value;
 }
 
 

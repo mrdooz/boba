@@ -6,8 +6,17 @@
 #include "proto_helpers.hpp"
 #include "resource_manager.hpp"
 
+#include "protocol/particle_bindings.cpp"
+
 using namespace boba;
 
+namespace
+{
+  struct CBufferPerFrame
+  {
+    Vector4 col;
+  };
+}
 //------------------------------------------------------------------------------
 ParticleTest::ParticleTest(const string &name)
   : Effect(name)
@@ -20,10 +29,27 @@ ParticleTest::~ParticleTest()
 }
 
 //------------------------------------------------------------------------------
-bool ParticleTest::Init()
+bool ParticleTest::Show()
 {
-  if (!LoadProto("config/particles1.pb", &_config))
+  return true;
+}
+
+//------------------------------------------------------------------------------
+bool ParticleTest::Hide()
+{
+  return true;
+}
+
+//------------------------------------------------------------------------------
+bool ParticleTest::Init(const char* config)
+{
+  _configName = config;
+
+  if (!LoadProto(config, &_config))
     return false;
+
+  BindConfig(&_config);
+  TwDefine("particle.Config visible=false");
 
   _texture = RESOURCE_MANAGER.LoadTexture("gfx/Abstract_BG_Texture2.jpg");
   if (!_texture.IsValid())
@@ -49,6 +75,10 @@ bool ParticleTest::Init()
   if (!_samplerState.IsValid())
     return false;
 
+  _cbuffer = GRAPHICS.CreateBuffer(D3D11_BIND_CONSTANT_BUFFER, sizeof(CBufferPerFrame), true);
+  if (!_cbuffer.IsValid())
+    return false;
+
   return true;
 }
 
@@ -63,6 +93,10 @@ bool ParticleTest::Render()
 {
   _ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), true);
   _ctx->BeginFrame();
+
+  CBufferPerFrame cb;
+  FromProtocol(_config.bb_col4f(), &cb.col);
+  _ctx->SetCBuffer(_cbuffer, &cb, sizeof(cb), ShaderType::PixelShader);
 
   _ctx->SetVS(_vs);
   _ctx->SetPS(_ps);
@@ -83,9 +117,14 @@ bool ParticleTest::Close()
 }
 
 //------------------------------------------------------------------------------
-bool ParticleTest::Init(const char* config)
+bool ParticleTest::SaveSettings()
 {
-  return LoadProto(config, &_config);
+  if (FILE* f = fopen(_configName.c_str() ,"wt"))
+  {
+    fprintf(f, "%s", _config.DebugString().c_str());
+    fclose(f);
+  }
+  return true;
 }
 
 //------------------------------------------------------------------------------

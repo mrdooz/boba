@@ -1,1 +1,12 @@
-num_particles : 5000
+num_particles: 5000
+bb_col3f: 0.1
+bb_col3f: 0.2
+bb_col3f: 0.3
+bb_col4f: 0.40000004
+bb_col4f: 0.59607846
+bb_col4f: 0.6
+bb_col4f: 0.7019608
+bb_dir3f: 1
+bb_dir3f: 0
+bb_dir3f: 0
+cc: false
