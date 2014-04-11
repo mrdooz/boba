@@ -215,15 +215,25 @@ void ResourceManager::AddFileWatch(
     bool initialCallback,
     bool* initialResult)
 {
+  auto it = _watchedFiles.find(filename);
+  if (it == _watchedFiles.end())
+  {
+    // the watch isn't already present, so add it
+    WatchedFile w;
+    w.filename = filename;
+    w.lastModification = LastModification(filename.c_str());
+    it = _watchedFiles.insert(make_pair(filename, w)).first;
+  }
+
+  it->second.callbacks.push_back(make_pair(token, cb));
+
   if (initialCallback)
   {
-    bool res = cb(filename.c_str(), token);
+    bool res = cb(filename, token);
     if (initialResult)
       *initialResult = res;
   }
 
-  // todo: add file watch :)
-  _watchedFiles[filename].push_back(make_pair(cb, token));
 }
 
 //------------------------------------------------------------------------------
@@ -267,6 +277,23 @@ void ResourceManager::Tick()
   ptime now = microsec_clock::local_time();
   if (_lastTickTime.is_not_a_date_time() || (now - _lastTickTime) > seconds(1))
   {
+    for (auto& kv : _watchedFiles)
+    {
+      const string& filename = kv.first;
+      WatchedFile& f = kv.second;
+      time_t lastModification = LastModification(filename.c_str());
+      if (lastModification > f.lastModification)
+      {
+        // file has been modified, so call all the callback
+        for (const auto& p : f.callbacks)
+        {
+          void* token = p.first;
+          const cbFileChanged& cb = p.second;
+          cb(filename, token);
+        }
+        f.lastModification = lastModification;
+      }
+    }
     //
   }
 }

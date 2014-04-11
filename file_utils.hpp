@@ -6,4 +6,5 @@ namespace boba
   bool SaveFile(const char* filename, const void* buf, int len);
   bool FileExists(const char* filename);
   bool DirectoryExists(const char *name);
+  time_t LastModification(const char* filename);
 }

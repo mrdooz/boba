@@ -48,4 +48,14 @@ namespace boba
 
     return fwrite(buf, len, 1, f) == len;
   }
+
+  //------------------------------------------------------------------------------
+  time_t LastModification(const char* filename)
+  {
+    struct stat s;
+    stat(filename, &s);
+    return s.st_mtime;
+  }
+
+  //------------------------------------------------------------------------------
 }

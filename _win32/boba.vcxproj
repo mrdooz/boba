@@ -29,6 +29,7 @@
     <ClCompile Include="..\protocol\particle.pb.cc" />
     <ClCompile Include="..\proto_helpers.cpp" />
     <ClCompile Include="..\resource_manager.cpp" />
+    <ClCompile Include="..\scene.cpp" />
     <ClCompile Include="..\scene_test.cpp" />
     <ClCompile Include="..\string_utils.cpp" />
     <ClCompile Include="..\utils.cpp" />
@@ -50,6 +51,7 @@
     <ClInclude Include="..\protocol\particle.pb.h" />
     <ClInclude Include="..\proto_helpers.hpp" />
     <ClInclude Include="..\resource_manager.hpp" />
+    <ClInclude Include="..\scene.hpp" />
     <ClInclude Include="..\scene_test.hpp" />
     <ClInclude Include="..\string_utils.hpp" />
     <ClInclude Include="..\utils.hpp" />

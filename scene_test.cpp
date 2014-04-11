@@ -5,6 +5,7 @@
 #include "demo_engine.hpp"
 #include "proto_helpers.hpp"
 #include "resource_manager.hpp"
+#include "scene.hpp"
 
 #include "boba_io.hpp"
 
@@ -19,27 +20,6 @@ namespace
   };
 }
 
-struct Mesh
-{
-  enum VertexFlags
-  {
-    VF_POS    = 1 << 0,
-    VF_NORMAL = 1 << 1,
-    VF_UV     = 1 << 2,
-  };
-
-  string _name;
-  GraphicsObjectHandle _vb;
-  GraphicsObjectHandle _ib;
-  GraphicsObjectHandle _layout;
-  u32 _numVerts;
-  u32 _numIndices;
-};
-
-struct Scene
-{
-  vector<Mesh> _meshes;
-};
 
 Mesh mesh;
 
@@ -231,6 +211,9 @@ bool SceneTest::Init(const char* config)
     return false;
 
   if (!LoadShadersFromFile("shaders/simple_mesh", &_vs, &_ps, &mesh._layout, vertexFlags))
+    return false;
+
+  if (!GRAPHICS.LoadShadersFromFile("shaders/simple_mesh", &_vs, &_ps))
     return false;
 
   _configName = config;

@@ -6,7 +6,7 @@ namespace boba
 {
 #if WITH_UNPACKED_RESOUCES
 
-  typedef function<bool (const char *, void *)> cbFileChanged;
+  typedef function<bool (const string&, void *)> cbFileChanged;
 
   class ResourceManager
   {
@@ -43,6 +43,7 @@ namespace boba
         const cbFileChanged& cb,
         bool initial_callback,
         bool* initial_result);
+
     void RemoveFileWatch(const cbFileChanged &cb);
 
     void Tick();
@@ -50,10 +51,17 @@ namespace boba
   private:
     string ResolveFilename(const char *filename, bool fullPath);
 
+    struct WatchedFile
+    {
+      string filename;
+      time_t lastModification;
+      vector<pair<void*, cbFileChanged>> callbacks;
+    };
+
     ptime _lastTickTime;
     vector<string> _paths;
     unordered_map<string, string> _resolvedPaths;
-    unordered_map<string, vector<pair<cbFileChanged, void*>>> _watchedFiles;
+    unordered_map<string, WatchedFile> _watchedFiles;
 
     string _outputFilename;
 

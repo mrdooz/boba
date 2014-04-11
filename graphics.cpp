@@ -4,6 +4,7 @@
 #include "utils.hpp"
 #include "vertex_types.hpp"
 #include "deferred_context.hpp"
+#include "resource_manager.hpp"
 
 extern const char* g_AppWindowTitle;
 
@@ -1314,4 +1315,78 @@ void Graphics::ScreenSize(int* width, int* height)
 GraphicsObjectHandle Graphics::DefaultSwapChain()
 {
   return _swapChain;
+}
+
+//------------------------------------------------------------------------------
+bool Graphics::LoadShadersFromFile(
+    const string& filenameBase,
+    GraphicsObjectHandle* vs,
+    GraphicsObjectHandle* ps)
+{
+  vector<char> buf;
+  if (vs)
+  {
+    string vsName = filenameBase + ".vso";
+
+    // Load the shader normally
+    if (!RESOURCE_MANAGER.LoadFile(vsName.c_str(), &buf))
+      return false;
+
+    *vs = GRAPHICS.CreateVertexShader(buf, "VsMain");
+    if (!vs->IsValid())
+      return false;
+
+    // Add a filewatch on the file
+    RESOURCE_MANAGER.AddFileWatch(vsName, (void*)vs->_raw, [this](const string& filename, void* token)
+    {
+      GraphicsObjectHandle h = *(GraphicsObjectHandle*)&token;
+      vector<char> buf;
+      if (!RESOURCE_MANAGER.LoadFile(filename.c_str(), &buf))
+        return false;
+
+      ID3D11VertexShader *vs = nullptr;
+      if (SUCCEEDED(_device->CreateVertexShader(&buf[0], buf.size(), NULL, &vs)))
+      {
+        // shader successfuly recreated, so update the id
+        _vertexShaders.Update(h, vs);
+      }
+
+      return true;
+
+    }, false, 0);
+  }
+
+  if (ps)
+  {
+    string psName = filenameBase + ".pso";
+
+    if (!RESOURCE_MANAGER.LoadFile(psName.c_str(), &buf))
+      return false;
+
+    *ps = GRAPHICS.CreatePixelShader(buf, "PsMain");
+    if (!ps->IsValid())
+      return false;
+
+    // Add a filewatch on the file
+    RESOURCE_MANAGER.AddFileWatch(psName, (void*)ps->_raw, [this](const string& filename, void* token)
+    {
+      GraphicsObjectHandle h = *(GraphicsObjectHandle*)&token;
+      vector<char> buf;
+      if (!RESOURCE_MANAGER.LoadFile(filename.c_str(), &buf))
+        return false;
+
+      ID3D11PixelShader *ps = nullptr;
+      if (SUCCEEDED(_device->CreatePixelShader(&buf[0], buf.size(), NULL, &ps)))
+      {
+        // shader successfuly recreated, so update the id
+        _pixelShaders.Update(h, ps);
+      }
+
+      return true;
+
+    }, false, 0);
+
+  }
+
+  return true;
 }

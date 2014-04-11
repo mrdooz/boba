@@ -275,6 +275,11 @@ namespace boba
     void ScreenSize(int* width, int* height);
     GraphicsObjectHandle DefaultSwapChain();
 
+    bool LoadShadersFromFile(
+        const string& filenameBase,
+        GraphicsObjectHandle* vs,
+        GraphicsObjectHandle* ps);
+
   private:
 
     bool CreateDevice();
