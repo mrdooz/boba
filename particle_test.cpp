@@ -6,7 +6,10 @@
 #include "proto_helpers.hpp"
 #include "resource_manager.hpp"
 
+#if WITH_ANT_TWEAK_BAR
 #include "protocol/particle_bindings.cpp"
+#endif
+
 
 using namespace boba;
 
@@ -48,8 +51,10 @@ bool ParticleTest::Init(const char* config)
   if (!LoadProto(config, &_config))
     return false;
 
+#if WITH_ANT_TWEAK_BAR
   BindConfig(&_config);
   TwDefine("particle.Config visible=false");
+#endif
 
   _texture = RESOURCE_MANAGER.LoadTexture("gfx/Abstract_BG_Texture2.jpg");
   if (!_texture.IsValid())

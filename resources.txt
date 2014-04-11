@@ -3,3 +3,5 @@ config/particles1.pb	D:/projects/boba/config/particles1.pb
 gfx/Abstract_BG_Texture2.jpg	D:/projects/boba/gfx/Abstract_BG_Texture2.jpg
 shaders/fullscreen.pso	D:/projects/boba/shaders/fullscreen.pso
 shaders/fullscreen.vso	D:/projects/boba/shaders/fullscreen.vso
+shaders/simple_mesh.pso	D:/projects/boba/shaders/simple_mesh.pso
+shaders/simple_mesh.vso	D:/projects/boba/shaders/simple_mesh.vso

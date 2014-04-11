@@ -191,7 +191,9 @@ void App::Run()
 #if WITH_MUSIC
       _system->update();
 #endif
+#if WITH_ANT_TWEAK_BAR
       TwDraw();
+#endif
       GRAPHICS.Present();
     }
   }

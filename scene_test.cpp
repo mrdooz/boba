@@ -14,7 +14,8 @@ namespace
 {
   struct CBufferPerFrame
   {
-    Vector4 col;
+    Matrix world;
+    Matrix viewProj;
   };
 }
 
@@ -31,12 +32,16 @@ struct Mesh
   GraphicsObjectHandle _vb;
   GraphicsObjectHandle _ib;
   GraphicsObjectHandle _layout;
+  u32 _numVerts;
+  u32 _numIndices;
 };
 
 struct Scene
 {
   vector<Mesh> _meshes;
 };
+
+Mesh mesh;
 
 struct BobaLoader
 {
@@ -72,6 +77,8 @@ struct BobaLoader
       if (e->name == name)
       {
         mesh->_name = name;
+        mesh->_numVerts = e->numVerts;
+        mesh->_numIndices = e->numIndices;
 
         // create a combined buffer for the vertex data
         bool hasPos = flags & Mesh::VF_POS && e->verts;
@@ -109,10 +116,10 @@ struct BobaLoader
 
         mesh->_vb = GRAPHICS.CreateBuffer(
             D3D11_BIND_VERTEX_BUFFER,
-            e->numVerts * vertexSize,
+            e->numVerts * vertexSize * sizeof(float),
             false,
             buf.data(),
-            vertexSize);
+            vertexSize * sizeof(float));
 
         mesh->_ib = GRAPHICS.CreateBuffer(
             D3D11_BIND_INDEX_BUFFER,
@@ -149,6 +156,61 @@ struct BobaLoader
 };
 
 //------------------------------------------------------------------------------
+bool LoadShadersFromFile(
+    const string& filenameBase,
+    GraphicsObjectHandle* vs,
+    GraphicsObjectHandle* ps,
+    GraphicsObjectHandle* inputLayout,
+    u32 vertexFlags)
+{
+  vector<char> buf;
+  if (vs)
+  {
+    if (!RESOURCE_MANAGER.LoadFile((filenameBase + ".vso").c_str(), &buf))
+      return false;
+
+    *vs = GRAPHICS.CreateVertexShader(buf, "VsMain");
+    if (!vs->IsValid())
+      return false;
+
+    if (inputLayout)
+    {
+      vector<D3D11_INPUT_ELEMENT_DESC> desc;
+      if (vertexFlags & Mesh::VF_POS)
+      {
+        D3D11_INPUT_ELEMENT_DESC element =
+            {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
+        desc.push_back(element);
+      }
+
+      if (vertexFlags & Mesh::VF_NORMAL)
+      {
+        D3D11_INPUT_ELEMENT_DESC element =
+            { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+        desc.push_back(element);
+      }
+
+      *inputLayout  = GRAPHICS.CreateInputLayout(desc, buf);
+      if (!inputLayout->IsValid())
+        return false;
+    }
+  }
+
+  if (ps)
+  {
+    if (!RESOURCE_MANAGER.LoadFile((filenameBase + ".pso").c_str(), &buf))
+      return false;
+
+    *ps = GRAPHICS.CreatePixelShader(buf, "PsMain");
+    if (!ps->IsValid())
+      return false;
+  }
+
+  return true;
+}
+
+
+//------------------------------------------------------------------------------
 SceneTest::SceneTest(const string &name)
   : Effect(name)
 {
@@ -164,33 +226,19 @@ bool SceneTest::Init(const char* config)
 {
   BobaLoader loader;
   loader.Load("D:\\projects\\model\\thing1.lxo.boba");
-  Mesh mesh;
-  loader.LoadMesh("mesh1", Mesh::VF_POS | Mesh::VF_NORMAL, &mesh);
+  u32 vertexFlags = Mesh::VF_POS | Mesh::VF_NORMAL;
+  if (!loader.LoadMesh("mesh1", vertexFlags, &mesh))
+    return false;
+
+  if (!LoadShadersFromFile("shaders/simple_mesh", &_vs, &_ps, &mesh._layout, vertexFlags))
+    return false;
+
   _configName = config;
 
   if (!LoadProto(config, &_config))
     return false;
 
 //  BindConfig(&_config);
-
-  _texture = RESOURCE_MANAGER.LoadTexture("gfx/Abstract_BG_Texture2.jpg");
-  if (!_texture.IsValid())
-    return false;
-
-  vector<char> buf;
-  if (!RESOURCE_MANAGER.LoadFile("shaders/fullscreen.vso", &buf))
-    return false;
-
-  _vs = GRAPHICS.CreateVertexShader(buf, "VSQuad");
-  if (!_vs.IsValid())
-    return false;
-
-  if (!RESOURCE_MANAGER.LoadFile("shaders/fullscreen.pso", &buf))
-    return false;
-
-  _ps = GRAPHICS.CreatePixelShader(buf, "PSQuad");
-  if (!_ps.IsValid())
-    return false;
 
   CD3D11_SAMPLER_DESC sampler = CD3D11_SAMPLER_DESC(CD3D11_DEFAULT());
   _samplerState = GRAPHICS.CreateSamplerState(sampler);
@@ -217,15 +265,25 @@ bool SceneTest::Render()
   _ctx->BeginFrame();
 
   CBufferPerFrame cb;
-  FromProtocol(_config.bb_col4f(), &cb.col);
-  _ctx->SetCBuffer(_cbuffer, &cb, sizeof(cb), ShaderType::PixelShader);
+  Matrix view, proj;
+  proj = Matrix::CreatePerspectiveFieldOfView(45.0f/180*3.1415f, 16.0f/10, 1, 1000);
+  view = Matrix::CreateLookAt(
+    Vector3(0, 0, -50),
+    Vector3(0, 0, 0),
+    Vector3(0, 1, 0));
+
+  cb.world = Matrix::Identity();
+  cb.viewProj = view * proj;
+
+  _ctx->SetCBuffer(_cbuffer, &cb, sizeof(cb), ShaderType::VertexShader);
 
   _ctx->SetVS(_vs);
   _ctx->SetPS(_ps);
+  _ctx->SetLayout(mesh._layout);
+  _ctx->SetVB(mesh._vb);
+  _ctx->SetIB(mesh._ib);
   _ctx->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-  _ctx->SetShaderResource(_texture, ShaderType::PixelShader);
-  _ctx->SetSamplerState(_samplerState, ShaderType::PixelShader);
-  _ctx->Draw(3,0);
+  _ctx->DrawIndexed(mesh._numIndices, 0, 0);
 
   _ctx->EndFrame();
 
