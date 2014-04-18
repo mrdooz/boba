@@ -24,6 +24,12 @@ namespace boba
     static Effect* Create(const char* name);
 
   private:
+
+    float Raycast(const Vector3& o, const Vector3& d);
+    Vector3 ScreenToViewSpace(u32 x, u32 y);
+
+    virtual void WndProc(UINT message, WPARAM wParam, LPARAM lParam);
+
     string _configName;
     particle::Config _config;
     GraphicsObjectHandle _texture;
@@ -31,6 +37,13 @@ namespace boba
     GraphicsObjectHandle _ps;
     GraphicsObjectHandle _samplerState;
     GraphicsObjectHandle _cbuffer;
+
+    Matrix _view;
+    Matrix _proj;
+
+    bool _rotatingObject;
+    Vector3 _v0;
+    Matrix _oldWorldMatrix;
   };
 
 }

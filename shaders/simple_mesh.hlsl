@@ -1,7 +1,7 @@
 cbuffer PerFrame : register(b0)
 {
-  float4x4 world;
-  float4x4 viewProj;
+  matrix world;
+  matrix viewProj;
 };
 
 struct VsIn
@@ -19,7 +19,7 @@ struct VsOut
 VsOut VsMain(VsIn v)
 {
   VsOut res;
-  float4x4 worldViewProj = world * viewProj;
+  matrix worldViewProj = mul(world, viewProj);
   res.pos = mul(float4(v.pos, 1), worldViewProj);
   res.normal = mul(v.normal, (float3x3)worldViewProj);
   return res;
@@ -27,5 +27,7 @@ VsOut VsMain(VsIn v)
 
 float4 PsMain(VsOut p) : SV_Target
 {
+  float t = 0.1 + saturate(dot(normalize(p.normal), float3(0,1,0)));
+  return t;
   return float4(1,0,1,1);
 }

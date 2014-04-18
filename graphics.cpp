@@ -1326,7 +1326,11 @@ bool Graphics::LoadShadersFromFile(
   vector<char> buf;
   if (vs)
   {
+#if _DEBUG
+    string vsName = filenameBase + "D.vso";
+#else
     string vsName = filenameBase + ".vso";
+#endif
 
     // Load the shader normally
     if (!RESOURCE_MANAGER.LoadFile(vsName.c_str(), &buf))
@@ -1358,7 +1362,11 @@ bool Graphics::LoadShadersFromFile(
 
   if (ps)
   {
+#if _DEBUG
+    string psName = filenameBase + "D.pso";
+#else
     string psName = filenameBase + ".pso";
+#endif
 
     if (!RESOURCE_MANAGER.LoadFile(psName.c_str(), &buf))
       return false;

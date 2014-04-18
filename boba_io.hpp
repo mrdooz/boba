@@ -28,6 +28,8 @@ namespace boba
     float* normals;
     float* uv;
     u32* indices;
+    // bounding sphere
+    float bx, by, bz, br;
   };
 
   struct BobaScene

@@ -69,6 +69,7 @@ namespace boba
   using std::map;
   using std::unordered_map;
   using std::deque;
+  using std::swap;
 
   using std::pair;
   using std::make_pair;
@@ -77,6 +78,9 @@ namespace boba
 
   using std::unique_ptr;
 
+  using DirectX::XMFLOAT3;
+
+  using DirectX::BoundingSphere;
   using DirectX::SimpleMath::Vector2;
   using DirectX::SimpleMath::Vector3;
   using DirectX::SimpleMath::Vector4;

@@ -5,3 +5,5 @@ shaders/fullscreen.pso	D:/projects/boba/shaders/fullscreen.pso
 shaders/fullscreen.vso	D:/projects/boba/shaders/fullscreen.vso
 shaders/simple_mesh.pso	D:/projects/boba/shaders/simple_mesh.pso
 shaders/simple_mesh.vso	D:/projects/boba/shaders/simple_mesh.vso
+shaders/simple_meshD.pso	D:/projects/boba/shaders/simple_meshD.pso
+shaders/simple_meshD.vso	D:/projects/boba/shaders/simple_meshD.vso

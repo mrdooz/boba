@@ -59,6 +59,7 @@ struct BobaLoader
         mesh->_name = name;
         mesh->_numVerts = e->numVerts;
         mesh->_numIndices = e->numIndices;
+        mesh->_boundingSphere = BoundingSphere(XMFLOAT3(e->bx, e->by, e->bz), e->br);
 
         // create a combined buffer for the vertex data
         bool hasPos = flags & Mesh::VF_POS && e->verts;
@@ -192,7 +193,9 @@ bool LoadShadersFromFile(
 
 //------------------------------------------------------------------------------
 SceneTest::SceneTest(const string &name)
-  : Effect(name)
+    : Effect(name)
+    , _rotatingObject(false)
+    , _oldWorldMatrix(Matrix::Identity())
 {
 }
 
@@ -248,15 +251,14 @@ bool SceneTest::Render()
   _ctx->BeginFrame();
 
   CBufferPerFrame cb;
-  Matrix view, proj;
-  proj = Matrix::CreatePerspectiveFieldOfView(45.0f/180*3.1415f, 16.0f/10, 1, 1000);
-  view = Matrix::CreateLookAt(
+  _proj = Matrix::CreatePerspectiveFieldOfView(45.0f/180*3.1415f, 16.0f/10, 1, 1000);
+  _view = Matrix::CreateLookAt(
     Vector3(0, 0, -50),
     Vector3(0, 0, 0),
     Vector3(0, 1, 0));
 
-  cb.world = Matrix::Identity();
-  cb.viewProj = view * proj;
+  cb.world = mesh._world;
+  cb.viewProj = (_view * _proj).Transpose();
 
   _ctx->SetCBuffer(_cbuffer, &cb, sizeof(cb), ShaderType::VertexShader);
 
@@ -300,4 +302,111 @@ Effect* SceneTest::Create(const char* name)
 const char* SceneTest::Name()
 {
   return "scene_test";
+}
+
+template <typename T>
+float Dot(const T& a, const T& b)
+{
+  return a.Dot(b);
+}
+
+//------------------------------------------------------------------------------
+float SceneTest::Raycast(const Vector3& o, const Vector3& d)
+{
+  // ray is in view space
+  XMFLOAT3 xx = mesh._boundingSphere.Center;
+  Vector3 ro(xx.x, xx.y, xx.z);
+  float r = mesh._boundingSphere.Radius;
+
+  // ray -> sphere intersection
+  //Compute A, B and C coefficients
+  float a = Dot(d, d);
+  float b = 2 * Dot(d, o - ro);
+  float c = Dot(o - ro, o - ro) - (r * r);
+
+  //Find discriminant
+  float disc = b * b - 4 * a * c;
+
+  // if discriminant is negative there are no real roots, so return 
+  // false as ray misses sphere
+  if (disc < 0)
+    return -1;
+
+  float t0 = (-b - sqrt(disc)) / (2 * a);
+  float t1 = (-b + sqrt(disc)) / (2 * a);
+
+  // return smallest non-negative 
+  float ta = min(t0, t1);
+  float tb = max(t0, t1);
+  return ta < 0 ? tb : ta;
+
+}
+
+//------------------------------------------------------------------------------
+Vector3 SceneTest::ScreenToViewSpace(u32 x, u32 y)
+{
+  int w, h;
+  GRAPHICS.ScreenSize(&w, &h);
+  float xv = (2.0f * x / w - 1) / _proj(0, 0);
+  float yv = (-2.0f * y / h + 1) / _proj(1, 1);
+
+  return Vector3(xv, yv, 1);
+}
+
+//------------------------------------------------------------------------------
+void SceneTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
+{
+  switch (message)
+  {
+    case WM_LBUTTONDOWN:
+    {
+      // start of rotation
+      u32 xs = LOWORD(lParam);
+      u32 ys = HIWORD(lParam);
+
+      Vector3 oView(0,0,0);
+      Vector3 dView = ScreenToViewSpace(xs, ys);
+
+      Matrix viewToWorld = _view.Invert();
+      Vector3 o = Vector4::Transform(Vector4(oView.x, oView.y, oView.z, 1), viewToWorld);
+      Vector3 d = Vector4::Transform(Vector4(dView.x, dView.y, dView.z, 0), viewToWorld);
+      d.Normalize();
+
+      float t = Raycast(o, d);
+      _rotatingObject = t > 0;
+      if (_rotatingObject)
+        _v0 = d;
+      break;
+    }
+
+    case WM_LBUTTONUP:
+      _oldWorldMatrix = mesh._world;
+      _rotatingObject = false;
+      break;
+
+    case WM_MOUSEMOVE:
+    {
+      if (_rotatingObject)
+      {
+        u32 xs = LOWORD(lParam);
+        u32 ys = HIWORD(lParam);
+
+        Matrix viewToWorld = _view.Invert();
+
+        // Find the click point in world space
+        Vector3 pos = ScreenToViewSpace(xs, ys);
+
+        // Vector from eye pos (0,0,0) to click point in world space
+        Vector3 v1 = Vector4::Transform(Vector4(pos.x, pos.y, pos.z, 0), viewToWorld);
+        v1.Normalize();
+
+        // angle between the two vectors
+        float angle = 2 * acos(_v0.Dot(v1));
+        Vector3 axis = _v0.Cross(v1);
+        if (axis.Length() > 0)
+          mesh._world = _oldWorldMatrix * Matrix::CreateFromAxisAngle(axis, angle);
+      }
+      break;
+    }
+  }
 }
