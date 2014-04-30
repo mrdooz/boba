@@ -7,7 +7,7 @@
 #include "resource_manager.hpp"
 
 #if WITH_ANT_TWEAK_BAR
-#include "protocol/particle_bindings.cpp"
+#include "protocol/particle_bindings.hpp"
 #endif
 
 
@@ -52,7 +52,7 @@ bool ParticleTest::Init(const char* config)
     return false;
 
 #if WITH_ANT_TWEAK_BAR
-  BindConfig(&_config);
+  BindConfig(&_config, nullptr);
   TwDefine("particle.Config visible=false");
 #endif
 

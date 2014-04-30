@@ -18,7 +18,9 @@
     <ClCompile Include="..\effect.cpp" />
     <ClCompile Include="..\error.cpp" />
     <ClCompile Include="..\file_utils.cpp" />
+    <ClCompile Include="..\generator_test.cpp" />
     <ClCompile Include="..\graphics.cpp" />
+    <ClCompile Include="..\graphics_utils.cpp" />
     <ClCompile Include="..\particle_test.cpp" />
     <ClCompile Include="..\precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -26,7 +28,10 @@
     </ClCompile>
     <ClCompile Include="..\protocol\anttweak.pb.cc" />
     <ClCompile Include="..\protocol\demo.pb.cc" />
+    <ClCompile Include="..\protocol\generator.pb.cc" />
+    <ClCompile Include="..\protocol\generator_bindings.cpp" />
     <ClCompile Include="..\protocol\particle.pb.cc" />
+    <ClCompile Include="..\protocol\particle_bindings.cpp" />
     <ClCompile Include="..\proto_helpers.cpp" />
     <ClCompile Include="..\resource_manager.cpp" />
     <ClCompile Include="..\scene.cpp" />
@@ -41,14 +46,19 @@
     <ClInclude Include="..\effect.hpp" />
     <ClInclude Include="..\error.hpp" />
     <ClInclude Include="..\file_utils.hpp" />
+    <ClInclude Include="..\generator_test.hpp" />
     <ClInclude Include="..\graphics.hpp" />
     <ClInclude Include="..\graphics_object_handle.hpp" />
+    <ClInclude Include="..\graphics_utils.hpp" />
     <ClInclude Include="..\id_buffer.hpp" />
     <ClInclude Include="..\particle_test.hpp" />
     <ClInclude Include="..\precompiled.hpp" />
     <ClInclude Include="..\protocol\anttweak.pb.h" />
     <ClInclude Include="..\protocol\demo.pb.h" />
+    <ClInclude Include="..\protocol\generator.pb.h" />
+    <ClInclude Include="..\protocol\generator_bindings.hpp" />
     <ClInclude Include="..\protocol\particle.pb.h" />
+    <ClInclude Include="..\protocol\particle_bindings.hpp" />
     <ClInclude Include="..\proto_helpers.hpp" />
     <ClInclude Include="..\resource_manager.hpp" />
     <ClInclude Include="..\scene.hpp" />
@@ -64,6 +74,7 @@
   <ItemGroup>
     <None Include="..\protocol\anttweak.proto" />
     <None Include="..\protocol\demo.proto" />
+    <None Include="..\protocol\generator.proto" />
     <None Include="..\protocol\particle.proto" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

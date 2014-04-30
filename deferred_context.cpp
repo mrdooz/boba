@@ -34,6 +34,8 @@ void DeferredContext::SetRenderTargets(
     bool *clear_targets,
     int num_render_targets)
 {
+  if (!num_render_targets)
+    return;
 
   ID3D11RenderTargetView *rts[8] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
   ID3D11DepthStencilView *dsv = nullptr;
@@ -267,8 +269,8 @@ void DeferredContext::EndFrame()
   if (!_is_immediate_context)
   {
     ID3D11CommandList *cmd_list;
-    _ctx->FinishCommandList(FALSE, &cmd_list);
-    GRAPHICS.AddCommandList(cmd_list);
+    if (SUCCEEDED(_ctx->FinishCommandList(FALSE, &cmd_list)))
+      GRAPHICS.AddCommandList(cmd_list);
   }
 }
 
@@ -342,9 +344,11 @@ void DeferredContext::SetCBuffer(
 {
   ID3D11Buffer *buffer = GRAPHICS._constantBuffers.Get(h);
   D3D11_MAPPED_SUBRESOURCE sub;
-  _ctx->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub);
-  memcpy(sub.pData, buf, len);
-  _ctx->Unmap(buffer, 0);
+  if (SUCCEEDED(_ctx->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub)))
+  {
+    memcpy(sub.pData, buf, len);
+    _ctx->Unmap(buffer, 0);
+  }
 
   if (shaderType == ShaderType::VertexShader)
     _ctx->VSSetConstantBuffers(0, 1, &buffer);

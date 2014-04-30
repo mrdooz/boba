@@ -1,21 +1,42 @@
-#include "demo.pb.h"
-namespace demo {
-void BindPart(demo::Part* data)
+#include "demo_bindings.hpp"
+namespace demo
 {
-	TwBar* bar = TwNewBar("demo.Part");
-	// Add start
-	TwAddVarCB(bar, "start", TW_TYPE_UINT32,
-		[](const void* value, void* data) { ((demo::Part*)(data))->set_start(*(uint32_t*)value); },
-		[](void* value, void* data) { *(uint32_t*)value = ((demo::Part*)(data))->start(); }, data, nullptr);
+void BindPart(demo::Part* data, bool *dirty)
+{
+  struct Cfg
+  {
+    Part* data;
+      bool *dirty;
+  };
 
-	// Add end
-	TwAddVarCB(bar, "end", TW_TYPE_UINT32,
-		[](const void* value, void* data) { ((demo::Part*)(data))->set_end(*(uint32_t*)value); },
-		[](void* value, void* data) { *(uint32_t*)value = ((demo::Part*)(data))->end(); }, data, nullptr);
+  static Cfg cfg;
+  cfg.data = data;
+  cfg.dirty = dirty;
+
+  TwBar* bar = TwNewBar("demo.Part");
+  // Add start
+  TwAddVarCB(bar, "start", TW_TYPE_UINT32,
+    [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_start(*(uint32_t*)value); if (cfg->dirty) *cfg->dirty = true; },
+    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(uint32_t*)value = cfg->data->start(); }, (void*)&cfg, nullptr);
+
+  // Add end
+  TwAddVarCB(bar, "end", TW_TYPE_UINT32,
+    [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_end(*(uint32_t*)value); if (cfg->dirty) *cfg->dirty = true; },
+    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(uint32_t*)value = cfg->data->end(); }, (void*)&cfg, nullptr);
 
 }
-void BindConfig(demo::Config* data)
+void BindConfig(demo::Config* data, bool *dirty)
 {
-	TwBar* bar = TwNewBar("demo.Config");
+  struct Cfg
+  {
+    Config* data;
+      bool *dirty;
+  };
+
+  static Cfg cfg;
+  cfg.data = data;
+  cfg.dirty = dirty;
+
+  TwBar* bar = TwNewBar("demo.Config");
 }
 }

@@ -2,7 +2,7 @@
 
 #ifdef _DEBUG
 #define WITH_UNPACKED_RESOUCES 1
-#define WITH_ANT_TWEAK_BAR 0
+#define WITH_ANT_TWEAK_BAR 1
 #define WITH_PROTOBUF_TEXTFORMAT 1
 #else
 #define WITH_UNPACKED_RESOUCES 0
@@ -17,14 +17,14 @@
 #include <sys/stat.h>
 #include <io.h>
 
-#include <atlbase.h>
-#include <windows.h>
-#include <windowsx.h>
-
 #include <dxgi.h>
 #include <dxgidebug.h>
 #include <d3d11.h>
 #include <D3DX11tex.h>
+
+#include <atlbase.h>
+#include <windows.h>
+#include <windowsx.h>
 
 #include <vector>
 #include <set>

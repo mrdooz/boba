@@ -12,14 +12,18 @@ shaders = {
 while True:
     for g in glob.glob('*.hlsl'):
         (p, e) = os.path.splitext(g)
-        # if the hlsl file is newer than the .vso/.pso file, compile them
-        hlsl_time = os.path.getmtime(g)
         vso = p + '.vso'
         pso = p + '.pso'
-        vso_time = os.path.getmtime(vso)
-        pso_time = os.path.getmtime(pso)
+
+        compile = True
+        if os.path.isfile(vso) and os.path.isfile(pso):
+            # if the hlsl file is newer than the .vso/.pso file, compile them
+            hlsl_time = os.path.getmtime(g)
+            vso_time = os.path.getmtime(vso)
+            pso_time = os.path.getmtime(pso)
+            compile = hlsl_time > vso_time or hlsl_time > pso_time
         
-        if hlsl_time > vso_time or hlsl_time > pso_time:
+        if compile:
             # check if the shader has a special entry point, otherwise use the defaults
             if p in shaders:
                 vs = shaders[p]['vs']

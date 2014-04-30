@@ -1,8 +1,8 @@
 part
 {
 	name : "scene1"
-	effect_class : "scene_test"
-	config : "config/particles1.pb"
+	effect_class : "generator_test"
+	config : "config/generator1.pb"
 	start : 0
 	end : 60000
 }

@@ -5,6 +5,7 @@
 #include "demo_engine.hpp"
 #include "particle_test.hpp"
 #include "scene_test.hpp"
+#include "generator_test.hpp"
 #include "resource_manager.hpp"
 
 static const int WM_LOG_NEW_MSG = WM_APP + 1;
@@ -130,6 +131,7 @@ bool App::Init(HINSTANCE hinstance)
 
   DEMO_ENGINE.RegisterFactory(ParticleTest::Name(), ParticleTest::Create);
   DEMO_ENGINE.RegisterFactory(SceneTest::Name(), SceneTest::Create);
+  DEMO_ENGINE.RegisterFactory(GeneratorTest::Name(), GeneratorTest::Create);
 
 #if WITH_ANT_TWEAK_BAR
   TwInit(TW_DIRECT3D11, GRAPHICS.Device());

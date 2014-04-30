@@ -516,12 +516,11 @@ bool Graphics::CreateBufferInner(
   ZeroMemory(&init_data, sizeof(init_data));
   init_data.pSysMem = data;
   HRESULT hr = _device->CreateBuffer(&desc, data ? &init_data : NULL, buffer);
-  if (hr == E_OUTOFMEMORY)
+  if (SUCCEEDED(hr))
   {
-    //LOG_ERROR_LN("Out of memory trying to allocate %d bytes for buffer [total allocated: %d bytes]", size, _totalBytesAllocated);
+    SetPrivateData(*buffer);
+    _totalBytesAllocated += size;
   }
-  SetPrivateData(*buffer);
-  _totalBytesAllocated += size;
   return SUCCEEDED(hr);
 }
 

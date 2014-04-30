@@ -6,6 +6,7 @@
 #include "proto_helpers.hpp"
 #include "resource_manager.hpp"
 #include "scene.hpp"
+#include "graphics_utils.hpp"
 
 #include "boba_io.hpp"
 
@@ -74,21 +75,21 @@ struct BobaLoader
         // interleave the vertex data..
         u32 numVerts = e->numVerts;
         u32 ofs = 0;
-        if (flags & Mesh::VF_POS)
+        if (hasPos)
         {
           for (u32 i = 0; i < numVerts; ++i)
             memcpy(&ptr[i*vertexSize], &e->verts[i*3], 3 * sizeof(float));
           ofs += 3;
         }
 
-        if (flags & Mesh::VF_NORMAL)
+        if (hasNormal)
         {
           for (u32 i = 0; i < numVerts; ++i)
             memcpy(&ptr[i*vertexSize + ofs], &e->normals[i*3], 3 * sizeof(float));
           ofs += 3;
         }
 
-        if (flags & Mesh::VF_UV)
+        if (hasUv)
         {
           for (u32 i = 0; i < numVerts; ++i)
             memcpy(&ptr[i*vertexSize + ofs], &e->uv[i*2], 2 * sizeof(float));
@@ -135,61 +136,6 @@ struct BobaLoader
   vector<MeshElement*> meshes;
   vector<char> buf;
 };
-
-//------------------------------------------------------------------------------
-bool LoadShadersFromFile(
-    const string& filenameBase,
-    GraphicsObjectHandle* vs,
-    GraphicsObjectHandle* ps,
-    GraphicsObjectHandle* inputLayout,
-    u32 vertexFlags)
-{
-  vector<char> buf;
-  if (vs)
-  {
-    if (!RESOURCE_MANAGER.LoadFile((filenameBase + ".vso").c_str(), &buf))
-      return false;
-
-    *vs = GRAPHICS.CreateVertexShader(buf, "VsMain");
-    if (!vs->IsValid())
-      return false;
-
-    if (inputLayout)
-    {
-      vector<D3D11_INPUT_ELEMENT_DESC> desc;
-      if (vertexFlags & Mesh::VF_POS)
-      {
-        D3D11_INPUT_ELEMENT_DESC element =
-            {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
-        desc.push_back(element);
-      }
-
-      if (vertexFlags & Mesh::VF_NORMAL)
-      {
-        D3D11_INPUT_ELEMENT_DESC element =
-            { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-        desc.push_back(element);
-      }
-
-      *inputLayout  = GRAPHICS.CreateInputLayout(desc, buf);
-      if (!inputLayout->IsValid())
-        return false;
-    }
-  }
-
-  if (ps)
-  {
-    if (!RESOURCE_MANAGER.LoadFile((filenameBase + ".pso").c_str(), &buf))
-      return false;
-
-    *ps = GRAPHICS.CreatePixelShader(buf, "PsMain");
-    if (!ps->IsValid())
-      return false;
-  }
-
-  return true;
-}
-
 
 //------------------------------------------------------------------------------
 SceneTest::SceneTest(const string &name)
@@ -319,16 +265,15 @@ float SceneTest::Raycast(const Vector3& o, const Vector3& d)
   float r = mesh._boundingSphere.Radius;
 
   // ray -> sphere intersection
-  //Compute A, B and C coefficients
+  // Compute A, B and C coefficients
   float a = Dot(d, d);
   float b = 2 * Dot(d, o - ro);
   float c = Dot(o - ro, o - ro) - (r * r);
 
-  //Find discriminant
+  // Find discriminant
   float disc = b * b - 4 * a * c;
 
-  // if discriminant is negative there are no real roots, so return 
-  // false as ray misses sphere
+  // if discriminant is negative there are no real roots, so ray misses sphere
   if (disc < 0)
     return -1;
 
@@ -339,7 +284,6 @@ float SceneTest::Raycast(const Vector3& o, const Vector3& d)
   float ta = min(t0, t1);
   float tb = max(t0, t1);
   return ta < 0 ? tb : ta;
-
 }
 
 //------------------------------------------------------------------------------
@@ -364,7 +308,7 @@ void SceneTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
       u32 xs = LOWORD(lParam);
       u32 ys = HIWORD(lParam);
 
-      Vector3 oView(0,0,0);
+      Vector3 oView = Vector3(0,0,0);
       Vector3 dView = ScreenToViewSpace(xs, ys);
 
       Matrix viewToWorld = _view.Invert();
@@ -401,10 +345,11 @@ void SceneTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
         v1.Normalize();
 
         // angle between the two vectors
-        float angle = 2 * acos(_v0.Dot(v1));
+        float speed = 2;
+        float angle = acos(_v0.Dot(v1));
         Vector3 axis = _v0.Cross(v1);
         if (axis.Length() > 0)
-          mesh._world = _oldWorldMatrix * Matrix::CreateFromAxisAngle(axis, angle);
+          mesh._world = Matrix::CreateFromAxisAngle(axis, speed * angle) * _oldWorldMatrix;
       }
       break;
     }
