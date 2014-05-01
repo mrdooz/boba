@@ -361,6 +361,17 @@ void DeferredContext::SetCBuffer(
 }
 
 //------------------------------------------------------------------------------
+void DeferredContext::SetRenderObjects(const RenderObjects& obj)
+{
+  SetVS(obj._vs);
+  SetPS(obj._ps);
+  SetLayout(obj._layout);
+  SetVB(obj._vb);
+  SetIB(obj._ib);
+  SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+//------------------------------------------------------------------------------
 /*
 void DeferredContext::set_samplers(const SamplerArray &samplers)
 {

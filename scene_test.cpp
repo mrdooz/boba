@@ -63,9 +63,9 @@ struct BobaLoader
         mesh->_boundingSphere = BoundingSphere(XMFLOAT3(e->bx, e->by, e->bz), e->br);
 
         // create a combined buffer for the vertex data
-        bool hasPos = flags & Mesh::VF_POS && e->verts;
-        bool hasNormal = flags & Mesh::VF_NORMAL && e->normals;
-        bool hasUv = flags & Mesh::VF_UV && e->uv;
+        bool hasPos = flags & VF_POS && e->verts;
+        bool hasNormal = flags & VF_NORMAL && e->normals;
+        bool hasUv = flags & VF_UV && e->uv;
 
         u32 vertexSize = (hasPos ? 3 : 0) + (hasNormal ? 3 : 0) + (hasUv ? 2 : 0);
 
@@ -155,7 +155,7 @@ bool SceneTest::Init(const char* config)
 {
   BobaLoader loader;
   loader.Load("D:\\projects\\model\\thing1.lxo.boba");
-  u32 vertexFlags = Mesh::VF_POS | Mesh::VF_NORMAL;
+  u32 vertexFlags = VF_POS | VF_NORMAL;
   if (!loader.LoadMesh("mesh1", vertexFlags, &mesh))
     return false;
 

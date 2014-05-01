@@ -3,9 +3,8 @@ import "anttweak.proto";
 
 message Config
 {
-  optional float length = 1;
-  optional float width = 2;
-  optional float height = 3;
+  optional float radius = 1;
+  optional float height = 2;
+  optional uint32 radial_segments = 3;
   optional uint32 height_segments = 4;
-  optional uint32 radial_segments = 5;
 }

@@ -1340,7 +1340,7 @@ bool Graphics::LoadShadersFromFile(
       return false;
 
     // Add a filewatch on the file
-    RESOURCE_MANAGER.AddFileWatch(vsName, (void*)vs->_raw, [this](const string& filename, void* token)
+    RESOURCE_MANAGER.AddFileWatch(vsName, (void*)vs->_raw, false, 0, [this](const string& filename, void* token)
     {
       GraphicsObjectHandle h = *(GraphicsObjectHandle*)&token;
       vector<char> buf;
@@ -1356,7 +1356,7 @@ bool Graphics::LoadShadersFromFile(
 
       return true;
 
-    }, false, 0);
+    });
   }
 
   if (ps)
@@ -1375,7 +1375,7 @@ bool Graphics::LoadShadersFromFile(
       return false;
 
     // Add a filewatch on the file
-    RESOURCE_MANAGER.AddFileWatch(psName, (void*)ps->_raw, [this](const string& filename, void* token)
+    RESOURCE_MANAGER.AddFileWatch(psName, (void*)ps->_raw, false, 0, [this](const string& filename, void* token)
     {
       GraphicsObjectHandle h = *(GraphicsObjectHandle*)&token;
       vector<char> buf;
@@ -1391,7 +1391,7 @@ bool Graphics::LoadShadersFromFile(
 
       return true;
 
-    }, false, 0);
+    });
 
   }
 

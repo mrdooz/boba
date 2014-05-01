@@ -1,8 +1,23 @@
 #pragma once
 #include "graphics_object_handle.hpp"
+#include "graphics.hpp"
 
 namespace boba
 {
+  struct RenderObjects
+  {
+    GraphicsObjectHandle _vs;
+    GraphicsObjectHandle _ps;
+    GraphicsObjectHandle _layout;
+
+    GraphicsObjectHandle _vb;
+    GraphicsObjectHandle _ib;
+    GraphicsObjectHandle _cbuffer;
+
+    u32 _vbSize;
+    u32 _ibSize;
+  };
+
   class DeferredContext
   {
     friend class Graphics;
@@ -32,6 +47,7 @@ namespace boba
     void SetShaderResource(GraphicsObjectHandle h, ShaderType shaderType);
     void SetSamplerState(GraphicsObjectHandle h, ShaderType shaderType);
     void SetCBuffer(GraphicsObjectHandle h, const void* buf, size_t len, ShaderType shaderType);
+    void SetRenderObjects(const RenderObjects& obj);
     void UnsetUavs(int first, int count);
     void UnsetRenderTargets(int first, int count);
     void DrawIndexed(int count, int start_index, int base_vertex);

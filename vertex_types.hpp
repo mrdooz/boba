@@ -19,6 +19,8 @@ namespace boba
     PosNormal() {}
     PosNormal(const Vector3& pos, const Vector3& normal) : pos(pos), normal(normal) {}
     PosNormal(float x, float y, float z, float nx, float ny, float nz) : pos(x, y, z), normal(nx, ny, nz) {}
+    float operator[](int idx) const { return ((float*)&pos.x)[idx]; }
+    float& operator[](int idx) { return ((float*)&pos.x)[idx]; }
     Vector3 pos;
     Vector3 normal;
   };

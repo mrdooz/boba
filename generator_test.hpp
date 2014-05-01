@@ -1,6 +1,7 @@
 #pragma once
 
 #include "effect.hpp"
+#include "deferred_context.hpp"
 #include "protocol/generator.pb.h"
 
 namespace boba
@@ -25,20 +26,10 @@ namespace boba
 
   private:
 
-    float Raycast(const Vector3& o, const Vector3& d);
-    Vector3 ScreenToViewSpace(u32 x, u32 y);
-
     virtual void WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 
     string _configName;
     generator::Config _config;
-    GraphicsObjectHandle _vs;
-    GraphicsObjectHandle _ps;
-    GraphicsObjectHandle _layout;
-    GraphicsObjectHandle _cbuffer;
-
-    GraphicsObjectHandle _vb;
-    GraphicsObjectHandle _ib;
 
     Matrix _oldWorldMatrix;
     Matrix _world;
@@ -47,9 +38,16 @@ namespace boba
 
     u32 _numIndices;
 
+    RenderObjects _meshObjects;
+
     bool _rotatingObject;
     Vector3 _v0;
     bool _dirtyFlag;
+
+    Vector3 _cameraPos;
+    Vector3 _cameraTarget;
+
+    lua_State* _lua;
   };
 
 }

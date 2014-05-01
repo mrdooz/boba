@@ -92,26 +92,26 @@ class Config : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional float length = 1;
-  inline bool has_length() const;
-  inline void clear_length();
-  static const int kLengthFieldNumber = 1;
-  inline float length() const;
-  inline void set_length(float value);
+  // optional float radius = 1;
+  inline bool has_radius() const;
+  inline void clear_radius();
+  static const int kRadiusFieldNumber = 1;
+  inline float radius() const;
+  inline void set_radius(float value);
 
-  // optional float width = 2;
-  inline bool has_width() const;
-  inline void clear_width();
-  static const int kWidthFieldNumber = 2;
-  inline float width() const;
-  inline void set_width(float value);
-
-  // optional float height = 3;
+  // optional float height = 2;
   inline bool has_height() const;
   inline void clear_height();
-  static const int kHeightFieldNumber = 3;
+  static const int kHeightFieldNumber = 2;
   inline float height() const;
   inline void set_height(float value);
+
+  // optional uint32 radial_segments = 3;
+  inline bool has_radial_segments() const;
+  inline void clear_radial_segments();
+  static const int kRadialSegmentsFieldNumber = 3;
+  inline ::google::protobuf::uint32 radial_segments() const;
+  inline void set_radial_segments(::google::protobuf::uint32 value);
 
   // optional uint32 height_segments = 4;
   inline bool has_height_segments() const;
@@ -120,36 +120,26 @@ class Config : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 height_segments() const;
   inline void set_height_segments(::google::protobuf::uint32 value);
 
-  // optional uint32 radial_segments = 5;
-  inline bool has_radial_segments() const;
-  inline void clear_radial_segments();
-  static const int kRadialSegmentsFieldNumber = 5;
-  inline ::google::protobuf::uint32 radial_segments() const;
-  inline void set_radial_segments(::google::protobuf::uint32 value);
-
   // @@protoc_insertion_point(class_scope:generator.Config)
  private:
-  inline void set_has_length();
-  inline void clear_has_length();
-  inline void set_has_width();
-  inline void clear_has_width();
+  inline void set_has_radius();
+  inline void clear_has_radius();
   inline void set_has_height();
   inline void clear_has_height();
-  inline void set_has_height_segments();
-  inline void clear_has_height_segments();
   inline void set_has_radial_segments();
   inline void clear_has_radial_segments();
+  inline void set_has_height_segments();
+  inline void clear_has_height_segments();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  float length_;
-  float width_;
+  float radius_;
   float height_;
-  ::google::protobuf::uint32 height_segments_;
   ::google::protobuf::uint32 radial_segments_;
+  ::google::protobuf::uint32 height_segments_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_generator_2eproto();
   friend void protobuf_AssignDesc_generator_2eproto();
@@ -165,59 +155,37 @@ class Config : public ::google::protobuf::Message {
 
 // Config
 
-// optional float length = 1;
-inline bool Config::has_length() const {
+// optional float radius = 1;
+inline bool Config::has_radius() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Config::set_has_length() {
+inline void Config::set_has_radius() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Config::clear_has_length() {
+inline void Config::clear_has_radius() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Config::clear_length() {
-  length_ = 0;
-  clear_has_length();
+inline void Config::clear_radius() {
+  radius_ = 0;
+  clear_has_radius();
 }
-inline float Config::length() const {
-  return length_;
+inline float Config::radius() const {
+  return radius_;
 }
-inline void Config::set_length(float value) {
-  set_has_length();
-  length_ = value;
+inline void Config::set_radius(float value) {
+  set_has_radius();
+  radius_ = value;
 }
 
-// optional float width = 2;
-inline bool Config::has_width() const {
+// optional float height = 2;
+inline bool Config::has_height() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Config::set_has_width() {
+inline void Config::set_has_height() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Config::clear_has_width() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void Config::clear_width() {
-  width_ = 0;
-  clear_has_width();
-}
-inline float Config::width() const {
-  return width_;
-}
-inline void Config::set_width(float value) {
-  set_has_width();
-  width_ = value;
-}
-
-// optional float height = 3;
-inline bool Config::has_height() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void Config::set_has_height() {
-  _has_bits_[0] |= 0x00000004u;
-}
 inline void Config::clear_has_height() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void Config::clear_height() {
   height_ = 0;
@@ -229,6 +197,28 @@ inline float Config::height() const {
 inline void Config::set_height(float value) {
   set_has_height();
   height_ = value;
+}
+
+// optional uint32 radial_segments = 3;
+inline bool Config::has_radial_segments() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Config::set_has_radial_segments() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Config::clear_has_radial_segments() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Config::clear_radial_segments() {
+  radial_segments_ = 0u;
+  clear_has_radial_segments();
+}
+inline ::google::protobuf::uint32 Config::radial_segments() const {
+  return radial_segments_;
+}
+inline void Config::set_radial_segments(::google::protobuf::uint32 value) {
+  set_has_radial_segments();
+  radial_segments_ = value;
 }
 
 // optional uint32 height_segments = 4;
@@ -251,28 +241,6 @@ inline ::google::protobuf::uint32 Config::height_segments() const {
 inline void Config::set_height_segments(::google::protobuf::uint32 value) {
   set_has_height_segments();
   height_segments_ = value;
-}
-
-// optional uint32 radial_segments = 5;
-inline bool Config::has_radial_segments() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void Config::set_has_radial_segments() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void Config::clear_has_radial_segments() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void Config::clear_radial_segments() {
-  radial_segments_ = 0u;
-  clear_has_radial_segments();
-}
-inline ::google::protobuf::uint32 Config::radial_segments() const {
-  return radial_segments_;
-}
-inline void Config::set_radial_segments(::google::protobuf::uint32 value) {
-  set_has_radial_segments();
-  radial_segments_ = value;
 }
 
 

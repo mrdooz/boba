@@ -211,9 +211,9 @@ string ResourceManager::ResolveFilename(const char* filename, bool fullPath)
 void ResourceManager::AddFileWatch(
     const string& filename,
     void* token,
-    const cbFileChanged &cb,
     bool initialCallback,
-    bool* initialResult)
+    bool* initialResult,
+    const cbFileChanged &cb)
 {
   auto it = _watchedFiles.find(filename);
   if (it == _watchedFiles.end())

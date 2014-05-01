@@ -8,13 +8,6 @@ namespace boba
   {
     Mesh();
 
-    enum VertexFlags
-    {
-      VF_POS = 1 << 0,
-      VF_NORMAL = 1 << 1,
-      VF_UV = 1 << 2,
-    };
-
     string _name;
     GraphicsObjectHandle _vb;
     GraphicsObjectHandle _ib;

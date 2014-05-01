@@ -40,9 +40,9 @@ namespace boba
     void AddFileWatch(
         const string& filename, 
         void* token,
-        const cbFileChanged& cb,
         bool initial_callback,
-        bool* initial_result);
+        bool* initial_result,
+        const cbFileChanged& cb);
 
     void RemoveFileWatch(const cbFileChanged &cb);
 

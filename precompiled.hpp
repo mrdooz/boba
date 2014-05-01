@@ -36,6 +36,8 @@
 #include <functional>
 #include <memory>
 
+#include "lua/lua.hpp"
+
 #include <google/protobuf/text_format.h>
 #include <google/protobuf/repeated_field.h>
 

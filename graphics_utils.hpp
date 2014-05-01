@@ -2,8 +2,14 @@
 
 namespace boba
 {
-  struct Mesh;
-  float Raycast(const Mesh& mesh, const Vector3& o, const Vector3& d);
+  enum VertexFlags
+  {
+    VF_POS    = 1 << 0,
+    VF_NORMAL = 1 << 1,
+    VF_UV     = 1 << 2,
+  };
+
+  float Raycast(const Vector3& center, float radius, const Vector3& o, const Vector3& d);
 
   Vector3 ScreenToViewSpace(const Matrix& proj, u32 x, u32 y);
 

@@ -34,12 +34,11 @@ void protobuf_AssignDesc_generator_2eproto() {
       "generator.proto");
   GOOGLE_CHECK(file != NULL);
   Config_descriptor_ = file->message_type(0);
-  static const int Config_offsets_[5] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, length_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, width_),
+  static const int Config_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, radius_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, height_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, height_segments_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, radial_segments_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, height_segments_),
   };
   Config_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -84,9 +83,9 @@ void protobuf_AddDesc_generator_2eproto() {
   ::anttweak::protobuf_AddDesc_anttweak_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\017generator.proto\022\tgenerator\032\016anttweak.p"
-    "roto\"i\n\006Config\022\016\n\006length\030\001 \001(\002\022\r\n\005width\030"
-    "\002 \001(\002\022\016\n\006height\030\003 \001(\002\022\027\n\017height_segments"
-    "\030\004 \001(\r\022\027\n\017radial_segments\030\005 \001(\r", 151);
+    "roto\"Z\n\006Config\022\016\n\006radius\030\001 \001(\002\022\016\n\006height"
+    "\030\002 \001(\002\022\027\n\017radial_segments\030\003 \001(\r\022\027\n\017heigh"
+    "t_segments\030\004 \001(\r", 136);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "generator.proto", &protobuf_RegisterTypes);
   Config::default_instance_ = new Config();
@@ -104,11 +103,10 @@ struct StaticDescriptorInitializer_generator_2eproto {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Config::kLengthFieldNumber;
-const int Config::kWidthFieldNumber;
+const int Config::kRadiusFieldNumber;
 const int Config::kHeightFieldNumber;
-const int Config::kHeightSegmentsFieldNumber;
 const int Config::kRadialSegmentsFieldNumber;
+const int Config::kHeightSegmentsFieldNumber;
 #endif  // !_MSC_VER
 
 Config::Config()
@@ -127,11 +125,10 @@ Config::Config(const Config& from)
 
 void Config::SharedCtor() {
   _cached_size_ = 0;
-  length_ = 0;
-  width_ = 0;
+  radius_ = 0;
   height_ = 0;
-  height_segments_ = 0u;
   radial_segments_ = 0u;
+  height_segments_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -167,11 +164,10 @@ Config* Config::New() const {
 
 void Config::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    length_ = 0;
-    width_ = 0;
+    radius_ = 0;
     height_ = 0;
-    height_segments_ = 0u;
     radial_segments_ = 0u;
+    height_segments_ = 0u;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -183,39 +179,23 @@ bool Config::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional float length = 1;
+      // optional float radius = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &length_)));
-          set_has_length();
+                 input, &radius_)));
+          set_has_radius();
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(21)) goto parse_width;
+        if (input->ExpectTag(21)) goto parse_height;
         break;
       }
 
-      // optional float width = 2;
+      // optional float height = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
-         parse_width:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &width_)));
-          set_has_width();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(29)) goto parse_height;
-        break;
-      }
-
-      // optional float height = 3;
-      case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_height:
@@ -223,6 +203,22 @@ bool Config::MergePartialFromCodedStream(
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &height_)));
           set_has_height();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_radial_segments;
+        break;
+      }
+
+      // optional uint32 radial_segments = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_radial_segments:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &radial_segments_)));
+          set_has_radial_segments();
         } else {
           goto handle_uninterpreted;
         }
@@ -239,22 +235,6 @@ bool Config::MergePartialFromCodedStream(
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &height_segments_)));
           set_has_height_segments();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(40)) goto parse_radial_segments;
-        break;
-      }
-
-      // optional uint32 radial_segments = 5;
-      case 5: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_radial_segments:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &radial_segments_)));
-          set_has_radial_segments();
         } else {
           goto handle_uninterpreted;
         }
@@ -280,29 +260,24 @@ bool Config::MergePartialFromCodedStream(
 
 void Config::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional float length = 1;
-  if (has_length()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->length(), output);
+  // optional float radius = 1;
+  if (has_radius()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->radius(), output);
   }
 
-  // optional float width = 2;
-  if (has_width()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->width(), output);
-  }
-
-  // optional float height = 3;
+  // optional float height = 2;
   if (has_height()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->height(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->height(), output);
+  }
+
+  // optional uint32 radial_segments = 3;
+  if (has_radial_segments()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->radial_segments(), output);
   }
 
   // optional uint32 height_segments = 4;
   if (has_height_segments()) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->height_segments(), output);
-  }
-
-  // optional uint32 radial_segments = 5;
-  if (has_radial_segments()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->radial_segments(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -313,29 +288,24 @@ void Config::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Config::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional float length = 1;
-  if (has_length()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->length(), target);
+  // optional float radius = 1;
+  if (has_radius()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->radius(), target);
   }
 
-  // optional float width = 2;
-  if (has_width()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->width(), target);
-  }
-
-  // optional float height = 3;
+  // optional float height = 2;
   if (has_height()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->height(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->height(), target);
+  }
+
+  // optional uint32 radial_segments = 3;
+  if (has_radial_segments()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->radial_segments(), target);
   }
 
   // optional uint32 height_segments = 4;
   if (has_height_segments()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->height_segments(), target);
-  }
-
-  // optional uint32 radial_segments = 5;
-  if (has_radial_segments()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->radial_segments(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -349,19 +319,21 @@ int Config::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional float length = 1;
-    if (has_length()) {
+    // optional float radius = 1;
+    if (has_radius()) {
       total_size += 1 + 4;
     }
 
-    // optional float width = 2;
-    if (has_width()) {
-      total_size += 1 + 4;
-    }
-
-    // optional float height = 3;
+    // optional float height = 2;
     if (has_height()) {
       total_size += 1 + 4;
+    }
+
+    // optional uint32 radial_segments = 3;
+    if (has_radial_segments()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->radial_segments());
     }
 
     // optional uint32 height_segments = 4;
@@ -369,13 +341,6 @@ int Config::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->height_segments());
-    }
-
-    // optional uint32 radial_segments = 5;
-    if (has_radial_segments()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->radial_segments());
     }
 
   }
@@ -405,20 +370,17 @@ void Config::MergeFrom(const ::google::protobuf::Message& from) {
 void Config::MergeFrom(const Config& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_length()) {
-      set_length(from.length());
-    }
-    if (from.has_width()) {
-      set_width(from.width());
+    if (from.has_radius()) {
+      set_radius(from.radius());
     }
     if (from.has_height()) {
       set_height(from.height());
     }
-    if (from.has_height_segments()) {
-      set_height_segments(from.height_segments());
-    }
     if (from.has_radial_segments()) {
       set_radial_segments(from.radial_segments());
+    }
+    if (from.has_height_segments()) {
+      set_height_segments(from.height_segments());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -443,11 +405,10 @@ bool Config::IsInitialized() const {
 
 void Config::Swap(Config* other) {
   if (other != this) {
-    std::swap(length_, other->length_);
-    std::swap(width_, other->width_);
+    std::swap(radius_, other->radius_);
     std::swap(height_, other->height_);
-    std::swap(height_segments_, other->height_segments_);
     std::swap(radial_segments_, other->radial_segments_);
+    std::swap(height_segments_, other->height_segments_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
