@@ -84,5 +84,20 @@ namespace boba
     return true;
   }
 
+  wstring utf8_to_wide(const char *str)
+  {
+    const int len = strlen(str);
+    WCHAR *buf = (WCHAR *)_alloca((len + 1) * 2);
+
+    wstring res;
+    if (MultiByteToWideChar(CP_UTF8, 0, str, -1, buf, (len + 1) * 2)) {
+      res = wstring(buf);
+    }
+    else {
+      int err = GetLastError();
+    }
+    return res;
+  }
+
 }
 

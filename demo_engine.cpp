@@ -47,7 +47,7 @@ void Timer::Stop()
 void Timer::SetElapsed(time_duration us)
 {
   s64 ticks = us.total_microseconds() * _frequency / 1000000;
-  _startTime = max(0, _curTime - ticks);
+  _startTime = max((s64)0, _curTime - ticks);
 }
 
 //------------------------------------------------------------------------------

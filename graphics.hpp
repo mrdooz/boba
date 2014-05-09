@@ -1,6 +1,7 @@
 #pragma once
 #include "graphics_object_handle.hpp"
 #include "id_buffer.hpp"
+#include "string_utils.hpp"
 
 namespace boba
 {
@@ -194,7 +195,7 @@ namespace boba
     GraphicsObjectHandle CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC &desc, const char *name = nullptr);
     GraphicsObjectHandle CreateSamplerState(const D3D11_SAMPLER_DESC &desc, const char *name = nullptr);
     GraphicsObjectHandle CreateSwapChain(
-        const char* name,
+        const TCHAR* name,
         size_t width,
         size_t height,
         DXGI_FORMAT format,
@@ -280,6 +281,8 @@ namespace boba
         GraphicsObjectHandle* vs,
         GraphicsObjectHandle* ps);
 
+    void AddText(const char* text, const char* font, float size, float x, float y, u32 color);
+
   private:
 
     bool CreateDevice();
@@ -304,6 +307,24 @@ namespace boba
 
     static INT_PTR CALLBACK dialogWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     static bool EnumerateDisplayModes(HWND hWnd);
+
+    struct TextElement
+    {
+      TextElement(const char* text, IFW1FontWrapper* font, float size, float x, float y, u32 color)
+          : font(font)
+          , size(size)
+          , x(x)
+          , y(y)
+          , color(color)
+      {
+        str = utf8_to_wide(text);
+      }
+      wstring str;
+      IFW1FontWrapper* font;
+      float size;
+      float x, y;
+      u32 color;
+    };
 
     Setup _curSetup;
 
@@ -369,6 +390,13 @@ namespace boba
     HWND _hwnd;
     HINSTANCE _hInstance;
     bool _displayAllModes;
+
+#if WITH_FONT_RENDERING
+    CComPtr<IFW1Factory> _fw1Factory;
+    CComPtr<IFW1FontWrapper> _fw1FontWrapper;
+#endif
+
+    vector<TextElement> _textElements;
   };
 
 #define GRAPHICS Graphics::Instance()

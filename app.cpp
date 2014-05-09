@@ -23,8 +23,8 @@ using namespace boba;
 
 App* App::_instance;
 
-const char* g_AppWindowClass = _T("BobaClass");
-const char* g_AppWindowTitle = _T("boba - neurotica e.f.s");
+const TCHAR* g_AppWindowClass = _T("BobaClass");
+const TCHAR* g_AppWindowTitle = _T("boba - neurotica e.f.s");
 
 #ifndef GET_X_LPARAM
 #define GET_X_LPARAM(lParam)	((int)(short)LOWORD(lParam))
@@ -196,6 +196,9 @@ void App::Run()
 #if WITH_ANT_TWEAK_BAR
       TwDraw();
 #endif
+
+      GRAPHICS.AddText("tjong!", nullptr, 100, 10, 10, 0xffffffff);
+
       GRAPHICS.Present();
     }
   }

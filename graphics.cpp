@@ -6,7 +6,7 @@
 #include "deferred_context.hpp"
 #include "resource_manager.hpp"
 
-extern const char* g_AppWindowTitle;
+extern const TCHAR* g_AppWindowTitle;
 
 using namespace boba;
 
@@ -361,7 +361,7 @@ bool Graphics::Create(HINSTANCE hInstance)
 #endif
 
   // Get the DXGIGetDebugInterface
-  if (_debugModule = LoadLibrary("Dxgidebug.dll"))
+  if (_debugModule = LoadLibraryA("Dxgidebug.dll"))
   {
     typedef HRESULT (WINAPI *DXGIGetDebugInterfaceFunc)(REFIID, void**);
     auto fn = (DXGIGetDebugInterfaceFunc)GetProcAddress(_debugModule, "DXGIGetDebugInterface");
@@ -398,7 +398,12 @@ bool Graphics::Init(HINSTANCE hInstance)
   for (int i = 0; i < 4; ++i)
     _defaultBlendFactors[i] = 1.0f;
 
-  return true;
+#if WITH_FONT_RENDERING
+  HRESULT hResult = FW1CreateFactory(FW1_VERSION, &_fw1Factory);
+  hResult = _fw1Factory->CreateFontWrapper(_device, L"Arial", &_fw1FontWrapper);
+#endif
+
+   return true;
 }
 
 //------------------------------------------------------------------------------
@@ -415,7 +420,7 @@ bool Graphics::Destroy()
   if (_debugModule)
   {
 #ifdef _DEBUG
-    OutputDebugString("** Dumping live objects\n");
+    OutputDebugStringA("** Dumping live objects\n");
     // todo: figure this out
     //_debugInterface->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
 #endif
@@ -720,7 +725,7 @@ bool Graphics::ReadTexture(
     vector<u8> *bits)
 {
   HRESULT hr;
-  D3DX11GetImageInfoFromFile(filename, NULL, info, &hr);
+  D3DX11GetImageInfoFromFileA(filename, NULL, info, &hr);
   if (FAILED(hr))
     return false;
 
@@ -730,7 +735,7 @@ bool Graphics::ReadTexture(
   loadinfo.Usage = D3D11_USAGE_STAGING;
   loadinfo.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
   CComPtr<ID3D11Resource> resource;
-  D3DX11CreateTextureFromFile(_device, filename, &loadinfo, NULL, &resource.p, &hr);
+  D3DX11CreateTextureFromFileA(_device, filename, &loadinfo, NULL, &resource.p, &hr);
   if (FAILED(hr))
     return false;
 
@@ -767,14 +772,14 @@ GraphicsObjectHandle Graphics::LoadTexture(
     D3DX11_IMAGE_INFO *info)
 {
   D3DX11_IMAGE_INFO imageInfo;
-  if (FAILED(D3DX11GetImageInfoFromFile(filename, NULL, &imageInfo, NULL)))
+  if (FAILED(D3DX11GetImageInfoFromFileA(filename, NULL, &imageInfo, NULL)))
     return emptyGoh;
 
   if (info)
     *info = imageInfo;
 
   auto data = unique_ptr<SimpleResource>(new SimpleResource());
-  if (FAILED(D3DX11CreateTextureFromFile(_device, filename, NULL, NULL, &data->resource, NULL)))
+  if (FAILED(D3DX11CreateTextureFromFileA(_device, filename, NULL, NULL, &data->resource, NULL)))
     return emptyGoh;
 
   // TODO: allow for srgb loading
@@ -1101,7 +1106,7 @@ GraphicsObjectHandle Graphics::CreateSamplerState(
 
 //------------------------------------------------------------------------------
 GraphicsObjectHandle Graphics::CreateSwapChain(
-    const char* name,
+    const TCHAR* name,
     size_t width,
     size_t height,
     DXGI_FORMAT format,
@@ -1292,12 +1297,20 @@ void Graphics::CreateDefaultSwapChain(
   WNDPROC wndProc,
   HINSTANCE instance)
 {
-  _swapChain = CreateSwapChain("default", width, height, format, wndProc, instance);
+  _swapChain = CreateSwapChain(_T("default"), width, height, format, wndProc, instance);
 }
 
 //------------------------------------------------------------------------------
 void Graphics::Present()
 {
+  for (const TextElement& text : _textElements)
+  {
+    _fw1FontWrapper->DrawString(
+        _immediateContext, text.str.c_str(), text.size, text.x, text.y, text.color, FW1_RESTORESTATE);
+  }
+
+  _textElements.clear();
+
   _swapChains.Get(_swapChain)->Present();
 }
 
@@ -1314,6 +1327,18 @@ void Graphics::ScreenSize(int* width, int* height)
 GraphicsObjectHandle Graphics::DefaultSwapChain()
 {
   return _swapChain;
+}
+
+//------------------------------------------------------------------------------
+void Graphics::AddText(
+    const char* text,
+    const char* font,
+    float size,
+    float x,
+    float y,
+    u32 color)
+{
+  _textElements.emplace_back(text, _fw1FontWrapper, size, x, y, color);
 }
 
 //------------------------------------------------------------------------------

@@ -10,6 +10,12 @@
 #define WITH_PROTOBUF_TEXTFORMAT 0
 #endif
 
+#if !defined(NOMINMAX)
+#define NOMINMAX
+#endif
+
+#define WITH_FONT_RENDERING 1
+
 #include <stdint.h>
 #include <assert.h>
 #include <time.h>
@@ -21,6 +27,7 @@
 #include <dxgidebug.h>
 #include <d3d11.h>
 #include <D3DX11tex.h>
+#include <DirectXMath.h>
 
 #include <atlbase.h>
 #include <windows.h>
@@ -52,6 +59,11 @@
 #include <AntTweakBar.h>
 #endif
 
+#if WITH_FONT_RENDERING
+#include <FW1FontWrapper.h>
+#pragma comment(lib, "FW1FontWrapper.lib")
+#endif
+
 typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
@@ -66,12 +78,15 @@ namespace boba
 {
   using std::vector;
   using std::string;
+  using std::wstring;
   using std::set;
   using std::unordered_set;
   using std::map;
   using std::unordered_map;
   using std::deque;
   using std::swap;
+  using std::min;
+  using std::max;
 
   using std::pair;
   using std::make_pair;
@@ -81,7 +96,6 @@ namespace boba
   using std::unique_ptr;
 
   using DirectX::XMFLOAT3;
-
   using DirectX::BoundingSphere;
   using DirectX::SimpleMath::Vector2;
   using DirectX::SimpleMath::Vector3;
@@ -94,7 +108,6 @@ namespace boba
   using boost::posix_time::milliseconds;
   using boost::posix_time::microseconds;
   using boost::posix_time::microsec_clock;
-
 
   using boost::algorithm::replace_all;
 
