@@ -9,6 +9,8 @@ namespace boba
     VF_UV     = 1 << 2,
   };
 
+  u32 ColorToU32(float r, float g, float b, float a);
+
   float Raycast(const Vector3& center, float radius, const Vector3& o, const Vector3& d);
 
   Vector3 ScreenToViewSpace(const Matrix& proj, u32 x, u32 y);

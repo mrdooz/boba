@@ -282,6 +282,7 @@ namespace boba
         GraphicsObjectHandle* ps);
 
     void AddText(const char* text, const char* font, float size, float x, float y, u32 color);
+    void AddText(const wchar_t* text, const char* font, float size, float x, float y, u32 color);
 
   private:
 
@@ -310,15 +311,16 @@ namespace boba
 
     struct TextElement
     {
-      TextElement(const char* text, IFW1FontWrapper* font, float size, float x, float y, u32 color)
-          : font(font)
+      TextElement(const wstring& str, IFW1FontWrapper* font, float size, float x, float y, u32 color)
+          : str(str)
+          , font(font)
           , size(size)
           , x(x)
           , y(y)
           , color(color)
       {
-        str = utf8_to_wide(text);
       }
+
       wstring str;
       IFW1FontWrapper* font;
       float size;

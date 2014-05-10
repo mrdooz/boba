@@ -7,6 +7,8 @@
 #include "scene_test.hpp"
 #include "generator_test.hpp"
 #include "resource_manager.hpp"
+#include "graphics_utils.hpp"
+#include "graphics.hpp"
 
 static const int WM_LOG_NEW_MSG = WM_APP + 1;
 static const int WM_APP_CLOSE = WM_APP + 2;
@@ -34,13 +36,6 @@ const TCHAR* g_AppWindowTitle = _T("boba - neurotica e.f.s");
 #endif
 
 #define WITH_MUSIC 0
-
-namespace boba
-{
-  Vector4 DEBUG_INFO_COLOR(1,0,1,1);
-  Vector4 DEBUG_WARNING_COLOR(0.9f, 0.9f, 0, 1);
-  Vector4 DEBUG_ERROR_COLOR(0.9f, 0.2f, 0, 1);
-}
 
 namespace
 {
@@ -196,8 +191,7 @@ void App::Run()
 #if WITH_ANT_TWEAK_BAR
       TwDraw();
 #endif
-
-      GRAPHICS.AddText("tjong!", nullptr, 100, 10, 10, 0xffffffff);
+      UpdateMessages();
 
       GRAPHICS.Present();
     }
@@ -275,6 +269,7 @@ LRESULT App::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
           APP.SaveSettings();
           DEMO_ENGINE.SaveSettings();
+          APP.AddMessage(MessageType::Info, "Settings saved");
         }
 #endif
         break;
@@ -384,4 +379,61 @@ void App::FindAppRoot()
       break;
   }
   _appRoot = starting_dir;
+}
+
+//------------------------------------------------------------------------------
+void App::AddMessage(MessageType type, const string& str)
+{
+  Message msg;
+  msg.str = utf8_to_wide(str.c_str());
+  if (type == MessageType::Info)
+  {
+    msg.r = msg.g = msg.b = 0.8f;
+    msg.endTime = microsec_clock::local_time() + seconds(5);
+  }
+  else if (type == MessageType::Warning)
+  {
+    msg.r = msg.g = 0.9f; msg.b = 0;
+    msg.endTime = microsec_clock::local_time() + seconds(10);
+  }
+  else
+  {
+    // error
+    msg.r = 0.9f; msg.g = 0.2f; msg.b = 0.0f;
+    msg.endTime = microsec_clock::local_time() + seconds(20);
+  }
+
+  _messages.push_back(msg);
+}
+
+//------------------------------------------------------------------------------
+void App::UpdateMessages()
+{
+  ptime now = microsec_clock::local_time();
+
+  float x = 300;
+  float y = 0;
+
+  for (auto it = _messages.begin(); it != _messages.end(); )
+  {
+    const Message& msg = *it;
+    if (msg.endTime <= now)
+    {
+      // message has elapsed, so remove it
+      it = _messages.erase(it);
+    }
+    else
+    {
+      ++it;
+      y += 15;
+      // blend out alpha over the last second
+      time_duration left = msg.endTime - now;
+      float a = 1;
+      if (left < seconds(1))
+      {
+        a = clamp(0.0f, 1.0f, left.total_milliseconds() / 1000.0f);
+      }
+      GRAPHICS.AddText(msg.str.c_str(), "Arial", 15, x, y, ColorToU32(msg.r, msg.g, msg.b, a));
+    }
+  }
 }

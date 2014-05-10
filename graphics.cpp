@@ -1338,6 +1338,18 @@ void Graphics::AddText(
     float y,
     u32 color)
 {
+  _textElements.emplace_back(utf8_to_wide(text), _fw1FontWrapper, size, x, y, color);
+}
+
+//------------------------------------------------------------------------------
+void Graphics::AddText(
+    const wchar_t* text,
+    const char* font,
+    float size,
+    float x,
+    float y,
+    u32 color)
+{
   _textElements.emplace_back(text, _fw1FontWrapper, size, x, y, color);
 }
 

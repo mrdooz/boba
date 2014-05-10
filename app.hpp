@@ -15,9 +15,12 @@ namespace FMOD
 
 namespace boba
 {
-  extern Vector4 DEBUG_INFO_COLOR;
-  extern Vector4 DEBUG_WARNING_COLOR;
-  extern Vector4 DEBUG_ERROR_COLOR;
+  enum class MessageType
+  {
+    Info,
+    Warning,
+    Error,
+  };
 
   class App
   {
@@ -31,7 +34,7 @@ namespace boba
     static bool Create();
     static bool Destroy();
 
-    const string& AppRoot() const { return _appRoot; }
+    void AddMessage(MessageType type, const string& str);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(App);
@@ -44,6 +47,8 @@ namespace boba
     void LoadSettings();
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+    void UpdateMessages();
 
   protected:
 
@@ -58,6 +63,15 @@ namespace boba
     FMOD::Sound  *_sound;
     FMOD::Channel *_channel;
 #endif
+
+    struct Message
+    {
+      wstring str;
+      ptime endTime;
+      float r, g, b;
+    };
+
+    vector<Message> _messages;
   };
 
 #define APP boba::App::Instance()

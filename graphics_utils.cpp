@@ -1,6 +1,7 @@
 #include "graphics_utils.hpp"
 #include "graphics.hpp"
 #include "scene.hpp"
+#include "utils.hpp"
 #include "resource_manager.hpp"
 
 namespace boba
@@ -44,6 +45,16 @@ namespace boba
     float yv = (-2.0f * y / h + 1) / proj(1, 1);
 
     return Vector3(xv, yv, 1);
+  }
+
+  //------------------------------------------------------------------------------
+  u32 ColorToU32(float r, float g, float b, float a)
+  {
+    return 
+      ((u32)(255 * clamp(0.0f, 1.0f, r)) << 16) +
+      ((u32)(255 * clamp(0.0f, 1.0f, g)) << 8) +
+      ((u32)(255 * clamp(0.0f, 1.0f, b)) << 0) +
+      ((u32)(255 * clamp(0.0f, 1.0f, a)) << 24);
   }
 
   //------------------------------------------------------------------------------
