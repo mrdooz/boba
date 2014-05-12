@@ -348,7 +348,6 @@ namespace boba
     IdBuffer<ID3D11Buffer *, IdCount> _vertexBuffers;
     IdBuffer<ID3D11Buffer *, IdCount> _indexBuffers;
     IdBuffer<ID3D11Buffer *, IdCount> _constantBuffers;
-    //IdBuffer<Technique *, IdCount> _techniques;
 
     IdBuffer<ID3D11BlendState *, IdCount> _blendStates;
     IdBuffer<ID3D11DepthStencilState *, IdCount> _depthStencilStates;

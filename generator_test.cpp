@@ -188,6 +188,9 @@ public:
   void DrawLineStrip(const Vector3* start, u32 count);
 
 private:
+
+  PosCol* AddQuad(const Vector3& a, const Vector3& b, PosCol* dst);
+
   bool Init();
 
   DebugDrawer();
@@ -197,9 +200,11 @@ private:
 
   GpuObjects _gpuObjects;
 
+  GraphicsObjectHandle _rasterizerState;
   DeferredContext* _ctx;
   Matrix _world;
   Matrix _view;
+  Matrix _invView;
   Matrix _proj;
   Color _color;
   float _width;
@@ -235,6 +240,10 @@ bool DebugDrawer::Init()
     return false;
   }
 
+  CD3D11_RASTERIZER_DESC desc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT());
+  desc.CullMode = D3D11_CULL_NONE;
+  _rasterizerState = GRAPHICS.CreateRasterizerState(desc);
+
   return true;
 }
 
@@ -262,6 +271,7 @@ void DebugDrawer::SetContext(DeferredContext* ctx)
 void DebugDrawer::SetViewProjMatrix(const Matrix& view, const Matrix& proj)
 {
   _view = view;
+  _invView = _view.Invert();
   _proj = proj;
 }
 
@@ -289,6 +299,37 @@ void DebugDrawer::Reset()
   _width = 1;
 }
 
+PosCol* DebugDrawer::AddQuad(const Vector3& a, const Vector3& b, PosCol* dst)
+{
+  Vector3 dir(b - a);
+  dir.Normalize();
+  Vector3 up(_invView.m[1][0], _invView.m[1][1], _invView.m[1][2]);
+  Vector3 right = up.Cross(dir);
+
+  // 2 3
+  // 0 1
+  Vector3 v0 = a - 0.5f * _width * right;
+  Vector3 v1 = a + 0.5f * _width * right;
+  Vector3 v2 = b - 0.5f * _width * right;
+  Vector3 v3 = b + 0.5f * _width * right;
+
+  for (u32 i = 0; i < 6; ++i)
+    dst[i].col = _color;
+
+  // 0, 2, 3
+  dst[0].pos = v0;
+  dst[1].pos = v2;
+  dst[2].pos = v3;
+
+  // 0, 3, 1
+  dst[3].pos = v0;
+  dst[4].pos = v3;
+  dst[5].pos = v1;
+
+  return dst + 6;
+}
+
+
 void DebugDrawer::DrawMatrix(const Matrix& matrix)
 {
 
@@ -297,32 +338,52 @@ void DebugDrawer::DrawMatrix(const Matrix& matrix)
 void DebugDrawer::DrawSphere(const Vector3& center, float radius)
 {
   D3D11_MAPPED_SUBRESOURCE res;
+  u32 numVerts = 0;
   if (_ctx->Map(_gpuObjects._vb, 0, D3D11_MAP_WRITE_DISCARD, 0, &res))
   {
     PosCol* vtx = (PosCol*)res.pData;
-    vtx[0].pos = center;
-    vtx[0].col = _color;
+    PosCol* org = vtx;
 
-    vtx[1].pos = center + radius * Vector3(1, 0, 0);
-    vtx[1].col = _color;
+    u32 numSteps = 100;
+    float inc = 2 * DirectX::XM_PI / numSteps;
+    float angle = 0;
+    Vector3 a = center + Vector3(0, radius * sin(angle), -radius * cos(angle));
+    for (u32 i = 0; i < numSteps; ++i)
+    {
+      angle += inc;
+      Vector3 b = center + Vector3(0, radius * sin(angle), -radius * cos(angle));
+      vtx = AddQuad(a, b, vtx);
+      a = b;
+    }
 
-    vtx[2].pos = center + radius * Vector3(0, 1, 0);
-    vtx[2].col = _color;
+    angle = 0;
+    a = center + Vector3(radius * cos(angle), 0, -radius * sin(angle));
+    for (u32 i = 0; i < numSteps; ++i)
+    {
+      angle += inc;
+      Vector3 b = center + Vector3(radius * cos(angle), 0, -radius * sin(angle));
+      vtx = AddQuad(a, b, vtx);
+      a = b;
+    }
 
-    vtx[3].pos = center + radius * Vector3(0, 0, 1);
-    vtx[3].col = _color;
 
-    //memcpy(res.pData, g_mesh.verts.data(), vbSize);
     _ctx->Unmap(_gpuObjects._vb, 0);
+
+    numVerts = vtx - org;
   }
 
-  CBufferPerFrame cb;
-  cb.world = _world;
-  cb.viewProj = (_view * _proj).Transpose();
+  if (numVerts > 0)
+  {
+    CBufferPerFrame cb;
+    cb.world = _world;
+    cb.viewProj = (_view * _proj).Transpose();
 
-  _ctx->SetCBuffer(_gpuObjects._cbuffer, &cb, sizeof(cb), ShaderType::VertexShader);
-  _ctx->SetRenderObjects(_gpuObjects);
-  _ctx->Draw(4, 0);
+    _ctx->SetRS(_rasterizerState);
+    _ctx->SetCBuffer(_gpuObjects._cbuffer, &cb, sizeof(cb), ShaderType::VertexShader);
+    _ctx->SetRenderObjects(_gpuObjects);
+    _ctx->Draw(numVerts, 0);
+  }
+
 }
 
 void DebugDrawer::DrawLine(const Vector3& a, const Vector3& b)
@@ -478,6 +539,7 @@ bool GeneratorTest::Render()
     DebugDrawer::Instance()->SetContext(_ctx);
     DebugDrawer::Instance()->SetViewProjMatrix(_view, _proj);
     DebugDrawer::Instance()->SetWorldMatrix(_world);
+    DebugDrawer::Instance()->SetWidth(5);
     DebugDrawer::Instance()->DrawSphere(g_mesh.center, g_mesh.radius);
 
     _ctx->EndFrame();
@@ -522,6 +584,8 @@ const char* GeneratorTest::Name()
 //------------------------------------------------------------------------------
 void GeneratorTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
+  DebugDrawer::Instance()->SetColor(Color(_rotatingObject * 1.0f, 1, 0, 1));
+
   switch (message)
   {
     case WM_LBUTTONDOWN:
@@ -538,10 +602,12 @@ void GeneratorTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
       Vector3 d = Vector4::Transform(Vector4(dView.x, dView.y, dView.z, 0), viewToWorld);
       d.Normalize();
 
-      float t = Raycast(g_mesh.center, g_mesh.radius, o, d);
+      Vector3 center_ws = Vector4::Transform(Vector4(g_mesh.center.x, g_mesh.center.y, g_mesh.center.z, 1), _world);
+      float t = Raycast(center_ws, g_mesh.radius, o, d);
       _rotatingObject = t > 0;
       if (_rotatingObject)
         _v0 = d;
+
       break;
     }
 
