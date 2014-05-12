@@ -5,6 +5,7 @@
 #include "vertex_types.hpp"
 #include "deferred_context.hpp"
 #include "resource_manager.hpp"
+#include "error.hpp"
 
 extern const TCHAR* g_AppWindowTitle;
 
@@ -971,7 +972,10 @@ GraphicsObjectHandle Graphics::CreateInputLayout(
 {
   ID3D11InputLayout* layout = nullptr;
   if (FAILED(_device->CreateInputLayout(&desc[0], desc.size(), &shader_bytecode[0], shader_bytecode.size(), &layout)))
+  {
+    LOG_WARN("Error creating input layout");
     return emptyGoh;
+  }
 
   return GraphicsObjectHandle(GraphicsObjectHandle::kInputLayout, _inputLayouts.Insert(layout));
 }
@@ -1239,7 +1243,7 @@ void Graphics::DestroyDeferredContext(DeferredContext *ctx)
 }
 
 //------------------------------------------------------------------------------
-DeferredContext *Graphics::CreateDeferredContext(bool canUseImmediate)
+DeferredContext* Graphics::CreateDeferredContext(bool canUseImmediate)
 {
   DeferredContext *dc = new DeferredContext;
   if (canUseImmediate)

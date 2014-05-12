@@ -38,7 +38,7 @@ function generate(radius, height, radial_segments, height_segments)
       local t2 = math.cos(3 * 3.1419 * ff)
       local r = radius * (1 - ff)
       local x = 50 * t^3 + r * c
-      local z = 20 * t^4 * t2 + r * s
+      local z = 23 * t^5 * t2 + r * s
       angle = angle + inc
       
       vtx(verts, vtx_idx, x, y, z, c, 0, s)

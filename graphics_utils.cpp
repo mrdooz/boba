@@ -51,9 +51,9 @@ namespace boba
   u32 ColorToU32(float r, float g, float b, float a)
   {
     return 
-      ((u32)(255 * clamp(0.0f, 1.0f, r)) << 16) +
+      ((u32)(255 * clamp(0.0f, 1.0f, r)) << 0) +
       ((u32)(255 * clamp(0.0f, 1.0f, g)) << 8) +
-      ((u32)(255 * clamp(0.0f, 1.0f, b)) << 0) +
+      ((u32)(255 * clamp(0.0f, 1.0f, b)) << 16) +
       ((u32)(255 * clamp(0.0f, 1.0f, a)) << 24);
   }
 
@@ -78,19 +78,31 @@ namespace boba
       if (inputLayout)
       {
         vector<D3D11_INPUT_ELEMENT_DESC> desc;
+        u32 ofs = 0;
         if (vertexFlags & VF_POS)
         {
           D3D11_INPUT_ELEMENT_DESC element =
           { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
           desc.push_back(element);
+          ofs += 12;
         }
 
         if (vertexFlags & VF_NORMAL)
         {
           D3D11_INPUT_ELEMENT_DESC element =
-          { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+          { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, ofs, D3D11_INPUT_PER_VERTEX_DATA, 0 };
           desc.push_back(element);
+          ofs += 12;
         }
+
+        if (vertexFlags & VF_COLOR)
+        {
+          D3D11_INPUT_ELEMENT_DESC element =
+          { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, ofs, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+          desc.push_back(element);
+          ofs += 16;
+        }
+
 
         *inputLayout = GRAPHICS.CreateInputLayout(desc, buf);
         if (!inputLayout->IsValid())

@@ -9,6 +9,7 @@
 #include "resource_manager.hpp"
 #include "graphics_utils.hpp"
 #include "graphics.hpp"
+#include "error.hpp"
 
 static const int WM_LOG_NEW_MSG = WM_APP + 1;
 static const int WM_APP_CLOSE = WM_APP + 2;
@@ -37,6 +38,9 @@ const TCHAR* g_AppWindowTitle = _T("boba - neurotica e.f.s");
 
 #define WITH_MUSIC 0
 
+LogSinkApp* g_logSinkApp;
+LogSinkConsole* g_logSinkConsole;
+
 namespace
 {
   tm GetLocalTime()
@@ -58,12 +62,16 @@ App::App()
   , _channel(nullptr)
 #endif
 {
+  g_logSinkConsole = new LogSinkConsole();
+  g_logSinkApp = new LogSinkApp();
   FindAppRoot();
 }
 
 //------------------------------------------------------------------------------
 App::~App()
 {
+  SAFE_DELETE(g_logSinkConsole);
+  SAFE_DELETE(g_logSinkApp);
 }
 
 //------------------------------------------------------------------------------
@@ -136,7 +144,24 @@ bool App::Init(HINSTANCE hinstance)
   LoadSettings();
 
   if (!DEMO_ENGINE.Init("config/demo.pb", hinstance))
+  {
+    DeferredContext* ctx = GRAPHICS.CreateDeferredContext(true);
+    ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), true);
+    // If we get this far, then the graphics are initialized, so just spin displaying an
+    // error message
+    while (true)
+    {
+      if (GetAsyncKeyState(VK_ESCAPE) & (1 << 15))
+        break;
+
+      UpdateMessages();
+      GRAPHICS.Present();
+    }
+
+    GRAPHICS.DestroyDeferredContext(ctx);
+
     return false;
+  }
 
 
 #if WITH_MUSIC

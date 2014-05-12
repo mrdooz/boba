@@ -62,7 +62,8 @@ void protobuf_AddDesc_anttweak_2eproto() {
     ".protobuf.FieldOptions\030\320\206\003 \001(\010:0\n\007color4"
     "f\022\035.google.protobuf.FieldOptions\030\321\206\003 \001(\010"
     ":.\n\005dir3f\022\035.google.protobuf.FieldOptions"
-    "\030\322\206\003 \001(\010", 208);
+    "\030\322\206\003 \001(\010:/\n\006nobind\022\035.google.protobuf.Fie"
+    "ldOptions\030\323\206\003 \001(\010", 257);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "anttweak.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::ExtensionSet::RegisterExtension(
@@ -74,6 +75,9 @@ void protobuf_AddDesc_anttweak_2eproto() {
   ::google::protobuf::internal::ExtensionSet::RegisterExtension(
     &::google::protobuf::FieldOptions::default_instance(),
     50002, 8, false, false);
+  ::google::protobuf::internal::ExtensionSet::RegisterExtension(
+    &::google::protobuf::FieldOptions::default_instance(),
+    50003, 8, false, false);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_anttweak_2eproto);
 }
 
@@ -92,6 +96,9 @@ struct StaticDescriptorInitializer_anttweak_2eproto {
 ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
     ::google::protobuf::internal::PrimitiveTypeTraits< bool >, 8, false >
   dir3f(kDir3FFieldNumber, false);
+::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< bool >, 8, false >
+  nobind(kNobindFieldNumber, false);
 
 // @@protoc_insertion_point(namespace_scope)
 

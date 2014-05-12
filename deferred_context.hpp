@@ -4,19 +4,7 @@
 
 namespace boba
 {
-  struct RenderObjects
-  {
-    GraphicsObjectHandle _vs;
-    GraphicsObjectHandle _ps;
-    GraphicsObjectHandle _layout;
-
-    GraphicsObjectHandle _vb;
-    GraphicsObjectHandle _ib;
-    GraphicsObjectHandle _cbuffer;
-
-    u32 _vbSize;
-    u32 _ibSize;
-  };
+  struct GpuObjects;
 
   class DeferredContext
   {
@@ -47,7 +35,7 @@ namespace boba
     void SetShaderResource(GraphicsObjectHandle h, ShaderType shaderType);
     void SetSamplerState(GraphicsObjectHandle h, ShaderType shaderType);
     void SetCBuffer(GraphicsObjectHandle h, const void* buf, size_t len, ShaderType shaderType);
-    void SetRenderObjects(const RenderObjects& obj);
+    void SetRenderObjects(const GpuObjects& obj);
     void UnsetUavs(int first, int count);
     void UnsetRenderTargets(int first, int count);
     void DrawIndexed(int count, int start_index, int base_vertex);

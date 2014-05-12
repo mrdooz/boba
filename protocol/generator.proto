@@ -1,10 +1,16 @@
 package generator;
 import "anttweak.proto";
+import "common.proto";
 
 message Config
 {
-  optional float radius = 1;
-  optional float height = 2;
-  optional uint32 radial_segments = 3;
-  optional uint32 height_segments = 4;
+  optional float radius                 = 1;
+  optional float height                 = 2;
+  optional uint32 radial_segments       = 3;
+  optional uint32 height_segments       = 4;
+  
+  optional common.Vector3 camera_pos    = 5 [(anttweak.nobind) = true];
+  optional common.Vector3 camera_target = 6 [(anttweak.nobind) = true];
+  
+  optional common.Matrix4x4 obj_world   = 7 [(anttweak.nobind) = true];
 }

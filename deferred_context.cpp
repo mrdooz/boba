@@ -1,5 +1,6 @@
 #include "graphics.hpp"
 #include "deferred_context.hpp"
+#include "gpu_objects.hpp"
 
 static const int MAX_SAMPLERS = 8;
 static const int MAX_TEXTURES = 8;
@@ -361,7 +362,7 @@ void DeferredContext::SetCBuffer(
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetRenderObjects(const RenderObjects& obj)
+void DeferredContext::SetRenderObjects(const GpuObjects& obj)
 {
   SetVS(obj._vs);
   SetPS(obj._ps);

@@ -34,11 +34,14 @@ void protobuf_AssignDesc_generator_2eproto() {
       "generator.proto");
   GOOGLE_CHECK(file != NULL);
   Config_descriptor_ = file->message_type(0);
-  static const int Config_offsets_[4] = {
+  static const int Config_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, radius_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, radial_segments_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, height_segments_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, camera_pos_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, camera_target_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, obj_world_),
   };
   Config_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -81,11 +84,16 @@ void protobuf_AddDesc_generator_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::anttweak::protobuf_AddDesc_anttweak_2eproto();
+  ::common::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\017generator.proto\022\tgenerator\032\016anttweak.p"
-    "roto\"Z\n\006Config\022\016\n\006radius\030\001 \001(\002\022\016\n\006height"
-    "\030\002 \001(\002\022\027\n\017radial_segments\030\003 \001(\r\022\027\n\017heigh"
-    "t_segments\030\004 \001(\r", 136);
+    "roto\032\014common.proto\"\337\001\n\006Config\022\016\n\006radius\030"
+    "\001 \001(\002\022\016\n\006height\030\002 \001(\002\022\027\n\017radial_segments"
+    "\030\003 \001(\r\022\027\n\017height_segments\030\004 \001(\r\022)\n\ncamer"
+    "a_pos\030\005 \001(\0132\017.common.Vector3B\004\230\265\030\001\022,\n\rca"
+    "mera_target\030\006 \001(\0132\017.common.Vector3B\004\230\265\030\001"
+    "\022*\n\tobj_world\030\007 \001(\0132\021.common.Matrix4x4B\004"
+    "\230\265\030\001", 284);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "generator.proto", &protobuf_RegisterTypes);
   Config::default_instance_ = new Config();
@@ -107,6 +115,9 @@ const int Config::kRadiusFieldNumber;
 const int Config::kHeightFieldNumber;
 const int Config::kRadialSegmentsFieldNumber;
 const int Config::kHeightSegmentsFieldNumber;
+const int Config::kCameraPosFieldNumber;
+const int Config::kCameraTargetFieldNumber;
+const int Config::kObjWorldFieldNumber;
 #endif  // !_MSC_VER
 
 Config::Config()
@@ -115,6 +126,9 @@ Config::Config()
 }
 
 void Config::InitAsDefaultInstance() {
+  camera_pos_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
+  camera_target_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
+  obj_world_ = const_cast< ::common::Matrix4x4*>(&::common::Matrix4x4::default_instance());
 }
 
 Config::Config(const Config& from)
@@ -129,6 +143,9 @@ void Config::SharedCtor() {
   height_ = 0;
   radial_segments_ = 0u;
   height_segments_ = 0u;
+  camera_pos_ = NULL;
+  camera_target_ = NULL;
+  obj_world_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -138,6 +155,9 @@ Config::~Config() {
 
 void Config::SharedDtor() {
   if (this != default_instance_) {
+    delete camera_pos_;
+    delete camera_target_;
+    delete obj_world_;
   }
 }
 
@@ -168,6 +188,15 @@ void Config::Clear() {
     height_ = 0;
     radial_segments_ = 0u;
     height_segments_ = 0u;
+    if (has_camera_pos()) {
+      if (camera_pos_ != NULL) camera_pos_->::common::Vector3::Clear();
+    }
+    if (has_camera_target()) {
+      if (camera_target_ != NULL) camera_target_->::common::Vector3::Clear();
+    }
+    if (has_obj_world()) {
+      if (obj_world_ != NULL) obj_world_->::common::Matrix4x4::Clear();
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -238,6 +267,48 @@ bool Config::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(42)) goto parse_camera_pos;
+        break;
+      }
+
+      // optional .common.Vector3 camera_pos = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_camera_pos:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_camera_pos()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(50)) goto parse_camera_target;
+        break;
+      }
+
+      // optional .common.Vector3 camera_target = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_camera_target:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_camera_target()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(58)) goto parse_obj_world;
+        break;
+      }
+
+      // optional .common.Matrix4x4 obj_world = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_obj_world:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_obj_world()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -280,6 +351,24 @@ void Config::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->height_segments(), output);
   }
 
+  // optional .common.Vector3 camera_pos = 5;
+  if (has_camera_pos()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, this->camera_pos(), output);
+  }
+
+  // optional .common.Vector3 camera_target = 6;
+  if (has_camera_target()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      6, this->camera_target(), output);
+  }
+
+  // optional .common.Matrix4x4 obj_world = 7;
+  if (has_obj_world()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      7, this->obj_world(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -306,6 +395,27 @@ void Config::SerializeWithCachedSizes(
   // optional uint32 height_segments = 4;
   if (has_height_segments()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->height_segments(), target);
+  }
+
+  // optional .common.Vector3 camera_pos = 5;
+  if (has_camera_pos()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        5, this->camera_pos(), target);
+  }
+
+  // optional .common.Vector3 camera_target = 6;
+  if (has_camera_target()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        6, this->camera_target(), target);
+  }
+
+  // optional .common.Matrix4x4 obj_world = 7;
+  if (has_obj_world()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        7, this->obj_world(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -341,6 +451,27 @@ int Config::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->height_segments());
+    }
+
+    // optional .common.Vector3 camera_pos = 5;
+    if (has_camera_pos()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->camera_pos());
+    }
+
+    // optional .common.Vector3 camera_target = 6;
+    if (has_camera_target()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->camera_target());
+    }
+
+    // optional .common.Matrix4x4 obj_world = 7;
+    if (has_obj_world()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->obj_world());
     }
 
   }
@@ -382,6 +513,15 @@ void Config::MergeFrom(const Config& from) {
     if (from.has_height_segments()) {
       set_height_segments(from.height_segments());
     }
+    if (from.has_camera_pos()) {
+      mutable_camera_pos()->::common::Vector3::MergeFrom(from.camera_pos());
+    }
+    if (from.has_camera_target()) {
+      mutable_camera_target()->::common::Vector3::MergeFrom(from.camera_target());
+    }
+    if (from.has_obj_world()) {
+      mutable_obj_world()->::common::Matrix4x4::MergeFrom(from.obj_world());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -409,6 +549,9 @@ void Config::Swap(Config* other) {
     std::swap(height_, other->height_);
     std::swap(radial_segments_, other->radial_segments_);
     std::swap(height_segments_, other->height_segments_);
+    std::swap(camera_pos_, other->camera_pos_);
+    std::swap(camera_target_, other->camera_target_);
+    std::swap(obj_world_, other->obj_world_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

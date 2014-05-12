@@ -3,6 +3,7 @@
 #include "effect.hpp"
 #include "deferred_context.hpp"
 #include "protocol/generator.pb.h"
+#include "gpu_objects.hpp"
 
 namespace boba
 {
@@ -38,14 +39,13 @@ namespace boba
 
     u32 _numIndices;
 
-    RenderObjects _meshObjects;
+    GpuObjects _meshObjects;
 
     bool _rotatingObject;
     Vector3 _v0;
     bool _dirtyFlag;
 
-    Vector3 _cameraPos;
-    Vector3 _cameraTarget;
+    Vector3 _cameraPos, _cameraTarget;
 
     lua_State* _lua;
   };

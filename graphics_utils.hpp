@@ -7,6 +7,7 @@ namespace boba
     VF_POS    = 1 << 0,
     VF_NORMAL = 1 << 1,
     VF_UV     = 1 << 2,
+    VF_COLOR  = 1 << 3,
   };
 
   u32 ColorToU32(float r, float g, float b, float a);

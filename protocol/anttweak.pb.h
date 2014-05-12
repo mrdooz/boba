@@ -50,6 +50,10 @@ static const int kDir3FFieldNumber = 50002;
 extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
     ::google::protobuf::internal::PrimitiveTypeTraits< bool >, 8, false >
   dir3f;
+static const int kNobindFieldNumber = 50003;
+extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< bool >, 8, false >
+  nobind;
 
 // ===================================================================
 

@@ -1,0 +1,37 @@
+package common;
+
+message Vector2
+{
+  optional float x = 1;
+  optional float y = 2;
+}
+
+message Vector3
+{
+  optional float x = 1;
+  optional float y = 2;
+  optional float z = 3;
+}
+
+message Vector4
+{
+  optional float x = 1;
+  optional float y = 2;
+  optional float z = 3;
+  optional float w = 4;
+}
+
+message Matrix3x3
+{
+  optional Vector3 row_1 = 1;
+  optional Vector3 row_2 = 2;
+  optional Vector3 row_3 = 3;
+}
+
+message Matrix4x4
+{
+  optional Vector4 row_1 = 1;
+  optional Vector4 row_2 = 2;
+  optional Vector4 row_3 = 3;
+  optional Vector4 row_4 = 4;
+}

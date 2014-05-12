@@ -12,6 +12,13 @@ namespace boba
     Error,
   };
 
+  struct LogEntry
+  {
+    const char* file;
+    u32 line;
+    string desc;
+    vector<pair<string, string>> values;
+  };
 
   //----------------------------------------------------------------------------------
   template <typename T>
@@ -32,7 +39,9 @@ namespace boba
   //----------------------------------------------------------------------------------
   struct LogSink
   {
-    virtual void Log(LogLevel level, const vector<pair<string, string> >& msg) = 0;
+    LogSink();
+    virtual ~LogSink();
+    virtual void Log(LogLevel level, const LogEntry& entry) = 0;
   };
 
   //----------------------------------------------------------------------------------
@@ -42,26 +51,32 @@ namespace boba
     ~LogSinkFile();
 
     bool Open(const char* filename);
-    virtual void Log(LogLevel level, const vector<pair<string, string> >& msg);
+    virtual void Log(LogLevel level, const LogEntry& entry);
 
-    FILE* _log;
+    FILE* _file;
   };
 
   //----------------------------------------------------------------------------------
   struct LogSinkConsole : public LogSink
   {
+    virtual void Log(LogLevel level, const LogEntry& entry);
+  };
+
+  //----------------------------------------------------------------------------------
+  struct LogSinkApp : public LogSink
+  {
+    virtual void Log(LogLevel level, const LogEntry& entry);
   };
 
   //----------------------------------------------------------------------------------
   struct LogStream
   {
-    LogStream(LogSink* sink, LogLevel level);
+    LogStream(LogLevel level, const char* file, u32 line);
     ~LogStream();
 
     void Append(const string& key, const string& value);
 
-    vector<pair<string, string> > _output;
-    LogSink* _sink;
+    LogEntry _entry;
     LogLevel _level;
   };
 
@@ -75,25 +90,21 @@ namespace boba
   }
 
   LogStream& operator<<(LogStream& s, const char* desc);
-  
-  extern LogSinkFile g_logSinkFile;
 
   // The minimum level at which we log
   LogLevel GetLogLevel();
   void SetLogLevel(LogLevel level);
 
-//#define LOG_DEBUG(x) \
-//  boba::LogStream GEN_NAME(s, __LINE__)(&boba::g_logSinkFile, boba::LogLevel::Debug); GEN_NAME(s, __LINE__) << x
-#define LOG_INFO(x) \
-  boba::LogStream GEN_NAME(s, __LINE__)(&boba::g_logSinkFile, boba::LogLevel::Info); GEN_NAME(s, __LINE__) << x
-#define LOG_WARN(x) \
-  boba::LogStream GEN_NAME(s, __LINE__)(&boba::g_logSinkFile, boba::LogLevel::Warning); GEN_NAME(s, __LINE__) << x
-#define LOG_ERROR(x)  \
-  boba::LogStream GEN_NAME(s, __LINE__)(&boba::g_logSinkFile, boba::LogLevel::Error); GEN_NAME(s, __LINE__) << x
-
 #define LOG_DEBUG(x)  \
     if (GetLogLevel() <= boba::LogLevel::Debug) {  \
-      boba::LogStream GEN_NAME(s, __LINE__)(&boba::g_logSinkFile, boba::LogLevel::Debug); GEN_NAME(s, __LINE__) << x  \
+      boba::LogStream GEN_NAME(s, __LINE__)(boba::LogLevel::Debug, __FILE__, __LINE__); GEN_NAME(s, __LINE__) << x  \
     }
+
+#define LOG_INFO(x) \
+  boba::LogStream GEN_NAME(s, __LINE__)(boba::LogLevel::Info, __FILE__, __LINE__); GEN_NAME(s, __LINE__) << x
+#define LOG_WARN(x) \
+  boba::LogStream GEN_NAME(s, __LINE__)(boba::LogLevel::Warning, __FILE__, __LINE__); GEN_NAME(s, __LINE__) << x
+#define LOG_ERROR(x)  \
+  boba::LogStream GEN_NAME(s, __LINE__)(boba::LogLevel::Error, __FILE__, __LINE__); GEN_NAME(s, __LINE__) << x
 }
 

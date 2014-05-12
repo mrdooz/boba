@@ -7,6 +7,7 @@
 #include "resource_manager.hpp"
 #include "graphics_utils.hpp"
 #include "vertex_types.hpp"
+#include "error.hpp"
 
 #include "boba_io.hpp"
 #include "protocol/generator_bindings.hpp"
@@ -166,6 +167,174 @@ int __cdecl luaopen_mesh(lua_State* L)
   return 0;
 }
 
+class DebugDrawer
+{
+public:
+
+  static bool Create();
+  static bool Destroy();
+  static DebugDrawer* Instance();
+
+  void SetContext(DeferredContext* ctx);
+  void SetViewProjMatrix(const Matrix& view, const Matrix& proj);
+  void SetWorldMatrix(const Matrix& world);
+  void SetColor(const Color& color);
+  void SetWidth(float width);
+  void Reset();
+
+  void DrawMatrix(const Matrix& matrix);
+  void DrawSphere(const Vector3& center, float radius);
+  void DrawLine(const Vector3& a, const Vector3& b);
+  void DrawLineStrip(const Vector3* start, u32 count);
+
+private:
+  bool Init();
+
+  DebugDrawer();
+  DISALLOW_COPY_AND_ASSIGN(DebugDrawer);
+
+  static DebugDrawer* _instance;
+
+  GpuObjects _gpuObjects;
+
+  DeferredContext* _ctx;
+  Matrix _world;
+  Matrix _view;
+  Matrix _proj;
+  Color _color;
+  float _width;
+};
+
+DebugDrawer* DebugDrawer::_instance;
+
+DebugDrawer::DebugDrawer()
+{
+  Reset();
+}
+
+bool DebugDrawer::Create()
+{
+  if (_instance)
+  {
+    LOG_WARN("DebugDrawer::Init() called multiple times");
+    return true;
+  }
+
+  _instance = new DebugDrawer();
+  return _instance->Init();
+}
+
+bool DebugDrawer::Init()
+{
+  _gpuObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosCol), sizeof(CBufferPerFrame));
+
+  if (!LoadShadersFromFile("shaders/debug_draw",
+    &_gpuObjects._vs, &_gpuObjects._ps, &_gpuObjects._layout, VF_POS | VF_COLOR))
+  {
+    LOG_WARN("Error loading shaders for DebugDrawer");
+    return false;
+  }
+
+  return true;
+}
+
+bool DebugDrawer::Destroy()
+{
+  if (!_instance)
+  {
+    LOG_WARN("DebugDrawer::Close() called without call to Init()");
+    return true;
+  }
+
+  return true;
+}
+
+DebugDrawer* DebugDrawer::Instance()
+{
+  return _instance;
+}
+
+void DebugDrawer::SetContext(DeferredContext* ctx)
+{
+  _ctx = ctx;
+}
+
+void DebugDrawer::SetViewProjMatrix(const Matrix& view, const Matrix& proj)
+{
+  _view = view;
+  _proj = proj;
+}
+
+void DebugDrawer::SetWorldMatrix(const Matrix& world)
+{
+  _world = world;
+}
+
+void DebugDrawer::SetColor(const Color& color)
+{
+  _color = color;
+}
+
+void DebugDrawer::SetWidth(float width)
+{
+  _width = width;
+}
+
+void DebugDrawer::Reset()
+{
+  _world = Matrix::Identity();
+  _view = Matrix::Identity();
+  _proj = Matrix::Identity();
+  _color = Color(1, 1, 1, 1);
+  _width = 1;
+}
+
+void DebugDrawer::DrawMatrix(const Matrix& matrix)
+{
+
+}
+
+void DebugDrawer::DrawSphere(const Vector3& center, float radius)
+{
+  D3D11_MAPPED_SUBRESOURCE res;
+  if (_ctx->Map(_gpuObjects._vb, 0, D3D11_MAP_WRITE_DISCARD, 0, &res))
+  {
+    PosCol* vtx = (PosCol*)res.pData;
+    vtx[0].pos = center;
+    vtx[0].col = _color;
+
+    vtx[1].pos = center + radius * Vector3(1, 0, 0);
+    vtx[1].col = _color;
+
+    vtx[2].pos = center + radius * Vector3(0, 1, 0);
+    vtx[2].col = _color;
+
+    vtx[3].pos = center + radius * Vector3(0, 0, 1);
+    vtx[3].col = _color;
+
+    //memcpy(res.pData, g_mesh.verts.data(), vbSize);
+    _ctx->Unmap(_gpuObjects._vb, 0);
+  }
+
+  CBufferPerFrame cb;
+  cb.world = _world;
+  cb.viewProj = (_view * _proj).Transpose();
+
+  _ctx->SetCBuffer(_gpuObjects._cbuffer, &cb, sizeof(cb), ShaderType::VertexShader);
+  _ctx->SetRenderObjects(_gpuObjects);
+  _ctx->Draw(4, 0);
+}
+
+void DebugDrawer::DrawLine(const Vector3& a, const Vector3& b)
+{
+
+}
+
+void DebugDrawer::DrawLineStrip(const Vector3* start, u32 count)
+{
+
+}
+
 //------------------------------------------------------------------------------
 GeneratorTest::GeneratorTest(const string &name)
     : Effect(name)
@@ -174,8 +343,6 @@ GeneratorTest::GeneratorTest(const string &name)
     , _dirtyFlag(true)
     , _lua(nullptr)
     , _numIndices(0)
-    , _cameraPos(Vector3(0, 0, -150))
-    , _cameraTarget(0,0,0)
 {
 }
 
@@ -192,15 +359,14 @@ bool GeneratorTest::Init(const char* config)
   if (!LoadProto(config, &_config))
     return false;
 
+  _cameraPos = FromProtocol(_config.camera_pos());
+  _cameraTarget = FromProtocol(_config.camera_target());
+  _oldWorldMatrix = FromProtocol(_config.obj_world());
+  _world = _oldWorldMatrix;
+
   BindConfig(&_config, &_dirtyFlag);
 
-  _meshObjects._ibSize = 64 * 1024;
-  _meshObjects._vbSize = 64 * 1024;
-  _meshObjects._vb = GRAPHICS.CreateBuffer(D3D11_BIND_VERTEX_BUFFER, _meshObjects._vbSize, true, nullptr, sizeof(PosNormal));
-  _meshObjects._ib = GRAPHICS.CreateBuffer(D3D11_BIND_INDEX_BUFFER, _meshObjects._ibSize, true, nullptr, DXGI_FORMAT_R32_UINT);
-  _meshObjects._cbuffer = GRAPHICS.CreateBuffer(D3D11_BIND_CONSTANT_BUFFER, sizeof(CBufferPerFrame), true);
-
-  _world = Matrix::Identity();
+  _meshObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosNormal), sizeof(CBufferPerFrame));
 
   LoadShadersFromFile("shaders/generator",
       &_meshObjects._vs, &_meshObjects._ps, &_meshObjects._layout, VF_POS | VF_NORMAL);
@@ -222,6 +388,9 @@ bool GeneratorTest::Init(const char* config)
       _dirtyFlag = true;
       return true;
     });
+
+  if (!DebugDrawer::Create())
+    return false;
 
   return true;
 }
@@ -306,6 +475,11 @@ bool GeneratorTest::Render()
     _ctx->SetRenderObjects(_meshObjects);
     _ctx->DrawIndexed(_numIndices, 0, 0);
 
+    DebugDrawer::Instance()->SetContext(_ctx);
+    DebugDrawer::Instance()->SetViewProjMatrix(_view, _proj);
+    DebugDrawer::Instance()->SetWorldMatrix(_world);
+    DebugDrawer::Instance()->DrawSphere(g_mesh.center, g_mesh.radius);
+
     _ctx->EndFrame();
   }
 
@@ -323,6 +497,10 @@ bool GeneratorTest::SaveSettings()
 {
   if (FILE* f = fopen(_configName.c_str() ,"wt"))
   {
+    ToProtocol(_cameraPos, _config.mutable_camera_pos());
+    ToProtocol(_cameraTarget, _config.mutable_camera_target());
+    ToProtocol(_oldWorldMatrix, _config.mutable_obj_world());
+
     fprintf(f, "%s", _config.DebugString().c_str());
     fclose(f);
   }

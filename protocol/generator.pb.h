@@ -25,6 +25,7 @@
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/unknown_field_set.h>
 #include "anttweak.pb.h"
+#include "common.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace generator {
@@ -120,6 +121,33 @@ class Config : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 height_segments() const;
   inline void set_height_segments(::google::protobuf::uint32 value);
 
+  // optional .common.Vector3 camera_pos = 5;
+  inline bool has_camera_pos() const;
+  inline void clear_camera_pos();
+  static const int kCameraPosFieldNumber = 5;
+  inline const ::common::Vector3& camera_pos() const;
+  inline ::common::Vector3* mutable_camera_pos();
+  inline ::common::Vector3* release_camera_pos();
+  inline void set_allocated_camera_pos(::common::Vector3* camera_pos);
+
+  // optional .common.Vector3 camera_target = 6;
+  inline bool has_camera_target() const;
+  inline void clear_camera_target();
+  static const int kCameraTargetFieldNumber = 6;
+  inline const ::common::Vector3& camera_target() const;
+  inline ::common::Vector3* mutable_camera_target();
+  inline ::common::Vector3* release_camera_target();
+  inline void set_allocated_camera_target(::common::Vector3* camera_target);
+
+  // optional .common.Matrix4x4 obj_world = 7;
+  inline bool has_obj_world() const;
+  inline void clear_obj_world();
+  static const int kObjWorldFieldNumber = 7;
+  inline const ::common::Matrix4x4& obj_world() const;
+  inline ::common::Matrix4x4* mutable_obj_world();
+  inline ::common::Matrix4x4* release_obj_world();
+  inline void set_allocated_obj_world(::common::Matrix4x4* obj_world);
+
   // @@protoc_insertion_point(class_scope:generator.Config)
  private:
   inline void set_has_radius();
@@ -130,6 +158,12 @@ class Config : public ::google::protobuf::Message {
   inline void clear_has_radial_segments();
   inline void set_has_height_segments();
   inline void clear_has_height_segments();
+  inline void set_has_camera_pos();
+  inline void clear_has_camera_pos();
+  inline void set_has_camera_target();
+  inline void clear_has_camera_target();
+  inline void set_has_obj_world();
+  inline void clear_has_obj_world();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -137,9 +171,12 @@ class Config : public ::google::protobuf::Message {
   float height_;
   ::google::protobuf::uint32 radial_segments_;
   ::google::protobuf::uint32 height_segments_;
+  ::common::Vector3* camera_pos_;
+  ::common::Vector3* camera_target_;
+  ::common::Matrix4x4* obj_world_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_generator_2eproto();
   friend void protobuf_AssignDesc_generator_2eproto();
@@ -241,6 +278,120 @@ inline ::google::protobuf::uint32 Config::height_segments() const {
 inline void Config::set_height_segments(::google::protobuf::uint32 value) {
   set_has_height_segments();
   height_segments_ = value;
+}
+
+// optional .common.Vector3 camera_pos = 5;
+inline bool Config::has_camera_pos() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Config::set_has_camera_pos() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Config::clear_has_camera_pos() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Config::clear_camera_pos() {
+  if (camera_pos_ != NULL) camera_pos_->::common::Vector3::Clear();
+  clear_has_camera_pos();
+}
+inline const ::common::Vector3& Config::camera_pos() const {
+  return camera_pos_ != NULL ? *camera_pos_ : *default_instance_->camera_pos_;
+}
+inline ::common::Vector3* Config::mutable_camera_pos() {
+  set_has_camera_pos();
+  if (camera_pos_ == NULL) camera_pos_ = new ::common::Vector3;
+  return camera_pos_;
+}
+inline ::common::Vector3* Config::release_camera_pos() {
+  clear_has_camera_pos();
+  ::common::Vector3* temp = camera_pos_;
+  camera_pos_ = NULL;
+  return temp;
+}
+inline void Config::set_allocated_camera_pos(::common::Vector3* camera_pos) {
+  delete camera_pos_;
+  camera_pos_ = camera_pos;
+  if (camera_pos) {
+    set_has_camera_pos();
+  } else {
+    clear_has_camera_pos();
+  }
+}
+
+// optional .common.Vector3 camera_target = 6;
+inline bool Config::has_camera_target() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void Config::set_has_camera_target() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void Config::clear_has_camera_target() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void Config::clear_camera_target() {
+  if (camera_target_ != NULL) camera_target_->::common::Vector3::Clear();
+  clear_has_camera_target();
+}
+inline const ::common::Vector3& Config::camera_target() const {
+  return camera_target_ != NULL ? *camera_target_ : *default_instance_->camera_target_;
+}
+inline ::common::Vector3* Config::mutable_camera_target() {
+  set_has_camera_target();
+  if (camera_target_ == NULL) camera_target_ = new ::common::Vector3;
+  return camera_target_;
+}
+inline ::common::Vector3* Config::release_camera_target() {
+  clear_has_camera_target();
+  ::common::Vector3* temp = camera_target_;
+  camera_target_ = NULL;
+  return temp;
+}
+inline void Config::set_allocated_camera_target(::common::Vector3* camera_target) {
+  delete camera_target_;
+  camera_target_ = camera_target;
+  if (camera_target) {
+    set_has_camera_target();
+  } else {
+    clear_has_camera_target();
+  }
+}
+
+// optional .common.Matrix4x4 obj_world = 7;
+inline bool Config::has_obj_world() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Config::set_has_obj_world() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Config::clear_has_obj_world() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void Config::clear_obj_world() {
+  if (obj_world_ != NULL) obj_world_->::common::Matrix4x4::Clear();
+  clear_has_obj_world();
+}
+inline const ::common::Matrix4x4& Config::obj_world() const {
+  return obj_world_ != NULL ? *obj_world_ : *default_instance_->obj_world_;
+}
+inline ::common::Matrix4x4* Config::mutable_obj_world() {
+  set_has_obj_world();
+  if (obj_world_ == NULL) obj_world_ = new ::common::Matrix4x4;
+  return obj_world_;
+}
+inline ::common::Matrix4x4* Config::release_obj_world() {
+  clear_has_obj_world();
+  ::common::Matrix4x4* temp = obj_world_;
+  obj_world_ = NULL;
+  return temp;
+}
+inline void Config::set_allocated_obj_world(::common::Matrix4x4* obj_world) {
+  delete obj_world_;
+  obj_world_ = obj_world;
+  if (obj_world) {
+    set_has_obj_world();
+  } else {
+    clear_has_obj_world();
+  }
 }
 
 

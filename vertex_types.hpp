@@ -97,11 +97,11 @@ namespace boba
     PosCol() {}
     PosCol(float x, float y, float z, float r, float g, float b, float a) : pos(x, y, z), col(r, g, b, a) {}
     PosCol(float x, float y, float z, const Vector4& col) : pos(x, y, z), col(col) {}
-    PosCol(const Vector3& pos, const Vector4& col) : pos(pos), col(col) {}
-    PosCol(const Vector2& pos, float z, const Vector4& col) : pos(pos.x, pos.y, z), col(col) {}
+    PosCol(const Vector3& pos, const Color& col) : pos(pos), col(col) {}
+    PosCol(const Vector2& pos, float z, const Color& col) : pos(pos.x, pos.y, z), col(col) {}
     PosCol(const Vector3& pos) : pos(pos) {}
     Vector3 pos;
-    Vector4 col;
+    Color col;
   };
 
   struct PosNormalTex
