@@ -9,16 +9,11 @@ namespace boba
   //------------------------------------------------------------------------------
   float Raycast(const Vector3& center, float radius, const Vector3& o, const Vector3& d)
   {
-    // ray is in view space
-    XMFLOAT3 xx = center;
-    Vector3 ro(xx.x, xx.y, xx.z);
-    float r = radius;
-
     // ray -> sphere intersection
     // Compute A, B and C coefficients
     float a = Dot(d, d);
-    float b = 2 * Dot(d, o - ro);
-    float c = Dot(o - ro, o - ro) - (r * r);
+    float b = 2 * Dot(d, o - center);
+    float c = Dot(o - center, o - center) - (radius * radius);
 
     // Find discriminant
     float disc = b * b - 4 * a * c;

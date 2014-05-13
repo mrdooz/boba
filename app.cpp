@@ -411,7 +411,11 @@ void App::AddMessage(MessageType type, const string& str)
 {
   Message msg;
   msg.str = utf8_to_wide(str.c_str());
-  if (type == MessageType::Info)
+  if (type == MessageType::Debug)
+  {
+    msg.r = msg.g = msg.b = 0.8f;
+  }
+  else if (type == MessageType::Info)
   {
     msg.r = msg.g = msg.b = 0.8f;
     msg.endTime = microsec_clock::local_time() + seconds(5);
@@ -442,14 +446,8 @@ void App::UpdateMessages()
   for (auto it = _messages.begin(); it != _messages.end(); )
   {
     const Message& msg = *it;
-    if (msg.endTime <= now)
+    if (msg.endTime.is_not_a_date_time() || msg.endTime > now)
     {
-      // message has elapsed, so remove it
-      it = _messages.erase(it);
-    }
-    else
-    {
-      ++it;
       y += 15;
       // blend out alpha over the last second
       time_duration left = msg.endTime - now;
@@ -459,6 +457,16 @@ void App::UpdateMessages()
         a = clamp(0.0f, 1.0f, left.total_milliseconds() / 1000.0f);
       }
       GRAPHICS.AddText(msg.str.c_str(), "Arial", 15, x, y, ColorToU32(msg.r, msg.g, msg.b, a));
+    }
+
+    if (!msg.endTime.is_not_a_date_time() && msg.endTime > now)
+    {
+      ++it;
+    }
+    else
+    {
+      // message has elapsed, so remove it
+      it = _messages.erase(it);
     }
   }
 }

@@ -37,7 +37,7 @@ function generate(radius, height, radial_segments, height_segments)
       local t = math.sin(3 * 3.1419 * ff)
       local t2 = math.cos(3 * 3.1419 * ff)
       local r = radius * (1 - ff)
-      local x = 50 * t^3 + r * c
+      local x = 50 + 50 * t^3 + r * c
       local z = 23 * t^5 * t2 + r * s
       angle = angle + inc
       

@@ -32,10 +32,10 @@ namespace boba
     string _configName;
     generator::Config _config;
 
-    Matrix _oldWorldMatrix;
-    Matrix _world;
     Matrix _view;
+    Matrix _invView;
     Matrix _proj;
+    Matrix _prevRot;
 
     u32 _numIndices;
 

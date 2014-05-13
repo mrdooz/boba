@@ -33,18 +33,24 @@ struct Face
 
 struct Mesh
 {
-  vector<float> verts;
-  vector<u32> indices;
-  vector<Face> faces;
-
-  Vector3 center;
-  float radius;
+  Mesh()
+  {
+    Reset();
+  }
 
   void Reset()
   {
+    rotation = Matrix::Identity();
+    translation = Vector3(0,0,0);
+
     indices.clear();
     verts.clear();
     faces.clear();
+  }
+
+  Matrix World()
+  {
+    return rotation * Matrix::CreateTranslation(translation);
   }
 
   void CalcBoundingSphere()
@@ -53,27 +59,47 @@ struct Mesh
       return;
 
     // find center
-    Vector3 tmp(verts[0], verts[1], verts[2]);
-    for (size_t i = 1*6; i < verts.size() / 6; ++i)
+    size_t numVerts = verts.size() / 6;
+    translation = Vector3(verts[0], verts[1], verts[2]);
+    for (size_t i = 1*6; i < numVerts; ++i)
     {
-      tmp.x += verts[i * 6 + 0];
-      tmp.y += verts[i * 6 + 1];
-      tmp.z += verts[i * 6 + 2];
+      translation.x += verts[i * 6 + 0];
+      translation.y += verts[i * 6 + 1];
+      translation.z += verts[i * 6 + 2];
     }
 
-    tmp /= (float)(verts.size() / 6);
+    translation/= (float)numVerts;
+
+    // center the verts
+    for (size_t i = 0; i < numVerts; ++i)
+    {
+      verts[i * 6 + 0] -= translation.x;
+      verts[i * 6 + 1] -= translation.y;
+      verts[i * 6 + 2] -= translation.z;
+    }
 
     // find max radius to center
-    float r = Vector3::DistanceSquared(tmp, Vector3(verts[0], verts[1], verts[2]));
-    for (size_t i = 1*6; i < verts.size() / 6; ++i)
+    float r = Vector3::DistanceSquared(Vector3(0,0,0), Vector3(verts[0], verts[1], verts[2]));
+    for (size_t i = 1*6; i < numVerts; ++i)
     {
-      float cand = Vector3::DistanceSquared(tmp, Vector3(verts[i * 6 + 0], verts[i * 6 + 1], verts[i * 6 + 2]));
+      float cand = Vector3::DistanceSquared(Vector3(0,0,0), Vector3(verts[i * 6 + 0], verts[i * 6 + 1], verts[i * 6 + 2]));
       r = max(r, cand);
     }
 
-    center = tmp;
+    center = Vector3(0,0,0);
     radius = sqrt(r);
   }
+
+  vector<float> verts;
+  vector<u32> indices;
+  vector<Face> faces;
+
+  Vector3 center;
+  float radius;
+
+  Matrix rotation;
+  Vector3 translation;
+
 };
 
 Mesh g_mesh;
@@ -303,8 +329,11 @@ PosCol* DebugDrawer::AddQuad(const Vector3& a, const Vector3& b, PosCol* dst)
 {
   Vector3 dir(b - a);
   dir.Normalize();
+  // use the camera's up vector
   Vector3 up(_invView.m[1][0], _invView.m[1][1], _invView.m[1][2]);
+  up.Normalize();
   Vector3 right = up.Cross(dir);
+  right.Normalize();
 
   // 2 3
   // 0 1
@@ -375,7 +404,7 @@ void DebugDrawer::DrawSphere(const Vector3& center, float radius)
   if (numVerts > 0)
   {
     CBufferPerFrame cb;
-    cb.world = _world;
+    cb.world = _world.Transpose();
     cb.viewProj = (_view * _proj).Transpose();
 
     _ctx->SetRS(_rasterizerState);
@@ -400,7 +429,7 @@ void DebugDrawer::DrawLineStrip(const Vector3* start, u32 count)
 GeneratorTest::GeneratorTest(const string &name)
     : Effect(name)
     , _rotatingObject(false)
-    , _oldWorldMatrix(Matrix::Identity())
+//    , _oldWorldMatrix(Matrix::Identity())
     , _dirtyFlag(true)
     , _lua(nullptr)
     , _numIndices(0)
@@ -422,8 +451,8 @@ bool GeneratorTest::Init(const char* config)
 
   _cameraPos = FromProtocol(_config.camera_pos());
   _cameraTarget = FromProtocol(_config.camera_target());
-  _oldWorldMatrix = FromProtocol(_config.obj_world());
-  _world = _oldWorldMatrix;
+  g_mesh.rotation = FromProtocol(_config.obj_world());
+  _prevRot = g_mesh.rotation;
 
   BindConfig(&_config, &_dirtyFlag);
 
@@ -496,6 +525,8 @@ bool GeneratorTest::Render()
         _meshObjects._ib = GRAPHICS.CreateBuffer(D3D11_BIND_INDEX_BUFFER, _meshObjects._ibSize, true, nullptr, DXGI_FORMAT_R32_UINT);
       }
 
+      g_mesh.CalcBoundingSphere();
+
       D3D11_MAPPED_SUBRESOURCE res;
       if (_ctx->Map(_meshObjects._vb, 0, D3D11_MAP_WRITE_DISCARD, 0, &res))
       {
@@ -510,7 +541,6 @@ bool GeneratorTest::Render()
       }
 
       _numIndices = g_mesh.indices.size();
-      g_mesh.CalcBoundingSphere();
     }
 
     _dirtyFlag = false;
@@ -528,8 +558,10 @@ bool GeneratorTest::Render()
         _cameraPos,
         _cameraTarget,
         Vector3(0, 1, 0));
+    _invView = _view.Invert();
 
-    cb.world = _world;
+    Matrix world = g_mesh.World();
+    cb.world = world.Transpose();
     cb.viewProj = (_view * _proj).Transpose();
 
     _ctx->SetCBuffer(_meshObjects._cbuffer, &cb, sizeof(cb), ShaderType::VertexShader);
@@ -538,7 +570,7 @@ bool GeneratorTest::Render()
 
     DebugDrawer::Instance()->SetContext(_ctx);
     DebugDrawer::Instance()->SetViewProjMatrix(_view, _proj);
-    DebugDrawer::Instance()->SetWorldMatrix(_world);
+    DebugDrawer::Instance()->SetWorldMatrix(world);
     DebugDrawer::Instance()->SetWidth(5);
     DebugDrawer::Instance()->DrawSphere(g_mesh.center, g_mesh.radius);
 
@@ -561,7 +593,8 @@ bool GeneratorTest::SaveSettings()
   {
     ToProtocol(_cameraPos, _config.mutable_camera_pos());
     ToProtocol(_cameraTarget, _config.mutable_camera_target());
-    ToProtocol(_oldWorldMatrix, _config.mutable_obj_world());
+    //ToProtocol(_oldWorldMatrix, _config.mutable_obj_world());
+    ToProtocol(g_mesh.rotation, _config.mutable_obj_world());
 
     fprintf(f, "%s", _config.DebugString().c_str());
     fclose(f);
@@ -593,26 +626,30 @@ void GeneratorTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
       // start of rotation
       u32 xs = LOWORD(lParam);
       u32 ys = HIWORD(lParam);
+      Vector3 org_vs = Vector3(0, 0, 0);
+      Vector3 dir_vs = ScreenToViewSpace(_proj, xs, ys);
+            
+      Matrix worldToObj = g_mesh.World().Invert();
+      Matrix viewToObj = _invView * worldToObj;
 
-      Vector3 oView = Vector3(0,0,0);
-      Vector3 dView = ScreenToViewSpace(_proj, xs, ys);
-
-      Matrix viewToWorld = _view.Invert();
-      Vector3 o = Vector4::Transform(Vector4(oView.x, oView.y, oView.z, 1), viewToWorld);
-      Vector3 d = Vector4::Transform(Vector4(dView.x, dView.y, dView.z, 0), viewToWorld);
-      d.Normalize();
-
-      Vector3 center_ws = Vector4::Transform(Vector4(g_mesh.center.x, g_mesh.center.y, g_mesh.center.z, 1), _world);
-      float t = Raycast(center_ws, g_mesh.radius, o, d);
+      Vector3 org_os = Vector4::Transform(Vector4(_invView._41,  _invView._42, _invView._43, 1), worldToObj);
+      Vector3 dir_os = Vector4::Transform(Vector4(dir_vs.x, dir_vs.y, dir_vs.z, 0), viewToObj);
+      dir_os.Normalize();
+      float t = Raycast(Vector3(0, 0, 0), g_mesh.radius, org_os, dir_os);
       _rotatingObject = t > 0;
+
       if (_rotatingObject)
+      {
+        Vector3 d = Vector4::Transform(Vector4(dir_vs.x, dir_vs.y, dir_vs.z, 0), _invView);
+        d.Normalize();
         _v0 = d;
+      }
 
       break;
     }
 
     case WM_LBUTTONUP:
-      _oldWorldMatrix = _world;
+      _prevRot = g_mesh.rotation;
       _rotatingObject = false;
       break;
 
@@ -623,13 +660,11 @@ void GeneratorTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
         u32 xs = LOWORD(lParam);
         u32 ys = HIWORD(lParam);
 
-        Matrix viewToWorld = _view.Invert();
-
         // Find the click point in world space
         Vector3 pos = ScreenToViewSpace(_proj, xs, ys);
 
         // Vector from eye pos (0,0,0) to click point in world space
-        Vector3 v1 = Vector4::Transform(Vector4(pos.x, pos.y, pos.z, 0), viewToWorld);
+        Vector3 v1 = Vector4::Transform(Vector4(pos.x, pos.y, pos.z, 0), _invView);
         v1.Normalize();
 
         // angle between the two vectors
@@ -637,7 +672,7 @@ void GeneratorTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
         float angle = acos(_v0.Dot(v1));
         Vector3 axis = _v0.Cross(v1);
         if (axis.Length() > 0)
-          _world = Matrix::CreateFromAxisAngle(axis, speed * angle) * _oldWorldMatrix;
+          g_mesh.rotation =  _prevRot * Matrix::CreateFromAxisAngle(axis, speed * angle);
       }
       break;
     }

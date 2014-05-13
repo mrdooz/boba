@@ -17,6 +17,7 @@ namespace boba
 {
   enum class MessageType
   {
+    Debug,
     Info,
     Warning,
     Error,
