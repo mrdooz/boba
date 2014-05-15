@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="..\app.cpp" />
     <ClCompile Include="..\boba.cpp" />
+    <ClCompile Include="..\debug_drawer.cpp" />
     <ClCompile Include="..\deferred_context.cpp" />
     <ClCompile Include="..\demo_engine.cpp" />
     <ClCompile Include="..\effect.cpp" />
@@ -307,6 +308,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\app.hpp" />
+    <ClInclude Include="..\debug_drawer.hpp" />
     <ClInclude Include="..\deferred_context.hpp" />
     <ClInclude Include="..\demo_engine.hpp" />
     <ClInclude Include="..\effect.hpp" />

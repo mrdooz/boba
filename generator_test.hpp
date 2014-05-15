@@ -44,6 +44,8 @@ namespace boba
     bool _rotatingObject;
     Vector3 _v0;
     bool _dirtyFlag;
+    bool _debugDraw;
+    bool _wireframe;
 
     Vector3 _cameraPos, _cameraTarget;
 

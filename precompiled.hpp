@@ -16,6 +16,8 @@
 
 #define WITH_FONT_RENDERING 1
 
+#define WITH_MEMORY_TRACKING 0
+
 #include <stdint.h>
 #include <assert.h>
 #include <time.h>

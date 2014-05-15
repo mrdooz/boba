@@ -11,6 +11,7 @@
 
 #include "boba_io.hpp"
 #include "protocol/generator_bindings.hpp"
+#include "debug_drawer.hpp"
 
 using namespace boba;
 
@@ -100,7 +101,11 @@ struct Mesh
   Matrix rotation;
   Vector3 translation;
 
+  GraphicsObjectHandle _wireframe;
+  GraphicsObjectHandle _solid;
 };
+
+#define DEBUG_DRAW DebugDrawer::Instance()
 
 Mesh g_mesh;
 
@@ -166,6 +171,25 @@ int GetMeshIndices(lua_State* L)
   return 1;
 }
 
+int LuaPrint(lua_State* L)
+{
+  int nargs = lua_gettop(L);
+
+  for (int i=1; i <= nargs; i++)
+  {
+    if (lua_isstring(L, i))
+    {
+      const char* str = lua_tostring(L, i);
+      APP.AddMessage(MessageType::Info, str);
+    }
+    else {
+
+    }
+  }
+
+  return 0;
+}
+
 int __cdecl luaopen_mesh(lua_State* L)
 {
   static const struct luaL_Reg vertexFunctions[] = {
@@ -180,6 +204,11 @@ int __cdecl luaopen_mesh(lua_State* L)
     NULL, NULL
   };
 
+  static const struct luaL_Reg printlib[] ={
+    { "print", LuaPrint },
+    { NULL, NULL } /* end of array */
+  };
+
   // create a metatable for our mesh type
   luaL_newmetatable(L, "vertices");
   luaL_setfuncs(L, vertexFunctions, 0);
@@ -190,249 +219,24 @@ int __cdecl luaopen_mesh(lua_State* L)
   // make our test routine available to Lua
   lua_register(L, "get_vertices", GetMeshVertices);
   lua_register(L, "get_indices", GetMeshIndices);
+
+  // hook up our own print function
+  lua_getglobal(L, "_G");
+  luaL_setfuncs(L, printlib, 0);
+  lua_pop(L, 1);
+
   return 0;
-}
-
-class DebugDrawer
-{
-public:
-
-  static bool Create();
-  static bool Destroy();
-  static DebugDrawer* Instance();
-
-  void SetContext(DeferredContext* ctx);
-  void SetViewProjMatrix(const Matrix& view, const Matrix& proj);
-  void SetWorldMatrix(const Matrix& world);
-  void SetColor(const Color& color);
-  void SetWidth(float width);
-  void Reset();
-
-  void DrawMatrix(const Matrix& matrix);
-  void DrawSphere(const Vector3& center, float radius);
-  void DrawLine(const Vector3& a, const Vector3& b);
-  void DrawLineStrip(const Vector3* start, u32 count);
-
-private:
-
-  PosCol* AddQuad(const Vector3& a, const Vector3& b, PosCol* dst);
-
-  bool Init();
-
-  DebugDrawer();
-  DISALLOW_COPY_AND_ASSIGN(DebugDrawer);
-
-  static DebugDrawer* _instance;
-
-  GpuObjects _gpuObjects;
-
-  GraphicsObjectHandle _rasterizerState;
-  DeferredContext* _ctx;
-  Matrix _world;
-  Matrix _view;
-  Matrix _invView;
-  Matrix _proj;
-  Color _color;
-  float _width;
-};
-
-DebugDrawer* DebugDrawer::_instance;
-
-DebugDrawer::DebugDrawer()
-{
-  Reset();
-}
-
-bool DebugDrawer::Create()
-{
-  if (_instance)
-  {
-    LOG_WARN("DebugDrawer::Init() called multiple times");
-    return true;
-  }
-
-  _instance = new DebugDrawer();
-  return _instance->Init();
-}
-
-bool DebugDrawer::Init()
-{
-  _gpuObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosCol), sizeof(CBufferPerFrame));
-
-  if (!LoadShadersFromFile("shaders/debug_draw",
-    &_gpuObjects._vs, &_gpuObjects._ps, &_gpuObjects._layout, VF_POS | VF_COLOR))
-  {
-    LOG_WARN("Error loading shaders for DebugDrawer");
-    return false;
-  }
-
-  CD3D11_RASTERIZER_DESC desc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT());
-  desc.CullMode = D3D11_CULL_NONE;
-  _rasterizerState = GRAPHICS.CreateRasterizerState(desc);
-
-  return true;
-}
-
-bool DebugDrawer::Destroy()
-{
-  if (!_instance)
-  {
-    LOG_WARN("DebugDrawer::Close() called without call to Init()");
-    return true;
-  }
-
-  return true;
-}
-
-DebugDrawer* DebugDrawer::Instance()
-{
-  return _instance;
-}
-
-void DebugDrawer::SetContext(DeferredContext* ctx)
-{
-  _ctx = ctx;
-}
-
-void DebugDrawer::SetViewProjMatrix(const Matrix& view, const Matrix& proj)
-{
-  _view = view;
-  _invView = _view.Invert();
-  _proj = proj;
-}
-
-void DebugDrawer::SetWorldMatrix(const Matrix& world)
-{
-  _world = world;
-}
-
-void DebugDrawer::SetColor(const Color& color)
-{
-  _color = color;
-}
-
-void DebugDrawer::SetWidth(float width)
-{
-  _width = width;
-}
-
-void DebugDrawer::Reset()
-{
-  _world = Matrix::Identity();
-  _view = Matrix::Identity();
-  _proj = Matrix::Identity();
-  _color = Color(1, 1, 1, 1);
-  _width = 1;
-}
-
-PosCol* DebugDrawer::AddQuad(const Vector3& a, const Vector3& b, PosCol* dst)
-{
-  Vector3 dir(b - a);
-  dir.Normalize();
-  // use the camera's up vector
-  Vector3 up(_invView.m[1][0], _invView.m[1][1], _invView.m[1][2]);
-  up.Normalize();
-  Vector3 right = up.Cross(dir);
-  right.Normalize();
-
-  // 2 3
-  // 0 1
-  Vector3 v0 = a - 0.5f * _width * right;
-  Vector3 v1 = a + 0.5f * _width * right;
-  Vector3 v2 = b - 0.5f * _width * right;
-  Vector3 v3 = b + 0.5f * _width * right;
-
-  for (u32 i = 0; i < 6; ++i)
-    dst[i].col = _color;
-
-  // 0, 2, 3
-  dst[0].pos = v0;
-  dst[1].pos = v2;
-  dst[2].pos = v3;
-
-  // 0, 3, 1
-  dst[3].pos = v0;
-  dst[4].pos = v3;
-  dst[5].pos = v1;
-
-  return dst + 6;
-}
-
-
-void DebugDrawer::DrawMatrix(const Matrix& matrix)
-{
-
-}
-
-void DebugDrawer::DrawSphere(const Vector3& center, float radius)
-{
-  D3D11_MAPPED_SUBRESOURCE res;
-  u32 numVerts = 0;
-  if (_ctx->Map(_gpuObjects._vb, 0, D3D11_MAP_WRITE_DISCARD, 0, &res))
-  {
-    PosCol* vtx = (PosCol*)res.pData;
-    PosCol* org = vtx;
-
-    u32 numSteps = 100;
-    float inc = 2 * DirectX::XM_PI / numSteps;
-    float angle = 0;
-    Vector3 a = center + Vector3(0, radius * sin(angle), -radius * cos(angle));
-    for (u32 i = 0; i < numSteps; ++i)
-    {
-      angle += inc;
-      Vector3 b = center + Vector3(0, radius * sin(angle), -radius * cos(angle));
-      vtx = AddQuad(a, b, vtx);
-      a = b;
-    }
-
-    angle = 0;
-    a = center + Vector3(radius * cos(angle), 0, -radius * sin(angle));
-    for (u32 i = 0; i < numSteps; ++i)
-    {
-      angle += inc;
-      Vector3 b = center + Vector3(radius * cos(angle), 0, -radius * sin(angle));
-      vtx = AddQuad(a, b, vtx);
-      a = b;
-    }
-
-
-    _ctx->Unmap(_gpuObjects._vb, 0);
-
-    numVerts = vtx - org;
-  }
-
-  if (numVerts > 0)
-  {
-    CBufferPerFrame cb;
-    cb.world = _world.Transpose();
-    cb.viewProj = (_view * _proj).Transpose();
-
-    _ctx->SetRS(_rasterizerState);
-    _ctx->SetCBuffer(_gpuObjects._cbuffer, &cb, sizeof(cb), ShaderType::VertexShader);
-    _ctx->SetRenderObjects(_gpuObjects);
-    _ctx->Draw(numVerts, 0);
-  }
-
-}
-
-void DebugDrawer::DrawLine(const Vector3& a, const Vector3& b)
-{
-
-}
-
-void DebugDrawer::DrawLineStrip(const Vector3* start, u32 count)
-{
-
 }
 
 //------------------------------------------------------------------------------
 GeneratorTest::GeneratorTest(const string &name)
     : Effect(name)
     , _rotatingObject(false)
-//    , _oldWorldMatrix(Matrix::Identity())
     , _dirtyFlag(true)
     , _lua(nullptr)
     , _numIndices(0)
+    , _debugDraw(false)
+    , _wireframe(true)
 {
 }
 
@@ -472,7 +276,14 @@ bool GeneratorTest::Init(const char* config)
       luaL_requiref(_lua, "mesh", luaopen_mesh, 1);
 
       if (luaL_loadfile(_lua, filename.c_str()))
+      {
+        APP.AddMessage(MessageType::Error, "Error loading generator1.lua");
         return false;
+      }
+      else
+      {
+        APP.AddMessage(MessageType::Info, "Loaded generator1.lua");
+      }
 
       lua_pcall(_lua, 0, 0, 0);
       _dirtyFlag = true;
@@ -481,6 +292,14 @@ bool GeneratorTest::Init(const char* config)
 
   if (!DebugDrawer::Create())
     return false;
+
+
+  CD3D11_RASTERIZER_DESC desc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT());
+  desc.FillMode = D3D11_FILL_SOLID;
+  g_mesh._solid = GRAPHICS.CreateRasterizerState(desc);
+  desc.FillMode = D3D11_FILL_WIREFRAME;
+  desc.CullMode = D3D11_CULL_NONE;
+  g_mesh._wireframe = GRAPHICS.CreateRasterizerState(desc);
 
   return true;
 }
@@ -498,15 +317,26 @@ bool GeneratorTest::Render()
   {
     g_mesh.Reset();
 
+    // push debug.traceback on stack 
+    lua_getglobal(_lua, "debug");
+    lua_getfield(_lua, -1, "traceback");
+    lua_replace(_lua, -2);
+
     lua_getglobal(_lua, "generate");
     lua_pushnumber(_lua, _config.radius());
     lua_pushnumber(_lua, _config.height());
     lua_pushinteger(_lua, _config.radial_segments());
     lua_pushinteger(_lua, _config.height_segments());
 
-    int res = lua_pcall(_lua, 4, 0, 0);
-
-    if (res == LUA_OK)
+    if (lua_pcall(_lua, 4, 0, -6))
+    {
+      const char* err = lua_tostring(_lua, -1);
+      OutputDebugStringA(err);
+      OutputDebugStringA("\n");
+      APP.AddMessage(MessageType::Warning, err);
+      lua_pop(_lua, 2);
+    }
+    else
     {
       // check if the buffers need to be resized
       u32 vbSize = g_mesh.verts.size() * sizeof(g_mesh.verts[0]);
@@ -542,6 +372,7 @@ bool GeneratorTest::Render()
 
       _numIndices = g_mesh.indices.size();
     }
+    lua_pop(_lua, 1);
 
     _dirtyFlag = false;
   }
@@ -564,15 +395,20 @@ bool GeneratorTest::Render()
     cb.world = world.Transpose();
     cb.viewProj = (_view * _proj).Transpose();
 
+    _ctx->SetRS(_wireframe ? g_mesh._wireframe : g_mesh._solid);
+
     _ctx->SetCBuffer(_meshObjects._cbuffer, &cb, sizeof(cb), ShaderType::VertexShader);
     _ctx->SetRenderObjects(_meshObjects);
     _ctx->DrawIndexed(_numIndices, 0, 0);
 
-    DebugDrawer::Instance()->SetContext(_ctx);
-    DebugDrawer::Instance()->SetViewProjMatrix(_view, _proj);
-    DebugDrawer::Instance()->SetWorldMatrix(world);
-    DebugDrawer::Instance()->SetWidth(5);
-    DebugDrawer::Instance()->DrawSphere(g_mesh.center, g_mesh.radius);
+    if (_debugDraw)
+    {
+      DEBUG_DRAW.SetContext(_ctx);
+      DEBUG_DRAW.SetViewProjMatrix(_view, _proj);
+      DEBUG_DRAW.SetWorldMatrix(world);
+      DEBUG_DRAW.SetWidth(5);
+      DEBUG_DRAW.DrawSphere(g_mesh.center, g_mesh.radius);
+    }
 
     _ctx->EndFrame();
   }
@@ -593,7 +429,6 @@ bool GeneratorTest::SaveSettings()
   {
     ToProtocol(_cameraPos, _config.mutable_camera_pos());
     ToProtocol(_cameraTarget, _config.mutable_camera_target());
-    //ToProtocol(_oldWorldMatrix, _config.mutable_obj_world());
     ToProtocol(g_mesh.rotation, _config.mutable_obj_world());
 
     fprintf(f, "%s", _config.DebugString().c_str());
@@ -617,10 +452,49 @@ const char* GeneratorTest::Name()
 //------------------------------------------------------------------------------
 void GeneratorTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-  DebugDrawer::Instance()->SetColor(Color(_rotatingObject * 1.0f, 1, 0, 1));
+  DEBUG_DRAW.SetColor(Color(_rotatingObject * 1.0f, 1, 0, 1));
+  float speed = 10;
 
   switch (message)
   {
+    case WM_KEYDOWN:
+      switch (wParam)
+      {
+        case '1':
+        _wireframe = !_wireframe;
+        break;
+
+        case 'A':
+        {
+          Vector3 right(_invView._11, _invView._12, _invView._23);
+          _cameraPos += -speed * right;
+          break;
+        }
+
+        case 'D':
+        {
+          Vector3 right(_invView._11, _invView._12, _invView._23);
+          _cameraPos += speed * right;
+          break;
+        }
+
+        case 'W':
+        {
+          Vector3 up(_invView._21, _invView._22, _invView._23);
+          _cameraPos += speed * up;
+          break;
+        }
+
+        case 'S':
+        {
+          Vector3 up(_invView._21, _invView._22, _invView._23);
+          _cameraPos += -speed * up;
+          break;
+        }
+
+      }
+    break;
+
     case WM_LBUTTONDOWN:
     {
       // start of rotation
