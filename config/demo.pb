@@ -2,7 +2,7 @@ part
 {
 	name : "scene1"
 	effect_class : "generator_test"
-	config : "config/generator1.pb"
+	config : "config/generator2.pb"
 	start : 0
 	end : 60000000
 }

@@ -20,9 +20,12 @@ namespace generator {
 
 namespace {
 
-const ::google::protobuf::Descriptor* Config_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* Spiky_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  Config_reflection_ = NULL;
+  Spiky_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Plane_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Plane_reflection_ = NULL;
 
 }  // namespace
 
@@ -33,27 +36,50 @@ void protobuf_AssignDesc_generator_2eproto() {
     ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
       "generator.proto");
   GOOGLE_CHECK(file != NULL);
-  Config_descriptor_ = file->message_type(0);
-  static const int Config_offsets_[7] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, radius_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, height_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, radial_segments_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, height_segments_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, camera_pos_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, camera_target_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, obj_world_),
+  Spiky_descriptor_ = file->message_type(0);
+  static const int Spiky_offsets_[8] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Spiky, radius_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Spiky, height_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Spiky, radial_segments_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Spiky, height_segments_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Spiky, camera_pos_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Spiky, camera_dir_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Spiky, obj_t_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Spiky, obj_r_),
   };
-  Config_reflection_ =
+  Spiky_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      Config_descriptor_,
-      Config::default_instance_,
-      Config_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Config, _unknown_fields_),
+      Spiky_descriptor_,
+      Spiky::default_instance_,
+      Spiky_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Spiky, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Spiky, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(Config));
+      sizeof(Spiky));
+  Plane_descriptor_ = file->message_type(1);
+  static const int Plane_offsets_[8] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, width_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, height_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, width_segments_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, height_segments_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, camera_pos_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, camera_dir_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, obj_t_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, obj_r_),
+  };
+  Plane_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Plane_descriptor_,
+      Plane::default_instance_,
+      Plane_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Plane));
 }
 
 namespace {
@@ -67,14 +93,18 @@ inline void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    Config_descriptor_, &Config::default_instance());
+    Spiky_descriptor_, &Spiky::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Plane_descriptor_, &Plane::default_instance());
 }
 
 }  // namespace
 
 void protobuf_ShutdownFile_generator_2eproto() {
-  delete Config::default_instance_;
-  delete Config_reflection_;
+  delete Spiky::default_instance_;
+  delete Spiky_reflection_;
+  delete Plane::default_instance_;
+  delete Plane_reflection_;
 }
 
 void protobuf_AddDesc_generator_2eproto() {
@@ -87,17 +117,26 @@ void protobuf_AddDesc_generator_2eproto() {
   ::common::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\017generator.proto\022\tgenerator\032\016anttweak.p"
-    "roto\032\014common.proto\"\337\001\n\006Config\022\016\n\006radius\030"
-    "\001 \001(\002\022\016\n\006height\030\002 \001(\002\022\027\n\017radial_segments"
-    "\030\003 \001(\r\022\027\n\017height_segments\030\004 \001(\r\022)\n\ncamer"
-    "a_pos\030\005 \001(\0132\017.common.Vector3B\004\230\265\030\001\022,\n\rca"
-    "mera_target\030\006 \001(\0132\017.common.Vector3B\004\230\265\030\001"
-    "\022*\n\tobj_world\030\007 \001(\0132\021.common.Matrix4x4B\004"
-    "\230\265\030\001", 284);
+    "roto\032\014common.proto\"\375\001\n\005Spiky\022\016\n\006radius\030\001"
+    " \001(\002\022\016\n\006height\030\002 \001(\002\022\027\n\017radial_segments\030"
+    "\003 \001(\r\022\027\n\017height_segments\030\004 \001(\r\022)\n\ncamera"
+    "_pos\030\005 \001(\0132\017.common.Vector3B\004\230\265\030\001\022)\n\ncam"
+    "era_dir\030\006 \001(\0132\017.common.Vector3B\004\230\265\030\001\022$\n\005"
+    "obj_t\030\007 \001(\0132\017.common.Vector3B\004\230\265\030\001\022&\n\005ob"
+    "j_r\030\010 \001(\0132\021.common.Matrix4x4B\004\230\265\030\001\"\373\001\n\005P"
+    "lane\022\r\n\005width\030\001 \001(\002\022\016\n\006height\030\002 \001(\002\022\026\n\016w"
+    "idth_segments\030\003 \001(\r\022\027\n\017height_segments\030\004"
+    " \001(\r\022)\n\ncamera_pos\030\005 \001(\0132\017.common.Vector"
+    "3B\004\230\265\030\001\022)\n\ncamera_dir\030\006 \001(\0132\017.common.Vec"
+    "tor3B\004\230\265\030\001\022$\n\005obj_t\030\007 \001(\0132\017.common.Vecto"
+    "r3B\004\230\265\030\001\022&\n\005obj_r\030\010 \001(\0132\021.common.Matrix4"
+    "x4B\004\230\265\030\001", 568);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "generator.proto", &protobuf_RegisterTypes);
-  Config::default_instance_ = new Config();
-  Config::default_instance_->InitAsDefaultInstance();
+  Spiky::default_instance_ = new Spiky();
+  Plane::default_instance_ = new Plane();
+  Spiky::default_instance_->InitAsDefaultInstance();
+  Plane::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_generator_2eproto);
 }
 
@@ -111,78 +150,82 @@ struct StaticDescriptorInitializer_generator_2eproto {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Config::kRadiusFieldNumber;
-const int Config::kHeightFieldNumber;
-const int Config::kRadialSegmentsFieldNumber;
-const int Config::kHeightSegmentsFieldNumber;
-const int Config::kCameraPosFieldNumber;
-const int Config::kCameraTargetFieldNumber;
-const int Config::kObjWorldFieldNumber;
+const int Spiky::kRadiusFieldNumber;
+const int Spiky::kHeightFieldNumber;
+const int Spiky::kRadialSegmentsFieldNumber;
+const int Spiky::kHeightSegmentsFieldNumber;
+const int Spiky::kCameraPosFieldNumber;
+const int Spiky::kCameraDirFieldNumber;
+const int Spiky::kObjTFieldNumber;
+const int Spiky::kObjRFieldNumber;
 #endif  // !_MSC_VER
 
-Config::Config()
+Spiky::Spiky()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void Config::InitAsDefaultInstance() {
+void Spiky::InitAsDefaultInstance() {
   camera_pos_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
-  camera_target_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
-  obj_world_ = const_cast< ::common::Matrix4x4*>(&::common::Matrix4x4::default_instance());
+  camera_dir_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
+  obj_t_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
+  obj_r_ = const_cast< ::common::Matrix4x4*>(&::common::Matrix4x4::default_instance());
 }
 
-Config::Config(const Config& from)
+Spiky::Spiky(const Spiky& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void Config::SharedCtor() {
+void Spiky::SharedCtor() {
   _cached_size_ = 0;
   radius_ = 0;
   height_ = 0;
   radial_segments_ = 0u;
   height_segments_ = 0u;
   camera_pos_ = NULL;
-  camera_target_ = NULL;
-  obj_world_ = NULL;
+  camera_dir_ = NULL;
+  obj_t_ = NULL;
+  obj_r_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-Config::~Config() {
+Spiky::~Spiky() {
   SharedDtor();
 }
 
-void Config::SharedDtor() {
+void Spiky::SharedDtor() {
   if (this != default_instance_) {
     delete camera_pos_;
-    delete camera_target_;
-    delete obj_world_;
+    delete camera_dir_;
+    delete obj_t_;
+    delete obj_r_;
   }
 }
 
-void Config::SetCachedSize(int size) const {
+void Spiky::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* Config::descriptor() {
+const ::google::protobuf::Descriptor* Spiky::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return Config_descriptor_;
+  return Spiky_descriptor_;
 }
 
-const Config& Config::default_instance() {
+const Spiky& Spiky::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_generator_2eproto();
   return *default_instance_;
 }
 
-Config* Config::default_instance_ = NULL;
+Spiky* Spiky::default_instance_ = NULL;
 
-Config* Config::New() const {
-  return new Config;
+Spiky* Spiky::New() const {
+  return new Spiky;
 }
 
-void Config::Clear() {
+void Spiky::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     radius_ = 0;
     height_ = 0;
@@ -191,18 +234,21 @@ void Config::Clear() {
     if (has_camera_pos()) {
       if (camera_pos_ != NULL) camera_pos_->::common::Vector3::Clear();
     }
-    if (has_camera_target()) {
-      if (camera_target_ != NULL) camera_target_->::common::Vector3::Clear();
+    if (has_camera_dir()) {
+      if (camera_dir_ != NULL) camera_dir_->::common::Vector3::Clear();
     }
-    if (has_obj_world()) {
-      if (obj_world_ != NULL) obj_world_->::common::Matrix4x4::Clear();
+    if (has_obj_t()) {
+      if (obj_t_ != NULL) obj_t_->::common::Vector3::Clear();
+    }
+    if (has_obj_r()) {
+      if (obj_r_ != NULL) obj_r_->::common::Matrix4x4::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
-bool Config::MergePartialFromCodedStream(
+bool Spiky::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
@@ -281,31 +327,45 @@ bool Config::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(50)) goto parse_camera_target;
+        if (input->ExpectTag(50)) goto parse_camera_dir;
         break;
       }
 
-      // optional .common.Vector3 camera_target = 6;
+      // optional .common.Vector3 camera_dir = 6;
       case 6: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_camera_target:
+         parse_camera_dir:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_camera_target()));
+               input, mutable_camera_dir()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(58)) goto parse_obj_world;
+        if (input->ExpectTag(58)) goto parse_obj_t;
         break;
       }
 
-      // optional .common.Matrix4x4 obj_world = 7;
+      // optional .common.Vector3 obj_t = 7;
       case 7: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_obj_world:
+         parse_obj_t:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_obj_world()));
+               input, mutable_obj_t()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(66)) goto parse_obj_r;
+        break;
+      }
+
+      // optional .common.Matrix4x4 obj_r = 8;
+      case 8: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_obj_r:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_obj_r()));
         } else {
           goto handle_uninterpreted;
         }
@@ -329,7 +389,7 @@ bool Config::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void Config::SerializeWithCachedSizes(
+void Spiky::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // optional float radius = 1;
   if (has_radius()) {
@@ -357,16 +417,22 @@ void Config::SerializeWithCachedSizes(
       5, this->camera_pos(), output);
   }
 
-  // optional .common.Vector3 camera_target = 6;
-  if (has_camera_target()) {
+  // optional .common.Vector3 camera_dir = 6;
+  if (has_camera_dir()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, this->camera_target(), output);
+      6, this->camera_dir(), output);
   }
 
-  // optional .common.Matrix4x4 obj_world = 7;
-  if (has_obj_world()) {
+  // optional .common.Vector3 obj_t = 7;
+  if (has_obj_t()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      7, this->obj_world(), output);
+      7, this->obj_t(), output);
+  }
+
+  // optional .common.Matrix4x4 obj_r = 8;
+  if (has_obj_r()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      8, this->obj_r(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -375,7 +441,7 @@ void Config::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* Config::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Spiky::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // optional float radius = 1;
   if (has_radius()) {
@@ -404,18 +470,25 @@ void Config::SerializeWithCachedSizes(
         5, this->camera_pos(), target);
   }
 
-  // optional .common.Vector3 camera_target = 6;
-  if (has_camera_target()) {
+  // optional .common.Vector3 camera_dir = 6;
+  if (has_camera_dir()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        6, this->camera_target(), target);
+        6, this->camera_dir(), target);
   }
 
-  // optional .common.Matrix4x4 obj_world = 7;
-  if (has_obj_world()) {
+  // optional .common.Vector3 obj_t = 7;
+  if (has_obj_t()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        7, this->obj_world(), target);
+        7, this->obj_t(), target);
+  }
+
+  // optional .common.Matrix4x4 obj_r = 8;
+  if (has_obj_r()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        8, this->obj_r(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -425,7 +498,7 @@ void Config::SerializeWithCachedSizes(
   return target;
 }
 
-int Config::ByteSize() const {
+int Spiky::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -460,18 +533,25 @@ int Config::ByteSize() const {
           this->camera_pos());
     }
 
-    // optional .common.Vector3 camera_target = 6;
-    if (has_camera_target()) {
+    // optional .common.Vector3 camera_dir = 6;
+    if (has_camera_dir()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->camera_target());
+          this->camera_dir());
     }
 
-    // optional .common.Matrix4x4 obj_world = 7;
-    if (has_obj_world()) {
+    // optional .common.Vector3 obj_t = 7;
+    if (has_obj_t()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->obj_world());
+          this->obj_t());
+    }
+
+    // optional .common.Matrix4x4 obj_r = 8;
+    if (has_obj_r()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->obj_r());
     }
 
   }
@@ -486,10 +566,10 @@ int Config::ByteSize() const {
   return total_size;
 }
 
-void Config::MergeFrom(const ::google::protobuf::Message& from) {
+void Spiky::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const Config* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const Config*>(
+  const Spiky* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Spiky*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -498,7 +578,7 @@ void Config::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void Config::MergeFrom(const Config& from) {
+void Spiky::MergeFrom(const Spiky& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_radius()) {
@@ -516,53 +596,561 @@ void Config::MergeFrom(const Config& from) {
     if (from.has_camera_pos()) {
       mutable_camera_pos()->::common::Vector3::MergeFrom(from.camera_pos());
     }
-    if (from.has_camera_target()) {
-      mutable_camera_target()->::common::Vector3::MergeFrom(from.camera_target());
+    if (from.has_camera_dir()) {
+      mutable_camera_dir()->::common::Vector3::MergeFrom(from.camera_dir());
     }
-    if (from.has_obj_world()) {
-      mutable_obj_world()->::common::Matrix4x4::MergeFrom(from.obj_world());
+    if (from.has_obj_t()) {
+      mutable_obj_t()->::common::Vector3::MergeFrom(from.obj_t());
+    }
+    if (from.has_obj_r()) {
+      mutable_obj_r()->::common::Matrix4x4::MergeFrom(from.obj_r());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void Config::CopyFrom(const ::google::protobuf::Message& from) {
+void Spiky::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Config::CopyFrom(const Config& from) {
+void Spiky::CopyFrom(const Spiky& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Config::IsInitialized() const {
+bool Spiky::IsInitialized() const {
 
   return true;
 }
 
-void Config::Swap(Config* other) {
+void Spiky::Swap(Spiky* other) {
   if (other != this) {
     std::swap(radius_, other->radius_);
     std::swap(height_, other->height_);
     std::swap(radial_segments_, other->radial_segments_);
     std::swap(height_segments_, other->height_segments_);
     std::swap(camera_pos_, other->camera_pos_);
-    std::swap(camera_target_, other->camera_target_);
-    std::swap(obj_world_, other->obj_world_);
+    std::swap(camera_dir_, other->camera_dir_);
+    std::swap(obj_t_, other->obj_t_);
+    std::swap(obj_r_, other->obj_r_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
   }
 }
 
-::google::protobuf::Metadata Config::GetMetadata() const {
+::google::protobuf::Metadata Spiky::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = Config_descriptor_;
-  metadata.reflection = Config_reflection_;
+  metadata.descriptor = Spiky_descriptor_;
+  metadata.reflection = Spiky_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int Plane::kWidthFieldNumber;
+const int Plane::kHeightFieldNumber;
+const int Plane::kWidthSegmentsFieldNumber;
+const int Plane::kHeightSegmentsFieldNumber;
+const int Plane::kCameraPosFieldNumber;
+const int Plane::kCameraDirFieldNumber;
+const int Plane::kObjTFieldNumber;
+const int Plane::kObjRFieldNumber;
+#endif  // !_MSC_VER
+
+Plane::Plane()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void Plane::InitAsDefaultInstance() {
+  camera_pos_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
+  camera_dir_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
+  obj_t_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
+  obj_r_ = const_cast< ::common::Matrix4x4*>(&::common::Matrix4x4::default_instance());
+}
+
+Plane::Plane(const Plane& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void Plane::SharedCtor() {
+  _cached_size_ = 0;
+  width_ = 0;
+  height_ = 0;
+  width_segments_ = 0u;
+  height_segments_ = 0u;
+  camera_pos_ = NULL;
+  camera_dir_ = NULL;
+  obj_t_ = NULL;
+  obj_r_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Plane::~Plane() {
+  SharedDtor();
+}
+
+void Plane::SharedDtor() {
+  if (this != default_instance_) {
+    delete camera_pos_;
+    delete camera_dir_;
+    delete obj_t_;
+    delete obj_r_;
+  }
+}
+
+void Plane::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Plane::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Plane_descriptor_;
+}
+
+const Plane& Plane::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_generator_2eproto();
+  return *default_instance_;
+}
+
+Plane* Plane::default_instance_ = NULL;
+
+Plane* Plane::New() const {
+  return new Plane;
+}
+
+void Plane::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    width_ = 0;
+    height_ = 0;
+    width_segments_ = 0u;
+    height_segments_ = 0u;
+    if (has_camera_pos()) {
+      if (camera_pos_ != NULL) camera_pos_->::common::Vector3::Clear();
+    }
+    if (has_camera_dir()) {
+      if (camera_dir_ != NULL) camera_dir_->::common::Vector3::Clear();
+    }
+    if (has_obj_t()) {
+      if (obj_t_ != NULL) obj_t_->::common::Vector3::Clear();
+    }
+    if (has_obj_r()) {
+      if (obj_r_ != NULL) obj_r_->::common::Matrix4x4::Clear();
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Plane::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional float width = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &width_)));
+          set_has_width();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(21)) goto parse_height;
+        break;
+      }
+
+      // optional float height = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_height:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &height_)));
+          set_has_height();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_width_segments;
+        break;
+      }
+
+      // optional uint32 width_segments = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_width_segments:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &width_segments_)));
+          set_has_width_segments();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(32)) goto parse_height_segments;
+        break;
+      }
+
+      // optional uint32 height_segments = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_height_segments:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &height_segments_)));
+          set_has_height_segments();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(42)) goto parse_camera_pos;
+        break;
+      }
+
+      // optional .common.Vector3 camera_pos = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_camera_pos:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_camera_pos()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(50)) goto parse_camera_dir;
+        break;
+      }
+
+      // optional .common.Vector3 camera_dir = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_camera_dir:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_camera_dir()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(58)) goto parse_obj_t;
+        break;
+      }
+
+      // optional .common.Vector3 obj_t = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_obj_t:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_obj_t()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(66)) goto parse_obj_r;
+        break;
+      }
+
+      // optional .common.Matrix4x4 obj_r = 8;
+      case 8: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_obj_r:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_obj_r()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void Plane::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional float width = 1;
+  if (has_width()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->width(), output);
+  }
+
+  // optional float height = 2;
+  if (has_height()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->height(), output);
+  }
+
+  // optional uint32 width_segments = 3;
+  if (has_width_segments()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->width_segments(), output);
+  }
+
+  // optional uint32 height_segments = 4;
+  if (has_height_segments()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->height_segments(), output);
+  }
+
+  // optional .common.Vector3 camera_pos = 5;
+  if (has_camera_pos()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, this->camera_pos(), output);
+  }
+
+  // optional .common.Vector3 camera_dir = 6;
+  if (has_camera_dir()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      6, this->camera_dir(), output);
+  }
+
+  // optional .common.Vector3 obj_t = 7;
+  if (has_obj_t()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      7, this->obj_t(), output);
+  }
+
+  // optional .common.Matrix4x4 obj_r = 8;
+  if (has_obj_r()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      8, this->obj_r(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* Plane::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional float width = 1;
+  if (has_width()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->width(), target);
+  }
+
+  // optional float height = 2;
+  if (has_height()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->height(), target);
+  }
+
+  // optional uint32 width_segments = 3;
+  if (has_width_segments()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->width_segments(), target);
+  }
+
+  // optional uint32 height_segments = 4;
+  if (has_height_segments()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->height_segments(), target);
+  }
+
+  // optional .common.Vector3 camera_pos = 5;
+  if (has_camera_pos()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        5, this->camera_pos(), target);
+  }
+
+  // optional .common.Vector3 camera_dir = 6;
+  if (has_camera_dir()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        6, this->camera_dir(), target);
+  }
+
+  // optional .common.Vector3 obj_t = 7;
+  if (has_obj_t()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        7, this->obj_t(), target);
+  }
+
+  // optional .common.Matrix4x4 obj_r = 8;
+  if (has_obj_r()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        8, this->obj_r(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int Plane::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional float width = 1;
+    if (has_width()) {
+      total_size += 1 + 4;
+    }
+
+    // optional float height = 2;
+    if (has_height()) {
+      total_size += 1 + 4;
+    }
+
+    // optional uint32 width_segments = 3;
+    if (has_width_segments()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->width_segments());
+    }
+
+    // optional uint32 height_segments = 4;
+    if (has_height_segments()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->height_segments());
+    }
+
+    // optional .common.Vector3 camera_pos = 5;
+    if (has_camera_pos()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->camera_pos());
+    }
+
+    // optional .common.Vector3 camera_dir = 6;
+    if (has_camera_dir()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->camera_dir());
+    }
+
+    // optional .common.Vector3 obj_t = 7;
+    if (has_obj_t()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->obj_t());
+    }
+
+    // optional .common.Matrix4x4 obj_r = 8;
+    if (has_obj_r()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->obj_r());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Plane::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Plane* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Plane*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Plane::MergeFrom(const Plane& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_width()) {
+      set_width(from.width());
+    }
+    if (from.has_height()) {
+      set_height(from.height());
+    }
+    if (from.has_width_segments()) {
+      set_width_segments(from.width_segments());
+    }
+    if (from.has_height_segments()) {
+      set_height_segments(from.height_segments());
+    }
+    if (from.has_camera_pos()) {
+      mutable_camera_pos()->::common::Vector3::MergeFrom(from.camera_pos());
+    }
+    if (from.has_camera_dir()) {
+      mutable_camera_dir()->::common::Vector3::MergeFrom(from.camera_dir());
+    }
+    if (from.has_obj_t()) {
+      mutable_obj_t()->::common::Vector3::MergeFrom(from.obj_t());
+    }
+    if (from.has_obj_r()) {
+      mutable_obj_r()->::common::Matrix4x4::MergeFrom(from.obj_r());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Plane::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Plane::CopyFrom(const Plane& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Plane::IsInitialized() const {
+
+  return true;
+}
+
+void Plane::Swap(Plane* other) {
+  if (other != this) {
+    std::swap(width_, other->width_);
+    std::swap(height_, other->height_);
+    std::swap(width_segments_, other->width_segments_);
+    std::swap(height_segments_, other->height_segments_);
+    std::swap(camera_pos_, other->camera_pos_);
+    std::swap(camera_dir_, other->camera_dir_);
+    std::swap(obj_t_, other->obj_t_);
+    std::swap(obj_r_, other->obj_r_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Plane::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Plane_descriptor_;
+  metadata.reflection = Plane_reflection_;
   return metadata;
 }
 

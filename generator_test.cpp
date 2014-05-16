@@ -190,6 +190,24 @@ int LuaPrint(lua_State* L)
   return 0;
 }
 
+int __cdecl luaopen_meshlib(lua_State* L)
+{
+  string filename("scripts/meshlib.lua");
+  if (luaL_loadfile(L, filename.c_str()))
+  {
+    APP.AddMessage(MessageType::Error, "Error loading " + filename);
+    return false;
+  }
+  else
+  {
+    APP.AddMessage(MessageType::Info, "Loaded " + filename);
+  }
+
+  lua_pcall(L, 0, 0, 0);
+
+  return 1;
+}
+
 int __cdecl luaopen_mesh(lua_State* L)
 {
   static const struct luaL_Reg vertexFunctions[] = {
@@ -225,7 +243,7 @@ int __cdecl luaopen_mesh(lua_State* L)
   luaL_setfuncs(L, printlib, 0);
   lua_pop(L, 1);
 
-  return 0;
+  return 1;
 }
 
 //------------------------------------------------------------------------------
@@ -237,6 +255,7 @@ GeneratorTest::GeneratorTest(const string &name)
     , _numIndices(0)
     , _debugDraw(false)
     , _wireframe(true)
+    , _cameraDir(0,0,1)
 {
 }
 
@@ -250,22 +269,27 @@ bool GeneratorTest::Init(const char* config)
 {
   _configName = config;
 
-  if (!LoadProto(config, &_config))
+  if (!LoadProto(config, &_planeConfig))
+  {
+    LOG_ERROR(ToString("Error loading config: %s", config).c_str());
     return false;
+  }
 
-  _cameraPos = FromProtocol(_config.camera_pos());
-  _cameraTarget = FromProtocol(_config.camera_target());
-  g_mesh.rotation = FromProtocol(_config.obj_world());
+  if (_planeConfig.has_camera_pos()) _cameraPos = FromProtocol(_planeConfig.camera_pos());
+  if (_planeConfig.has_camera_dir()) _cameraDir = FromProtocol(_planeConfig.camera_dir());
+  if (_planeConfig.has_obj_t()) g_mesh.translation = FromProtocol(_planeConfig.obj_t());
+  if (_planeConfig.has_obj_r()) g_mesh.rotation = FromProtocol(_planeConfig.obj_r());
   _prevRot = g_mesh.rotation;
 
-  BindConfig(&_config, &_dirtyFlag);
+  //BindSpiky(&_spikyConfig, &_dirtyFlag);
+  BindPlane(&_planeConfig, &_dirtyFlag);
 
   _meshObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosNormal), sizeof(CBufferPerFrame));
 
   LoadShadersFromFile("shaders/generator",
       &_meshObjects._vs, &_meshObjects._ps, &_meshObjects._layout, VF_POS | VF_NORMAL);
 
-  RESOURCE_MANAGER.AddFileWatch("scripts/generator1.lua", 0, true, nullptr, 
+  RESOURCE_MANAGER.AddFileWatch("scripts/generator2.lua", 0, true, nullptr, 
     [this](const string& filename, void* token)
     {
       if (_lua)
@@ -273,16 +297,17 @@ bool GeneratorTest::Init(const char* config)
 
       _lua = luaL_newstate();
       luaL_openlibs(_lua);
+      luaL_requiref(_lua, "meshlib", luaopen_meshlib, 1);
       luaL_requiref(_lua, "mesh", luaopen_mesh, 1);
 
       if (luaL_loadfile(_lua, filename.c_str()))
       {
-        APP.AddMessage(MessageType::Error, "Error loading generator1.lua");
+        APP.AddMessage(MessageType::Error, "Error loading " + filename);
         return false;
       }
       else
       {
-        APP.AddMessage(MessageType::Info, "Loaded generator1.lua");
+        APP.AddMessage(MessageType::Info, "Loaded " + filename);
       }
 
       lua_pcall(_lua, 0, 0, 0);
@@ -311,7 +336,7 @@ bool GeneratorTest::Update(const UpdateState& state)
 }
 
 //------------------------------------------------------------------------------
-bool GeneratorTest::Render()
+void GeneratorTest::RenderPlane()
 {
   if (_dirtyFlag)
   {
@@ -323,10 +348,10 @@ bool GeneratorTest::Render()
     lua_replace(_lua, -2);
 
     lua_getglobal(_lua, "generate");
-    lua_pushnumber(_lua, _config.radius());
-    lua_pushnumber(_lua, _config.height());
-    lua_pushinteger(_lua, _config.radial_segments());
-    lua_pushinteger(_lua, _config.height_segments());
+    lua_pushnumber(_lua, _planeConfig.width());
+    lua_pushnumber(_lua, _planeConfig.height());
+    lua_pushinteger(_lua, _planeConfig.width_segments());
+    lua_pushinteger(_lua, _planeConfig.height_segments());
 
     if (lua_pcall(_lua, 4, 0, -6))
     {
@@ -377,6 +402,82 @@ bool GeneratorTest::Render()
     _dirtyFlag = false;
   }
 
+}
+
+//------------------------------------------------------------------------------
+void GeneratorTest::RenderSpiky()
+{
+  if (_dirtyFlag)
+  {
+    g_mesh.Reset();
+
+    // push debug.traceback on stack 
+    lua_getglobal(_lua, "debug");
+    lua_getfield(_lua, -1, "traceback");
+    lua_replace(_lua, -2);
+
+    lua_getglobal(_lua, "generate");
+    lua_pushnumber(_lua, _spikyConfig.radius());
+    lua_pushnumber(_lua, _spikyConfig.height());
+    lua_pushinteger(_lua, _spikyConfig.radial_segments());
+    lua_pushinteger(_lua, _spikyConfig.height_segments());
+
+    if (lua_pcall(_lua, 4, 0, -6))
+    {
+      const char* err = lua_tostring(_lua, -1);
+      OutputDebugStringA(err);
+      OutputDebugStringA("\n");
+      APP.AddMessage(MessageType::Warning, err);
+      lua_pop(_lua, 2);
+    }
+    else
+    {
+      // check if the buffers need to be resized
+      u32 vbSize = g_mesh.verts.size() * sizeof(g_mesh.verts[0]);
+      if (vbSize > _meshObjects._vbSize)
+      {
+        while (_meshObjects._vbSize < vbSize)
+          _meshObjects._vbSize <<= 1;
+        _meshObjects._vb = GRAPHICS.CreateBuffer(D3D11_BIND_VERTEX_BUFFER, _meshObjects._vbSize, true, nullptr, sizeof(PosNormal));
+      }
+
+      u32 ibSize = g_mesh.indices.size() * sizeof(u32);
+      if (ibSize > _meshObjects._ibSize)
+      {
+        while (_meshObjects._ibSize < ibSize)
+          _meshObjects._ibSize <<= 1;
+        _meshObjects._ib = GRAPHICS.CreateBuffer(D3D11_BIND_INDEX_BUFFER, _meshObjects._ibSize, true, nullptr, DXGI_FORMAT_R32_UINT);
+      }
+
+      g_mesh.CalcBoundingSphere();
+
+      D3D11_MAPPED_SUBRESOURCE res;
+      if (_ctx->Map(_meshObjects._vb, 0, D3D11_MAP_WRITE_DISCARD, 0, &res))
+      {
+        memcpy(res.pData, g_mesh.verts.data(), vbSize);
+        _ctx->Unmap(_meshObjects._vb, 0);
+      }
+
+      if (_ctx->Map(_meshObjects._ib, 0, D3D11_MAP_WRITE_DISCARD, 0, &res))
+      {
+        memcpy(res.pData, g_mesh.indices.data(), ibSize);
+        _ctx->Unmap(_meshObjects._ib, 0);
+      }
+
+      _numIndices = g_mesh.indices.size();
+    }
+    lua_pop(_lua, 1);
+
+    _dirtyFlag = false;
+  }
+
+}
+
+//------------------------------------------------------------------------------
+bool GeneratorTest::Render()
+{
+  RenderPlane();
+
   _ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), true);
 
   if (_numIndices >= 3)
@@ -387,7 +488,7 @@ bool GeneratorTest::Render()
     _proj = Matrix::CreatePerspectiveFieldOfView(45.0f / 180 * 3.1415f, 16.0f / 10, 1, 1000);
     _view = Matrix::CreateLookAt(
         _cameraPos,
-        _cameraTarget,
+        _cameraPos + 100 * _cameraDir,
         Vector3(0, 1, 0));
     _invView = _view.Invert();
 
@@ -427,11 +528,13 @@ bool GeneratorTest::SaveSettings()
 {
   if (FILE* f = fopen(_configName.c_str() ,"wt"))
   {
-    ToProtocol(_cameraPos, _config.mutable_camera_pos());
-    ToProtocol(_cameraTarget, _config.mutable_camera_target());
-    ToProtocol(g_mesh.rotation, _config.mutable_obj_world());
+    ToProtocol(_cameraPos, _planeConfig.mutable_camera_pos());
+    ToProtocol(_cameraDir, _planeConfig.mutable_camera_dir());
 
-    fprintf(f, "%s", _config.DebugString().c_str());
+    ToProtocol(g_mesh.translation, _planeConfig.mutable_obj_t());
+    ToProtocol(g_mesh.rotation, _planeConfig.mutable_obj_r());
+
+    fprintf(f, "%s", _planeConfig.DebugString().c_str());
     fclose(f);
   }
   return true;
@@ -466,29 +569,25 @@ void GeneratorTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 
         case 'A':
         {
-          Vector3 right(_invView._11, _invView._12, _invView._23);
-          _cameraPos += -speed * right;
+          _cameraPos += -speed * _invView.Right();
           break;
         }
 
         case 'D':
         {
-          Vector3 right(_invView._11, _invView._12, _invView._23);
-          _cameraPos += speed * right;
+          _cameraPos += speed * _invView.Right();
           break;
         }
 
         case 'W':
         {
-          Vector3 up(_invView._21, _invView._22, _invView._23);
-          _cameraPos += speed * up;
+          _cameraPos += speed * _invView.Up();
           break;
         }
 
         case 'S':
         {
-          Vector3 up(_invView._21, _invView._22, _invView._23);
-          _cameraPos += -speed * up;
+          _cameraPos += -speed * _invView.Up();
           break;
         }
 
@@ -555,9 +654,7 @@ void GeneratorTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
     {
       s16 delta = HIWORD(wParam);
       float fDelta = delta / 120.0f;
-      Vector3 dir = _cameraTarget - _cameraPos;
-      dir.Normalize();
-      _cameraPos += 10 * fDelta * dir;
+      _cameraPos += 10 * fDelta * _invView.Forward();
       break;
     }
     

@@ -29,8 +29,12 @@ namespace boba
 
     virtual void WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 
+    void RenderSpiky();
+    void RenderPlane();
+
     string _configName;
-    generator::Config _config;
+    generator::Spiky _spikyConfig;
+    generator::Plane _planeConfig;
 
     Matrix _view;
     Matrix _invView;
@@ -47,7 +51,7 @@ namespace boba
     bool _debugDraw;
     bool _wireframe;
 
-    Vector3 _cameraPos, _cameraTarget;
+    Vector3 _cameraPos, _cameraDir;
 
     lua_State* _lua;
   };

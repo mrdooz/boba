@@ -10,6 +10,8 @@ namespace boba
     VF_COLOR  = 1 << 3,
   };
 
+  Vector3 GetRow(const Matrix& m, u32 row);
+
   u32 ColorToU32(float r, float g, float b, float a);
 
   float Raycast(const Vector3& center, float radius, const Vector3& o, const Vector3& d);

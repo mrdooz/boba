@@ -2,5 +2,6 @@
 #include "generator.pb.h"
 namespace generator
 {
-void BindConfig(generator::Config* data, bool *dirty);
+void BindSpiky(generator::Spiky* data, bool *dirty);
+void BindPlane(generator::Plane* data, bool *dirty);
 }

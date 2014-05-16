@@ -2,7 +2,7 @@ package generator;
 import "anttweak.proto";
 import "common.proto";
 
-message Config
+message Spiky
 {
   optional float radius                 = 1;
   optional float height                 = 2;
@@ -10,7 +10,22 @@ message Config
   optional uint32 height_segments       = 4;
   
   optional common.Vector3 camera_pos    = 5 [(anttweak.nobind) = true];
-  optional common.Vector3 camera_target = 6 [(anttweak.nobind) = true];
+  optional common.Vector3 camera_dir    = 6 [(anttweak.nobind) = true];
   
-  optional common.Matrix4x4 obj_world   = 7 [(anttweak.nobind) = true];
+  optional common.Vector3 obj_t         = 7 [(anttweak.nobind) = true];
+  optional common.Matrix4x4 obj_r       = 8 [(anttweak.nobind) = true];
+}
+
+message Plane
+{
+  optional float width                  = 1;
+  optional float height                 = 2;
+  optional uint32 width_segments        = 3;
+  optional uint32 height_segments       = 4;
+  
+  optional common.Vector3 camera_pos    = 5 [(anttweak.nobind) = true];
+  optional common.Vector3 camera_dir    = 6 [(anttweak.nobind) = true];
+  
+  optional common.Vector3 obj_t         = 7 [(anttweak.nobind) = true];
+  optional common.Matrix4x4 obj_r       = 8 [(anttweak.nobind) = true];
 }
