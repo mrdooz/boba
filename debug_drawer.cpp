@@ -8,16 +8,6 @@
 using namespace boba;
 
 //------------------------------------------------------------------------------
-namespace
-{
-  struct CBufferPerFrame
-  {
-    Matrix world;
-    Matrix viewProj;
-  };
-}
-
-//------------------------------------------------------------------------------
 DebugDrawer* DebugDrawer::_instance;
 
 //------------------------------------------------------------------------------
@@ -41,7 +31,8 @@ bool DebugDrawer::Create()
 
 bool DebugDrawer::Init()
 {
-  _gpuObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosCol), sizeof(CBufferPerFrame));
+  _gpuObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosCol));
+  _cb.Create();
 
   if (!LoadShadersFromFile("shaders/debug_draw",
     &_gpuObjects._vs, &_gpuObjects._ps, &_gpuObjects._layout, VF_POS | VF_COLOR))
@@ -202,8 +193,8 @@ void DebugDrawer::DrawSphere(const Vector3& center, float radius)
     cb.world = _world.Transpose();
     cb.viewProj = (_view * _proj).Transpose();
 
-    _ctx->SetRS(_rasterizerState);
-    _ctx->SetCBuffer(_gpuObjects._cbuffer, &cb, sizeof(cb), ShaderType::VertexShader);
+    _ctx->SetRasterizerState(_rasterizerState);
+    _ctx->SetCBuffer(_cb, ShaderType::VertexShader);
     _ctx->SetRenderObjects(_gpuObjects);
     _ctx->Draw(numVerts, 0);
   }

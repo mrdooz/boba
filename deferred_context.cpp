@@ -31,23 +31,22 @@ void DeferredContext::SetRenderTarget(GraphicsObjectHandle render_target, bool c
 
 //------------------------------------------------------------------------------
 void DeferredContext::SetRenderTargets(
-    GraphicsObjectHandle *render_targets,
-    bool *clear_targets,
-    int num_render_targets)
+    GraphicsObjectHandle* renderTargets,
+    bool* clearTargets,
+    int numRenderTargets)
 {
-  if (!num_render_targets)
+  if (!numRenderTargets)
     return;
 
   ID3D11RenderTargetView *rts[8] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
   ID3D11DepthStencilView *dsv = nullptr;
   D3D11_TEXTURE2D_DESC texture_desc;
-  float color[4] = {0,0,0,0};
 
   // Collect the valid render targets, set the first available depth buffer
   // and clear targets if specified
-  for (int i = 0; i < num_render_targets; ++i)
+  for (int i = 0; i < numRenderTargets; ++i)
   {
-    GraphicsObjectHandle h = render_targets[i];
+    GraphicsObjectHandle h = renderTargets[i];
     assert(h.IsValid());
     Graphics::RenderTargetResource* rt = GRAPHICS._renderTargets.Get(h);
     texture_desc = rt->texture.desc;
@@ -57,8 +56,9 @@ void DeferredContext::SetRenderTargets(
     }
     rts[i] = rt->rtv.resource;
     // clear render target (and depth stenci)
-    if (clear_targets[i])
+    if (clearTargets[i])
     {
+      static float color[4] = { 0, 0, 0, 0 };
       _ctx->ClearRenderTargetView(rts[i], color);
       if (rt->dsv.resource)
       {
@@ -68,7 +68,7 @@ void DeferredContext::SetRenderTargets(
   }
   CD3D11_VIEWPORT viewport(0.0f, 0.0f, (float)texture_desc.Width, (float)texture_desc.Height);
   _ctx->RSSetViewports(1, &viewport);
-  _ctx->OMSetRenderTargets(num_render_targets, rts, dsv);
+  _ctx->OMSetRenderTargets(numRenderTargets, rts, dsv);
 }
 
 //------------------------------------------------------------------------------
@@ -84,9 +84,8 @@ void DeferredContext::GetRenderTargetTextureDesc(
 //------------------------------------------------------------------------------
 void DeferredContext::SetSwapChain(GraphicsObjectHandle h, bool clear)
 {
-  Graphics& g = GRAPHICS;
-  auto swapChain  = g._swapChains.Get(h);
-  auto rt         = g._renderTargets.Get(swapChain->_renderTarget);
+  auto swapChain  = GRAPHICS._swapChains.Get(h);
+  auto rt         = GRAPHICS._renderTargets.Get(swapChain->_renderTarget);
   _ctx->OMSetRenderTargets(1, &rt->rtv.resource.p, rt->dsv.resource);
   if (clear)
   {
@@ -155,27 +154,27 @@ void DeferredContext::SetIB(GraphicsObjectHandle ib)
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetTopology(D3D11_PRIMITIVE_TOPOLOGY top)
+void DeferredContext::SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY top)
 {
   _ctx->IASetPrimitiveTopology(top);
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetRS(GraphicsObjectHandle rs)
+void DeferredContext::SetRasterizerState(GraphicsObjectHandle rs)
 {
   _ctx->RSSetState(GRAPHICS._rasterizerStates.Get(rs));
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetDSS(GraphicsObjectHandle dss, UINT stencil_ref)
+void DeferredContext::SetDepthStencilState(GraphicsObjectHandle dss, UINT stencil_ref)
 {
   _ctx->OMSetDepthStencilState(GRAPHICS._depthStencilStates.Get(dss), stencil_ref);
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetBS(GraphicsObjectHandle bs, const float *blend_factors, UINT sample_mask)
+void DeferredContext::SetBlendState(GraphicsObjectHandle bs, const float* blendFactors, UINT sampleMask)
 {
-  _ctx->OMSetBlendState(GRAPHICS._blendStates.Get(bs), blend_factors, sample_mask);
+  _ctx->OMSetBlendState(GRAPHICS._blendStates.Get(bs), blendFactors, sampleMask);
 }
 
 //------------------------------------------------------------------------------
@@ -284,29 +283,9 @@ void DeferredContext::Flush()
 //------------------------------------------------------------------------------
 void DeferredContext::SetShaderResource(GraphicsObjectHandle h, ShaderType shaderType)
 {
-  GraphicsObjectHandle::Type type = h.type();
-  ID3D11ShaderResourceView* view = nullptr;
-
-  if (type == GraphicsObjectHandle::kTexture)
-  {
-    view = GRAPHICS._textures.Get(h)->view.resource;
-  }
-  else if (type == GraphicsObjectHandle::kResource)
-  {
-    view = GRAPHICS._resources.Get(h)->view.resource;
-  }
-  else if (type == GraphicsObjectHandle::kRenderTarget)
-  {
-    view = GRAPHICS._renderTargets.Get(h)->srv.resource;
-  }
-  else if (type == GraphicsObjectHandle::kStructuredBuffer)
-  {
-    view = GRAPHICS._structuredBuffers.Get(h)->srv.resource;
-  }
-  else
-  {
-    //LOG_ERROR_LN("Trying to set invalid resource type!");
-  }
+  ID3D11ShaderResourceView* view = GRAPHICS.GetShaderResourceView(h);
+  if (!view)
+    return;
 
   if (shaderType == ShaderType::VertexShader)
     _ctx->VSSetShaderResources(0, 1, &view);
@@ -322,18 +301,39 @@ void DeferredContext::SetShaderResource(GraphicsObjectHandle h, ShaderType shade
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetSamplerState(GraphicsObjectHandle h, ShaderType shaderType)
+void DeferredContext::SetSamplerState(GraphicsObjectHandle h, u32 slot, ShaderType shaderType)
 {
   ID3D11SamplerState* samplerState = GRAPHICS._sampler_states.Get(h);
 
   if (shaderType == ShaderType::VertexShader)
-    _ctx->VSSetSamplers(0, 1, &samplerState);
+    _ctx->VSSetSamplers(slot, 1, &samplerState);
   else if (shaderType == ShaderType::PixelShader)
-    _ctx->PSSetSamplers(0, 1, &samplerState);
+    _ctx->PSSetSamplers(slot, 1, &samplerState);
   else if (shaderType == ShaderType::ComputeShader)
-    _ctx->CSSetSamplers(0, 1, &samplerState);
+    _ctx->CSSetSamplers(slot, 1, &samplerState);
   else if (shaderType == ShaderType::GeometryShader)
-    _ctx->GSSetSamplers(0, 1, &samplerState);
+    _ctx->GSSetSamplers(slot, 1, &samplerState);
+}
+
+//------------------------------------------------------------------------------
+void DeferredContext::SetSamplers(
+    GraphicsObjectHandle* h,
+    u32 slot,
+    u32 numSamplers,
+    ShaderType shaderType)
+{
+  vector<ID3D11SamplerState*> samplers;
+  for (u32 i = 0; i < numSamplers; ++i)
+    samplers.push_back(GRAPHICS._sampler_states.Get(h[i]));
+
+  if (shaderType == ShaderType::VertexShader)
+    _ctx->VSSetSamplers(slot, numSamplers, samplers.data());
+  else if (shaderType == ShaderType::PixelShader)
+    _ctx->PSSetSamplers(slot, numSamplers, samplers.data());
+  else if (shaderType == ShaderType::ComputeShader)
+    _ctx->CSSetSamplers(slot, numSamplers, samplers.data());
+  else if (shaderType == ShaderType::GeometryShader)
+    _ctx->GSSetSamplers(slot, numSamplers, samplers.data());
 }
 
 //------------------------------------------------------------------------------
@@ -369,7 +369,14 @@ void DeferredContext::SetRenderObjects(const GpuObjects& obj)
   SetLayout(obj._layout);
   SetVB(obj._vb);
   SetIB(obj._ib);
-  SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+//------------------------------------------------------------------------------
+void DeferredContext::SetViewports(const D3D11_VIEWPORT& viewport, u32 numViewports)
+{
+  vector<D3D11_VIEWPORT> viewports(numViewports, viewport);
+  _ctx->RSSetViewports(numViewports, viewports.data());
 }
 
 //------------------------------------------------------------------------------

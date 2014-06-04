@@ -35,7 +35,7 @@ namespace boba
   Vector3 ScreenToViewSpace(const Matrix& proj, u32 x, u32 y)
   {
     int w, h;
-    GRAPHICS.ScreenSize(&w, &h);
+    GRAPHICS.GetBackBufferSize(&w, &h);
     float xv = (2.0f * x / w - 1) / proj(0, 0);
     float yv = (-2.0f * y / h + 1) / proj(1, 1);
 

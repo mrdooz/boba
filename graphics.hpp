@@ -2,6 +2,7 @@
 #include "graphics_object_handle.hpp"
 #include "id_buffer.hpp"
 #include "string_utils.hpp"
+#include "flags.hpp"
 
 namespace boba
 {
@@ -17,6 +18,27 @@ namespace boba
     GeometryShader,
     ComputeShader,
   };
+
+  struct BufferFlag
+  {
+    enum Enum
+    {
+      CreateMipMaps        = 1 << 0,
+      CreateDepthBuffer    = 1 << 1,
+      CreateSrv            = 1 << 2,
+      CreateUav            = 1 << 3,
+    };
+
+    struct Bits
+    {
+      u32 mipMaps : 1;
+      u32 depthBuffer : 1;
+      u32 srv : 1;
+      u32 uav : 1;
+    };
+  };
+
+  typedef Flags<BufferFlag> BufferFlags;
 
   class Graphics
   {
@@ -44,14 +66,6 @@ namespace boba
       int multisampleCount;
       bool windowed;
       int width, height;
-    };
-
-    enum BufferFlags
-    {
-      kCreateMipMaps        = 1 << 0,
-      kCreateDepthBuffer    = 1 << 1,
-      kCreateSrv            = 1 << 2,
-      kCreateUav            = 1 << 3,
     };
 
     enum PredefinedGeometry
@@ -201,25 +215,25 @@ namespace boba
         DXGI_FORMAT format,
         WNDPROC wndProc,
         HINSTANCE instance);
+    GraphicsObjectHandle RenderTargetForSwapChain(GraphicsObjectHandle h);
 
     D3D_FEATURE_LEVEL FeatureLevel() const { return _featureLevel; }
 
+    bool GetTextureSize(GraphicsObjectHandle h, u32* x, u32* y);
     GraphicsObjectHandle GetTempRenderTarget(
-        DeferredContext* ctx,
         int width,
         int height,
         DXGI_FORMAT format,
-        u32 bufferFlags,
-        const string &name);
+        const BufferFlags& bufferFlags);
+
     void ReleaseTempRenderTarget(GraphicsObjectHandle h);
 
     GraphicsObjectHandle CreateRenderTarget(
-        DeferredContext* ctx,
         int width,
         int height,
         DXGI_FORMAT format,
-        u32 bufferFlags,
-        const string &name);
+        const BufferFlags& bufferFlags,
+        const string& name = "");
 
     GraphicsObjectHandle CreateStructuredBuffer(int elemSize, int numElems, bool createSrv);
     GraphicsObjectHandle CreateTexture(const D3D11_TEXTURE2D_DESC &desc, const char *name);
@@ -273,7 +287,7 @@ namespace boba
     void Clear();
     void Present();
     
-    void ScreenSize(int* width, int* height);
+    void GetBackBufferSize(int* width, int* height);
     GraphicsObjectHandle DefaultSwapChain();
 
     bool LoadShadersFromFile(
@@ -293,15 +307,16 @@ namespace boba
     bool CreateBufferInner(D3D11_BIND_FLAG bind, int size, bool dynamic, const void* data, ID3D11Buffer** buffer);
 
     bool CreateRenderTarget(
-        DeferredContext* ctx,
         int width,
         int height,
         DXGI_FORMAT format,
-        u32 bufferFlags,
+        const BufferFlags& bufferFlags,
         RenderTargetResource *out);
     bool CreateTexture(const D3D11_TEXTURE2D_DESC &desc, TextureResource *out);
 
     bool CreateDefaultGeometry();
+
+    ID3D11ShaderResourceView* GetShaderResourceView(GraphicsObjectHandle h);
 
     // given texture data and a name, insert it into the GOH chain
     GraphicsObjectHandle InsertTexture(TextureResource *data, const char *friendlyName);
@@ -403,5 +418,24 @@ namespace boba
 #define GRAPHICS Graphics::Instance()
 
 #define GFX_CreateBuffer(bind, size, dynamic, buf, data) GRAPHICS.CreateBuffer(bind, size, dynamic, buf, data);
+
+  struct ScopedRenderTarget
+  {
+    ScopedRenderTarget(int width, int height, DXGI_FORMAT format, const BufferFlags& bufferFlags)
+    {
+      h = GRAPHICS.GetTempRenderTarget(width, height, format, bufferFlags);
+    }
+
+    ~ScopedRenderTarget()
+    {
+      if (h.IsValid())
+      {
+        GRAPHICS.ReleaseTempRenderTarget(h);
+      }
+    }
+
+    GraphicsObjectHandle h;
+  };
+
 
 }

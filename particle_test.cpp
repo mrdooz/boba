@@ -105,9 +105,9 @@ bool ParticleTest::Render()
 
   _ctx->SetVS(_vs);
   _ctx->SetPS(_ps);
-  _ctx->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  _ctx->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   _ctx->SetShaderResource(_texture, ShaderType::PixelShader);
-  _ctx->SetSamplerState(_samplerState, ShaderType::PixelShader);
+  _ctx->SetSamplerState(_samplerState, 0, ShaderType::PixelShader);
   _ctx->Draw(3,0);
 
   _ctx->EndFrame();

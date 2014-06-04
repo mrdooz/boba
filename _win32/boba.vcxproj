@@ -314,6 +314,7 @@
     <ClInclude Include="..\effect.hpp" />
     <ClInclude Include="..\error.hpp" />
     <ClInclude Include="..\file_utils.hpp" />
+    <ClInclude Include="..\flags.hpp" />
     <ClInclude Include="..\generator_test.hpp" />
     <ClInclude Include="..\gpu_objects.hpp" />
     <ClInclude Include="..\graphics.hpp" />
@@ -405,7 +406,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ANTTWEAKBAR_ROOT)/include;$(FW1);$(IncludePath)</IncludePath>
-    <LibraryPath>$(ANTTWEAKBAR_ROOT)/lib/$(Configuration);$(FW1)/x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ANTTWEAKBAR_ROOT)/lib/$(Configuration);$(FW1)/x86;D:\projects\protobuf-2.5.0\vsprojects\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

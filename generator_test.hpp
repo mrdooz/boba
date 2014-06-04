@@ -9,6 +9,40 @@ namespace boba
 {
   class DeferredContext;
 
+  struct PostProcess
+  {
+    PostProcess(DeferredContext* ctx);
+
+    struct CBufferPS
+    {
+      Vector2 inputSize;
+      Vector2 outputSize;
+    };
+
+    bool Init();
+    void Setup();
+
+    void Execute(
+      GraphicsObjectHandle input,
+      GraphicsObjectHandle output,
+      GraphicsObjectHandle shader,
+      WCHAR* name);
+
+    DeferredContext* _ctx;
+    ConstantBuffer<CBufferPS> _cb;
+
+    GraphicsObjectHandle _depthStencilState;
+    GraphicsObjectHandle _blendState;
+    GraphicsObjectHandle _rasterizerState;
+
+    GraphicsObjectHandle _linearSamplerState;
+    GraphicsObjectHandle _linearWrapSamplerState;
+    GraphicsObjectHandle _linearBorderSamplerState;
+    GraphicsObjectHandle _pointSamplerState;
+
+    GraphicsObjectHandle _vsQuad;
+  };
+
   class GeneratorTest : public Effect
   {
   public:
@@ -31,6 +65,13 @@ namespace boba
 
     void RenderSpiky();
     void RenderPlane();
+    void InitGeneratorScript();
+
+    struct CBufferPerFrame
+    {
+      Matrix world;
+      Matrix viewProj;
+    };
 
     string _configName;
     generator::Spiky _spikyConfig;
@@ -44,6 +85,7 @@ namespace boba
     u32 _numIndices;
 
     GpuObjects _meshObjects;
+    ConstantBuffer<CBufferPerFrame> _cb;
 
     bool _rotatingObject;
     Vector3 _v0;
@@ -52,8 +94,18 @@ namespace boba
     bool _wireframe;
 
     Vector3 _cameraPos, _cameraDir;
+    unique_ptr<PostProcess> _postProcess;
 
     lua_State* _lua;
+
+    GraphicsObjectHandle _renderTarget;
+    GraphicsObjectHandle _psCopy;
+
+    // default states
+    GraphicsObjectHandle _depthStencilState;
+    GraphicsObjectHandle _blendState;
+    GraphicsObjectHandle _rasterizerState;
+
   };
 
 }

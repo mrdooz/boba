@@ -15,15 +15,6 @@
 
 using namespace boba;
 
-namespace
-{
-  struct CBufferPerFrame
-  {
-    Matrix world;
-    Matrix viewProj;
-  };
-}
-
 struct Face
 {
   Face() {}
@@ -37,6 +28,16 @@ struct Mesh
   Mesh()
   {
     Reset();
+  }
+
+  void Init()
+  {
+    CD3D11_RASTERIZER_DESC desc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT());
+    desc.FillMode = D3D11_FILL_SOLID;
+    _solid = GRAPHICS.CreateRasterizerState(desc);
+    desc.FillMode = D3D11_FILL_WIREFRAME;
+    desc.CullMode = D3D11_CULL_NONE;
+    _wireframe = GRAPHICS.CreateRasterizerState(desc);
   }
 
   void Reset()
@@ -246,6 +247,97 @@ int __cdecl luaopen_mesh(lua_State* L)
   return 1;
 }
 
+
+//------------------------------------------------------------------------------
+PostProcess::PostProcess(DeferredContext* ctx)
+    : _ctx(ctx)
+{
+}
+
+//------------------------------------------------------------------------------
+bool PostProcess::Init()
+{
+  _cb.Create();
+
+  CD3D11_DEPTH_STENCIL_DESC dsDesc = CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT());
+  dsDesc.DepthEnable = FALSE;
+  dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+  dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+  _depthStencilState = GRAPHICS.CreateDepthStencilState(dsDesc);
+
+  _blendState = GRAPHICS.CreateBlendState(CD3D11_BLEND_DESC(CD3D11_DEFAULT()));
+
+  CD3D11_RASTERIZER_DESC rsDesc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT());
+  rsDesc.CullMode = D3D11_CULL_NONE;
+  _rasterizerState = GRAPHICS.CreateRasterizerState(rsDesc);
+
+  CD3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC(CD3D11_DEFAULT());
+  _linearSamplerState = GRAPHICS.CreateSamplerState(samplerDesc);
+  
+  samplerDesc.AddressU = samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+  _linearWrapSamplerState = GRAPHICS.CreateSamplerState(samplerDesc);
+
+  samplerDesc.AddressU = samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+  _linearBorderSamplerState = GRAPHICS.CreateSamplerState(samplerDesc);
+
+  samplerDesc.AddressU = samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+  samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+  _pointSamplerState = GRAPHICS.CreateSamplerState(samplerDesc);
+
+  GRAPHICS.LoadShadersFromFile("shaders/quad", &_vsQuad, nullptr);
+
+  return true;
+}
+
+//------------------------------------------------------------------------------
+void PostProcess::Setup()
+{
+  float blendFactor[4] = { 1, 1, 1, 1 };
+  _ctx->SetRasterizerState(_rasterizerState);
+  _ctx->SetBlendState(_blendState, blendFactor, 0xffffffff);
+  _ctx->SetDepthStencilState(_depthStencilState, 0);
+
+  GraphicsObjectHandle samplers[] = { _pointSamplerState, _linearSamplerState,
+      _linearWrapSamplerState, _linearBorderSamplerState };
+  _ctx->SetSamplers(samplers, 0, 4, ShaderType::PixelShader);
+
+  _ctx->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  _ctx->SetVS(_vsQuad);
+  _ctx->SetGS(GraphicsObjectHandle());
+}
+
+//------------------------------------------------------------------------------
+void PostProcess::Execute(
+    GraphicsObjectHandle input,
+    GraphicsObjectHandle output,
+    GraphicsObjectHandle shader,
+    WCHAR* name)
+{
+  D3DPERF_BeginEvent(0xffffffff, name);
+
+  _ctx->SetRenderTarget(output, false);
+  _ctx->SetShaderResource(input, ShaderType::PixelShader);
+
+  // set constant buffers
+  u32 inputX, inputY;
+  u32 outputX, outputY;
+  GRAPHICS.GetTextureSize(input, &inputX, &inputY);
+  GRAPHICS.GetTextureSize(output, &outputX, &outputY);
+  _cb.data.inputSize.x = (float)inputX;
+  _cb.data.inputSize.y = (float)inputY;
+  _cb.data.outputSize.x = (float)outputX;
+  _cb.data.outputSize.y = (float)outputY;
+  _ctx->SetCBuffer(_cb, ShaderType::PixelShader);
+
+  CD3D11_VIEWPORT viewport = CD3D11_VIEWPORT(0.f, 0.f, (float)outputX, (float)outputY);
+  _ctx->SetViewports(viewport, 1);
+
+  _ctx->SetPS(shader);
+  _ctx->DrawIndexed(6, 0, 0);
+
+  D3DPERF_EndEvent();
+}
+
 //------------------------------------------------------------------------------
 GeneratorTest::GeneratorTest(const string &name)
     : Effect(name)
@@ -284,49 +376,66 @@ bool GeneratorTest::Init(const char* config)
   //BindSpiky(&_spikyConfig, &_dirtyFlag);
   BindPlane(&_planeConfig, &_dirtyFlag);
 
-  _meshObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosNormal), sizeof(CBufferPerFrame));
+  _meshObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosNormal));
+  _cb.Create();
 
   LoadShadersFromFile("shaders/generator",
       &_meshObjects._vs, &_meshObjects._ps, &_meshObjects._layout, VF_POS | VF_NORMAL);
 
-  RESOURCE_MANAGER.AddFileWatch("scripts/generator2.lua", 0, true, nullptr, 
-    [this](const string& filename, void* token)
-    {
-      if (_lua)
-        lua_close(_lua);
-
-      _lua = luaL_newstate();
-      luaL_openlibs(_lua);
-      luaL_requiref(_lua, "meshlib", luaopen_meshlib, 1);
-      luaL_requiref(_lua, "mesh", luaopen_mesh, 1);
-
-      if (luaL_loadfile(_lua, filename.c_str()))
-      {
-        APP.AddMessage(MessageType::Error, "Error loading " + filename);
-        return false;
-      }
-      else
-      {
-        APP.AddMessage(MessageType::Info, "Loaded " + filename);
-      }
-
-      lua_pcall(_lua, 0, 0, 0);
-      _dirtyFlag = true;
-      return true;
-    });
+  InitGeneratorScript();
 
   if (!DebugDrawer::Create())
     return false;
 
+  g_mesh.Init();
 
-  CD3D11_RASTERIZER_DESC desc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT());
-  desc.FillMode = D3D11_FILL_SOLID;
-  g_mesh._solid = GRAPHICS.CreateRasterizerState(desc);
-  desc.FillMode = D3D11_FILL_WIREFRAME;
-  desc.CullMode = D3D11_CULL_NONE;
-  g_mesh._wireframe = GRAPHICS.CreateRasterizerState(desc);
+  _postProcess = make_unique<PostProcess>(_ctx);
+  if (!_postProcess->Init())
+    return false;
+
+  int w, h;
+  GRAPHICS.GetBackBufferSize(&w, &h);
+  BufferFlags f(BufferFlag::CreateDepthBuffer);
+  f |= BufferFlag::CreateSrv;
+  _renderTarget = GRAPHICS.CreateRenderTarget(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
+  
+  GRAPHICS.LoadShadersFromFile("shaders/copy", nullptr, &_psCopy);
+
+  _depthStencilState = GRAPHICS.CreateDepthStencilState(CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT()));
+  _blendState = GRAPHICS.CreateBlendState(CD3D11_BLEND_DESC(CD3D11_DEFAULT()));
+  _rasterizerState = GRAPHICS.CreateRasterizerState(CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT()));
 
   return true;
+}
+
+//------------------------------------------------------------------------------
+void GeneratorTest::InitGeneratorScript()
+{
+  RESOURCE_MANAGER.AddFileWatch("scripts/generator2.lua", 0, true, nullptr,
+    [this](const string& filename, void* token)
+  {
+    if (_lua)
+      lua_close(_lua);
+
+    _lua = luaL_newstate();
+    luaL_openlibs(_lua);
+    luaL_requiref(_lua, "meshlib", luaopen_meshlib, 1);
+    luaL_requiref(_lua, "mesh", luaopen_mesh, 1);
+
+    if (luaL_loadfile(_lua, filename.c_str()))
+    {
+      APP.AddMessage(MessageType::Error, "Error loading " + filename);
+      return false;
+    }
+    else
+    {
+      APP.AddMessage(MessageType::Info, "Loaded " + filename);
+    }
+
+    lua_pcall(_lua, 0, 0, 0);
+    _dirtyFlag = true;
+    return true;
+  });
 }
 
 //------------------------------------------------------------------------------
@@ -470,7 +579,6 @@ void GeneratorTest::RenderSpiky()
 
     _dirtyFlag = false;
   }
-
 }
 
 //------------------------------------------------------------------------------
@@ -478,13 +586,16 @@ bool GeneratorTest::Render()
 {
   RenderPlane();
 
-  _ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), true);
+  float blendFactor[4] ={ 1, 1, 1, 1 };
+  _ctx->SetRasterizerState(_rasterizerState);
+  _ctx->SetBlendState(_blendState, blendFactor, 0xffffffff);
+  _ctx->SetDepthStencilState(_depthStencilState, 0);
+  _ctx->SetRenderTarget(_renderTarget, true);
 
   if (_numIndices >= 3)
   {
     _ctx->BeginFrame();
 
-    CBufferPerFrame cb;
     _proj = Matrix::CreatePerspectiveFieldOfView(45.0f / 180 * 3.1415f, 16.0f / 10, 1, 1000);
     _view = Matrix::CreateLookAt(
         _cameraPos,
@@ -493,14 +604,17 @@ bool GeneratorTest::Render()
     _invView = _view.Invert();
 
     Matrix world = g_mesh.World();
-    cb.world = world.Transpose();
-    cb.viewProj = (_view * _proj).Transpose();
+    _cb.data.world = world.Transpose();
+    _cb.data.viewProj = (_view * _proj).Transpose();
 
-    _ctx->SetRS(_wireframe ? g_mesh._wireframe : g_mesh._solid);
-
-    _ctx->SetCBuffer(_meshObjects._cbuffer, &cb, sizeof(cb), ShaderType::VertexShader);
+    _ctx->SetRasterizerState(_wireframe ? g_mesh._wireframe : g_mesh._solid);
+    _ctx->SetCBuffer(_cb, ShaderType::VertexShader);
     _ctx->SetRenderObjects(_meshObjects);
     _ctx->DrawIndexed(_numIndices, 0, 0);
+
+    // calc average luminance
+    ScopedRenderTarget rtTmp(1024, 1024, DXGI_FORMAT_R32_FLOAT, BufferFlags());
+    GraphicsObjectHandle h = rtTmp.h;
 
     if (_debugDraw)
     {
@@ -513,6 +627,13 @@ bool GeneratorTest::Render()
 
     _ctx->EndFrame();
   }
+
+  _ctx->UnsetRenderTargets(0, 1);
+
+  _postProcess->Setup();
+  GraphicsObjectHandle rtDest = GRAPHICS.RenderTargetForSwapChain(GRAPHICS.DefaultSwapChain());
+  _postProcess->Execute(_renderTarget, rtDest, _psCopy, L"COPY");
+  _ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), false);
 
   return true;
 }

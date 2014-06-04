@@ -29,6 +29,12 @@ namespace boba
 
   private:
 
+    struct CBufferPerFrame
+    {
+      Matrix world;
+      Matrix viewProj;
+    };
+
     PosCol* AddQuad(const Vector3& a, const Vector3& b, PosCol* dst);
 
     bool Init();
@@ -38,6 +44,7 @@ namespace boba
 
     static DebugDrawer* _instance;
 
+    ConstantBuffer<CBufferPerFrame> _cb;
     GpuObjects _gpuObjects;
 
     GraphicsObjectHandle _rasterizerState;

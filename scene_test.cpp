@@ -213,7 +213,7 @@ bool SceneTest::Render()
   _ctx->SetLayout(mesh._layout);
   _ctx->SetVB(mesh._vb);
   _ctx->SetIB(mesh._ib);
-  _ctx->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  _ctx->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   _ctx->DrawIndexed(mesh._numIndices, 0, 0);
 
   _ctx->EndFrame();
@@ -290,7 +290,7 @@ float SceneTest::Raycast(const Vector3& o, const Vector3& d)
 Vector3 SceneTest::ScreenToViewSpace(u32 x, u32 y)
 {
   int w, h;
-  GRAPHICS.ScreenSize(&w, &h);
+  GRAPHICS.GetBackBufferSize(&w, &h);
   float xv = (2.0f * x / w - 1) / _proj(0, 0);
   float yv = (-2.0f * y / h + 1) / _proj(1, 1);
 

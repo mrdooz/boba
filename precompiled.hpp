@@ -18,6 +18,8 @@
 
 #define WITH_MEMORY_TRACKING 0
 
+#define WITH_GPU_PERF 1
+
 #include <stdint.h>
 #include <assert.h>
 #include <time.h>
@@ -30,6 +32,8 @@
 #include <d3d11.h>
 #include <D3DX11tex.h>
 #include <DirectXMath.h>
+
+#include <d3d9.h>
 
 #include <atlbase.h>
 #include <windows.h>
@@ -96,6 +100,7 @@ namespace boba
   using std::function;
 
   using std::unique_ptr;
+  using std::make_unique;
 
   using DirectX::XMFLOAT3;
   using DirectX::BoundingSphere;
@@ -122,6 +127,10 @@ namespace boba
 #pragma comment(lib, "D3D11.lib")
 #pragma comment(lib, "D3DX11.lib")
 #pragma comment(lib, "psapi.lib")
+
+#if WITH_GPU_PERF
+#pragma comment(lib, "D3D9.lib")
+#endif
 
 #ifdef _DEBUG
 #pragma comment(lib, "libboost_date_time-vc120-mt-sgd-1_55.lib")

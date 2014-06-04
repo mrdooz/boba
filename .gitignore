@@ -35,4 +35,4 @@ shaders/*.pso
 shaders/*.vso
 shaders/*.psa
 shaders/*.vsa
-
+_win32/Graphics*

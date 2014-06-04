@@ -127,7 +127,7 @@ bool App::Init(HINSTANCE hinstance)
   int width = GetSystemMetrics(SM_CXFULLSCREEN);
   int height = GetSystemMetrics(SM_CYFULLSCREEN);
 
-  GRAPHICS.CreateDefaultSwapChain(3 * width / 4, 3 * height / 4, DXGI_FORMAT_R8G8B8A8_UNORM, WndProc, hinstance);
+  GRAPHICS.CreateDefaultSwapChain(3 * width / 4, 3 * height / 4, DXGI_FORMAT_R16G16B16A16_FLOAT, WndProc, hinstance);
 
   if (!DemoEngine::Create())
     return false;

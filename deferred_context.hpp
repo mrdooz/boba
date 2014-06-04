@@ -1,11 +1,10 @@
 #pragma once
 #include "graphics_object_handle.hpp"
 #include "graphics.hpp"
+#include "gpu_objects.hpp"
 
 namespace boba
 {
-  struct GpuObjects;
-
   class DeferredContext
   {
     friend class Graphics;
@@ -28,14 +27,23 @@ namespace boba
     void SetLayout(GraphicsObjectHandle layout);
     void SetVB(GraphicsObjectHandle vb);
     void SetIB(GraphicsObjectHandle ib);
-    void SetTopology(D3D11_PRIMITIVE_TOPOLOGY top);
-    void SetRS(GraphicsObjectHandle rs);
-    void SetDSS(GraphicsObjectHandle dss, UINT stencil_ref);
-    void SetBS(GraphicsObjectHandle bs, const float *blend_factors, UINT sample_mask);
+    void SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY top);
+    void SetRasterizerState(GraphicsObjectHandle rs);
+    void SetDepthStencilState(GraphicsObjectHandle dss, UINT stencil_ref);
+    void SetBlendState(GraphicsObjectHandle bs, const float *blendFactors, UINT sampleMask);
     void SetShaderResource(GraphicsObjectHandle h, ShaderType shaderType);
-    void SetSamplerState(GraphicsObjectHandle h, ShaderType shaderType);
+    void SetSamplerState(GraphicsObjectHandle h, u32 slot, ShaderType shaderType);
+    void SetSamplers(GraphicsObjectHandle* h, u32 slot, u32 numSamplers, ShaderType shaderType);
+    template <typename T>
+    void SetCBuffer(const ConstantBuffer<T>& buffer, ShaderType shaderType)
+    {
+      return SetCBuffer(buffer.handle, &buffer.data, sizeof(T), shaderType);
+    }
+
     void SetCBuffer(GraphicsObjectHandle h, const void* buf, size_t len, ShaderType shaderType);
     void SetRenderObjects(const GpuObjects& obj);
+    void SetViewports(const D3D11_VIEWPORT& viewport, u32 numViewports);
+
     void UnsetUavs(int first, int count);
     void UnsetRenderTargets(int first, int count);
     void DrawIndexed(int count, int start_index, int base_vertex);
