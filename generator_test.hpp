@@ -100,6 +100,7 @@ namespace boba
 
     GraphicsObjectHandle _renderTarget;
     GraphicsObjectHandle _psCopy;
+    GraphicsObjectHandle _psLuminance;
 
     // default states
     GraphicsObjectHandle _depthStencilState;

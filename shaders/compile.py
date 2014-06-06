@@ -4,51 +4,64 @@ import time
 import glob
 import subprocess
 
-# fancy shaders that want their own entry points..
-shaders = {
-    'fullscreen' : { 'vs' : 'VSQuad', 'ps' : 'PSQuad' }
+# a single .hlsl can contain multiple entry points
+vs_entry = {
+    'fullscreen' : ['VSQuad']
 }
 
-vsOnly = [ 'quad' ]
-psOnly = [ 'copy' ]
+ps_entry = {
+    'fullscreen' : ['VSQuad'],
+    'tonemap' : ['LuminanceMap', 'Composite']
+}
+
+vs_only = [ 'quad' ]
+ps_only = [ 'copy', 'tonemap' ]
+
+def gen_filenames(cur, only, default_entry_point, entry_point_list, ext):
+    if cur in only:
+        return []
+
+    res = []
+    ss = [default_entry_point] if not cur in entry_point_list else entry_point_list[cur]
+    for s in ss:
+        res.append(cur + '_' + s + ext)
+    return res
 
 while True:
     for g in glob.glob('*.hlsl'):
-        (p, e) = os.path.splitext(g)
-        vso = p + '.vso'
-        pso = p + '.pso'
+        (cur, e) = os.path.splitext(g)
+        vso = gen_filenames(cur, ps_only, 'VsMain', vs_entry, '.vso')
+        pso = gen_filenames(cur, vs_only, 'PsMain', ps_entry, '.pso')
 
         compile = True
         hlsl_time = os.path.getmtime(g)
-        if p not in psOnly and os.path.isfile(vso):
+        for v in vso:
             # if the hlsl file is newer than the .vso/.pso file, compile them
-            vso_time = os.path.getmtime(vso)
+            vso_time = os.path.getmtime(v)
             compile = hlsl_time > vso_time
 
-        if p not in vsOnly and os.path.isfile(pso):
+        for p in pso:
             # if the hlsl file is newer than the .vso/.pso file, compile them
-            pso_time = os.path.getmtime(pso)
+            pso_time = os.path.getmtime(p)
             compile = hlsl_time > pso_time
             
         if compile:
-            # check if the shader has a special entry point, otherwise use the defaults
-            if p in shaders:
-                vs = shaders[p]['vs']
-                ps = shaders[p]['ps']
-            else:
-                vs = 'VsMain'
-                ps = 'PsMain'
-            print 'compiling: ' + g
-            
-            # release
-            if not p in psOnly:
-                subprocess.call(['fxc', '/Tvs_5_0', '/O3', '/E%s' % vs, '/Fo%s.vso' % p, '/Fc%s.vsa' % p, '%s.hlsl' % p])
-            if not p in vsOnly:
-                subprocess.call(['fxc', '/Tps_5_0', '/O3', '/E%s' % ps, '/Fo%s.pso' % p, '/Fc%s.psa' % p, '%s.hlsl' % p])
-                
-            #debug
-            if not p in psOnly:
-                subprocess.call(['fxc', '/Tvs_5_0', '/Od', '/Zi', '/E%s' % vs, '/Fo%sD.vso' % p, '/Fc%sD.vsa' % p, '%s.hlsl' % p])
-            if not p in vsOnly:
-                subprocess.call(['fxc', '/Tps_5_0', '/Od', '/Zi', '/E%s' % ps, '/Fo%sD.pso' % p, '/Fc%sD.psa' % p, '%s.hlsl' % p])
+            # check if the current shader has multiple (or non default) entry points
+            vs = ['VsMain'] if not cur in vs_entry else vs_entry[cur]
+            ps = ['PsMain'] if not cur in ps_entry else ps_entry[cur]
+
+            # vertex shaders
+            if not cur in ps_only:
+                for v in vs:
+                    out_name = cur + '_' + v
+                    # debug, then release
+                    subprocess.call(['fxc', '/Tvs_5_0', '/Od', '/Zi', ('/E%s' % v), ('/Fo%sD.vso' % out_name), ('/Fc%sD.vsa' % out_name), ('%s.hlsl' % cur)])
+                    subprocess.call(['fxc', '/Tvs_5_0', '/O3',        ('/E%s' % v), ('/Fo%s.vso' % out_name),  ('/Fc%s.vsa' % out_name),  ('%s.hlsl' % cur)])
+                    
+            # pixel shaders
+            if not cur in vs_only:
+                for p in ps:
+                    out_name = cur + '_' + p
+                    subprocess.call(['fxc', '/Tps_5_0', '/Od', '/Zi', ('/E%s' % p), ('/Fo%sD.pso' % out_name), ('/Fc%sD.psa' % out_name), ('%s.hlsl' % cur)])
+                    subprocess.call(['fxc', '/Tps_5_0', '/O3',        ('/E%s' % p), ('/Fo%s.pso' % out_name),  ('/Fc%s.psa' % out_name),  ('%s.hlsl' % cur)])
     time.sleep(1)

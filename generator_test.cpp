@@ -612,9 +612,18 @@ bool GeneratorTest::Render()
     _ctx->SetRenderObjects(_meshObjects);
     _ctx->DrawIndexed(_numIndices, 0, 0);
 
-    // calc average luminance
-    ScopedRenderTarget rtTmp(1024, 1024, DXGI_FORMAT_R32_FLOAT, BufferFlags());
-    GraphicsObjectHandle h = rtTmp.h;
+    ScopedRenderTarget rtLuminance(1024, 1024, DXGI_FORMAT_R32_FLOAT, BufferFlags());
+
+    // we want the geometric mean of the luminance, which can be calculated as
+    // exp(avg(log(x)), where the avg(log) term can be obtained as the lowest mip level
+    // from a texture containing the log luminance
+    _postProcess->Setup();
+    _postProcess->Execute(_renderTarget, rtLuminance.h, _psLuminance, L"Luminance");
+    _ctx->GenerateMips(rtLuminance.h);
+
+    // calc the bloom
+    
+    // apply tone mapping and bloom
 
     if (_debugDraw)
     {
