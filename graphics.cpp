@@ -6,6 +6,7 @@
 #include "deferred_context.hpp"
 #include "resource_manager.hpp"
 #include "error.hpp"
+#include "graphics_utils.hpp"
 
 extern const TCHAR* g_AppWindowTitle;
 
@@ -1431,79 +1432,73 @@ GraphicsObjectHandle Graphics::RenderTargetForSwapChain(GraphicsObjectHandle h)
 bool Graphics::LoadShadersFromFile(
     const string& filenameBase,
     GraphicsObjectHandle* vs,
-    GraphicsObjectHandle* ps)
+    GraphicsObjectHandle* ps,
+    GraphicsObjectHandle* inputLayout,
+    u32 vertexFlags,
+    const char* vsEntry,
+    const char* psEntry)
 {
+#if WITH_DEBUG_SHADERS
+  string vsSuffix = ToString("_%sD.vso", vsEntry);
+  string psSuffix = ToString("_%sD.pso", psEntry);
+#else
+  string vsSuffix = ToString("_%s.vso", vsEntry);
+  string psSuffix = ToString("_%s.pso", psEntry);
+#endif
+
   vector<char> buf;
   if (vs)
   {
-#if _DEBUG
-    string vsName = filenameBase + "D.vso";
-#else
-    string vsName = filenameBase + ".vso";
-#endif
-
-    // Load the shader normally
-    if (!RESOURCE_MANAGER.LoadFile(vsName.c_str(), &buf))
+    if (!RESOURCE_MANAGER.LoadFile((filenameBase + vsSuffix).c_str(), &buf))
       return false;
 
-    *vs = GRAPHICS.CreateVertexShader(buf, "VsMain");
+    *vs = GRAPHICS.CreateVertexShader(buf, vsEntry);
     if (!vs->IsValid())
       return false;
 
-    // Add a filewatch on the file
-    RESOURCE_MANAGER.AddFileWatch(vsName, (void*)vs->_raw, false, 0, [this](const string& filename, void* token)
+    if (inputLayout)
     {
-      GraphicsObjectHandle h = *(GraphicsObjectHandle*)&token;
-      vector<char> buf;
-      if (!RESOURCE_MANAGER.LoadFile(filename.c_str(), &buf))
-        return false;
-
-      ID3D11VertexShader *vs = nullptr;
-      if (SUCCEEDED(_device->CreateVertexShader(&buf[0], buf.size(), NULL, &vs)))
+      vector<D3D11_INPUT_ELEMENT_DESC> desc;
+      u32 ofs = 0;
+      if (vertexFlags & VF_POS)
       {
-        // shader successfuly recreated, so update the id
-        _vertexShaders.Update(h, vs);
+        D3D11_INPUT_ELEMENT_DESC element =
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+        desc.push_back(element);
+        ofs += 12;
       }
 
-      return true;
+      if (vertexFlags & VF_NORMAL)
+      {
+        D3D11_INPUT_ELEMENT_DESC element =
+        { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, ofs, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+        desc.push_back(element);
+        ofs += 12;
+      }
 
-    });
+      if (vertexFlags & VF_COLOR)
+      {
+        D3D11_INPUT_ELEMENT_DESC element =
+        { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, ofs, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+        desc.push_back(element);
+        ofs += 16;
+      }
+
+
+      *inputLayout = GRAPHICS.CreateInputLayout(desc, buf);
+      if (!inputLayout->IsValid())
+        return false;
+    }
   }
 
   if (ps)
   {
-#if _DEBUG
-    string psName = filenameBase + "D.pso";
-#else
-    string psName = filenameBase + ".pso";
-#endif
-
-    if (!RESOURCE_MANAGER.LoadFile(psName.c_str(), &buf))
+    if (!RESOURCE_MANAGER.LoadFile((filenameBase + psSuffix).c_str(), &buf))
       return false;
 
-    *ps = GRAPHICS.CreatePixelShader(buf, "PsMain");
+    *ps = GRAPHICS.CreatePixelShader(buf, psEntry);
     if (!ps->IsValid())
       return false;
-
-    // Add a filewatch on the file
-    RESOURCE_MANAGER.AddFileWatch(psName, (void*)ps->_raw, false, 0, [this](const string& filename, void* token)
-    {
-      GraphicsObjectHandle h = *(GraphicsObjectHandle*)&token;
-      vector<char> buf;
-      if (!RESOURCE_MANAGER.LoadFile(filename.c_str(), &buf))
-        return false;
-
-      ID3D11PixelShader *ps = nullptr;
-      if (SUCCEEDED(_device->CreatePixelShader(&buf[0], buf.size(), NULL, &ps)))
-      {
-        // shader successfuly recreated, so update the id
-        _pixelShaders.Update(h, ps);
-      }
-
-      return true;
-
-    });
-
   }
 
   return true;

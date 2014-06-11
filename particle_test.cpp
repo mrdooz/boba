@@ -60,19 +60,7 @@ bool ParticleTest::Init(const char* config)
   if (!_texture.IsValid())
     return false;
 
-  vector<char> buf;
-  if (!RESOURCE_MANAGER.LoadFile("shaders/fullscreen.vso", &buf))
-    return false;
-
-  _vs = GRAPHICS.CreateVertexShader(buf, "VSQuad");
-  if (!_vs.IsValid())
-    return false;
-
-  if (!RESOURCE_MANAGER.LoadFile("shaders/fullscreen.pso", &buf))
-    return false;
-
-  _ps = GRAPHICS.CreatePixelShader(buf, "PSQuad");
-  if (!_ps.IsValid())
+  if (!GRAPHICS.LoadShadersFromFile("shaders/fullscreen", &_vs, &_ps, nullptr, 0))
     return false;
 
   CD3D11_SAMPLER_DESC sampler = CD3D11_SAMPLER_DESC(CD3D11_DEFAULT());

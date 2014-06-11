@@ -293,7 +293,11 @@ namespace boba
     bool LoadShadersFromFile(
         const string& filenameBase,
         GraphicsObjectHandle* vs,
-        GraphicsObjectHandle* ps);
+        GraphicsObjectHandle* ps,
+        GraphicsObjectHandle* inputLayout,
+        u32 vertexFlags,
+        const char* vsEntry = "VsMain",
+        const char* psEntry = "PsMain");
 
     void AddText(const char* text, const char* font, float size, float x, float y, u32 color);
     void AddText(const wchar_t* text, const char* font, float size, float x, float y, u32 color);

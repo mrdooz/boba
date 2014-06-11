@@ -159,10 +159,7 @@ bool SceneTest::Init(const char* config)
   if (!loader.LoadMesh("mesh1", vertexFlags, &mesh))
     return false;
 
-  if (!LoadShadersFromFile("shaders/simple_mesh", &_vs, &_ps, &mesh._layout, vertexFlags))
-    return false;
-
-  if (!GRAPHICS.LoadShadersFromFile("shaders/simple_mesh", &_vs, &_ps))
+  if (!GRAPHICS.LoadShadersFromFile("shaders/simple_mesh", &_vs, &_ps, &mesh._layout, vertexFlags))
     return false;
 
   _configName = config;

@@ -54,19 +54,29 @@ namespace boba
 
   //------------------------------------------------------------------------------
   bool LoadShadersFromFile(
-    const string& filenameBase,
-    GraphicsObjectHandle* vs,
-    GraphicsObjectHandle* ps,
-    GraphicsObjectHandle* inputLayout,
-    u32 vertexFlags)
+      const string& filenameBase,
+      GraphicsObjectHandle* vs,
+      GraphicsObjectHandle* ps,
+      GraphicsObjectHandle* inputLayout,
+      u32 vertexFlags,
+      const char* vsEntry,
+      const char* psEntry)
   {
+#if WITH_DEBUG_SHADERS
+    string vsSuffix = ToString("_%sD.vso", vsEntry);
+    string psSuffix = ToString("_%sD.pso", psEntry);
+#else
+    string vsSuffix = ToString("_%s.vso", vsEntry);
+    string psSuffix = ToString("_%s.pso", psEntry);
+#endif
+
     vector<char> buf;
     if (vs)
     {
-      if (!RESOURCE_MANAGER.LoadFile((filenameBase + ".vso").c_str(), &buf))
+      if (!RESOURCE_MANAGER.LoadFile((filenameBase + vsSuffix).c_str(), &buf))
         return false;
 
-      *vs = GRAPHICS.CreateVertexShader(buf, "VsMain");
+      *vs = GRAPHICS.CreateVertexShader(buf, vsEntry);
       if (!vs->IsValid())
         return false;
 
@@ -107,10 +117,10 @@ namespace boba
 
     if (ps)
     {
-      if (!RESOURCE_MANAGER.LoadFile((filenameBase + ".pso").c_str(), &buf))
+      if (!RESOURCE_MANAGER.LoadFile((filenameBase + psSuffix).c_str(), &buf))
         return false;
 
-      *ps = GRAPHICS.CreatePixelShader(buf, "PsMain");
+      *ps = GRAPHICS.CreatePixelShader(buf, psEntry);
       if (!ps->IsValid())
         return false;
     }

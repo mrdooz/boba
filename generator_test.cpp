@@ -284,7 +284,7 @@ bool PostProcess::Init()
   samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
   _pointSamplerState = GRAPHICS.CreateSamplerState(samplerDesc);
 
-  GRAPHICS.LoadShadersFromFile("shaders/quad", &_vsQuad, nullptr);
+  GRAPHICS.LoadShadersFromFile("shaders/quad", &_vsQuad, nullptr, nullptr, 0);
 
   return true;
 }
@@ -379,7 +379,7 @@ bool GeneratorTest::Init(const char* config)
   _meshObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosNormal));
   _cb.Create();
 
-  LoadShadersFromFile("shaders/generator",
+  GRAPHICS.LoadShadersFromFile("shaders/generator",
       &_meshObjects._vs, &_meshObjects._ps, &_meshObjects._layout, VF_POS | VF_NORMAL);
 
   InitGeneratorScript();
@@ -399,7 +399,8 @@ bool GeneratorTest::Init(const char* config)
   f |= BufferFlag::CreateSrv;
   _renderTarget = GRAPHICS.CreateRenderTarget(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
   
-  GRAPHICS.LoadShadersFromFile("shaders/copy", nullptr, &_psCopy);
+  GRAPHICS.LoadShadersFromFile("shaders/copy", nullptr, &_psCopy, nullptr, 0);
+  GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psLuminance, nullptr, 0, nullptr, "LuminanceMap");
 
   _depthStencilState = GRAPHICS.CreateDepthStencilState(CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT()));
   _blendState = GRAPHICS.CreateBlendState(CD3D11_BLEND_DESC(CD3D11_DEFAULT()));
@@ -634,14 +635,15 @@ bool GeneratorTest::Render()
       DEBUG_DRAW.DrawSphere(g_mesh.center, g_mesh.radius);
     }
 
+    _ctx->UnsetRenderTargets(0, 1);
+
+    _postProcess->Setup();
+    GraphicsObjectHandle rtDest = GRAPHICS.RenderTargetForSwapChain(GRAPHICS.DefaultSwapChain());
+    _postProcess->Execute(_renderTarget, rtDest, _psCopy, L"COPY");
+
     _ctx->EndFrame();
   }
 
-  _ctx->UnsetRenderTargets(0, 1);
-
-  _postProcess->Setup();
-  GraphicsObjectHandle rtDest = GRAPHICS.RenderTargetForSwapChain(GRAPHICS.DefaultSwapChain());
-  _postProcess->Execute(_renderTarget, rtDest, _psCopy, L"COPY");
   _ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), false);
 
   return true;

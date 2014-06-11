@@ -34,7 +34,7 @@ bool DebugDrawer::Init()
   _gpuObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosCol));
   _cb.Create();
 
-  if (!LoadShadersFromFile("shaders/debug_draw",
+  if (!GRAPHICS.LoadShadersFromFile("shaders/debug_draw",
     &_gpuObjects._vs, &_gpuObjects._ps, &_gpuObjects._layout, VF_POS | VF_COLOR))
   {
     LOG_WARN("Error loading shaders for DebugDrawer");

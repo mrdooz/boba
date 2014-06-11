@@ -6,11 +6,9 @@ import subprocess
 
 # a single .hlsl can contain multiple entry points
 vs_entry = {
-    'fullscreen' : ['VSQuad']
 }
 
 ps_entry = {
-    'fullscreen' : ['VSQuad'],
     'tonemap' : ['LuminanceMap', 'Composite']
 }
 
@@ -37,13 +35,19 @@ while True:
         hlsl_time = os.path.getmtime(g)
         for v in vso:
             # if the hlsl file is newer than the .vso/.pso file, compile them
-            vso_time = os.path.getmtime(v)
-            compile = hlsl_time > vso_time
+            try:
+                vso_time = os.path.getmtime(v)
+                compile = hlsl_time > vso_time
+            except:
+                compile = True
 
         for p in pso:
             # if the hlsl file is newer than the .vso/.pso file, compile them
-            pso_time = os.path.getmtime(p)
-            compile = hlsl_time > pso_time
+            try:
+                pso_time = os.path.getmtime(p)
+                compile = hlsl_time > pso_time
+            except:
+                compile = True
             
         if compile:
             # check if the current shader has multiple (or non default) entry points

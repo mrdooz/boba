@@ -20,6 +20,13 @@
 
 #define WITH_GPU_PERF 1
 
+#ifdef _DEBUG
+#define WITH_DEBUG_SHADERS 1
+#else
+#define WITH_DEBUG_SHADERS 0
+#endif
+
+
 #include <stdint.h>
 #include <assert.h>
 #include <time.h>

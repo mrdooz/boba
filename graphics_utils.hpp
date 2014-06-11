@@ -25,11 +25,4 @@ namespace boba
   }
 
   class GraphicsObjectHandle;
-  bool LoadShadersFromFile(
-    const string& filenameBase,
-    GraphicsObjectHandle* vs,
-    GraphicsObjectHandle* ps,
-    GraphicsObjectHandle* inputLayout,
-    u32 vertexFlags);
-
 }
