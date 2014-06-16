@@ -20,7 +20,8 @@ DeferredContext::DeferredContext()
 //------------------------------------------------------------------------------
 void DeferredContext::GenerateMips(GraphicsObjectHandle h)
 {
-  _ctx->GenerateMips(GRAPHICS._renderTargets.Get(h)->srv.resource);
+  auto r = GRAPHICS._renderTargets.Get(h)->srv.resource;
+  _ctx->GenerateMips(r);
 }
 
 //------------------------------------------------------------------------------

@@ -345,8 +345,7 @@ GeneratorTest::GeneratorTest(const string &name)
     , _dirtyFlag(true)
     , _lua(nullptr)
     , _numIndices(0)
-    , _debugDraw(false)
-    , _wireframe(true)
+    , _renderFlags(RenderFlags::Wireframe)
     , _cameraDir(0,0,1)
 {
 }
@@ -598,22 +597,20 @@ bool GeneratorTest::Render()
     _ctx->BeginFrame();
 
     _proj = Matrix::CreatePerspectiveFieldOfView(45.0f / 180 * 3.1415f, 16.0f / 10, 1, 1000);
-    _view = Matrix::CreateLookAt(
-        _cameraPos,
-        _cameraPos + 100 * _cameraDir,
-        Vector3(0, 1, 0));
+    _view = Matrix::CreateLookAt(_cameraPos, _cameraPos + 100 * _cameraDir, Vector3(0, 1, 0));
     _invView = _view.Invert();
 
     Matrix world = g_mesh.World();
     _cb.data.world = world.Transpose();
     _cb.data.viewProj = (_view * _proj).Transpose();
 
-    _ctx->SetRasterizerState(_wireframe ? g_mesh._wireframe : g_mesh._solid);
+    _ctx->SetRasterizerState(_renderFlags.IsSet(RenderFlags::Wireframe) ? g_mesh._wireframe : g_mesh._solid);
     _ctx->SetCBuffer(_cb, ShaderType::VertexShader);
     _ctx->SetRenderObjects(_meshObjects);
     _ctx->DrawIndexed(_numIndices, 0, 0);
 
-    ScopedRenderTarget rtLuminance(1024, 1024, DXGI_FORMAT_R32_FLOAT, BufferFlags());
+    // TODO: clear the render target..
+    ScopedRenderTarget rtLuminance(1024, 1024, DXGI_FORMAT_R32_FLOAT, BufferFlags(BufferFlag::CreateSrv));
 
     // we want the geometric mean of the luminance, which can be calculated as
     // exp(avg(log(x)), where the avg(log) term can be obtained as the lowest mip level
@@ -626,7 +623,7 @@ bool GeneratorTest::Render()
     
     // apply tone mapping and bloom
 
-    if (_debugDraw)
+    if (_renderFlags.IsSet(RenderFlags::Wireframe))
     {
       DEBUG_DRAW.SetContext(_ctx);
       DEBUG_DRAW.SetViewProjMatrix(_view, _proj);
@@ -639,7 +636,9 @@ bool GeneratorTest::Render()
 
     _postProcess->Setup();
     GraphicsObjectHandle rtDest = GRAPHICS.RenderTargetForSwapChain(GRAPHICS.DefaultSwapChain());
-    _postProcess->Execute(_renderTarget, rtDest, _psCopy, L"COPY");
+
+    //_postProcess->Execute(_renderTarget, rtDest, _psCopy, L"COPY");
+    _postProcess->Execute(_renderFlags.IsSet(RenderFlags::Luminance) ? rtLuminance.h : _renderTarget, rtDest, _psCopy, L"COPY");
 
     _ctx->EndFrame();
   }
@@ -696,7 +695,11 @@ void GeneratorTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
       switch (wParam)
       {
         case '1':
-        _wireframe = !_wireframe;
+        _renderFlags.Toggle(RenderFlags::Wireframe);
+        break;
+
+        case '2':
+        _renderFlags.Toggle(RenderFlags::Luminance);
         break;
 
         case 'A':

@@ -90,8 +90,11 @@ namespace boba
     bool _rotatingObject;
     Vector3 _v0;
     bool _dirtyFlag;
-    bool _debugDraw;
-    bool _wireframe;
+    struct RenderFlags { 
+      enum Enum { Wireframe = 0x1, Luminance = 0x2, DebugDraw = 0x4, };
+      struct Bits { u32 wireframe : 1; u32 luminance : 1; u32 debugDraw : 1; };
+    };
+    Flags<RenderFlags> _renderFlags;
 
     Vector3 _cameraPos, _cameraDir;
     unique_ptr<PostProcess> _postProcess;

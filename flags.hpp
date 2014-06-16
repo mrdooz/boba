@@ -26,6 +26,11 @@ namespace boba
       _value |= f;
     }
 
+    void Toggle(Enum f)
+    {
+      _value ^= f;
+    }
+
     void Clear(Enum f)
     {
       _value &= ~f;
