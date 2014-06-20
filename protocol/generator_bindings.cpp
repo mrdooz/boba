@@ -68,5 +68,15 @@ void BindPlane(generator::Plane* data, bool *dirty)
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_height_segments(*(uint32_t*)value); if (cfg->dirty) *cfg->dirty = true; },
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(uint32_t*)value = cfg->data->height_segments(); }, (void*)&cfg, nullptr);
 
+  // Add tau
+  TwAddVarCB(bar, "tau", TW_TYPE_FLOAT,
+    [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_tau(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
+    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->tau(); }, (void*)&cfg, nullptr);
+
+  // Add key
+  TwAddVarCB(bar, "key", TW_TYPE_FLOAT,
+    [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_key(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
+    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->key(); }, (void*)&cfg, nullptr);
+
 }
 }

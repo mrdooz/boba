@@ -318,6 +318,20 @@ class Plane : public ::google::protobuf::Message {
   inline ::common::Matrix4x4* release_obj_r();
   inline void set_allocated_obj_r(::common::Matrix4x4* obj_r);
 
+  // optional float tau = 9 [default = 0.5];
+  inline bool has_tau() const;
+  inline void clear_tau();
+  static const int kTauFieldNumber = 9;
+  inline float tau() const;
+  inline void set_tau(float value);
+
+  // optional float key = 10 [default = 0.18];
+  inline bool has_key() const;
+  inline void clear_key();
+  static const int kKeyFieldNumber = 10;
+  inline float key() const;
+  inline void set_key(float value);
+
   // @@protoc_insertion_point(class_scope:generator.Plane)
  private:
   inline void set_has_width();
@@ -336,6 +350,10 @@ class Plane : public ::google::protobuf::Message {
   inline void clear_has_obj_t();
   inline void set_has_obj_r();
   inline void clear_has_obj_r();
+  inline void set_has_tau();
+  inline void clear_has_tau();
+  inline void set_has_key();
+  inline void clear_has_key();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -347,9 +365,11 @@ class Plane : public ::google::protobuf::Message {
   ::common::Vector3* camera_dir_;
   ::common::Vector3* obj_t_;
   ::common::Matrix4x4* obj_r_;
+  float tau_;
+  float key_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
 
   friend void  protobuf_AddDesc_generator_2eproto();
   friend void protobuf_AssignDesc_generator_2eproto();
@@ -847,6 +867,50 @@ inline void Plane::set_allocated_obj_r(::common::Matrix4x4* obj_r) {
   } else {
     clear_has_obj_r();
   }
+}
+
+// optional float tau = 9 [default = 0.5];
+inline bool Plane::has_tau() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void Plane::set_has_tau() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void Plane::clear_has_tau() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void Plane::clear_tau() {
+  tau_ = 0.5f;
+  clear_has_tau();
+}
+inline float Plane::tau() const {
+  return tau_;
+}
+inline void Plane::set_tau(float value) {
+  set_has_tau();
+  tau_ = value;
+}
+
+// optional float key = 10 [default = 0.18];
+inline bool Plane::has_key() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void Plane::set_has_key() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void Plane::clear_has_key() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void Plane::clear_key() {
+  key_ = 0.18f;
+  clear_has_key();
+}
+inline float Plane::key() const {
+  return key_;
+}
+inline void Plane::set_key(float value) {
+  set_has_key();
+  key_ = value;
 }
 
 

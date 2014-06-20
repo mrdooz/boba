@@ -742,9 +742,6 @@ bool Graphics::CreateRenderTarget(
   if (FAILED(_device->CreateRenderTargetView(out->texture.resource, &out->rtv.desc, &out->rtv.resource.p)))
     return false;
   SetPrivateData(out->rtv.resource.p);
-  float color[4] = { 0 };
-  // TODO: think about this..
-  // ctx->_ctx->ClearRenderTargetView(out->rtv.resource.p, color);
 
   if (bufferFlags.IsSet(BufferFlag::CreateDepthBuffer))
   {
@@ -1446,58 +1443,93 @@ bool Graphics::LoadShadersFromFile(
   string psSuffix = ToString("_%s.pso", psEntry);
 #endif
 
-  vector<char> buf;
   if (vs)
   {
-    if (!RESOURCE_MANAGER.LoadFile((filenameBase + vsSuffix).c_str(), &buf))
+    // todo: preallocate the shader handle to avoid writing to a pointer like this..
+    bool res;
+    RESOURCE_MANAGER.AddFileWatch((filenameBase + vsSuffix).c_str(), nullptr, true, &res,
+      [=](const string& filename, void* token)
+      {
+        vector<char> buf;
+
+        if (!RESOURCE_MANAGER.LoadFile(filename.c_str(), &buf))
+        {
+          LOG_WARN("Unable to load vertex shader" << LogKeyValue("filename", filename));
+          return false;
+        }
+
+        GraphicsObjectHandle h = GRAPHICS.CreateVertexShader(buf, vsEntry);
+        if (!h.IsValid())
+        {
+          LOG_WARN("Unable to create vertex shader" << LogKeyValue("filename", filename));
+          return false;
+        }
+
+        *vs = h;
+
+        if (inputLayout)
+        {
+          vector<D3D11_INPUT_ELEMENT_DESC> desc;
+          u32 ofs = 0;
+          if (vertexFlags & VF_POS)
+          {
+            D3D11_INPUT_ELEMENT_DESC element =
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+            desc.push_back(element);
+            ofs += 12;
+          }
+
+          if (vertexFlags & VF_NORMAL)
+          {
+            D3D11_INPUT_ELEMENT_DESC element =
+            { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, ofs, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+            desc.push_back(element);
+            ofs += 12;
+          }
+
+          if (vertexFlags & VF_COLOR)
+          {
+            D3D11_INPUT_ELEMENT_DESC element =
+            { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, ofs, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+            desc.push_back(element);
+            ofs += 16;
+          }
+
+          *inputLayout = GRAPHICS.CreateInputLayout(desc, buf);
+          if (!inputLayout->IsValid())
+            return false;
+        }
+        return true;
+      });
+
+    if (!res)
       return false;
-
-    *vs = GRAPHICS.CreateVertexShader(buf, vsEntry);
-    if (!vs->IsValid())
-      return false;
-
-    if (inputLayout)
-    {
-      vector<D3D11_INPUT_ELEMENT_DESC> desc;
-      u32 ofs = 0;
-      if (vertexFlags & VF_POS)
-      {
-        D3D11_INPUT_ELEMENT_DESC element =
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-        desc.push_back(element);
-        ofs += 12;
-      }
-
-      if (vertexFlags & VF_NORMAL)
-      {
-        D3D11_INPUT_ELEMENT_DESC element =
-        { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, ofs, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-        desc.push_back(element);
-        ofs += 12;
-      }
-
-      if (vertexFlags & VF_COLOR)
-      {
-        D3D11_INPUT_ELEMENT_DESC element =
-        { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, ofs, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-        desc.push_back(element);
-        ofs += 16;
-      }
-
-
-      *inputLayout = GRAPHICS.CreateInputLayout(desc, buf);
-      if (!inputLayout->IsValid())
-        return false;
-    }
   }
 
   if (ps)
   {
-    if (!RESOURCE_MANAGER.LoadFile((filenameBase + psSuffix).c_str(), &buf))
-      return false;
+    bool res;
+    RESOURCE_MANAGER.AddFileWatch((filenameBase + psSuffix).c_str(), nullptr, true, &res,
+      [=](const string& filename, void* token)
+    {
+      vector<char> buf;
+      if (!RESOURCE_MANAGER.LoadFile(filename.c_str(), &buf))
+      {
+        LOG_WARN("Unable to load pixel shader" << LogKeyValue("filename", filename));
+        return false;
+      }
 
-    *ps = GRAPHICS.CreatePixelShader(buf, psEntry);
-    if (!ps->IsValid())
+      *ps = GRAPHICS.CreatePixelShader(buf, psEntry);
+      if (!ps->IsValid())
+      {
+        LOG_WARN("Unable to create pixel shader" << LogKeyValue("filename", filename));
+        return false;
+      }
+
+      return true;
+    });
+
+    if (!res)
       return false;
   }
 

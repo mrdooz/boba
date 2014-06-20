@@ -194,7 +194,7 @@ void DebugDrawer::DrawSphere(const Vector3& center, float radius)
     cb.viewProj = (_view * _proj).Transpose();
 
     _ctx->SetRasterizerState(_rasterizerState);
-    _ctx->SetCBuffer(_cb, ShaderType::VertexShader);
+    _ctx->SetCBuffer(_cb, ShaderType::VertexShader, 0);
     _ctx->SetRenderObjects(_gpuObjects);
     _ctx->Draw(numVerts, 0);
   }

@@ -12,8 +12,8 @@ namespace boba
 
     void GetRenderTargetTextureDesc(GraphicsObjectHandle handle, D3D11_TEXTURE2D_DESC* desc);
     void SetSwapChain(GraphicsObjectHandle h, bool clear);
-    void SetRenderTarget(GraphicsObjectHandle render_target, bool clear_target);
-    void SetRenderTargets(GraphicsObjectHandle *render_targets, bool *clear_targets, int num_render_targets);
+    void SetRenderTarget(GraphicsObjectHandle render_target, const Color* clearTarget);
+    void SetRenderTargets(GraphicsObjectHandle *render_targets, const Color* clearTarget, int num_render_targets);
     void GenerateMips(GraphicsObjectHandle h);
 
     void BeginFrame();
@@ -32,19 +32,21 @@ namespace boba
     void SetDepthStencilState(GraphicsObjectHandle dss, UINT stencil_ref);
     void SetBlendState(GraphicsObjectHandle bs, const float *blendFactors, UINT sampleMask);
     void SetShaderResource(GraphicsObjectHandle h, ShaderType shaderType);
+    void SetShaderResources(const vector<GraphicsObjectHandle>& handles, ShaderType shaderType);
     void SetSamplerState(GraphicsObjectHandle h, u32 slot, ShaderType shaderType);
     void SetSamplers(GraphicsObjectHandle* h, u32 slot, u32 numSamplers, ShaderType shaderType);
     template <typename T>
-    void SetCBuffer(const ConstantBuffer<T>& buffer, ShaderType shaderType)
+    void SetCBuffer(const ConstantBuffer<T>& buffer, ShaderType shaderType, u32 slot)
     {
-      return SetCBuffer(buffer.handle, &buffer.data, sizeof(T), shaderType);
+      return SetCBuffer(buffer.handle, &buffer.data, sizeof(T), shaderType, slot);
     }
 
-    void SetCBuffer(GraphicsObjectHandle h, const void* buf, size_t len, ShaderType shaderType);
+    void SetCBuffer(GraphicsObjectHandle h, const void* buf, size_t len, ShaderType shaderType, u32 slot);
     void SetRenderObjects(const GpuObjects& obj);
     void SetViewports(const D3D11_VIEWPORT& viewport, u32 numViewports);
 
-    void UnsetUavs(int first, int count);
+    void UnsetSRVs(u32 first, u32 count);
+    void UnsetUAVs(int first, int count);
     void UnsetRenderTargets(int first, int count);
     void DrawIndexed(int count, int start_index, int base_vertex);
     void Draw(int vertexCount, int startVertexLocation);

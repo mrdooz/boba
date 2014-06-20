@@ -25,15 +25,15 @@ void DeferredContext::GenerateMips(GraphicsObjectHandle h)
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetRenderTarget(GraphicsObjectHandle render_target, bool clear_target)
+void DeferredContext::SetRenderTarget(GraphicsObjectHandle render_target, const Color* clearColor)
 {
-  SetRenderTargets(&render_target, &clear_target, 1);
+  SetRenderTargets(&render_target, clearColor, 1);
 }
 
 //------------------------------------------------------------------------------
 void DeferredContext::SetRenderTargets(
     GraphicsObjectHandle* renderTargets,
-    bool* clearTargets,
+    const Color* clearTargets,
     int numRenderTargets)
 {
   if (!numRenderTargets)
@@ -59,8 +59,7 @@ void DeferredContext::SetRenderTargets(
     // clear render target (and depth stenci)
     if (clearTargets[i])
     {
-      static float color[4] = { 0, 0, 0, 0 };
-      _ctx->ClearRenderTargetView(rts[i], color);
+      _ctx->ClearRenderTargetView(rts[i], &clearTargets[i].x);
       if (rt->dsv.resource)
       {
         _ctx->ClearDepthStencilView(rt->dsv.resource, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
@@ -179,18 +178,25 @@ void DeferredContext::SetBlendState(GraphicsObjectHandle bs, const float* blendF
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::UnsetUavs(int first, int count)
+void DeferredContext::UnsetSRVs(u32 first, u32 count)
+{
+  ID3D11ShaderResourceView* srViews[16] = { nullptr };
+  _ctx->PSSetShaderResources(0, count, srViews);
+}
+
+//------------------------------------------------------------------------------
+void DeferredContext::UnsetUAVs(int first, int count)
 {
   UINT initialCount = -1;
-  static ID3D11UnorderedAccessView *nullViews[MAX_TEXTURES] = {0, 0, 0, 0, 0, 0, 0, 0};
+  static ID3D11UnorderedAccessView *nullViews[MAX_TEXTURES] = { nullptr };
   _ctx->CSSetUnorderedAccessViews(first, count, nullViews, &initialCount);
 }
 
 //------------------------------------------------------------------------------
 void DeferredContext::UnsetRenderTargets(int first, int count)
 {
-  static ID3D11RenderTargetView *nullViews[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-  _ctx->OMSetRenderTargets(count, &nullViews[first], nullptr);
+  static ID3D11RenderTargetView *nullViews[8] = { nullptr };
+  _ctx->OMSetRenderTargets(count, nullViews, nullptr);
 }
 
 //------------------------------------------------------------------------------
@@ -282,6 +288,32 @@ void DeferredContext::Flush()
 }
 
 //------------------------------------------------------------------------------
+void DeferredContext::SetShaderResources(
+    const vector<GraphicsObjectHandle>& handles,
+    ShaderType shaderType)
+{
+  ID3D11ShaderResourceView** v = (ID3D11ShaderResourceView**)_alloca(sizeof(ID3D11ShaderResourceView*) * handles.size());
+  ID3D11ShaderResourceView** t = v;
+  for (auto h : handles)
+  {
+    *t++ = GRAPHICS.GetShaderResourceView(h);
+  }
+
+  size_t count = handles.size();
+  if (shaderType == ShaderType::VertexShader)
+    _ctx->VSSetShaderResources(0, count, v);
+  else if (shaderType == ShaderType::PixelShader)
+    _ctx->PSSetShaderResources(0, count, v);
+  else if (shaderType == ShaderType::ComputeShader)
+    _ctx->CSSetShaderResources(0, count, v);
+  else if (shaderType == ShaderType::GeometryShader)
+    _ctx->GSSetShaderResources(0, count, v);
+  else
+    assert(false);
+
+}
+
+//------------------------------------------------------------------------------
 void DeferredContext::SetShaderResource(GraphicsObjectHandle h, ShaderType shaderType)
 {
   ID3D11ShaderResourceView* view = GRAPHICS.GetShaderResourceView(h);
@@ -342,7 +374,8 @@ void DeferredContext::SetCBuffer(
     GraphicsObjectHandle h,
     const void* buf,
     size_t len,
-    ShaderType shaderType)
+    ShaderType shaderType,
+    u32 slot)
 {
   ID3D11Buffer *buffer = GRAPHICS._constantBuffers.Get(h);
   D3D11_MAPPED_SUBRESOURCE sub;
@@ -353,13 +386,13 @@ void DeferredContext::SetCBuffer(
   }
 
   if (shaderType == ShaderType::VertexShader)
-    _ctx->VSSetConstantBuffers(0, 1, &buffer);
+    _ctx->VSSetConstantBuffers(slot, 1, &buffer);
   else if (shaderType == ShaderType::PixelShader)
-    _ctx->PSSetConstantBuffers(0, 1, &buffer);
+    _ctx->PSSetConstantBuffers(slot, 1, &buffer);
   else if (shaderType == ShaderType::ComputeShader)
-    _ctx->CSSetConstantBuffers(0, 1, &buffer);
+    _ctx->CSSetConstantBuffers(slot, 1, &buffer);
   else if (shaderType == ShaderType::GeometryShader)
-    _ctx->GSSetConstantBuffers(0, 1, &buffer);
+    _ctx->GSSetConstantBuffers(slot, 1, &buffer);
 }
 
 //------------------------------------------------------------------------------

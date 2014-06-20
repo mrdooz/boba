@@ -12,6 +12,19 @@ struct PSInput
   float2 uv: TexCoord;
 };
 
+cbuffer textureSize : register(b0)
+{
+  float2 inputSize : packoffset(c0.x);
+  float2 outputSize : packoffset(c0.z);
+};
+
+cbuffer settings : register(b1)
+{
+  float tua : packoffset(c0.x);
+  float key : packoffset(c0.y);
+  float timeDelta : packoffset(c0.z);
+};
+
 //------------------------------------------------------------------------------
 // Approximates luminance from an RGB value
 float CalcLuminance(float3 color)
@@ -34,15 +47,28 @@ float3 ToneMap(float3 color, float avgLuminance, float key)
 }
 
 //------------------------------------------------------------------------------
+// Slowly adjusts the scene luminance based on the previous scene luminance
+float4 AdaptLuminance(in PSInput input) : SV_Target
+{
+  float lastLum = Texture0.Load(uint3(0, 0, 0)).x;
+  float currentLum = exp(Texture1.SampleLevel(PointSampler, float2(0.5f, 0.5f), 10.0f).x);
+
+  // Adapt the luminance using Pattanaik's technique
+  float adaptedLum = lastLum + (currentLum - lastLum) * (1 - exp(-timeDelta * tua));
+
+  return float4(adaptedLum, 1.0f, 1.0f, 1.0f);
+}
+
+//------------------------------------------------------------------------------
 // Creates the luminance map for the scene
 float4 LuminanceMap(in PSInput input) : SV_Target
 {
   // Sample the input
-  float3 color = Texture0.Sample(LinearSampler, input.uv).rgb;
 
+  float3 color = Texture0.Sample(LinearSampler, input.uv).rgb;
   // calculate the luminance using a weighted average
   float luminance = log(max(CalcLuminance(color), 0.00001f));
-
+  
   return float4(luminance, 1.0f, 1.0f, 1.0f);
 }
 
@@ -51,13 +77,10 @@ float4 LuminanceMap(in PSInput input) : SV_Target
 float4 Composite(in PSInput input) : SV_Target
 {
   // texture_0 = input texture
-  // texture_1 = log(avg) luminance (there is no adaption phase, so this is the full 1024x1024
-  //             texture).
+  // texture_1 = avg luminance
   
-  // sample the log(avg), and convert to avg luminance
-  float avgLuminance = exp(Texture1.SampleLevel(PointSampler, float2(0.5f, 0.5f), 10.0f).x);
   float3 color = Texture0.Sample(PointSampler, input.uv).rgb;
-
-  color = ToneMap(color, avgLuminance, 0.18);
+  float avgLuminance = GetAvgLuminance(Texture1);
+  color = ToneMap(color, avgLuminance, key);
   return float4(color, 1.0f);
 }

@@ -10,4 +10,6 @@ shaders/fullscreen_VsMainD.vso	D:/projects/boba/shaders/fullscreen_VsMainD.vso
 shaders/generator_PsMainD.pso	D:/projects/boba/shaders/generator_PsMainD.pso
 shaders/generator_VsMainD.vso	D:/projects/boba/shaders/generator_VsMainD.vso
 shaders/quad_VsMainD.vso	D:/projects/boba/shaders/quad_VsMainD.vso
+shaders/tonemap_AdaptLuminanceD.pso	D:/projects/boba/shaders/tonemap_AdaptLuminanceD.pso
+shaders/tonemap_CompositeD.pso	D:/projects/boba/shaders/tonemap_CompositeD.pso
 shaders/tonemap_LuminanceMapD.pso	D:/projects/boba/shaders/tonemap_LuminanceMapD.pso

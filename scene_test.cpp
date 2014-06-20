@@ -203,7 +203,7 @@ bool SceneTest::Render()
   cb.world = mesh._world;
   cb.viewProj = (_view * _proj).Transpose();
 
-  _ctx->SetCBuffer(_cbuffer, &cb, sizeof(cb), ShaderType::VertexShader);
+  _ctx->SetCBuffer(_cbuffer, &cb, sizeof(cb), ShaderType::VertexShader, 0);
 
   _ctx->SetVS(_vs);
   _ctx->SetPS(_ps);

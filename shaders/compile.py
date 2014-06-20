@@ -9,7 +9,7 @@ vs_entry = {
 }
 
 ps_entry = {
-    'tonemap' : ['LuminanceMap', 'Composite']
+    'tonemap' : ['LuminanceMap', 'Composite', 'AdaptLuminance']
 }
 
 vs_only = [ 'quad' ]

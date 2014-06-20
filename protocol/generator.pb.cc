@@ -59,7 +59,7 @@ void protobuf_AssignDesc_generator_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Spiky));
   Plane_descriptor_ = file->message_type(1);
-  static const int Plane_offsets_[8] = {
+  static const int Plane_offsets_[10] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, width_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, width_segments_),
@@ -68,6 +68,8 @@ void protobuf_AssignDesc_generator_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, camera_dir_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, obj_t_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, obj_r_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, tau_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, key_),
   };
   Plane_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -123,14 +125,15 @@ void protobuf_AddDesc_generator_2eproto() {
     "_pos\030\005 \001(\0132\017.common.Vector3B\004\230\265\030\001\022)\n\ncam"
     "era_dir\030\006 \001(\0132\017.common.Vector3B\004\230\265\030\001\022$\n\005"
     "obj_t\030\007 \001(\0132\017.common.Vector3B\004\230\265\030\001\022&\n\005ob"
-    "j_r\030\010 \001(\0132\021.common.Matrix4x4B\004\230\265\030\001\"\373\001\n\005P"
+    "j_r\030\010 \001(\0132\021.common.Matrix4x4B\004\230\265\030\001\"\240\002\n\005P"
     "lane\022\r\n\005width\030\001 \001(\002\022\016\n\006height\030\002 \001(\002\022\026\n\016w"
     "idth_segments\030\003 \001(\r\022\027\n\017height_segments\030\004"
     " \001(\r\022)\n\ncamera_pos\030\005 \001(\0132\017.common.Vector"
     "3B\004\230\265\030\001\022)\n\ncamera_dir\030\006 \001(\0132\017.common.Vec"
     "tor3B\004\230\265\030\001\022$\n\005obj_t\030\007 \001(\0132\017.common.Vecto"
     "r3B\004\230\265\030\001\022&\n\005obj_r\030\010 \001(\0132\021.common.Matrix4"
-    "x4B\004\230\265\030\001", 568);
+    "x4B\004\230\265\030\001\022\020\n\003tau\030\t \001(\002:\0030.5\022\021\n\003key\030\n \001(\002:"
+    "\0040.18", 605);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "generator.proto", &protobuf_RegisterTypes);
   Spiky::default_instance_ = new Spiky();
@@ -662,6 +665,8 @@ const int Plane::kCameraPosFieldNumber;
 const int Plane::kCameraDirFieldNumber;
 const int Plane::kObjTFieldNumber;
 const int Plane::kObjRFieldNumber;
+const int Plane::kTauFieldNumber;
+const int Plane::kKeyFieldNumber;
 #endif  // !_MSC_VER
 
 Plane::Plane()
@@ -692,6 +697,8 @@ void Plane::SharedCtor() {
   camera_dir_ = NULL;
   obj_t_ = NULL;
   obj_r_ = NULL;
+  tau_ = 0.5f;
+  key_ = 0.18f;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -747,6 +754,10 @@ void Plane::Clear() {
     if (has_obj_r()) {
       if (obj_r_ != NULL) obj_r_->::common::Matrix4x4::Clear();
     }
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    tau_ = 0.5f;
+    key_ = 0.18f;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -873,6 +884,38 @@ bool Plane::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(77)) goto parse_tau;
+        break;
+      }
+
+      // optional float tau = 9 [default = 0.5];
+      case 9: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_tau:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &tau_)));
+          set_has_tau();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(85)) goto parse_key;
+        break;
+      }
+
+      // optional float key = 10 [default = 0.18];
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_key:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &key_)));
+          set_has_key();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -939,6 +982,16 @@ void Plane::SerializeWithCachedSizes(
       8, this->obj_r(), output);
   }
 
+  // optional float tau = 9 [default = 0.5];
+  if (has_tau()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(9, this->tau(), output);
+  }
+
+  // optional float key = 10 [default = 0.18];
+  if (has_key()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(10, this->key(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -993,6 +1046,16 @@ void Plane::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         8, this->obj_r(), target);
+  }
+
+  // optional float tau = 9 [default = 0.5];
+  if (has_tau()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(9, this->tau(), target);
+  }
+
+  // optional float key = 10 [default = 0.18];
+  if (has_key()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(10, this->key(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1059,6 +1122,18 @@ int Plane::ByteSize() const {
     }
 
   }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional float tau = 9 [default = 0.5];
+    if (has_tau()) {
+      total_size += 1 + 4;
+    }
+
+    // optional float key = 10 [default = 0.18];
+    if (has_key()) {
+      total_size += 1 + 4;
+    }
+
+  }
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -1110,6 +1185,14 @@ void Plane::MergeFrom(const Plane& from) {
       mutable_obj_r()->::common::Matrix4x4::MergeFrom(from.obj_r());
     }
   }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_tau()) {
+      set_tau(from.tau());
+    }
+    if (from.has_key()) {
+      set_key(from.key());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -1140,6 +1223,8 @@ void Plane::Swap(Plane* other) {
     std::swap(camera_dir_, other->camera_dir_);
     std::swap(obj_t_, other->obj_t_);
     std::swap(obj_r_, other->obj_r_);
+    std::swap(tau_, other->tau_);
+    std::swap(key_, other->key_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

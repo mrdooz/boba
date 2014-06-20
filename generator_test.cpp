@@ -308,32 +308,42 @@ void PostProcess::Setup()
 
 //------------------------------------------------------------------------------
 void PostProcess::Execute(
-    GraphicsObjectHandle input,
+    const vector<GraphicsObjectHandle>& input,
     GraphicsObjectHandle output,
     GraphicsObjectHandle shader,
+    const Color* clearColor,
     WCHAR* name)
 {
   D3DPERF_BeginEvent(0xffffffff, name);
 
-  _ctx->SetRenderTarget(output, false);
-  _ctx->SetShaderResource(input, ShaderType::PixelShader);
+  if (output.IsValid())
+    _ctx->SetRenderTarget(output, clearColor);
+
+  _ctx->SetShaderResources(input, ShaderType::PixelShader);
 
   // set constant buffers
-  u32 inputX, inputY;
+  u32 inputX[8], inputY[8];
   u32 outputX, outputY;
-  GRAPHICS.GetTextureSize(input, &inputX, &inputY);
+
+  for (size_t i = 0; i < input.size(); ++i)
+    GRAPHICS.GetTextureSize(input[i], &inputX[i], &inputY[i]);
   GRAPHICS.GetTextureSize(output, &outputX, &outputY);
-  _cb.data.inputSize.x = (float)inputX;
-  _cb.data.inputSize.y = (float)inputY;
+  _cb.data.inputSize.x = (float)inputX[0];
+  _cb.data.inputSize.y = (float)inputY[0];
   _cb.data.outputSize.x = (float)outputX;
   _cb.data.outputSize.y = (float)outputY;
-  _ctx->SetCBuffer(_cb, ShaderType::PixelShader);
+  _ctx->SetCBuffer(_cb, ShaderType::PixelShader, 0);
 
   CD3D11_VIEWPORT viewport = CD3D11_VIEWPORT(0.f, 0.f, (float)outputX, (float)outputY);
   _ctx->SetViewports(viewport, 1);
 
   _ctx->SetPS(shader);
   _ctx->DrawIndexed(6, 0, 0);
+
+  if (output.IsValid())
+    _ctx->UnsetRenderTargets(0, 1);
+
+  _ctx->UnsetSRVs(0, input.size());
 
   D3DPERF_EndEvent();
 }
@@ -347,6 +357,7 @@ GeneratorTest::GeneratorTest(const string &name)
     , _numIndices(0)
     , _renderFlags(RenderFlags::Wireframe)
     , _cameraDir(0,0,1)
+    , _curAdaption(0)
 {
 }
 
@@ -378,6 +389,10 @@ bool GeneratorTest::Init(const char* config)
   _meshObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosNormal));
   _cb.Create();
 
+  _cbToneMapping.Create();
+  _luminanceAdaption[0] = GRAPHICS.CreateRenderTarget(1, 1, DXGI_FORMAT_R16_FLOAT, BufferFlags(BufferFlag::CreateSrv));
+  _luminanceAdaption[1] = GRAPHICS.CreateRenderTarget(1, 1, DXGI_FORMAT_R16_FLOAT, BufferFlags(BufferFlag::CreateSrv));
+
   GRAPHICS.LoadShadersFromFile("shaders/generator",
       &_meshObjects._vs, &_meshObjects._ps, &_meshObjects._layout, VF_POS | VF_NORMAL);
 
@@ -398,8 +413,17 @@ bool GeneratorTest::Init(const char* config)
   f |= BufferFlag::CreateSrv;
   _renderTarget = GRAPHICS.CreateRenderTarget(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
   
-  GRAPHICS.LoadShadersFromFile("shaders/copy", nullptr, &_psCopy, nullptr, 0);
-  GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psLuminance, nullptr, 0, nullptr, "LuminanceMap");
+  if (!GRAPHICS.LoadShadersFromFile("shaders/copy", nullptr, &_psCopy, nullptr, 0))
+    return false;
+
+  if (!GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psLuminance, nullptr, 0, nullptr, "LuminanceMap"))
+    return false;
+
+  if (!GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psComposite, nullptr, 0, nullptr, "Composite"))
+    return false;
+
+  if (!GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psAdaption, nullptr, 0, nullptr, "AdaptLuminance"))
+    return false;
 
   _depthStencilState = GRAPHICS.CreateDepthStencilState(CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT()));
   _blendState = GRAPHICS.CreateBlendState(CD3D11_BLEND_DESC(CD3D11_DEFAULT()));
@@ -441,6 +465,7 @@ void GeneratorTest::InitGeneratorScript()
 //------------------------------------------------------------------------------
 bool GeneratorTest::Update(const UpdateState& state)
 {
+  _updateState = state;
   return true;
 }
 
@@ -586,11 +611,12 @@ bool GeneratorTest::Render()
 {
   RenderPlane();
 
+  Color black(0, 0, 0, 0);
   float blendFactor[4] ={ 1, 1, 1, 1 };
   _ctx->SetRasterizerState(_rasterizerState);
   _ctx->SetBlendState(_blendState, blendFactor, 0xffffffff);
   _ctx->SetDepthStencilState(_depthStencilState, 0);
-  _ctx->SetRenderTarget(_renderTarget, true);
+  _ctx->SetRenderTarget(_renderTarget, &black);
 
   if (_numIndices >= 3)
   {
@@ -605,23 +631,45 @@ bool GeneratorTest::Render()
     _cb.data.viewProj = (_view * _proj).Transpose();
 
     _ctx->SetRasterizerState(_renderFlags.IsSet(RenderFlags::Wireframe) ? g_mesh._wireframe : g_mesh._solid);
-    _ctx->SetCBuffer(_cb, ShaderType::VertexShader);
+    _ctx->SetCBuffer(_cb, ShaderType::VertexShader, 0);
     _ctx->SetRenderObjects(_meshObjects);
     _ctx->DrawIndexed(_numIndices, 0, 0);
 
-    // TODO: clear the render target..
     ScopedRenderTarget rtLuminance(1024, 1024, DXGI_FORMAT_R32_FLOAT, BufferFlags(BufferFlag::CreateSrv));
 
     // we want the geometric mean of the luminance, which can be calculated as
     // exp(avg(log(x)), where the avg(log) term can be obtained as the lowest mip level
     // from a texture containing the log luminance
     _postProcess->Setup();
-    _postProcess->Execute(_renderTarget, rtLuminance.h, _psLuminance, L"Luminance");
+    _postProcess->Execute({_renderTarget}, rtLuminance.h, _psLuminance, 0, L"Luminance");
     _ctx->GenerateMips(rtLuminance.h);
+
+    // luminance level adaption
+    _cbToneMapping.data.tau = _planeConfig.tau();
+    _cbToneMapping.data.key = _planeConfig.key();
+    _cbToneMapping.data.delta = _updateState.delta.total_microseconds() / 1e6f;
+    _ctx->SetCBuffer(_cbToneMapping, ShaderType::PixelShader, 1);
+
+    _postProcess->Execute({_luminanceAdaption[!_curAdaption], rtLuminance.h },
+        _luminanceAdaption[_curAdaption], _psAdaption, 0, L"Adaption");
+
 
     // calc the bloom
     
     // apply tone mapping and bloom
+    GraphicsObjectHandle rtDest = GRAPHICS.RenderTargetForSwapChain(GRAPHICS.DefaultSwapChain());
+
+    if (_renderFlags.IsSet(GeneratorTest::RenderFlags::Luminance))
+    {
+      _postProcess->Execute({_renderTarget, _luminanceAdaption[_curAdaption]},
+          rtDest, _psComposite, &black, L"Composite");
+    }
+    else
+    {
+      _postProcess->Execute({_renderTarget}, rtDest, _psCopy, &black, L"Composite");
+    }
+
+    _curAdaption = !_curAdaption;
 
     if (_renderFlags.IsSet(RenderFlags::Wireframe))
     {
@@ -631,14 +679,6 @@ bool GeneratorTest::Render()
       DEBUG_DRAW.SetWidth(5);
       DEBUG_DRAW.DrawSphere(g_mesh.center, g_mesh.radius);
     }
-
-    _ctx->UnsetRenderTargets(0, 1);
-
-    _postProcess->Setup();
-    GraphicsObjectHandle rtDest = GRAPHICS.RenderTargetForSwapChain(GRAPHICS.DefaultSwapChain());
-
-    //_postProcess->Execute(_renderTarget, rtDest, _psCopy, L"COPY");
-    _postProcess->Execute(_renderFlags.IsSet(RenderFlags::Luminance) ? rtLuminance.h : _renderTarget, rtDest, _psCopy, L"COPY");
 
     _ctx->EndFrame();
   }

@@ -23,10 +23,11 @@ namespace boba
     void Setup();
 
     void Execute(
-      GraphicsObjectHandle input,
-      GraphicsObjectHandle output,
-      GraphicsObjectHandle shader,
-      WCHAR* name);
+        const vector<GraphicsObjectHandle>& input,
+        GraphicsObjectHandle output,
+        GraphicsObjectHandle shader,
+        const Color* clearColor,
+        WCHAR* name);
 
     DeferredContext* _ctx;
     ConstantBuffer<CBufferPS> _cb;
@@ -73,6 +74,13 @@ namespace boba
       Matrix viewProj;
     };
 
+    struct CBufferToneMapping
+    {
+      float tau;
+      float key;
+      float delta;
+    };
+
     string _configName;
     generator::Spiky _spikyConfig;
     generator::Plane _planeConfig;
@@ -104,12 +112,18 @@ namespace boba
     GraphicsObjectHandle _renderTarget;
     GraphicsObjectHandle _psCopy;
     GraphicsObjectHandle _psLuminance;
+    GraphicsObjectHandle _psAdaption;
+    GraphicsObjectHandle _psComposite;
 
     // default states
     GraphicsObjectHandle _depthStencilState;
     GraphicsObjectHandle _blendState;
     GraphicsObjectHandle _rasterizerState;
 
+    ConstantBuffer<CBufferToneMapping> _cbToneMapping;
+    GraphicsObjectHandle _luminanceAdaption[2];
+    u32 _curAdaption;
+    UpdateState _updateState;
   };
 
 }
