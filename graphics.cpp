@@ -443,11 +443,13 @@ const DXGI_MODE_DESC &Graphics::selectedDisplayMode() const
 bool Graphics::CreateDevice()
 {
   int flags = 0;
-  bool createDebugDevice = false;
+  bool createDebugDevice = true;
   if (createDebugDevice)
   {
     flags |= D3D11_CREATE_DEVICE_DEBUG;
   }
+
+  flags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
   // Create the DX11 device
   CComPtr<IDXGIAdapter> adapter = _curSetup.videoAdapters[_curSetup.selectedAdapter].adapter;
@@ -1423,6 +1425,45 @@ GraphicsObjectHandle Graphics::RenderTargetForSwapChain(GraphicsObjectHandle h)
 
   auto swapChain = GRAPHICS._swapChains.Get(h);
   return swapChain->_renderTarget;
+}
+
+//------------------------------------------------------------------------------
+bool Graphics::LoadComputeShadersFromFile(
+    const string& filenameBase,
+    GraphicsObjectHandle* shader,
+    const char* entry)
+{
+#if WITH_DEBUG_SHADERS
+  string suffix = ToString("_%sD.cso", entry);
+#else
+  string suffix = ToString("_%s.cso", entry);
+#endif
+
+  bool res;
+  RESOURCE_MANAGER.AddFileWatch((filenameBase + suffix).c_str(), nullptr, true, &res,
+    [=](const string& filename, void* token)
+  {
+    vector<char> buf;
+    if (!RESOURCE_MANAGER.LoadFile(filename.c_str(), &buf))
+    {
+      LOG_WARN("Unable to load shader" << LogKeyValue("filename", filename));
+      return false;
+    }
+
+    *shader = GRAPHICS.CreateComputeShader(buf, entry);
+    if (!shader->IsValid())
+    {
+      LOG_WARN("Unable to create shader" << LogKeyValue("filename", filename));
+      return false;
+    }
+
+    return true;
+  });
+
+  if (!res)
+    return false;
+
+  return true;
 }
 
 //------------------------------------------------------------------------------

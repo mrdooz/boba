@@ -33,6 +33,7 @@ namespace boba
     void SetBlendState(GraphicsObjectHandle bs, const float *blendFactors, UINT sampleMask);
     void SetShaderResource(GraphicsObjectHandle h, ShaderType shaderType);
     void SetShaderResources(const vector<GraphicsObjectHandle>& handles, ShaderType shaderType);
+    void SetUav(GraphicsObjectHandle h);
     void SetSamplerState(GraphicsObjectHandle h, u32 slot, ShaderType shaderType);
     void SetSamplers(GraphicsObjectHandle* h, u32 slot, u32 numSamplers, ShaderType shaderType);
     template <typename T>
@@ -45,7 +46,7 @@ namespace boba
     void SetRenderObjects(const GpuObjects& obj);
     void SetViewports(const D3D11_VIEWPORT& viewport, u32 numViewports);
 
-    void UnsetSRVs(u32 first, u32 count);
+    void UnsetSRVs(u32 first, u32 count, ShaderType shaderType);
     void UnsetUAVs(int first, int count);
     void UnsetRenderTargets(int first, int count);
     void DrawIndexed(int count, int start_index, int base_vertex);

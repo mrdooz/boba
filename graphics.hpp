@@ -299,6 +299,11 @@ namespace boba
         const char* vsEntry = "VsMain",
         const char* psEntry = "PsMain");
 
+    bool LoadComputeShadersFromFile(
+        const string& filenameBase,
+        GraphicsObjectHandle* shader,
+        const char* entry = "CsMain");
+
     void AddText(const char* text, const char* font, float size, float x, float y, u32 color);
     void AddText(const wchar_t* text, const char* font, float size, float x, float y, u32 color);
 
@@ -359,25 +364,25 @@ namespace boba
 
     // resources
     enum { IdCount = 1 << GraphicsObjectHandle::cIdBits };
-    IdBuffer<ID3D11VertexShader *, IdCount> _vertexShaders;
-    IdBuffer<ID3D11PixelShader *, IdCount> _pixelShaders;
-    IdBuffer<ID3D11ComputeShader *, IdCount> _computeShaders;
-    IdBuffer<ID3D11GeometryShader *, IdCount> _geometryShaders;
-    IdBuffer<ID3D11InputLayout *, IdCount> _inputLayouts;
-    IdBuffer<ID3D11Buffer *, IdCount> _vertexBuffers;
-    IdBuffer<ID3D11Buffer *, IdCount> _indexBuffers;
-    IdBuffer<ID3D11Buffer *, IdCount> _constantBuffers;
+    IdBuffer<ID3D11VertexShader*, IdCount> _vertexShaders;
+    IdBuffer<ID3D11PixelShader*, IdCount> _pixelShaders;
+    IdBuffer<ID3D11ComputeShader*, IdCount> _computeShaders;
+    IdBuffer<ID3D11GeometryShader*, IdCount> _geometryShaders;
+    IdBuffer<ID3D11InputLayout*, IdCount> _inputLayouts;
+    IdBuffer<ID3D11Buffer*, IdCount> _vertexBuffers;
+    IdBuffer<ID3D11Buffer*, IdCount> _indexBuffers;
+    IdBuffer<ID3D11Buffer*, IdCount> _constantBuffers;
 
-    IdBuffer<ID3D11BlendState *, IdCount> _blendStates;
-    IdBuffer<ID3D11DepthStencilState *, IdCount> _depthStencilStates;
-    IdBuffer<ID3D11RasterizerState *, IdCount> _rasterizerStates;
-    IdBuffer<ID3D11SamplerState *, IdCount> _sampler_states;
+    IdBuffer<ID3D11BlendState*, IdCount> _blendStates;
+    IdBuffer<ID3D11DepthStencilState*, IdCount> _depthStencilStates;
+    IdBuffer<ID3D11RasterizerState*, IdCount> _rasterizerStates;
+    IdBuffer<ID3D11SamplerState*, IdCount> _sampler_states;
 
-    IdBuffer<TextureResource *, IdCount> _textures;
-    IdBuffer<RenderTargetResource *, IdCount> _renderTargets;
-    IdBuffer<SimpleResource *, IdCount> _resources;
-    IdBuffer<ID3D11ShaderResourceView *, IdCount> _shaderResourceViews;
-    IdBuffer<StructuredBuffer *, IdCount> _structuredBuffers;
+    IdBuffer<TextureResource*, IdCount> _textures;
+    IdBuffer<RenderTargetResource*, IdCount> _renderTargets;
+    IdBuffer<SimpleResource*, IdCount> _resources;
+    IdBuffer<ID3D11ShaderResourceView*, IdCount> _shaderResourceViews;
+    IdBuffer<StructuredBuffer*, IdCount> _structuredBuffers;
     IdBuffer<SwapChain*, 16> _swapChains;
 
     static Graphics* _instance;

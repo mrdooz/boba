@@ -332,6 +332,13 @@ class Plane : public ::google::protobuf::Message {
   inline float key() const;
   inline void set_key(float value);
 
+  // optional float blur_radius = 11 [default = 10];
+  inline bool has_blur_radius() const;
+  inline void clear_blur_radius();
+  static const int kBlurRadiusFieldNumber = 11;
+  inline float blur_radius() const;
+  inline void set_blur_radius(float value);
+
   // @@protoc_insertion_point(class_scope:generator.Plane)
  private:
   inline void set_has_width();
@@ -354,6 +361,8 @@ class Plane : public ::google::protobuf::Message {
   inline void clear_has_tau();
   inline void set_has_key();
   inline void clear_has_key();
+  inline void set_has_blur_radius();
+  inline void clear_has_blur_radius();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -367,9 +376,10 @@ class Plane : public ::google::protobuf::Message {
   ::common::Matrix4x4* obj_r_;
   float tau_;
   float key_;
+  float blur_radius_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
 
   friend void  protobuf_AddDesc_generator_2eproto();
   friend void protobuf_AssignDesc_generator_2eproto();
@@ -911,6 +921,28 @@ inline float Plane::key() const {
 inline void Plane::set_key(float value) {
   set_has_key();
   key_ = value;
+}
+
+// optional float blur_radius = 11 [default = 10];
+inline bool Plane::has_blur_radius() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void Plane::set_has_blur_radius() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void Plane::clear_has_blur_radius() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void Plane::clear_blur_radius() {
+  blur_radius_ = 10;
+  clear_has_blur_radius();
+}
+inline float Plane::blur_radius() const {
+  return blur_radius_;
+}
+inline void Plane::set_blur_radius(float value) {
+  set_has_blur_radius();
+  blur_radius_ = value;
 }
 
 

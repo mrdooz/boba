@@ -2,6 +2,8 @@ config/demo.pb	D:/projects/boba/config/demo.pb
 config/generator2.pb	D:/projects/boba/config/generator2.pb
 config/particles1.pb	D:/projects/boba/config/particles1.pb
 gfx/Abstract_BG_Texture2.jpg	D:/projects/boba/gfx/Abstract_BG_Texture2.jpg
+shaders/blur_BoxBlurXD.cso	D:/projects/boba/shaders/blur_BoxBlurXD.cso
+shaders/blur_BoxBlurYD.cso	D:/projects/boba/shaders/blur_BoxBlurYD.cso
 shaders/copy_PsMainD.pso	D:/projects/boba/shaders/copy_PsMainD.pso
 shaders/debug_draw_PsMainD.pso	D:/projects/boba/shaders/debug_draw_PsMainD.pso
 shaders/debug_draw_VsMainD.vso	D:/projects/boba/shaders/debug_draw_VsMainD.vso

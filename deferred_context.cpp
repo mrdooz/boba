@@ -1,6 +1,7 @@
 #include "graphics.hpp"
 #include "deferred_context.hpp"
 #include "gpu_objects.hpp"
+#include "error.hpp"
 
 static const int MAX_SAMPLERS = 8;
 static const int MAX_TEXTURES = 8;
@@ -129,7 +130,10 @@ void DeferredContext::SetPS(GraphicsObjectHandle ps)
 //------------------------------------------------------------------------------
 void DeferredContext::SetLayout(GraphicsObjectHandle layout)
 {
-  _ctx->IASetInputLayout(GRAPHICS._inputLayouts.Get(layout));
+  if (layout.IsValid())
+    _ctx->IASetInputLayout(GRAPHICS._inputLayouts.Get(layout));
+  else
+    _ctx->IASetInputLayout(nullptr);
 }
 
 //------------------------------------------------------------------------------
@@ -178,10 +182,18 @@ void DeferredContext::SetBlendState(GraphicsObjectHandle bs, const float* blendF
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::UnsetSRVs(u32 first, u32 count)
+void DeferredContext::UnsetSRVs(u32 first, u32 count, ShaderType shaderType)
 {
   ID3D11ShaderResourceView* srViews[16] = { nullptr };
-  _ctx->PSSetShaderResources(0, count, srViews);
+
+  if (shaderType == ShaderType::VertexShader)
+    _ctx->VSSetShaderResources(first, count, srViews);
+  else if (shaderType == ShaderType::PixelShader)
+    _ctx->PSSetShaderResources(first, count, srViews);
+  else if (shaderType == ShaderType::ComputeShader)
+    _ctx->CSSetShaderResources(first, count, srViews);
+  else if (shaderType == ShaderType::GeometryShader)
+    _ctx->GSSetShaderResources(first, count, srViews);
 }
 
 //------------------------------------------------------------------------------
@@ -316,7 +328,8 @@ void DeferredContext::SetShaderResources(
 //------------------------------------------------------------------------------
 void DeferredContext::SetShaderResource(GraphicsObjectHandle h, ShaderType shaderType)
 {
-  ID3D11ShaderResourceView* view = GRAPHICS.GetShaderResourceView(h);
+  ID3D11ShaderResourceView* view = view = GRAPHICS.GetShaderResourceView(h);
+  view = GRAPHICS.GetShaderResourceView(h);
   if (!view)
     return;
 
@@ -331,6 +344,32 @@ void DeferredContext::SetShaderResource(GraphicsObjectHandle h, ShaderType shade
   else
     assert(false);
     //LOG_ERROR_LN("Implement me!");
+}
+
+//------------------------------------------------------------------------------
+void DeferredContext::SetUav(GraphicsObjectHandle h)
+{
+  auto type = h.type();
+
+  ID3D11UnorderedAccessView* view = nullptr;
+  if (type == GraphicsObjectHandle::kStructuredBuffer)
+  {
+    Graphics::StructuredBuffer* buf = GRAPHICS._structuredBuffers.Get(h);
+    view = buf->uav.resource;
+  }
+  else if (type == GraphicsObjectHandle::kRenderTarget)
+  {
+    Graphics::RenderTargetResource* res = GRAPHICS._renderTargets.Get(h);
+    view = res->uav.resource;
+  }
+  else
+  {
+    LOG_WARN("Trying to set an unsupported UAV type!");
+    return;
+  }
+
+  u32 initialCount = 0;
+  _ctx->CSSetUnorderedAccessViews(0, 1, &view, &initialCount);
 }
 
 //------------------------------------------------------------------------------
@@ -350,7 +389,7 @@ void DeferredContext::SetSamplerState(GraphicsObjectHandle h, u32 slot, ShaderTy
 
 //------------------------------------------------------------------------------
 void DeferredContext::SetSamplers(
-    GraphicsObjectHandle* h,
+     GraphicsObjectHandle* h,
     u32 slot,
     u32 numSamplers,
     ShaderType shaderType)

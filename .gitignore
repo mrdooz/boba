@@ -33,6 +33,12 @@ _win32/My Amplifier XE Results - */*
 gfx/*.jpg
 shaders/*.pso
 shaders/*.vso
+shaders/*.cso
 shaders/*.psa
 shaders/*.vsa
+shaders/*.csa
 _win32/Graphics*
+**/CMakeFiles/*
+**/CMakeCache.txt
+editor/*.vcxproj
+editor/*.sln

@@ -24,9 +24,10 @@ namespace boba
   template <typename T>
   struct ConstantBuffer
   {
-    void Create()
+    bool Create()
     {
       handle = GRAPHICS.CreateBuffer(D3D11_BIND_CONSTANT_BUFFER, sizeof(T), true);
+      return handle.IsValid();
     }
 
     T data;

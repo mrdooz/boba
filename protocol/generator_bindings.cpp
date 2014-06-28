@@ -78,5 +78,10 @@ void BindPlane(generator::Plane* data, bool *dirty)
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_key(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->key(); }, (void*)&cfg, nullptr);
 
+  // Add blur_radius
+  TwAddVarCB(bar, "blur_radius", TW_TYPE_FLOAT,
+    [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_blur_radius(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
+    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->blur_radius(); }, (void*)&cfg, nullptr);
+
 }
 }

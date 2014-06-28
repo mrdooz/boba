@@ -2,7 +2,7 @@
 
 // pretty much stolen from http://molecularmusings.wordpress.com/2011/08/23/flags-on-steroids/
 
-namespace boba
+namespace editor
 {
   // input is a struct of the form
   // struct Mode { enum Enum { type1, type2 }; struct Bits { u32 type1 : 1; u32 type2 : 2 } }
@@ -14,6 +14,8 @@ namespace boba
     typedef typename F::Bits Bits;
 
     Flags() : _value(0) {}
+    Flags(const Flags<F>& f) { _value = f._value; }
+    Flags& operator=(const Flags<F>& f) { _value = f._value; return *this; }
     explicit Flags(Enum f) : _value(f) {}
 
     bool IsSet(Enum f) const
@@ -43,13 +45,13 @@ namespace boba
 
     Flags& operator|=(Enum f)
     {
-      _value |= f;
+      _value |= (u32)f;
       return *this;
     }
 
     Flags operator|(Enum f)
     {
-      return Flags(Enum(_value | f));
+      return Flags(Enum(_value | (u32)f));
     }
 
     Flags operator|(Flags rhs)

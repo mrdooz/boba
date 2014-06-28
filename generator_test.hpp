@@ -13,12 +13,6 @@ namespace boba
   {
     PostProcess(DeferredContext* ctx);
 
-    struct CBufferPS
-    {
-      Vector2 inputSize;
-      Vector2 outputSize;
-    };
-
     bool Init();
     void Setup();
 
@@ -30,6 +24,12 @@ namespace boba
         WCHAR* name);
 
     DeferredContext* _ctx;
+
+    struct CBufferPS
+    {
+      Vector2 inputSize;
+      Vector2 outputSize;
+    };
     ConstantBuffer<CBufferPS> _cb;
 
     GraphicsObjectHandle _depthStencilState;
@@ -68,19 +68,6 @@ namespace boba
     void RenderPlane();
     void InitGeneratorScript();
 
-    struct CBufferPerFrame
-    {
-      Matrix world;
-      Matrix viewProj;
-    };
-
-    struct CBufferToneMapping
-    {
-      float tau;
-      float key;
-      float delta;
-    };
-
     string _configName;
     generator::Spiky _spikyConfig;
     generator::Plane _planeConfig;
@@ -93,6 +80,11 @@ namespace boba
     u32 _numIndices;
 
     GpuObjects _meshObjects;
+    struct CBufferPerFrame
+    {
+      Matrix world;
+      Matrix viewProj;
+    };
     ConstantBuffer<CBufferPerFrame> _cb;
 
     bool _rotatingObject;
@@ -120,10 +112,26 @@ namespace boba
     GraphicsObjectHandle _blendState;
     GraphicsObjectHandle _rasterizerState;
 
+    struct CBufferToneMapping
+    {
+      float tau;
+      float key;
+      float delta;
+    };
     ConstantBuffer<CBufferToneMapping> _cbToneMapping;
+
     GraphicsObjectHandle _luminanceAdaption[2];
     u32 _curAdaption;
     UpdateState _updateState;
+
+    struct CBufferBlur
+    {
+      Vector2 inputSize;
+      float radius;
+    };
+    ConstantBuffer<CBufferBlur> _cbBlur;
+    GraphicsObjectHandle _csBlurX;
+    GraphicsObjectHandle _csBlurY;
   };
 
 }

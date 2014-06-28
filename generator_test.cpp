@@ -316,6 +316,8 @@ void PostProcess::Execute(
 {
   D3DPERF_BeginEvent(0xffffffff, name);
 
+  _ctx->SetLayout(GraphicsObjectHandle());
+
   if (output.IsValid())
     _ctx->SetRenderTarget(output, clearColor);
 
@@ -343,7 +345,7 @@ void PostProcess::Execute(
   if (output.IsValid())
     _ctx->UnsetRenderTargets(0, 1);
 
-  _ctx->UnsetSRVs(0, input.size());
+  _ctx->UnsetSRVs(0, input.size(), ShaderType::PixelShader);
 
   D3DPERF_EndEvent();
 }
@@ -355,7 +357,6 @@ GeneratorTest::GeneratorTest(const string &name)
     , _dirtyFlag(true)
     , _lua(nullptr)
     , _numIndices(0)
-    , _renderFlags(RenderFlags::Wireframe)
     , _cameraDir(0,0,1)
     , _curAdaption(0)
 {
@@ -384,7 +385,8 @@ bool GeneratorTest::Init(const char* config)
   _prevRot = g_mesh.rotation;
 
   //BindSpiky(&_spikyConfig, &_dirtyFlag);
-  BindPlane(&_planeConfig, &_dirtyFlag);
+  static bool tmp;
+  BindPlane(&_planeConfig, &tmp);
 
   _meshObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosNormal));
   _cb.Create();
@@ -409,9 +411,8 @@ bool GeneratorTest::Init(const char* config)
 
   int w, h;
   GRAPHICS.GetBackBufferSize(&w, &h);
-  BufferFlags f(BufferFlag::CreateDepthBuffer);
-  f |= BufferFlag::CreateSrv;
-  _renderTarget = GRAPHICS.CreateRenderTarget(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
+  _renderTarget = GRAPHICS.CreateRenderTarget(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT,
+      BufferFlags(BufferFlag::CreateDepthBuffer) | BufferFlag::CreateSrv);
   
   if (!GRAPHICS.LoadShadersFromFile("shaders/copy", nullptr, &_psCopy, nullptr, 0))
     return false;
@@ -424,6 +425,14 @@ bool GeneratorTest::Init(const char* config)
 
   if (!GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psAdaption, nullptr, 0, nullptr, "AdaptLuminance"))
     return false;
+
+  if (!GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csBlurX, "BoxBlurX"))
+    return false;
+
+  if (!GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csBlurY, "BoxBlurY"))
+    return false;
+
+  _cbBlur.Create();
 
   _depthStencilState = GRAPHICS.CreateDepthStencilState(CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT()));
   _blendState = GRAPHICS.CreateBlendState(CD3D11_BLEND_DESC(CD3D11_DEFAULT()));
@@ -635,7 +644,8 @@ bool GeneratorTest::Render()
     _ctx->SetRenderObjects(_meshObjects);
     _ctx->DrawIndexed(_numIndices, 0, 0);
 
-    ScopedRenderTarget rtLuminance(1024, 1024, DXGI_FORMAT_R32_FLOAT, BufferFlags(BufferFlag::CreateSrv));
+    ScopedRenderTarget rtLuminance(1024, 1024, DXGI_FORMAT_R32_FLOAT,
+        BufferFlags(BufferFlag::CreateSrv) | BufferFlag::CreateMipMaps);
 
     // we want the geometric mean of the luminance, which can be calculated as
     // exp(avg(log(x)), where the avg(log) term can be obtained as the lowest mip level
@@ -653,8 +663,58 @@ bool GeneratorTest::Render()
     _postProcess->Execute({_luminanceAdaption[!_curAdaption], rtLuminance.h },
         _luminanceAdaption[_curAdaption], _psAdaption, 0, L"Adaption");
 
+    // todo: perform bloom threshold calculation
+
+    // blur the bloom
+    int w, h;
+    GRAPHICS.GetBackBufferSize(&w, &h);
+    auto f = BufferFlags(BufferFlag::CreateSrv) | BufferFlag::CreateUav;
+    ScopedRenderTarget blur0(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
+    ScopedRenderTarget blur1(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
+
+    // set constant buffers
+    _cbBlur.data.inputSize.x = (float)w;
+    _cbBlur.data.inputSize.y = (float)h;
+    _cbBlur.data.radius = _planeConfig.blur_radius();
+    _ctx->SetCBuffer(_cbBlur, ShaderType::ComputeShader, 0);
+
+    GraphicsObjectHandle srcDst[] =
+    {
+      _renderTarget, blur0.h, blur0.h, blur1.h,
+      blur1.h, blur0.h, blur0.h, blur1.h,
+      blur1.h, blur0.h, blur0.h, blur1.h,
+    };
+
+    for (int i = 0; i < 3; ++i)
+    {
+      D3DPERF_BeginEvent(0xffffffff, L"blurX");
+
+      _ctx->SetShaderResources({ srcDst[i*4+0] }, ShaderType::ComputeShader);
+      _ctx->SetUav(srcDst[i*4+1]);
+
+      _ctx->SetCS(_csBlurX);
+      _ctx->Dispatch(h/32+1, 1, 1);
+
+      _ctx->UnsetUAVs(0, 1);
+      _ctx->UnsetSRVs(0, 1, ShaderType::ComputeShader);
+
+      D3DPERF_EndEvent();
+      D3DPERF_BeginEvent(0xffffffff, L"blurX");
+
+      _ctx->SetShaderResources({ srcDst[i*4+2] }, ShaderType::ComputeShader);
+      _ctx->SetUav(srcDst[i*4+3]);
+
+      _ctx->SetCS(_csBlurY);
+      _ctx->Dispatch(w/32+1, 1, 1);
+
+      _ctx->UnsetUAVs(0, 1);
+      _ctx->UnsetSRVs(0, 1, ShaderType::ComputeShader);
+
+      D3DPERF_EndEvent();
+    }
 
     // calc the bloom
+
     
     // apply tone mapping and bloom
     GraphicsObjectHandle rtDest = GRAPHICS.RenderTargetForSwapChain(GRAPHICS.DefaultSwapChain());
@@ -666,7 +726,7 @@ bool GeneratorTest::Render()
     }
     else
     {
-      _postProcess->Execute({_renderTarget}, rtDest, _psCopy, &black, L"Composite");
+      _postProcess->Execute({blur1.h}, rtDest, _psCopy, &black, L"Copy");
     }
 
     _curAdaption = !_curAdaption;

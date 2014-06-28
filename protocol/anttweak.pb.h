@@ -54,6 +54,30 @@ static const int kNobindFieldNumber = 50003;
 extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
     ::google::protobuf::internal::PrimitiveTypeTraits< bool >, 8, false >
   nobind;
+static const int kMinFFieldNumber = 50004;
+extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+  minF;
+static const int kMaxFFieldNumber = 50005;
+extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+  maxF;
+static const int kStepFFieldNumber = 50006;
+extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+  stepF;
+static const int kMinIFieldNumber = 50007;
+extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+  minI;
+static const int kMaxIFieldNumber = 50008;
+extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+  maxI;
+static const int kStepIFieldNumber = 50009;
+extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+  stepI;
 
 // ===================================================================
 

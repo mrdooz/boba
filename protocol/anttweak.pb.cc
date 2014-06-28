@@ -63,7 +63,14 @@ void protobuf_AddDesc_anttweak_2eproto() {
     "f\022\035.google.protobuf.FieldOptions\030\321\206\003 \001(\010"
     ":.\n\005dir3f\022\035.google.protobuf.FieldOptions"
     "\030\322\206\003 \001(\010:/\n\006nobind\022\035.google.protobuf.Fie"
-    "ldOptions\030\323\206\003 \001(\010", 257);
+    "ldOptions\030\323\206\003 \001(\010:-\n\004minF\022\035.google.proto"
+    "buf.FieldOptions\030\324\206\003 \001(\002:-\n\004maxF\022\035.googl"
+    "e.protobuf.FieldOptions\030\325\206\003 \001(\002:.\n\005stepF"
+    "\022\035.google.protobuf.FieldOptions\030\326\206\003 \001(\002:"
+    "-\n\004minI\022\035.google.protobuf.FieldOptions\030\327"
+    "\206\003 \001(\002:-\n\004maxI\022\035.google.protobuf.FieldOp"
+    "tions\030\330\206\003 \001(\002:.\n\005stepI\022\035.google.protobuf"
+    ".FieldOptions\030\331\206\003 \001(\002", 541);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "anttweak.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::ExtensionSet::RegisterExtension(
@@ -78,6 +85,24 @@ void protobuf_AddDesc_anttweak_2eproto() {
   ::google::protobuf::internal::ExtensionSet::RegisterExtension(
     &::google::protobuf::FieldOptions::default_instance(),
     50003, 8, false, false);
+  ::google::protobuf::internal::ExtensionSet::RegisterExtension(
+    &::google::protobuf::FieldOptions::default_instance(),
+    50004, 2, false, false);
+  ::google::protobuf::internal::ExtensionSet::RegisterExtension(
+    &::google::protobuf::FieldOptions::default_instance(),
+    50005, 2, false, false);
+  ::google::protobuf::internal::ExtensionSet::RegisterExtension(
+    &::google::protobuf::FieldOptions::default_instance(),
+    50006, 2, false, false);
+  ::google::protobuf::internal::ExtensionSet::RegisterExtension(
+    &::google::protobuf::FieldOptions::default_instance(),
+    50007, 2, false, false);
+  ::google::protobuf::internal::ExtensionSet::RegisterExtension(
+    &::google::protobuf::FieldOptions::default_instance(),
+    50008, 2, false, false);
+  ::google::protobuf::internal::ExtensionSet::RegisterExtension(
+    &::google::protobuf::FieldOptions::default_instance(),
+    50009, 2, false, false);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_anttweak_2eproto);
 }
 
@@ -99,6 +124,24 @@ struct StaticDescriptorInitializer_anttweak_2eproto {
 ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
     ::google::protobuf::internal::PrimitiveTypeTraits< bool >, 8, false >
   nobind(kNobindFieldNumber, false);
+::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+  minF(kMinFFieldNumber, 0);
+::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+  maxF(kMaxFFieldNumber, 0);
+::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+  stepF(kStepFFieldNumber, 0);
+::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+  minI(kMinIFieldNumber, 0);
+::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+  maxI(kMaxIFieldNumber, 0);
+::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+  stepI(kStepIFieldNumber, 0);
 
 // @@protoc_insertion_point(namespace_scope)
 
