@@ -1,5 +1,7 @@
 #pragma once
 
+#include "protocol/editor_settings.pb.h"
+
 namespace editor
 {
   class WindowEventManager;
@@ -8,14 +10,20 @@ namespace editor
   class Editor
   {
   public:
-    Editor();
-    ~Editor();
+
+    static void Create();
+    static void Destroy();
+    static Editor& Instance();
 
     bool Init();
     bool Run();
     bool Close();
 
+    editor::Settings& Settings() { return _settings; }
+
   private:
+    Editor();
+    ~Editor();
 
     void Update();
     void Render();
@@ -31,7 +39,10 @@ namespace editor
     WindowEventManager* _eventManager;
     VirtualWindowManager* _virtualWindowManager;
 
+    static Editor* _instance;
+    editor::Settings _settings;
     bool _done;
   };
 
+  #define EDITOR Editor::Instance()
 }

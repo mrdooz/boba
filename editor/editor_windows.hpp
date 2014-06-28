@@ -46,5 +46,13 @@ namespace editor
         const Vector2f& pos,
         const Vector2f& size,
         const WindowFlags& = WindowFlags(WindowFlag::DefaultFlags));
+
+    virtual void Draw();
+
+  private:
+    ptime _startTime;
+    u32 _pixelsPerSecond;
   };
+
+
 }

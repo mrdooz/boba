@@ -2,8 +2,35 @@
 #include "window_event_manager.hpp"
 #include "virtual_window_manager.hpp"
 #include "editor_windows.hpp"
+#include "utils.hpp"
 
 using namespace editor;
+
+Editor* Editor::_instance;
+
+//----------------------------------------------------------------------------------
+void Editor::Create()
+{
+  if (!_instance)
+  {
+    _instance = new Editor();
+  }
+}
+
+//----------------------------------------------------------------------------------
+void Editor::Destroy()
+{
+  if (_instance)
+  {
+    delete exch_null(_instance);
+  }
+}
+
+//----------------------------------------------------------------------------------
+Editor& Editor::Instance()
+{
+  return *_instance;
+}
 
 //----------------------------------------------------------------------------------
 Editor::Editor()
@@ -59,7 +86,8 @@ bool Editor::Init()
         new PreviewWindow("PREVIEW",       Vector2f(w, 0), Vector2f(rw, h)),
         new ComponentWindow("COMPONENTS",  Vector2f(0, h), Vector2f(w, h)),
         new TimelineWindow("TIMELINE",     Vector2f(w, h), Vector2f(rw, h)),
-        Vector2f(width, height)));
+        Vector2f(width, height),
+        Vector2f(0.25f, 0.5f)));
   }
 
   return true;
@@ -140,13 +168,15 @@ bool Editor::Close()
 int main(int argc, char** argv)
 {
 
-  Editor editor;
-  if (!editor.Init())
+  Editor::Create();
+  if (!EDITOR.Init())
     return 1;
 
-  editor.Run();
+  EDITOR.Run();
 
-  editor.Close();
+  EDITOR.Close();
+
+  Editor::Destroy();
 
   return 0;
 }

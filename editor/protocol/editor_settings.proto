@@ -1,0 +1,6 @@
+package editor;
+
+message Settings
+{
+	optional uint32 ticker_height = 1 [default = 100];
+}

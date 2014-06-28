@@ -42,3 +42,6 @@ _win32/Graphics*
 **/CMakeCache.txt
 editor/*.vcxproj
 editor/*.sln
+editor/.idea/*
+editor/CMakeScripts/*
+editor/editor.xcode*
