@@ -4,17 +4,20 @@ project (editor)
 
 include(FindProtobuf)
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH})
 if (MSVC)
   set(SFML_STATIC_LIBRARIES TRUE)
 endif()
 find_package(SFML 2 REQUIRED system window graphics)
 find_package(Boost REQUIRED)
 find_package(Protobuf REQUIRED)
+# todo, why is this required to be upper case?
+find_package(BRISTOL COMPONENTS main sfml)
 
 include_directories(${Boost_INCLUDE_DIR})
 include_directories(${SFML_INCLUDE_DIR})
 include_directories(${PROTOBUF_INCLUDE_DIR})
+include_directories(${BRISTOL_INCLUDE_DIR})
 
 file(GLOB SRC "*.cpp" "*.hpp" "protocol/*.pb.cc")
 
@@ -56,11 +59,14 @@ else()
       STRING(REPLACE "/MD"  "/MT" "${flag}" "${${flag}}")
       SET("${flag}" "${${flag}}")
     endforeach()
-
+    
+   
     target_link_libraries(${PROJECT_NAME}
       debug ${SFML_GRAPHICS_LIBRARY_DEBUG} optimized ${SFML_GRAPHICS_LIBRARY_RELEASE}
       debug ${SFML_SYSTEM_LIBRARY_DEBUG} optimized ${SFML_SYSTEM_LIBRARY_RELEASE}
       debug ${SFML_WINDOW_LIBRARY_DEBUG} optimized ${SFML_WINDOW_LIBRARY_RELEASE}
+      debug ${BRISTOL_MAIN_LIBRARY_DEBUG}
+      debug ${BRISTOL_SFML_LIBRARY_DEBUG}
       ${Boost_DATETIME_LIBRARY}
       debug ${PROTOBUF_LIBRARY_DEBUG} optimized ${PROTOBUF_LIBRARY})
 

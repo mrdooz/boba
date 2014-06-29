@@ -1,5 +1,4 @@
 #pragma once
-#include "virtual_window.hpp"
 
 namespace editor
 {
@@ -12,7 +11,7 @@ namespace editor
         const string& title,
         const Vector2f& pos,
         const Vector2f& size,
-        const WindowFlags& = WindowFlags(WindowFlag::DefaultFlags));
+        const bristol::WindowFlags& = bristol::WindowFlags(bristol::WindowFlag::DefaultFlags));
   };
 
   //----------------------------------------------------------------------------------
@@ -23,7 +22,7 @@ namespace editor
         const string& title,
         const Vector2f& pos,
         const Vector2f& size,
-        const WindowFlags& = WindowFlags(WindowFlag::DefaultFlags));
+        const bristol::WindowFlags& = bristol::WindowFlags(bristol::WindowFlag::DefaultFlags));
   };
 
   //----------------------------------------------------------------------------------
@@ -34,7 +33,7 @@ namespace editor
         const string& title,
         const Vector2f& pos,
         const Vector2f& size,
-        const WindowFlags& = WindowFlags(WindowFlag::DefaultFlags));
+        const bristol::WindowFlags& = bristol::WindowFlags(bristol::WindowFlag::DefaultFlags));
   };
 
   //----------------------------------------------------------------------------------
@@ -45,7 +44,7 @@ namespace editor
         const string& title,
         const Vector2f& pos,
         const Vector2f& size,
-        const WindowFlags& = WindowFlags(WindowFlag::DefaultFlags));
+        const bristol::WindowFlags& = bristol::WindowFlags(bristol::WindowFlag::DefaultFlags));
 
     virtual void Draw();
 

@@ -36,6 +36,12 @@
 #include <CoreGraphics/CGDirectDisplay.h>
 #endif
 
+#include <sfml/window_event_manager.hpp>
+#include <sfml/virtual_window_manager.hpp>
+#include <sfml/virtual_window.hpp>
+#include <flags.hpp>
+#include <utils.hpp>
+
 typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
@@ -115,6 +121,14 @@ namespace editor
   using boost::posix_time::microsec_clock;
   using boost::posix_time::milliseconds;
   using boost::posix_time::seconds;
+
+  using bristol::WindowEventManager;
+  using bristol::VirtualWindowManager;
+  using bristol::GridSplitter;
+  using bristol::VirtualWindow;
+  using bristol::Flags;
+
+  using bristol::exch_null;
 
 }
 

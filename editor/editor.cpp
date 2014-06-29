@@ -1,8 +1,5 @@
 #include "editor.hpp"
-#include "window_event_manager.hpp"
-#include "virtual_window_manager.hpp"
 #include "editor_windows.hpp"
-#include "utils.hpp"
 
 using namespace editor;
 
