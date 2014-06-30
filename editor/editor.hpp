@@ -2,10 +2,14 @@
 
 #include "protocol/editor_settings.pb.h"
 
-namespace editor
+namespace bristol
 {
   class WindowEventManager;
   class VirtualWindowManager;
+}
+
+namespace editor
+{
 
   class Editor
   {

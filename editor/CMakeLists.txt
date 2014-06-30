@@ -39,6 +39,8 @@ if (APPLE)
   # specifically link against a protobuf and boost build with libc++
   target_link_libraries(${PROJECT_NAME}
     ${SFML_LIBRARIES}
+    "/Users/dooz/Library/Caches/appCode30/DerivedData/bristol-e7802bc5/Build/Products/Debug/libbristol_main.a"
+    "/Users/dooz//Library/Caches/appCode30/DerivedData/bristol-e7802bc5/Build/Products/Debug/libbristol_sfml.a"
     "/opt/local/boost/lib/libboost_date_time.a"
     "/opt/local/protobuf/lib/libprotobuf.a"
     ${APP_SERVICES} )
