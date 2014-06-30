@@ -51,17 +51,10 @@ namespace boba
   private:
     string ResolveFilename(const char *filename, bool fullPath);
 
-    struct WatchedFile
-    {
-      string filename;
-      time_t lastModification;
-      vector<pair<void*, cbFileChanged>> callbacks;
-    };
+    FileWatcher _fileWatcher;
 
-    ptime _lastTickTime;
     vector<string> _paths;
     unordered_map<string, string> _resolvedPaths;
-    unordered_map<string, WatchedFile> _watchedFiles;
 
     string _outputFilename;
 

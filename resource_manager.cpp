@@ -1,9 +1,8 @@
 #include "resource_manager.hpp"
-#include "utils.hpp"
-#include "file_utils.hpp"
 #include "graphics.hpp"
 
 using namespace boba;
+using namespace bristol;
 
 #if WITH_UNPACKED_RESOUCES
 
@@ -90,7 +89,7 @@ bool ResourceManager::LoadFile(const char *filename, vector<char> *buf)
     return false;
   _readFiles.insert(FileInfo(filename, fullPath));
 
-  return boba::LoadFile(fullPath.c_str(), buf);
+  return bristol::LoadFile(fullPath.c_str(), buf);
 }
 
 //------------------------------------------------------------------------------
@@ -153,7 +152,7 @@ __time64_t ResourceManager::ModifiedDate(const char *filename)
 string ResourceManager::ResolveFilename(const char* filename, bool fullPath)
 {
 
-  if (boba::FileExists(filename))
+  if (bristol::FileExists(filename))
   {
     if (fullPath)
     {
@@ -177,7 +176,7 @@ string ResourceManager::ResolveFilename(const char* filename, bool fullPath)
   for (size_t i = 0; i < _paths.size(); ++i)
   {
     string cand(_paths[i] + filename);
-    if (boba::FileExists(cand.c_str()))
+    if (bristol::FileExists(cand.c_str()))
     {
       count++;
       if (res.empty())
@@ -215,36 +214,19 @@ void ResourceManager::AddFileWatch(
     bool* initialResult,
     const cbFileChanged &cb)
 {
-  auto it = _watchedFiles.find(filename);
-  if (it == _watchedFiles.end())
-  {
-    // the watch isn't already present, so add it
-    WatchedFile w;
-    w.filename = filename;
-    w.lastModification = LastModification(filename.c_str());
-    it = _watchedFiles.insert(make_pair(filename, w)).first;
-  }
-
-  it->second.callbacks.push_back(make_pair(token, cb));
-
-  if (initialCallback)
-  {
-    bool res = cb(filename, token);
-    if (initialResult)
-      *initialResult = res;
-  }
-
+  _fileWatcher.AddFileWatch(filename, token, initialCallback, initialResult, cb);
 }
 
 //------------------------------------------------------------------------------
 void ResourceManager::RemoveFileWatch(const cbFileChanged &cb)
 {
-//   for (auto i = begin(_watchedFiles); i != end(_watchedFiles); ++i)
-//   {
-//     auto &v = i->second;
-//     v.erase(remove_if(begin(v), end(v), [&](const pair<cbFileChanged, void*> &x)
-//       { return cb == x.first; }), end(v));
-//   }
+  _fileWatcher.RemoveFileWatch(cb);
+}
+
+//------------------------------------------------------------------------------
+void ResourceManager::Tick()
+{
+  _fileWatcher.Tick();
 }
 
 //------------------------------------------------------------------------------
@@ -269,33 +251,6 @@ GraphicsObjectHandle ResourceManager::LoadTextureFromMemory(
     D3DX11_IMAGE_INFO* info)
 {
   return GRAPHICS.LoadTextureFromMemory(buf, len, friendlyName, srgb, info);
-}
-
-//------------------------------------------------------------------------------
-void ResourceManager::Tick()
-{
-  ptime now = microsec_clock::local_time();
-  if (_lastTickTime.is_not_a_date_time() || (now - _lastTickTime) > seconds(1))
-  {
-    for (auto& kv : _watchedFiles)
-    {
-      const string& filename = kv.first;
-      WatchedFile& f = kv.second;
-      time_t lastModification = LastModification(filename.c_str());
-      if (lastModification > f.lastModification)
-      {
-        // file has been modified, so call all the callback
-        for (const auto& p : f.callbacks)
-        {
-          void* token = p.first;
-          const cbFileChanged& cb = p.second;
-          cb(filename, token);
-        }
-        f.lastModification = lastModification;
-      }
-    }
-    //
-  }
 }
 
 #else

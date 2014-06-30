@@ -1,11 +1,9 @@
 #include "debug_drawer.hpp"
-#include "error.hpp"
-#include "vertex_types.hpp"
-#include "graphics_utils.hpp"
 #include "graphics.hpp"
 #include "deferred_context.hpp"
 
 using namespace boba;
+using namespace bristol;
 
 //------------------------------------------------------------------------------
 DebugDrawer* DebugDrawer::_instance;

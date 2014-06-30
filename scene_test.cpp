@@ -6,11 +6,11 @@
 #include "proto_helpers.hpp"
 #include "resource_manager.hpp"
 #include "scene.hpp"
-#include "graphics_utils.hpp"
 
 #include "boba_io.hpp"
 
 using namespace boba;
+using namespace bristol;
 
 namespace
 {
@@ -245,12 +245,6 @@ Effect* SceneTest::Create(const char* name)
 const char* SceneTest::Name()
 {
   return "scene_test";
-}
-
-template <typename T>
-float Dot(const T& a, const T& b)
-{
-  return a.Dot(b);
 }
 
 //------------------------------------------------------------------------------

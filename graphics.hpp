@@ -1,11 +1,11 @@
 #pragma once
 #include "graphics_object_handle.hpp"
 #include "id_buffer.hpp"
-#include "string_utils.hpp"
-#include "flags.hpp"
 
 namespace boba
 {
+  Vector3 ScreenToViewSpace(const Matrix& proj, u32 x, u32 y);
+
   class Shader;
   class Material;
 

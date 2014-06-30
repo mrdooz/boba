@@ -1,7 +1,5 @@
 #pragma once
 
-#include "utils.hpp"
-
 /*
 repeat after me: directx is left-handed. z goes into the screen.
 */

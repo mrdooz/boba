@@ -36,11 +36,11 @@
 #include <CoreGraphics/CGDirectDisplay.h>
 #endif
 
-#include <sfml/window_event_manager.hpp>
-#include <sfml/virtual_window_manager.hpp>
-#include <sfml/virtual_window.hpp>
-#include <flags.hpp>
-#include <utils.hpp>
+#include <bristol/sfml/window_event_manager.hpp>
+#include <bristol/sfml/virtual_window_manager.hpp>
+#include <bristol/sfml/virtual_window.hpp>
+#include <bristol/flags.hpp>
+#include <bristol/utils.hpp>
 
 typedef uint8_t u8;
 typedef uint16_t u16;

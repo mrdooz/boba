@@ -5,15 +5,13 @@
 #include "demo_engine.hpp"
 #include "proto_helpers.hpp"
 #include "resource_manager.hpp"
-#include "graphics_utils.hpp"
-#include "vertex_types.hpp"
-#include "error.hpp"
 
 #include "boba_io.hpp"
 #include "protocol/generator_bindings.hpp"
 #include "debug_drawer.hpp"
 
 using namespace boba;
+using namespace bristol;
 
 struct Face
 {

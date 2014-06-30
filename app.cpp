@@ -1,15 +1,11 @@
 #include "app.hpp"
 #include "graphics.hpp"
-#include "string_utils.hpp"
-#include "file_utils.hpp"
 #include "demo_engine.hpp"
 #include "particle_test.hpp"
 #include "scene_test.hpp"
 #include "generator_test.hpp"
 #include "resource_manager.hpp"
-#include "graphics_utils.hpp"
 #include "graphics.hpp"
-#include "error.hpp"
 
 static const int WM_LOG_NEW_MSG = WM_APP + 1;
 static const int WM_APP_CLOSE = WM_APP + 2;
@@ -23,6 +19,7 @@ static const int WM_APP_CLOSE = WM_APP + 2;
 }
 
 using namespace boba;
+using namespace bristol;
 
 App* App::_instance;
 
@@ -454,7 +451,7 @@ void App::UpdateMessages()
       float a = 1;
       if (left < seconds(1))
       {
-        a = clamp(0.0f, 1.0f, left.total_milliseconds() / 1000.0f);
+        a = Clamp(0.0f, 1.0f, left.total_milliseconds() / 1000.0f);
       }
       GRAPHICS.AddText(msg.str.c_str(), "Arial", 15, x, y, ColorToU32(msg.r, msg.g, msg.b, a));
     }

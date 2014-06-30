@@ -17,12 +17,9 @@
     <ClCompile Include="..\deferred_context.cpp" />
     <ClCompile Include="..\demo_engine.cpp" />
     <ClCompile Include="..\effect.cpp" />
-    <ClCompile Include="..\error.cpp" />
-    <ClCompile Include="..\file_utils.cpp" />
     <ClCompile Include="..\generator_test.cpp" />
     <ClCompile Include="..\gpu_objects.cpp" />
     <ClCompile Include="..\graphics.cpp" />
-    <ClCompile Include="..\graphics_utils.cpp" />
     <ClCompile Include="..\lua\lapi.c">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ForcedIncludeFiles>
@@ -303,8 +300,6 @@
     <ClCompile Include="..\resource_manager.cpp" />
     <ClCompile Include="..\scene.cpp" />
     <ClCompile Include="..\scene_test.cpp" />
-    <ClCompile Include="..\string_utils.cpp" />
-    <ClCompile Include="..\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\app.hpp" />
@@ -312,14 +307,10 @@
     <ClInclude Include="..\deferred_context.hpp" />
     <ClInclude Include="..\demo_engine.hpp" />
     <ClInclude Include="..\effect.hpp" />
-    <ClInclude Include="..\error.hpp" />
-    <ClInclude Include="..\file_utils.hpp" />
-    <ClInclude Include="..\flags.hpp" />
     <ClInclude Include="..\generator_test.hpp" />
     <ClInclude Include="..\gpu_objects.hpp" />
     <ClInclude Include="..\graphics.hpp" />
     <ClInclude Include="..\graphics_object_handle.hpp" />
-    <ClInclude Include="..\graphics_utils.hpp" />
     <ClInclude Include="..\id_buffer.hpp" />
     <ClInclude Include="..\lua\lapi.h" />
     <ClInclude Include="..\lua\lauxlib.h" />
@@ -359,9 +350,6 @@
     <ClInclude Include="..\resource_manager.hpp" />
     <ClInclude Include="..\scene.hpp" />
     <ClInclude Include="..\scene_test.hpp" />
-    <ClInclude Include="..\string_utils.hpp" />
-    <ClInclude Include="..\utils.hpp" />
-    <ClInclude Include="..\vertex_types.hpp" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -439,8 +427,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ANTTWEAKBAR_ROOT)/include;$(FW1);$(IncludePath)</IncludePath>
-    <LibraryPath>$(ANTTWEAKBAR_ROOT)/lib/$(Configuration);$(FW1)/x86;D:\projects\protobuf-2.5.0\vsprojects\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ANTTWEAKBAR_ROOT)/include;$(FW1);D:\projects\bristol;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ANTTWEAKBAR_ROOT)/lib/$(Configuration);$(FW1)/x86;D:\projects\protobuf-2.5.0\vsprojects\Debug;D:\projects\bristol\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -461,7 +449,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libprotobuf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libprotobuf.lib;bristol_main.lib;bristol_dx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

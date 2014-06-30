@@ -1,11 +1,14 @@
 #pragma once
-#include "utils.hpp"
 #include "gpu_objects.hpp"
+
+namespace bristol
+{
+  struct PosCol;
+}
 
 namespace boba
 {
   class DeferredContext;
-  struct PosCol;
 
   class DebugDrawer
   {
@@ -35,7 +38,7 @@ namespace boba
       Matrix viewProj;
     };
 
-    PosCol* AddQuad(const Vector3& a, const Vector3& b, PosCol* dst);
+    bristol::PosCol* AddQuad(const Vector3& a, const Vector3& b, bristol::PosCol* dst);
 
     bool Init();
 

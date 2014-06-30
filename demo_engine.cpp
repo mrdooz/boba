@@ -1,12 +1,11 @@
 #include "demo_engine.hpp"
 #include "effect.hpp"
-#include "file_utils.hpp"
 #include "graphics.hpp"
-#include "utils.hpp"
 #include "proto_helpers.hpp"
 #include "resource_manager.hpp"
 
 using namespace boba;
+using namespace bristol;
 
 //------------------------------------------------------------------------------
 float TimeDurationToFloat(time_duration t)

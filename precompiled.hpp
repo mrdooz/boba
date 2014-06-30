@@ -66,8 +66,6 @@
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/algorithm/string/replace.hpp>
 
-#include "DirectXTK/SimpleMath.h"
-
 #if WITH_ANT_TWEAK_BAR
 #include <AntTweakBar.h>
 #endif
@@ -76,6 +74,16 @@
 #include <FW1FontWrapper.h>
 #pragma comment(lib, "FW1FontWrapper.lib")
 #endif
+
+#include <bristol/string_utils.hpp>
+#include <bristol/flags.hpp>
+#include <bristol/utils.hpp>
+#include <bristol/error.hpp>
+#include <bristol/file_utils.hpp>
+#include <bristol/file_watcher.hpp>
+#include <bristol/dx/graphics_utils.hpp>
+#include <bristol/dx/vertex_types.hpp>
+
 
 typedef uint8_t u8;
 typedef uint16_t u16;
@@ -127,6 +135,9 @@ namespace boba
   using boost::algorithm::replace_all;
 
   using namespace std::tr1::placeholders;
+
+  using bristol::Flags;
+  using bristol::FileWatcher;
 }
 
 #pragma comment(lib, "DXGI.lib")

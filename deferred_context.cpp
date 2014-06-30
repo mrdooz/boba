@@ -1,7 +1,6 @@
 #include "graphics.hpp"
 #include "deferred_context.hpp"
 #include "gpu_objects.hpp"
-#include "error.hpp"
 
 static const int MAX_SAMPLERS = 8;
 static const int MAX_TEXTURES = 8;
