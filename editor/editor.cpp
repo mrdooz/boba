@@ -1,5 +1,6 @@
 #include "editor.hpp"
 #include "editor_windows.hpp"
+#import "flags.hpp"
 
 using namespace editor;
 
@@ -34,7 +35,7 @@ Editor::Editor()
     : _renderWindow(nullptr)
     , _eventManager(nullptr)
     , _virtualWindowManager(nullptr)
-    , _done(false)
+    , _curTime(seconds(0))
 {
 }
 
@@ -57,6 +58,7 @@ bool Editor::Init()
   auto displayId = CGMainDisplayID();
   width = CGDisplayPixelsWide(displayId);
   height = CGDisplayPixelsHigh(displayId);
+  _appRoot = "/Users/dooz/projects/boba/editor";
 #endif
 
   sf::ContextSettings settings;
@@ -108,9 +110,7 @@ bool Editor::OnKeyPressed(const Event& event)
   Keyboard::Key key = event.key.code;
   switch (key)
   {
-    case Keyboard::Escape:
-      _done = true;
-      return true;
+    case Keyboard::Escape: _stateFlags.Set(StateFlagsF::Done); return true;
   }
   return false;
 }
@@ -118,6 +118,11 @@ bool Editor::OnKeyPressed(const Event& event)
 //----------------------------------------------------------------------------------
 bool Editor::OnKeyReleased(const Event& event)
 {
+  switch (event.key.code)
+  {
+    case Keyboard::Key::Space: _stateFlags.Toggle(StateFlagsF::Paused); return true;
+  }
+
   return false;
 }
 
@@ -130,8 +135,20 @@ bool Editor::OnMouseButtonReleased(const Event& event)
 //----------------------------------------------------------------------------------
 void Editor::Update()
 {
-  _eventManager->Poll();
+  ptime now = microsec_clock::local_time();
 
+  if (_lastUpdate.is_not_a_date_time())
+    _lastUpdate = now;
+
+  time_duration delta = now - _lastUpdate;
+  _lastUpdate = now;
+
+  if (!_stateFlags.IsSet(StateFlagsF::Paused))
+  {
+    _curTime += delta;
+  }
+
+  _eventManager->Poll();
 }
 
 //----------------------------------------------------------------------------------
@@ -145,7 +162,7 @@ void Editor::Render()
 //----------------------------------------------------------------------------------
 bool Editor::Run()
 {
-  while (_renderWindow->isOpen() && !_done)
+  while (_renderWindow->isOpen() && !_stateFlags.IsSet(StateFlagsF::Done))
   {
     Update();
     Render();

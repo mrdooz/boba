@@ -34,8 +34,10 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
       "editor_settings.proto");
   GOOGLE_CHECK(file != NULL);
   Settings_descriptor_ = file->message_type(0);
-  static const int Settings_offsets_[1] = {
+  static const int Settings_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_height_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_interval_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticks_per_interval_),
   };
   Settings_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -78,8 +80,10 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\025editor_settings.proto\022\006editor\"&\n\010Setti"
-    "ngs\022\032\n\rticker_height\030\001 \001(\r:\003100", 71);
+    "\n\025editor_settings.proto\022\006editor\"a\n\010Setti"
+    "ngs\022\031\n\rticker_height\030\001 \001(\r:\00250\022\033\n\017ticker"
+    "_interval\030\002 \001(\r:\00220\022\035\n\022ticks_per_interva"
+    "l\030\003 \001(\r:\0014", 130);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_settings.proto", &protobuf_RegisterTypes);
   Settings::default_instance_ = new Settings();
@@ -98,6 +102,8 @@ struct StaticDescriptorInitializer_editor_5fsettings_2eproto {
 
 #ifndef _MSC_VER
 const int Settings::kTickerHeightFieldNumber;
+const int Settings::kTickerIntervalFieldNumber;
+const int Settings::kTicksPerIntervalFieldNumber;
 #endif  // !_MSC_VER
 
 Settings::Settings()
@@ -116,7 +122,9 @@ Settings::Settings(const Settings& from)
 
 void Settings::SharedCtor() {
   _cached_size_ = 0;
-  ticker_height_ = 100u;
+  ticker_height_ = 50u;
+  ticker_interval_ = 20u;
+  ticks_per_interval_ = 4u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -152,7 +160,9 @@ Settings* Settings::New() const {
 
 void Settings::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    ticker_height_ = 100u;
+    ticker_height_ = 50u;
+    ticker_interval_ = 20u;
+    ticks_per_interval_ = 4u;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -164,7 +174,7 @@ bool Settings::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint32 ticker_height = 1 [default = 100];
+      // optional uint32 ticker_height = 1 [default = 50];
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -172,6 +182,38 @@ bool Settings::MergePartialFromCodedStream(
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &ticker_height_)));
           set_has_ticker_height();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_ticker_interval;
+        break;
+      }
+
+      // optional uint32 ticker_interval = 2 [default = 20];
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_ticker_interval:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &ticker_interval_)));
+          set_has_ticker_interval();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_ticks_per_interval;
+        break;
+      }
+
+      // optional uint32 ticks_per_interval = 3 [default = 4];
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_ticks_per_interval:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &ticks_per_interval_)));
+          set_has_ticks_per_interval();
         } else {
           goto handle_uninterpreted;
         }
@@ -197,9 +239,19 @@ bool Settings::MergePartialFromCodedStream(
 
 void Settings::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional uint32 ticker_height = 1 [default = 100];
+  // optional uint32 ticker_height = 1 [default = 50];
   if (has_ticker_height()) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->ticker_height(), output);
+  }
+
+  // optional uint32 ticker_interval = 2 [default = 20];
+  if (has_ticker_interval()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->ticker_interval(), output);
+  }
+
+  // optional uint32 ticks_per_interval = 3 [default = 4];
+  if (has_ticks_per_interval()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->ticks_per_interval(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -210,9 +262,19 @@ void Settings::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Settings::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional uint32 ticker_height = 1 [default = 100];
+  // optional uint32 ticker_height = 1 [default = 50];
   if (has_ticker_height()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->ticker_height(), target);
+  }
+
+  // optional uint32 ticker_interval = 2 [default = 20];
+  if (has_ticker_interval()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->ticker_interval(), target);
+  }
+
+  // optional uint32 ticks_per_interval = 3 [default = 4];
+  if (has_ticks_per_interval()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->ticks_per_interval(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -226,11 +288,25 @@ int Settings::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional uint32 ticker_height = 1 [default = 100];
+    // optional uint32 ticker_height = 1 [default = 50];
     if (has_ticker_height()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->ticker_height());
+    }
+
+    // optional uint32 ticker_interval = 2 [default = 20];
+    if (has_ticker_interval()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->ticker_interval());
+    }
+
+    // optional uint32 ticks_per_interval = 3 [default = 4];
+    if (has_ticks_per_interval()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->ticks_per_interval());
     }
 
   }
@@ -263,6 +339,12 @@ void Settings::MergeFrom(const Settings& from) {
     if (from.has_ticker_height()) {
       set_ticker_height(from.ticker_height());
     }
+    if (from.has_ticker_interval()) {
+      set_ticker_interval(from.ticker_interval());
+    }
+    if (from.has_ticks_per_interval()) {
+      set_ticks_per_interval(from.ticks_per_interval());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -287,6 +369,8 @@ bool Settings::IsInitialized() const {
 void Settings::Swap(Settings* other) {
   if (other != this) {
     std::swap(ticker_height_, other->ticker_height_);
+    std::swap(ticker_interval_, other->ticker_interval_);
+    std::swap(ticks_per_interval_, other->ticks_per_interval_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

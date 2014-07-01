@@ -15,6 +15,14 @@ namespace editor
   {
   public:
 
+    struct StateFlagsF
+    {
+      enum Enum { Done = 1 << 0, Paused = 1 << 1, };
+      struct Bits { u32 done : 1; u32 paused : 1; };
+    };
+
+    typedef Flags<StateFlagsF> StateFlags;
+
     static void Create();
     static void Destroy();
     static Editor& Instance();
@@ -24,6 +32,8 @@ namespace editor
     bool Close();
 
     editor::Settings& Settings() { return _settings; }
+    string GetAppRoot() const { return _appRoot; }
+    time_duration CurTime() const { return _curTime; }
 
   private:
     Editor();
@@ -45,7 +55,10 @@ namespace editor
 
     static Editor* _instance;
     editor::Settings _settings;
-    bool _done;
+    string _appRoot;
+    ptime _lastUpdate;
+    time_duration _curTime;
+    StateFlags _stateFlags;
   };
 
   #define EDITOR Editor::Instance()

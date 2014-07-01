@@ -46,11 +46,17 @@ namespace editor
         const Vector2f& size,
         const bristol::WindowFlags& = bristol::WindowFlags(bristol::WindowFlag::DefaultFlags));
 
+    virtual bool Init();
     virtual void Draw();
 
+    int TimeToPixel(const time_duration& t);
+    time_duration PixelToTime(int x);
+
   private:
-    ptime _startTime;
+    time_duration _panelOffset;
+    time_duration _curTime;
     u32 _pixelsPerSecond;
+    Font _font;
   };
 
 

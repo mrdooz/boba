@@ -41,6 +41,7 @@
 #include <bristol/sfml/virtual_window.hpp>
 #include <bristol/flags.hpp>
 #include <bristol/utils.hpp>
+#include <bristol/string_utils.hpp>
 
 typedef uint8_t u8;
 typedef uint16_t u16;

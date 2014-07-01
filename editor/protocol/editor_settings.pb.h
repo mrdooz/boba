@@ -91,24 +91,44 @@ class Settings : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional uint32 ticker_height = 1 [default = 100];
+  // optional uint32 ticker_height = 1 [default = 50];
   inline bool has_ticker_height() const;
   inline void clear_ticker_height();
   static const int kTickerHeightFieldNumber = 1;
   inline ::google::protobuf::uint32 ticker_height() const;
   inline void set_ticker_height(::google::protobuf::uint32 value);
 
+  // optional uint32 ticker_interval = 2 [default = 20];
+  inline bool has_ticker_interval() const;
+  inline void clear_ticker_interval();
+  static const int kTickerIntervalFieldNumber = 2;
+  inline ::google::protobuf::uint32 ticker_interval() const;
+  inline void set_ticker_interval(::google::protobuf::uint32 value);
+
+  // optional uint32 ticks_per_interval = 3 [default = 4];
+  inline bool has_ticks_per_interval() const;
+  inline void clear_ticks_per_interval();
+  static const int kTicksPerIntervalFieldNumber = 3;
+  inline ::google::protobuf::uint32 ticks_per_interval() const;
+  inline void set_ticks_per_interval(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:editor.Settings)
  private:
   inline void set_has_ticker_height();
   inline void clear_has_ticker_height();
+  inline void set_has_ticker_interval();
+  inline void clear_has_ticker_interval();
+  inline void set_has_ticks_per_interval();
+  inline void clear_has_ticks_per_interval();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 ticker_height_;
+  ::google::protobuf::uint32 ticker_interval_;
+  ::google::protobuf::uint32 ticks_per_interval_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_editor_5fsettings_2eproto();
   friend void protobuf_AssignDesc_editor_5fsettings_2eproto();
@@ -124,7 +144,7 @@ class Settings : public ::google::protobuf::Message {
 
 // Settings
 
-// optional uint32 ticker_height = 1 [default = 100];
+// optional uint32 ticker_height = 1 [default = 50];
 inline bool Settings::has_ticker_height() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -135,7 +155,7 @@ inline void Settings::clear_has_ticker_height() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void Settings::clear_ticker_height() {
-  ticker_height_ = 100u;
+  ticker_height_ = 50u;
   clear_has_ticker_height();
 }
 inline ::google::protobuf::uint32 Settings::ticker_height() const {
@@ -144,6 +164,50 @@ inline ::google::protobuf::uint32 Settings::ticker_height() const {
 inline void Settings::set_ticker_height(::google::protobuf::uint32 value) {
   set_has_ticker_height();
   ticker_height_ = value;
+}
+
+// optional uint32 ticker_interval = 2 [default = 20];
+inline bool Settings::has_ticker_interval() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Settings::set_has_ticker_interval() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Settings::clear_has_ticker_interval() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Settings::clear_ticker_interval() {
+  ticker_interval_ = 20u;
+  clear_has_ticker_interval();
+}
+inline ::google::protobuf::uint32 Settings::ticker_interval() const {
+  return ticker_interval_;
+}
+inline void Settings::set_ticker_interval(::google::protobuf::uint32 value) {
+  set_has_ticker_interval();
+  ticker_interval_ = value;
+}
+
+// optional uint32 ticks_per_interval = 3 [default = 4];
+inline bool Settings::has_ticks_per_interval() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Settings::set_has_ticks_per_interval() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Settings::clear_has_ticks_per_interval() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Settings::clear_ticks_per_interval() {
+  ticks_per_interval_ = 4u;
+  clear_has_ticks_per_interval();
+}
+inline ::google::protobuf::uint32 Settings::ticks_per_interval() const {
+  return ticks_per_interval_;
+}
+inline void Settings::set_ticks_per_interval(::google::protobuf::uint32 value) {
+  set_has_ticks_per_interval();
+  ticks_per_interval_ = value;
 }
 
 
