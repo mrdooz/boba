@@ -14,7 +14,7 @@ extend google.protobuf.FieldOptions
   optional float maxF     = 50005;
   optional float stepF    = 50006;
   
-  optional float minI     = 50007;
-  optional float maxI     = 50008;
-  optional float stepI    = 50009;
+  optional int32 minI     = 50007;
+  optional int32 maxI     = 50008;
+  optional int32 stepI    = 50009;
 }

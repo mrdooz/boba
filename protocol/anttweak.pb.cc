@@ -68,9 +68,9 @@ void protobuf_AddDesc_anttweak_2eproto() {
     "e.protobuf.FieldOptions\030\325\206\003 \001(\002:.\n\005stepF"
     "\022\035.google.protobuf.FieldOptions\030\326\206\003 \001(\002:"
     "-\n\004minI\022\035.google.protobuf.FieldOptions\030\327"
-    "\206\003 \001(\002:-\n\004maxI\022\035.google.protobuf.FieldOp"
-    "tions\030\330\206\003 \001(\002:.\n\005stepI\022\035.google.protobuf"
-    ".FieldOptions\030\331\206\003 \001(\002", 541);
+    "\206\003 \001(\005:-\n\004maxI\022\035.google.protobuf.FieldOp"
+    "tions\030\330\206\003 \001(\005:.\n\005stepI\022\035.google.protobuf"
+    ".FieldOptions\030\331\206\003 \001(\005", 541);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "anttweak.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::ExtensionSet::RegisterExtension(
@@ -96,13 +96,13 @@ void protobuf_AddDesc_anttweak_2eproto() {
     50006, 2, false, false);
   ::google::protobuf::internal::ExtensionSet::RegisterExtension(
     &::google::protobuf::FieldOptions::default_instance(),
-    50007, 2, false, false);
+    50007, 5, false, false);
   ::google::protobuf::internal::ExtensionSet::RegisterExtension(
     &::google::protobuf::FieldOptions::default_instance(),
-    50008, 2, false, false);
+    50008, 5, false, false);
   ::google::protobuf::internal::ExtensionSet::RegisterExtension(
     &::google::protobuf::FieldOptions::default_instance(),
-    50009, 2, false, false);
+    50009, 5, false, false);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_anttweak_2eproto);
 }
 
@@ -134,13 +134,13 @@ struct StaticDescriptorInitializer_anttweak_2eproto {
     ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
   stepF(kStepFFieldNumber, 0);
 ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
-    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+    ::google::protobuf::internal::PrimitiveTypeTraits< ::google::protobuf::int32 >, 5, false >
   minI(kMinIFieldNumber, 0);
 ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
-    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+    ::google::protobuf::internal::PrimitiveTypeTraits< ::google::protobuf::int32 >, 5, false >
   maxI(kMaxIFieldNumber, 0);
 ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
-    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+    ::google::protobuf::internal::PrimitiveTypeTraits< ::google::protobuf::int32 >, 5, false >
   stepI(kStepIFieldNumber, 0);
 
 // @@protoc_insertion_point(namespace_scope)

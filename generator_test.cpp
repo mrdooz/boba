@@ -358,6 +358,7 @@ GeneratorTest::GeneratorTest(const string &name)
     , _cameraDir(0,0,1)
     , _curAdaption(0)
 {
+  _renderFlags.Set(GeneratorTest::RenderFlags::Luminance);
 }
 
 //------------------------------------------------------------------------------
@@ -424,6 +425,9 @@ bool GeneratorTest::Init(const char* config)
   if (!GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psAdaption, nullptr, 0, nullptr, "AdaptLuminance"))
     return false;
 
+  if (!GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psThreshold, nullptr, 0, nullptr, "BloomThreshold"))
+    return false;
+
   if (!GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csBlurX, "BoxBlurX"))
     return false;
 
@@ -431,6 +435,8 @@ bool GeneratorTest::Init(const char* config)
     return false;
 
   _cbBlur.Create();
+  _cbBloom.Create();
+  _cbComposite.Create();
 
   _depthStencilState = GRAPHICS.CreateDepthStencilState(CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT()));
   _blendState = GRAPHICS.CreateBlendState(CD3D11_BLEND_DESC(CD3D11_DEFAULT()));
@@ -661,11 +667,16 @@ bool GeneratorTest::Render()
     _postProcess->Execute({_luminanceAdaption[!_curAdaption], rtLuminance.h },
         _luminanceAdaption[_curAdaption], _psAdaption, 0, L"Adaption");
 
-    // todo: perform bloom threshold calculation
-
-    // blur the bloom
     int w, h;
     GRAPHICS.GetBackBufferSize(&w, &h);
+
+    // bloom threshold
+    ScopedRenderTarget threshold(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, BufferFlags(BufferFlag::CreateSrv));
+    _cbBloom.data.threshold = _planeConfig.bloom_threshold();
+    _ctx->SetCBuffer(_cbBloom, ShaderType::PixelShader, 2);
+    _postProcess->Execute({ _renderTarget }, threshold.h, _psThreshold, 0, L"BloomThreshold");
+
+    // blur the bloom
     auto f = BufferFlags(BufferFlag::CreateSrv) | BufferFlag::CreateUav;
     ScopedRenderTarget blur0(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
     ScopedRenderTarget blur1(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
@@ -678,7 +689,7 @@ bool GeneratorTest::Render()
 
     GraphicsObjectHandle srcDst[] =
     {
-      _renderTarget, blur0.h, blur0.h, blur1.h,
+      threshold.h, blur0.h, blur0.h, blur1.h,
       blur1.h, blur0.h, blur0.h, blur1.h,
       blur1.h, blur0.h, blur0.h, blur1.h,
     };
@@ -719,7 +730,10 @@ bool GeneratorTest::Render()
 
     if (_renderFlags.IsSet(GeneratorTest::RenderFlags::Luminance))
     {
-      _postProcess->Execute({_renderTarget, _luminanceAdaption[_curAdaption]},
+      _cbComposite.data.bloomMultiplier = _planeConfig.bloom_multiplier();
+      _ctx->SetCBuffer(_cbComposite, ShaderType::PixelShader, 3);
+
+      _postProcess->Execute({_renderTarget, _luminanceAdaption[_curAdaption], blur1.h},
           rtDest, _psComposite, &black, L"Composite");
     }
     else

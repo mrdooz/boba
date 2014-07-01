@@ -105,6 +105,13 @@ namespace boba
     GraphicsObjectHandle _psCopy;
     GraphicsObjectHandle _psLuminance;
     GraphicsObjectHandle _psAdaption;
+
+    struct CBuffeComposite
+    {
+      float bloomMultiplier;
+    };
+    ConstantBuffer<CBuffeComposite> _cbComposite;
+
     GraphicsObjectHandle _psComposite;
 
     // default states
@@ -132,6 +139,13 @@ namespace boba
     ConstantBuffer<CBufferBlur> _cbBlur;
     GraphicsObjectHandle _csBlurX;
     GraphicsObjectHandle _csBlurY;
+
+    struct CBufferBloom
+    {
+      float threshold;
+    };
+    ConstantBuffer<CBufferBloom> _cbBloom;
+    GraphicsObjectHandle _psThreshold;
   };
 
 }

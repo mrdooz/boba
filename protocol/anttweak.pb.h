@@ -68,15 +68,15 @@ extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::Fi
   stepF;
 static const int kMinIFieldNumber = 50007;
 extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
-    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+    ::google::protobuf::internal::PrimitiveTypeTraits< ::google::protobuf::int32 >, 5, false >
   minI;
 static const int kMaxIFieldNumber = 50008;
 extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
-    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+    ::google::protobuf::internal::PrimitiveTypeTraits< ::google::protobuf::int32 >, 5, false >
   maxI;
 static const int kStepIFieldNumber = 50009;
 extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
-    ::google::protobuf::internal::PrimitiveTypeTraits< float >, 2, false >
+    ::google::protobuf::internal::PrimitiveTypeTraits< ::google::protobuf::int32 >, 5, false >
   stepI;
 
 // ===================================================================

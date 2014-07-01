@@ -15,7 +15,7 @@ ps = {
     'debug_draw' : ['PsMain'],
     'fullscreen' : ['PsMain'],
     'generator' : ['PsMain'],
-    'tonemap' : ['LuminanceMap', 'Composite', 'AdaptLuminance'],
+    'tonemap' : ['LuminanceMap', 'Composite', 'AdaptLuminance', 'BloomThreshold'],
     'copy' : ['PsMain'],
 }
 

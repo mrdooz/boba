@@ -3,6 +3,7 @@
 
 Texture2D Texture0 : register(t0);
 Texture2D Texture1 : register(t1);
+Texture2D Texture2 : register(t2);
 sampler PointSampler : register(s0);
 sampler LinearSampler : register(s1);
 
@@ -23,6 +24,16 @@ cbuffer settings : register(b1)
   float tua : packoffset(c0.x);
   float key : packoffset(c0.y);
   float timeDelta : packoffset(c0.z);
+};
+
+cbuffer bloomSettings : register(b2)
+{
+  float bloomThreshold : packoffset(c0.x);
+};
+
+cbuffer compositeSettings : register(b3)
+{
+  float bloomMultiplier : packoffset(c0.x);
 };
 
 //------------------------------------------------------------------------------
@@ -78,9 +89,22 @@ float4 Composite(in PSInput input) : SV_Target
 {
   // texture_0 = input texture
   // texture_1 = avg luminance
+  // texture_2 = bloom
   
   float3 color = Texture0.Sample(PointSampler, input.uv).rgb;
   float avgLuminance = GetAvgLuminance(Texture1);
   color = ToneMap(color, avgLuminance, key);
+
+  float3 bloom = Texture2.Sample(LinearSampler, input.uv).rgb;
+  color += bloomMultiplier * bloom;
+ 
   return float4(color, 1.0f);
+}
+
+//------------------------------------------------------------------------------
+// Perform bloom threshold computation
+float4 BloomThreshold(in PSInput input) : SV_Target
+{
+  float3 c = Texture0.Sample(PointSampler, input.uv).rgb;
+  return CalcLuminance(c) > bloomThreshold ? float4(c,1) : 0;
 }

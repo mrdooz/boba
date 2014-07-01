@@ -76,12 +76,22 @@ void BindPlane(generator::Plane* data, bool *dirty)
   // Add key
   TwAddVarCB(bar, "key", TW_TYPE_FLOAT,
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_key(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
-    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->key(); }, (void*)&cfg, nullptr);
+    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->key(); }, (void*)&cfg, "min=0.010000 max=1.000000 step=0.010000 ");
 
   // Add blur_radius
   TwAddVarCB(bar, "blur_radius", TW_TYPE_FLOAT,
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_blur_radius(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
-    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->blur_radius(); }, (void*)&cfg, nullptr);
+    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->blur_radius(); }, (void*)&cfg, "min=0.000000 max=200.000000 step=1.000000 ");
+
+  // Add bloom_threshold
+  TwAddVarCB(bar, "bloom_threshold", TW_TYPE_FLOAT,
+    [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_bloom_threshold(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
+    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->bloom_threshold(); }, (void*)&cfg, "min=0.000000 max=1.000000 step=0.010000 ");
+
+  // Add bloom_multiplier
+  TwAddVarCB(bar, "bloom_multiplier", TW_TYPE_FLOAT,
+    [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_bloom_multiplier(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
+    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->bloom_multiplier(); }, (void*)&cfg, "min=0.000000 max=5.000000 step=0.100000 ");
 
 }
 }

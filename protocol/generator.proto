@@ -30,6 +30,8 @@ message Plane
   optional common.Matrix4x4 obj_r       = 8 [(anttweak.nobind) = true];
   
   optional float tau                    = 9 [default = 0.5];
-  optional float key                    = 10 [default = 0.18];
-  optional float blur_radius            = 11 [default = 10];
+  optional float key                    = 10 [(anttweak.minF) = 0.01, (anttweak.maxF) = 1, (anttweak.stepF) = 0.01, default = 0.18];
+  optional float blur_radius            = 11 [(anttweak.minF) = 0, (anttweak.maxF) = 200, (anttweak.stepF) = 1, default = 10];
+  optional float bloom_threshold        = 12 [(anttweak.minF) = 0, (anttweak.maxF) = 1, (anttweak.stepF) = 0.01, default = 0.8];
+  optional float bloom_multiplier       = 13 [(anttweak.minF) = 0, (anttweak.maxF) = 5, (anttweak.stepF) = 0.1, default = 1.0];
 }
