@@ -1,6 +1,5 @@
 #include "editor.hpp"
 #include "editor_windows.hpp"
-#import "flags.hpp"
 
 using namespace editor;
 
@@ -149,6 +148,12 @@ void Editor::Update()
   }
 
   _eventManager->Poll();
+}
+
+//----------------------------------------------------------------------------------
+void Editor::SetCurTime(const time_duration& t)
+{
+  _curTime = t;
 }
 
 //----------------------------------------------------------------------------------

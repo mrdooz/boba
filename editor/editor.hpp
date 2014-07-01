@@ -34,6 +34,7 @@ namespace editor
     editor::Settings& Settings() { return _settings; }
     string GetAppRoot() const { return _appRoot; }
     time_duration CurTime() const { return _curTime; }
+    void SetCurTime(const time_duration& t);
 
   private:
     Editor();

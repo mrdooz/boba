@@ -61,15 +61,15 @@ bool TimelineWindow::Init()
 //----------------------------------------------------------------------------------
 int TimelineWindow::TimeToPixel(const time_duration& t)
 {
-  return t.total_milliseconds() / (1000 * _pixelsPerSecond);
+  // p = s * t / 1000
+  // t = 1000 * p / s
+  return (u64)_pixelsPerSecond * t.total_milliseconds() / 1000;
 }
 
 //----------------------------------------------------------------------------------
 time_duration TimelineWindow::PixelToTime(int x)
 {
-  // p = t / (1000 * s);
-  // (1000 * s) * p
-  return milliseconds(x * 1000 * _pixelsPerSecond);
+  return milliseconds(1000 * x / _pixelsPerSecond);
 }
 
 //----------------------------------------------------------------------------------
@@ -113,10 +113,9 @@ void TimelineWindow::Draw()
 
   VertexArray curLine(sf::Lines);
   x = TimeToPixel(EDITOR.CurTime());
-  curLine.append(sf::Vertex(Vector2f(x, 0), Color::Red));
-  curLine.append(sf::Vertex(Vector2f(x, 40), Color::Red));
+  curLine.append(sf::Vertex(Vector2f(x, y), Color::Red));
+  curLine.append(sf::Vertex(Vector2f(x, _size.y), Color::Red));
   _texture.draw(curLine);
-
 
   // draw the rows
 
