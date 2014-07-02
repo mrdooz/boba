@@ -125,7 +125,6 @@ namespace editor
 
   using bristol::WindowEventManager;
   using bristol::VirtualWindowManager;
-  using bristol::GridSplitter;
   using bristol::VirtualWindow;
   using bristol::Flags;
 

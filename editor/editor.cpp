@@ -57,7 +57,7 @@ bool Editor::Init()
   auto displayId = CGMainDisplayID();
   width = CGDisplayPixelsWide(displayId);
   height = CGDisplayPixelsHigh(displayId);
-  _appRoot = "/Users/dooz/projects/boba/editor";
+  _appRoot = "/Users/dooz/projects/boba/editor/";
 #endif
 
   sf::ContextSettings settings;
@@ -84,6 +84,9 @@ bool Editor::Init()
     _virtualWindowManager->AddWindow(new ComponentWindow("COMPONENTS", Vector2f(0, h), Vector2f(w, h)));
     _virtualWindowManager->AddWindow(new TimelineWindow("TIMELINE", Vector2f(w, h), Vector2f(rw, h)));
   }
+
+  _effects.push_back({ "tjong", 20 });
+  _effects.push_back({ "tjong2", 20 });
 
   return true;
 }

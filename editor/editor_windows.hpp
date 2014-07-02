@@ -31,6 +31,12 @@ namespace editor
         const string& title,
         const Vector2f& pos,
         const Vector2f& size);
+
+    virtual bool Init();
+    virtual void Draw();
+
+  private:
+    Font _font;
   };
 
   //----------------------------------------------------------------------------------

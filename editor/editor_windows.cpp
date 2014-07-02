@@ -33,6 +33,53 @@ ComponentWindow::ComponentWindow(
 }
 
 //----------------------------------------------------------------------------------
+bool ComponentWindow::Init()
+{
+  if (!_font.loadFromFile(EDITOR.GetAppRoot() + "gfx/04b_03b_.ttf"))
+    return false;
+
+  return true;
+}
+
+void DrawRectOutline(RenderTexture& texture, const Vector2f& pos, const Vector2f& size, const Color& col, int borderWidth)
+{
+  RectangleShape rect;
+  rect.setFillColor(col);
+  rect.setPosition(pos);
+  rect.setSize(size);
+  texture.draw(rect);
+
+  Vector2f v(borderWidth, borderWidth);
+  rect.setPosition(pos + v);
+  rect.setSize(size - 2.0f * v);
+  rect.setFillColor(Color(col.r / 2, col.g / 2, col.b / 2));
+  texture.draw(rect);
+}
+
+//----------------------------------------------------------------------------------
+void ComponentWindow::Draw()
+{
+  _texture.clear();
+
+  int x = 0;
+  int y = 0;
+  Text text;
+  for (const Effect& effect : EDITOR.GetEffects())
+  {
+    DrawRectOutline(_texture, Vector2f(x,y), Vector2f(_size.x, 50), Color(40, 40, 40), 2);
+    text.setString(effect.name);
+    text.setCharacterSize(16);
+    text.setFont(_font);
+    Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
+    text.setPosition(Vector2f(x, y) + (Vector2f(_size.x, 50) - ofs) / 2.0f);
+    _texture.draw(text);
+    y += 48;
+  }
+
+  _texture.display();
+}
+
+//----------------------------------------------------------------------------------
 TimelineWindow::TimelineWindow(
   const string& title,
   const Vector2f& pos,
@@ -59,7 +106,9 @@ bool TimelineWindow::Init()
   if (!VirtualWindow::Init())
     return false;
 
-  _font.loadFromFile("gfx/04b_03b_.ttf");
+  if (!_font.loadFromFile(EDITOR.GetAppRoot() + "gfx/04b_03b_.ttf"))
+    return false;
+
   return true;
 }
 
@@ -91,9 +140,9 @@ void TimelineWindow::Draw()
   _texture.draw(ticker);
 
   time_duration t = EDITOR.CurTime();
-  Text curTime(to_string("XXXX %d", t.total_milliseconds()), _font);
-  curTime.setPosition(10, 10);
-  curTime.setCharacterSize(20);
+  Text curTime(to_string("TIME: %.3f", t.total_milliseconds() / 1000.0f), _font);
+  curTime.setPosition(10, 0);
+  curTime.setCharacterSize(16);
   _texture.draw(curTime);
 
   VertexArray lines(sf::Lines);

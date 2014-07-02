@@ -11,6 +11,13 @@ namespace bristol
 namespace editor
 {
 
+  struct Effect
+  {
+    string name;
+    u32 tjong;
+  };
+
+
   class Editor
   {
   public:
@@ -36,6 +43,8 @@ namespace editor
     time_duration CurTime() const { return _curTime; }
     void SetCurTime(const time_duration& t);
 
+    const vector<Effect>& GetEffects() const { return _effects; }
+
   private:
     Editor();
     ~Editor();
@@ -60,6 +69,8 @@ namespace editor
     ptime _lastUpdate;
     time_duration _curTime;
     StateFlags _stateFlags;
+
+    vector<Effect> _effects;
   };
 
   #define EDITOR Editor::Instance()
