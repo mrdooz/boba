@@ -8,9 +8,8 @@ using namespace bristol;
 PropertyWindow::PropertyWindow(
   const string& title,
   const Vector2f& pos,
-  const Vector2f& size,
-  const bristol::WindowFlags& flags)
-    : VirtualWindow(title, pos, size, make_shared<sf::RenderTexture>(), flags)
+  const Vector2f& size)
+    : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
 {
 }
 
@@ -18,9 +17,8 @@ PropertyWindow::PropertyWindow(
 PreviewWindow::PreviewWindow(
   const string& title,
   const Vector2f& pos,
-  const Vector2f& size,
-  const bristol::WindowFlags& flags)
-    : VirtualWindow(title, pos, size, make_shared<sf::RenderTexture>(), flags)
+  const Vector2f& size)
+    : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
 {
 }
 
@@ -29,9 +27,8 @@ PreviewWindow::PreviewWindow(
 ComponentWindow::ComponentWindow(
   const string& title,
   const Vector2f& pos,
-  const Vector2f& size,
-  const bristol::WindowFlags& flags)
-    : VirtualWindow(title, pos, size, make_shared<sf::RenderTexture>(), flags)
+  const Vector2f& size)
+    : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
 {
 }
 
@@ -39,9 +36,8 @@ ComponentWindow::ComponentWindow(
 TimelineWindow::TimelineWindow(
   const string& title,
   const Vector2f& pos,
-  const Vector2f& size,
-  const bristol::WindowFlags& flags)
-    : VirtualWindow(title, pos, size, make_shared<sf::RenderTexture>(), flags)
+  const Vector2f& size)
+    : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
     , _panelOffset(seconds(0))
     , _pixelsPerSecond(100)
 {
@@ -84,7 +80,7 @@ time_duration TimelineWindow::PixelToTime(int x)
 //----------------------------------------------------------------------------------
 void TimelineWindow::Draw()
 {
-  //_texture->clear();
+  _texture.clear();
 
   const editor::Settings& settings = EDITOR.Settings();
 
@@ -92,13 +88,13 @@ void TimelineWindow::Draw()
   RectangleShape ticker;
   ticker.setFillColor(Color(40, 40, 40));
   ticker.setSize(Vector2f(_size.x, settings.ticker_height()));
-  _texture->draw(ticker);
+  _texture.draw(ticker);
 
   time_duration t = EDITOR.CurTime();
   Text curTime(to_string("XXXX %d", t.total_milliseconds()), _font);
   curTime.setPosition(10, 10);
   curTime.setCharacterSize(20);
-  _texture->draw(curTime);
+  _texture.draw(curTime);
 
   VertexArray lines(sf::Lines);
   int x = 0;
@@ -116,7 +112,7 @@ void TimelineWindow::Draw()
     }
     x = tmpX + settings.ticker_interval();
   }
-  _texture->draw(lines);
+  _texture.draw(lines);
 
   VertexArray curLine(sf::Lines);
   int w = _size.x;
@@ -127,10 +123,10 @@ void TimelineWindow::Draw()
   x = TimeToPixel(EDITOR.CurTime() - _panelOffset);
   curLine.append(sf::Vertex(Vector2f(x, y), Color::Red));
   curLine.append(sf::Vertex(Vector2f(x, _size.y), Color::Red));
-  _texture->draw(curLine);
+  _texture.draw(curLine);
 
   // draw the rows
 
-  //_texture.display();
+  _texture.display();
 }
 

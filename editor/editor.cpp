@@ -79,13 +79,10 @@ bool Editor::Init()
     float rw = (float)width - w;
     float h = (float)height/2;
 
-    _virtualWindowManager->AddWindow(new GridSplitter(
-        new PropertyWindow("PROPERTIES",   Vector2f(0, 0), Vector2f(w, h)),
-        new PreviewWindow("PREVIEW",       Vector2f(w, 0), Vector2f(rw, h)),
-        new ComponentWindow("COMPONENTS",  Vector2f(0, h), Vector2f(w, h)),
-        new TimelineWindow("TIMELINE",     Vector2f(w, h), Vector2f(rw, h)),
-        Vector2f(width, height),
-        Vector2f(0.25f, 0.5f)));
+    _virtualWindowManager->AddWindow(new PropertyWindow("PROPERTIES", Vector2f(0, 0), Vector2f(w, h)));
+    _virtualWindowManager->AddWindow(new PreviewWindow("PREVIEW", Vector2f(w, 0), Vector2f(rw, h)));
+    _virtualWindowManager->AddWindow(new ComponentWindow("COMPONENTS", Vector2f(0, h), Vector2f(w, h)));
+    _virtualWindowManager->AddWindow(new TimelineWindow("TIMELINE", Vector2f(w, h), Vector2f(rw, h)));
   }
 
   return true;

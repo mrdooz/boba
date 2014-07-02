@@ -10,8 +10,7 @@ namespace editor
     PropertyWindow(
         const string& title,
         const Vector2f& pos,
-        const Vector2f& size,
-        const bristol::WindowFlags& = bristol::WindowFlags(bristol::WindowFlag::DefaultFlags));
+        const Vector2f& size);
   };
 
   //----------------------------------------------------------------------------------
@@ -21,8 +20,7 @@ namespace editor
     PreviewWindow(
         const string& title,
         const Vector2f& pos,
-        const Vector2f& size,
-        const bristol::WindowFlags& = bristol::WindowFlags(bristol::WindowFlag::DefaultFlags));
+        const Vector2f& size);
   };
 
   //----------------------------------------------------------------------------------
@@ -32,8 +30,7 @@ namespace editor
     ComponentWindow(
         const string& title,
         const Vector2f& pos,
-        const Vector2f& size,
-        const bristol::WindowFlags& = bristol::WindowFlags(bristol::WindowFlag::DefaultFlags));
+        const Vector2f& size);
   };
 
   //----------------------------------------------------------------------------------
@@ -43,8 +40,7 @@ namespace editor
     TimelineWindow(
         const string& title,
         const Vector2f& pos,
-        const Vector2f& size,
-        const bristol::WindowFlags& = bristol::WindowFlags(bristol::WindowFlag::DefaultFlags));
+        const Vector2f& size);
 
     virtual bool Init();
     virtual void Draw();
