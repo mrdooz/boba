@@ -38,45 +38,62 @@ bool ComponentWindow::Init()
   if (!_font.loadFromFile(EDITOR.GetAppRoot() + "gfx/04b_03b_.ttf"))
     return false;
 
+  _windowManager->RegisterHandler(Event::MouseButtonPressed, nullptr, bind(&ComponentWindow::OnMouseButtonPressed, this, _1));
+  _windowManager->RegisterHandler(Event::MouseMoved, nullptr, bind(&ComponentWindow::OnMouseMoved, this, _1));
+  _windowManager->RegisterHandler(Event::MouseButtonReleased, nullptr, bind(&ComponentWindow::OnMouseButtonReleased, this, _1));
+
+  u32 id = 0;
+  for (const Effect& effect : EDITOR.GetEffects())
+  {
+    _modules.push_back({id++, effect.name});
+  }
+
   return true;
-}
-
-void DrawRectOutline(RenderTexture& texture, const Vector2f& pos, const Vector2f& size, const Color& col, int borderWidth)
-{
-  RectangleShape rect;
-  rect.setFillColor(col);
-  rect.setPosition(pos);
-  rect.setSize(size);
-  texture.draw(rect);
-
-  Vector2f v(borderWidth, borderWidth);
-  rect.setPosition(pos + v);
-  rect.setSize(size - 2.0f * v);
-  rect.setFillColor(Color(col.r / 2, col.g / 2, col.b / 2));
-  texture.draw(rect);
 }
 
 //----------------------------------------------------------------------------------
 void ComponentWindow::Draw()
 {
+  const editor::Settings& settings = EDITOR.Settings();
+
   _texture.clear();
 
+  u32 rowHeight = settings.module_row_height();
   int x = 0;
   int y = 0;
   Text text;
-  for (const Effect& effect : EDITOR.GetEffects())
+  for (const Module& module : _modules)
   {
-    DrawRectOutline(_texture, Vector2f(x,y), Vector2f(_size.x, 50), Color(40, 40, 40), 2);
-    text.setString(effect.name);
+    Color col = module.flags.IsSet(ModuleFlagsF::Selected) ? Color(80, 80, 80) : Color(40, 40, 40);
+    DrawRectOutline(_texture, Vector2f(x,y), Vector2f(_size.x, rowHeight), col, 2);
+    text.setString(module.name);
     text.setCharacterSize(16);
     text.setFont(_font);
     Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
-    text.setPosition(Vector2f(x, y) + (Vector2f(_size.x, 50) - ofs) / 2.0f);
+    text.setPosition(Vector2f(x, y) + (Vector2f(_size.x, rowHeight) - ofs) / 2.0f);
     _texture.draw(text);
-    y += 48;
+    y += rowHeight - 2;
   }
 
   _texture.display();
+}
+
+//----------------------------------------------------------------------------------
+bool ComponentWindow::OnMouseButtonPressed(const Event& event)
+{
+  return true;
+}
+
+//----------------------------------------------------------------------------------
+bool ComponentWindow::OnMouseMoved(const Event& event)
+{
+  return true;
+}
+
+//----------------------------------------------------------------------------------
+bool ComponentWindow::OnMouseButtonReleased(const Event& event)
+{
+  return true;
 }
 
 //----------------------------------------------------------------------------------
@@ -108,6 +125,11 @@ bool TimelineWindow::Init()
 
   if (!_font.loadFromFile(EDITOR.GetAppRoot() + "gfx/04b_03b_.ttf"))
     return false;
+
+  for (u32 i = 0; i < 10; ++i)
+  {
+    _rows.push_back({i});
+  }
 
   return true;
 }
@@ -175,6 +197,15 @@ void TimelineWindow::Draw()
   _texture.draw(curLine);
 
   // draw the rows
+  u32 rowHeight = settings.module_row_height();
+  x = 0;
+  y = settings.ticker_height();
+  for (const Row& row : _rows)
+  {
+    DrawRectOutline(_texture, Vector2f(x, y), Vector2f(_size.x, rowHeight), Color(40, 40, 40), 2);
+    y += rowHeight - 2;
+
+  }
 
   _texture.display();
 }

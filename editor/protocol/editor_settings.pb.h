@@ -112,6 +112,13 @@ class Settings : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 ticks_per_interval() const;
   inline void set_ticks_per_interval(::google::protobuf::uint32 value);
 
+  // optional uint32 module_row_height = 4 [default = 50];
+  inline bool has_module_row_height() const;
+  inline void clear_module_row_height();
+  static const int kModuleRowHeightFieldNumber = 4;
+  inline ::google::protobuf::uint32 module_row_height() const;
+  inline void set_module_row_height(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:editor.Settings)
  private:
   inline void set_has_ticker_height();
@@ -120,15 +127,18 @@ class Settings : public ::google::protobuf::Message {
   inline void clear_has_ticker_interval();
   inline void set_has_ticks_per_interval();
   inline void clear_has_ticks_per_interval();
+  inline void set_has_module_row_height();
+  inline void clear_has_module_row_height();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 ticker_height_;
   ::google::protobuf::uint32 ticker_interval_;
   ::google::protobuf::uint32 ticks_per_interval_;
+  ::google::protobuf::uint32 module_row_height_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_editor_5fsettings_2eproto();
   friend void protobuf_AssignDesc_editor_5fsettings_2eproto();
@@ -208,6 +218,28 @@ inline ::google::protobuf::uint32 Settings::ticks_per_interval() const {
 inline void Settings::set_ticks_per_interval(::google::protobuf::uint32 value) {
   set_has_ticks_per_interval();
   ticks_per_interval_ = value;
+}
+
+// optional uint32 module_row_height = 4 [default = 50];
+inline bool Settings::has_module_row_height() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Settings::set_has_module_row_height() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Settings::clear_has_module_row_height() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Settings::clear_module_row_height() {
+  module_row_height_ = 50u;
+  clear_has_module_row_height();
+}
+inline ::google::protobuf::uint32 Settings::module_row_height() const {
+  return module_row_height_;
+}
+inline void Settings::set_module_row_height(::google::protobuf::uint32 value) {
+  set_has_module_row_height();
+  module_row_height_ = value;
 }
 
 

@@ -36,12 +36,14 @@
 #include <CoreGraphics/CGDirectDisplay.h>
 #endif
 
+#include <bristol/sfml/sfml_helpers.hpp>
 #include <bristol/sfml/window_event_manager.hpp>
 #include <bristol/sfml/virtual_window_manager.hpp>
 #include <bristol/sfml/virtual_window.hpp>
 #include <bristol/flags.hpp>
 #include <bristol/utils.hpp>
 #include <bristol/string_utils.hpp>
+#include <bristol/file_watcher.hpp>
 
 typedef uint8_t u8;
 typedef uint16_t u16;
@@ -127,6 +129,7 @@ namespace editor
   using bristol::VirtualWindowManager;
   using bristol::VirtualWindow;
   using bristol::Flags;
+  using bristol::FileWatcher;
 
   using bristol::exch_null;
 

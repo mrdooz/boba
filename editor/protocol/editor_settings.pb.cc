@@ -34,10 +34,11 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
       "editor_settings.proto");
   GOOGLE_CHECK(file != NULL);
   Settings_descriptor_ = file->message_type(0);
-  static const int Settings_offsets_[3] = {
+  static const int Settings_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_interval_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticks_per_interval_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, module_row_height_),
   };
   Settings_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -80,10 +81,11 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\025editor_settings.proto\022\006editor\"a\n\010Setti"
-    "ngs\022\031\n\rticker_height\030\001 \001(\r:\00250\022\033\n\017ticker"
-    "_interval\030\002 \001(\r:\00220\022\035\n\022ticks_per_interva"
-    "l\030\003 \001(\r:\0014", 130);
+    "\n\025editor_settings.proto\022\006editor\"\200\001\n\010Sett"
+    "ings\022\031\n\rticker_height\030\001 \001(\r:\00250\022\033\n\017ticke"
+    "r_interval\030\002 \001(\r:\00220\022\035\n\022ticks_per_interv"
+    "al\030\003 \001(\r:\0014\022\035\n\021module_row_height\030\004 \001(\r:\002"
+    "50", 162);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_settings.proto", &protobuf_RegisterTypes);
   Settings::default_instance_ = new Settings();
@@ -104,6 +106,7 @@ struct StaticDescriptorInitializer_editor_5fsettings_2eproto {
 const int Settings::kTickerHeightFieldNumber;
 const int Settings::kTickerIntervalFieldNumber;
 const int Settings::kTicksPerIntervalFieldNumber;
+const int Settings::kModuleRowHeightFieldNumber;
 #endif  // !_MSC_VER
 
 Settings::Settings()
@@ -125,6 +128,7 @@ void Settings::SharedCtor() {
   ticker_height_ = 50u;
   ticker_interval_ = 20u;
   ticks_per_interval_ = 4u;
+  module_row_height_ = 50u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -163,6 +167,7 @@ void Settings::Clear() {
     ticker_height_ = 50u;
     ticker_interval_ = 20u;
     ticks_per_interval_ = 4u;
+    module_row_height_ = 50u;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -217,6 +222,22 @@ bool Settings::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(32)) goto parse_module_row_height;
+        break;
+      }
+
+      // optional uint32 module_row_height = 4 [default = 50];
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_module_row_height:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &module_row_height_)));
+          set_has_module_row_height();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -254,6 +275,11 @@ void Settings::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->ticks_per_interval(), output);
   }
 
+  // optional uint32 module_row_height = 4 [default = 50];
+  if (has_module_row_height()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->module_row_height(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -275,6 +301,11 @@ void Settings::SerializeWithCachedSizes(
   // optional uint32 ticks_per_interval = 3 [default = 4];
   if (has_ticks_per_interval()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->ticks_per_interval(), target);
+  }
+
+  // optional uint32 module_row_height = 4 [default = 50];
+  if (has_module_row_height()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->module_row_height(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -307,6 +338,13 @@ int Settings::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->ticks_per_interval());
+    }
+
+    // optional uint32 module_row_height = 4 [default = 50];
+    if (has_module_row_height()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->module_row_height());
     }
 
   }
@@ -345,6 +383,9 @@ void Settings::MergeFrom(const Settings& from) {
     if (from.has_ticks_per_interval()) {
       set_ticks_per_interval(from.ticks_per_interval());
     }
+    if (from.has_module_row_height()) {
+      set_module_row_height(from.module_row_height());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -371,6 +412,7 @@ void Settings::Swap(Settings* other) {
     std::swap(ticker_height_, other->ticker_height_);
     std::swap(ticker_interval_, other->ticker_interval_);
     std::swap(ticks_per_interval_, other->ticks_per_interval_);
+    std::swap(module_row_height_, other->module_row_height_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

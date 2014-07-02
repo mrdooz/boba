@@ -6,6 +6,26 @@ using namespace editor;
 Editor* Editor::_instance;
 
 //----------------------------------------------------------------------------------
+template <typename T>
+bool LoadProto(const char* filename, T* out)
+{
+#pragma warning(suppress: 4996)
+  FILE* f = fopen(filename, "rb");
+  if (!f)
+    return false;
+
+  fseek(f, 0, 2);
+  size_t s = ftell(f);
+  fseek(f, 0, 0);
+  std::string str;
+  str.resize(s);
+  fread((char*)str.c_str(), 1, s, f);
+  fclose(f);
+
+  return google::protobuf::TextFormat::ParseFromString(str, out);
+}
+
+//----------------------------------------------------------------------------------
 void Editor::Create()
 {
   if (!_instance)
@@ -35,7 +55,9 @@ Editor::Editor()
     , _eventManager(nullptr)
     , _virtualWindowManager(nullptr)
     , _curTime(seconds(0))
+    , _fileWatchAcc(seconds(0))
 {
+  _stateFlags.Set(StateFlagsF::Paused);
 }
 
 //----------------------------------------------------------------------------------
@@ -49,6 +71,9 @@ Editor::~Editor()
 //----------------------------------------------------------------------------------
 bool Editor::Init()
 {
+  _effects.push_back({ "tjong", 20 });
+  _effects.push_back({ "tjong2", 20 });
+
   size_t width, height;
 #ifdef _WIN32
   width = GetSystemMetrics(SM_CXFULLSCREEN);
@@ -85,8 +110,11 @@ bool Editor::Init()
     _virtualWindowManager->AddWindow(new TimelineWindow("TIMELINE", Vector2f(w, h), Vector2f(rw, h)));
   }
 
-  _effects.push_back({ "tjong", 20 });
-  _effects.push_back({ "tjong2", 20 });
+
+  _fileWatcher.AddFileWatch("config/editor_settings.pb", 0, true, 0, [this](const string& filename, void* token)
+  {
+    return LoadProto(filename.c_str(), &_settings);
+  });
 
   return true;
 }
@@ -140,6 +168,13 @@ void Editor::Update()
     _lastUpdate = now;
 
   time_duration delta = now - _lastUpdate;
+  _fileWatchAcc += delta;
+
+  if (_fileWatchAcc > seconds(1))
+  {
+    _fileWatchAcc -= seconds(1);
+    _fileWatcher.Tick();
+  }
   _lastUpdate = now;
 
   if (!_stateFlags.IsSet(StateFlagsF::Paused))

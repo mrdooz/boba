@@ -2,7 +2,9 @@ package editor;
 
 message Settings
 {
-	optional uint32 ticker_height = 1 [default = 50];
-	optional uint32 ticker_interval = 2 [default = 20];
-	optional uint32 ticks_per_interval = 3 [default = 4];
+  optional uint32 ticker_height = 1 [default = 50];
+  optional uint32 ticker_interval = 2 [default = 20];
+  optional uint32 ticks_per_interval = 3 [default = 4];
+  
+  optional uint32 module_row_height = 4 [default = 50];
 }

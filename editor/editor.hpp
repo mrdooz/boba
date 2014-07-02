@@ -68,9 +68,11 @@ namespace editor
     string _appRoot;
     ptime _lastUpdate;
     time_duration _curTime;
+    time_duration _fileWatchAcc;
     StateFlags _stateFlags;
 
     vector<Effect> _effects;
+    FileWatcher _fileWatcher;
   };
 
   #define EDITOR Editor::Instance()
