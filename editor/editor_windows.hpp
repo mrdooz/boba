@@ -53,8 +53,10 @@ namespace editor
     time_duration PixelToTime(int x);
 
   private:
+
+    bool OnMouseButtonPressed(const Event& event);
+
     time_duration _panelOffset;
-    time_duration _curTime;
     u32 _pixelsPerSecond;
     Font _font;
   };

@@ -148,6 +148,7 @@ void Editor::Update()
   }
 
   _eventManager->Poll();
+  _virtualWindowManager->Update();
 }
 
 //----------------------------------------------------------------------------------
@@ -160,7 +161,7 @@ void Editor::SetCurTime(const time_duration& t)
 void Editor::Render()
 {
   _renderWindow->clear();
-  _virtualWindowManager->Update();
+  _virtualWindowManager->Draw();
   _renderWindow->display();
 }
 
