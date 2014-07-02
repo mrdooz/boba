@@ -20,6 +20,9 @@ namespace editor {
 
 namespace {
 
+const ::google::protobuf::Descriptor* Color4_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Color4_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Settings_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Settings_reflection_ = NULL;
@@ -33,12 +36,33 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
     ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
       "editor_settings.proto");
   GOOGLE_CHECK(file != NULL);
-  Settings_descriptor_ = file->message_type(0);
-  static const int Settings_offsets_[4] = {
+  Color4_descriptor_ = file->message_type(0);
+  static const int Color4_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Color4, r_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Color4, g_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Color4, b_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Color4, a_),
+  };
+  Color4_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Color4_descriptor_,
+      Color4::default_instance_,
+      Color4_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Color4, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Color4, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Color4));
+  Settings_descriptor_ = file->message_type(1);
+  static const int Settings_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_interval_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticks_per_interval_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, module_view_width_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, module_row_height_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, default_row_color_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, selected_row_color_),
   };
   Settings_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -64,12 +88,16 @@ inline void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Color4_descriptor_, &Color4::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Settings_descriptor_, &Settings::default_instance());
 }
 
 }  // namespace
 
 void protobuf_ShutdownFile_editor_5fsettings_2eproto() {
+  delete Color4::default_instance_;
+  delete Color4_reflection_;
   delete Settings::default_instance_;
   delete Settings_reflection_;
 }
@@ -81,14 +109,20 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\025editor_settings.proto\022\006editor\"\200\001\n\010Sett"
-    "ings\022\031\n\rticker_height\030\001 \001(\r:\00250\022\033\n\017ticke"
-    "r_interval\030\002 \001(\r:\00220\022\035\n\022ticks_per_interv"
-    "al\030\003 \001(\r:\0014\022\035\n\021module_row_height\030\004 \001(\r:\002"
-    "50", 162);
+    "\n\025editor_settings.proto\022\006editor\"B\n\006Color"
+    "4\022\014\n\001r\030\001 \001(\r:\0010\022\014\n\001g\030\002 \001(\r:\0010\022\014\n\001b\030\003 \001(\r"
+    ":\0010\022\016\n\001a\030\004 \001(\r:\003255\"\367\001\n\010Settings\022\031\n\rtick"
+    "er_height\030\001 \001(\r:\00250\022\033\n\017ticker_interval\030\002"
+    " \001(\r:\00220\022\035\n\022ticks_per_interval\030\003 \001(\r:\0014\022"
+    "\036\n\021module_view_width\030\004 \001(\r:\003200\022\035\n\021modul"
+    "e_row_height\030\005 \001(\r:\00250\022)\n\021default_row_co"
+    "lor\030d \001(\0132\016.editor.Color4\022*\n\022selected_ro"
+    "w_color\030e \001(\0132\016.editor.Color4", 349);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_settings.proto", &protobuf_RegisterTypes);
+  Color4::default_instance_ = new Color4();
   Settings::default_instance_ = new Settings();
+  Color4::default_instance_->InitAsDefaultInstance();
   Settings::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_editor_5fsettings_2eproto);
 }
@@ -103,10 +137,341 @@ struct StaticDescriptorInitializer_editor_5fsettings_2eproto {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int Color4::kRFieldNumber;
+const int Color4::kGFieldNumber;
+const int Color4::kBFieldNumber;
+const int Color4::kAFieldNumber;
+#endif  // !_MSC_VER
+
+Color4::Color4()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void Color4::InitAsDefaultInstance() {
+}
+
+Color4::Color4(const Color4& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void Color4::SharedCtor() {
+  _cached_size_ = 0;
+  r_ = 0u;
+  g_ = 0u;
+  b_ = 0u;
+  a_ = 255u;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Color4::~Color4() {
+  SharedDtor();
+}
+
+void Color4::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Color4::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Color4::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Color4_descriptor_;
+}
+
+const Color4& Color4::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_editor_5fsettings_2eproto();
+  return *default_instance_;
+}
+
+Color4* Color4::default_instance_ = NULL;
+
+Color4* Color4::New() const {
+  return new Color4;
+}
+
+void Color4::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    r_ = 0u;
+    g_ = 0u;
+    b_ = 0u;
+    a_ = 255u;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Color4::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional uint32 r = 1 [default = 0];
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &r_)));
+          set_has_r();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_g;
+        break;
+      }
+
+      // optional uint32 g = 2 [default = 0];
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_g:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &g_)));
+          set_has_g();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_b;
+        break;
+      }
+
+      // optional uint32 b = 3 [default = 0];
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_b:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &b_)));
+          set_has_b();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(32)) goto parse_a;
+        break;
+      }
+
+      // optional uint32 a = 4 [default = 255];
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_a:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &a_)));
+          set_has_a();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void Color4::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional uint32 r = 1 [default = 0];
+  if (has_r()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->r(), output);
+  }
+
+  // optional uint32 g = 2 [default = 0];
+  if (has_g()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->g(), output);
+  }
+
+  // optional uint32 b = 3 [default = 0];
+  if (has_b()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->b(), output);
+  }
+
+  // optional uint32 a = 4 [default = 255];
+  if (has_a()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->a(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* Color4::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional uint32 r = 1 [default = 0];
+  if (has_r()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->r(), target);
+  }
+
+  // optional uint32 g = 2 [default = 0];
+  if (has_g()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->g(), target);
+  }
+
+  // optional uint32 b = 3 [default = 0];
+  if (has_b()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->b(), target);
+  }
+
+  // optional uint32 a = 4 [default = 255];
+  if (has_a()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->a(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int Color4::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional uint32 r = 1 [default = 0];
+    if (has_r()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->r());
+    }
+
+    // optional uint32 g = 2 [default = 0];
+    if (has_g()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->g());
+    }
+
+    // optional uint32 b = 3 [default = 0];
+    if (has_b()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->b());
+    }
+
+    // optional uint32 a = 4 [default = 255];
+    if (has_a()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->a());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Color4::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Color4* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Color4*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Color4::MergeFrom(const Color4& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_r()) {
+      set_r(from.r());
+    }
+    if (from.has_g()) {
+      set_g(from.g());
+    }
+    if (from.has_b()) {
+      set_b(from.b());
+    }
+    if (from.has_a()) {
+      set_a(from.a());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Color4::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Color4::CopyFrom(const Color4& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Color4::IsInitialized() const {
+
+  return true;
+}
+
+void Color4::Swap(Color4* other) {
+  if (other != this) {
+    std::swap(r_, other->r_);
+    std::swap(g_, other->g_);
+    std::swap(b_, other->b_);
+    std::swap(a_, other->a_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Color4::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Color4_descriptor_;
+  metadata.reflection = Color4_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
 const int Settings::kTickerHeightFieldNumber;
 const int Settings::kTickerIntervalFieldNumber;
 const int Settings::kTicksPerIntervalFieldNumber;
+const int Settings::kModuleViewWidthFieldNumber;
 const int Settings::kModuleRowHeightFieldNumber;
+const int Settings::kDefaultRowColorFieldNumber;
+const int Settings::kSelectedRowColorFieldNumber;
 #endif  // !_MSC_VER
 
 Settings::Settings()
@@ -115,6 +480,8 @@ Settings::Settings()
 }
 
 void Settings::InitAsDefaultInstance() {
+  default_row_color_ = const_cast< ::editor::Color4*>(&::editor::Color4::default_instance());
+  selected_row_color_ = const_cast< ::editor::Color4*>(&::editor::Color4::default_instance());
 }
 
 Settings::Settings(const Settings& from)
@@ -128,7 +495,10 @@ void Settings::SharedCtor() {
   ticker_height_ = 50u;
   ticker_interval_ = 20u;
   ticks_per_interval_ = 4u;
+  module_view_width_ = 200u;
   module_row_height_ = 50u;
+  default_row_color_ = NULL;
+  selected_row_color_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -138,6 +508,8 @@ Settings::~Settings() {
 
 void Settings::SharedDtor() {
   if (this != default_instance_) {
+    delete default_row_color_;
+    delete selected_row_color_;
   }
 }
 
@@ -167,7 +539,14 @@ void Settings::Clear() {
     ticker_height_ = 50u;
     ticker_interval_ = 20u;
     ticks_per_interval_ = 4u;
+    module_view_width_ = 200u;
     module_row_height_ = 50u;
+    if (has_default_row_color()) {
+      if (default_row_color_ != NULL) default_row_color_->::editor::Color4::Clear();
+    }
+    if (has_selected_row_color()) {
+      if (selected_row_color_ != NULL) selected_row_color_->::editor::Color4::Clear();
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -222,12 +601,28 @@ bool Settings::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(32)) goto parse_module_row_height;
+        if (input->ExpectTag(32)) goto parse_module_view_width;
         break;
       }
 
-      // optional uint32 module_row_height = 4 [default = 50];
+      // optional uint32 module_view_width = 4 [default = 200];
       case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_module_view_width:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &module_view_width_)));
+          set_has_module_view_width();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(40)) goto parse_module_row_height;
+        break;
+      }
+
+      // optional uint32 module_row_height = 5 [default = 50];
+      case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_module_row_height:
@@ -235,6 +630,34 @@ bool Settings::MergePartialFromCodedStream(
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &module_row_height_)));
           set_has_module_row_height();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(802)) goto parse_default_row_color;
+        break;
+      }
+
+      // optional .editor.Color4 default_row_color = 100;
+      case 100: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_default_row_color:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_default_row_color()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(810)) goto parse_selected_row_color;
+        break;
+      }
+
+      // optional .editor.Color4 selected_row_color = 101;
+      case 101: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_selected_row_color:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_selected_row_color()));
         } else {
           goto handle_uninterpreted;
         }
@@ -275,9 +698,26 @@ void Settings::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->ticks_per_interval(), output);
   }
 
-  // optional uint32 module_row_height = 4 [default = 50];
+  // optional uint32 module_view_width = 4 [default = 200];
+  if (has_module_view_width()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->module_view_width(), output);
+  }
+
+  // optional uint32 module_row_height = 5 [default = 50];
   if (has_module_row_height()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->module_row_height(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->module_row_height(), output);
+  }
+
+  // optional .editor.Color4 default_row_color = 100;
+  if (has_default_row_color()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      100, this->default_row_color(), output);
+  }
+
+  // optional .editor.Color4 selected_row_color = 101;
+  if (has_selected_row_color()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      101, this->selected_row_color(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -303,9 +743,28 @@ void Settings::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->ticks_per_interval(), target);
   }
 
-  // optional uint32 module_row_height = 4 [default = 50];
+  // optional uint32 module_view_width = 4 [default = 200];
+  if (has_module_view_width()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->module_view_width(), target);
+  }
+
+  // optional uint32 module_row_height = 5 [default = 50];
   if (has_module_row_height()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->module_row_height(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->module_row_height(), target);
+  }
+
+  // optional .editor.Color4 default_row_color = 100;
+  if (has_default_row_color()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        100, this->default_row_color(), target);
+  }
+
+  // optional .editor.Color4 selected_row_color = 101;
+  if (has_selected_row_color()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        101, this->selected_row_color(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -340,11 +799,32 @@ int Settings::ByteSize() const {
           this->ticks_per_interval());
     }
 
-    // optional uint32 module_row_height = 4 [default = 50];
+    // optional uint32 module_view_width = 4 [default = 200];
+    if (has_module_view_width()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->module_view_width());
+    }
+
+    // optional uint32 module_row_height = 5 [default = 50];
     if (has_module_row_height()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->module_row_height());
+    }
+
+    // optional .editor.Color4 default_row_color = 100;
+    if (has_default_row_color()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->default_row_color());
+    }
+
+    // optional .editor.Color4 selected_row_color = 101;
+    if (has_selected_row_color()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->selected_row_color());
     }
 
   }
@@ -383,8 +863,17 @@ void Settings::MergeFrom(const Settings& from) {
     if (from.has_ticks_per_interval()) {
       set_ticks_per_interval(from.ticks_per_interval());
     }
+    if (from.has_module_view_width()) {
+      set_module_view_width(from.module_view_width());
+    }
     if (from.has_module_row_height()) {
       set_module_row_height(from.module_row_height());
+    }
+    if (from.has_default_row_color()) {
+      mutable_default_row_color()->::editor::Color4::MergeFrom(from.default_row_color());
+    }
+    if (from.has_selected_row_color()) {
+      mutable_selected_row_color()->::editor::Color4::MergeFrom(from.selected_row_color());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -412,7 +901,10 @@ void Settings::Swap(Settings* other) {
     std::swap(ticker_height_, other->ticker_height_);
     std::swap(ticker_interval_, other->ticker_interval_);
     std::swap(ticks_per_interval_, other->ticks_per_interval_);
+    std::swap(module_view_width_, other->module_view_width_);
     std::swap(module_row_height_, other->module_row_height_);
+    std::swap(default_row_color_, other->default_row_color_);
+    std::swap(selected_row_color_, other->selected_row_color_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

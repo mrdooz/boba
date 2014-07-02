@@ -73,6 +73,8 @@ bool Editor::Init()
 {
   _effects.push_back({ "tjong", 20 });
   _effects.push_back({ "tjong2", 20 });
+  _effects.push_back({ "tjong3", 20 });
+  _effects.push_back({ "tjong4", 20 });
 
   size_t width, height;
 #ifdef _WIN32
@@ -106,12 +108,10 @@ bool Editor::Init()
 
     _virtualWindowManager->AddWindow(new PropertyWindow("PROPERTIES", Vector2f(0, 0), Vector2f(w, h)));
     _virtualWindowManager->AddWindow(new PreviewWindow("PREVIEW", Vector2f(w, 0), Vector2f(rw, h)));
-    _virtualWindowManager->AddWindow(new ComponentWindow("COMPONENTS", Vector2f(0, h), Vector2f(w, h)));
-    _virtualWindowManager->AddWindow(new TimelineWindow("TIMELINE", Vector2f(w, h), Vector2f(rw, h)));
+    _virtualWindowManager->AddWindow(new TimelineWindow("TIMELINE", Vector2f(0, h), Vector2f((float)width, h)));
   }
 
-
-  _fileWatcher.AddFileWatch("config/editor_settings.pb", 0, true, 0, [this](const string& filename, void* token)
+  _fileWatcher.AddFileWatch(GetAppRoot() + "config/editor_settings.pb", 0, true, 0, [this](const string& filename, void* token)
   {
     return LoadProto(filename.c_str(), &_settings);
   });

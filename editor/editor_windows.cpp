@@ -1,5 +1,6 @@
 #include "editor_windows.hpp"
 #include "editor.hpp"
+#include "proto_utils.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -22,80 +23,6 @@ PreviewWindow::PreviewWindow(
 {
 }
 
-
-//----------------------------------------------------------------------------------
-ComponentWindow::ComponentWindow(
-  const string& title,
-  const Vector2f& pos,
-  const Vector2f& size)
-    : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
-{
-}
-
-//----------------------------------------------------------------------------------
-bool ComponentWindow::Init()
-{
-  if (!_font.loadFromFile(EDITOR.GetAppRoot() + "gfx/04b_03b_.ttf"))
-    return false;
-
-  _windowManager->RegisterHandler(Event::MouseButtonPressed, nullptr, bind(&ComponentWindow::OnMouseButtonPressed, this, _1));
-  _windowManager->RegisterHandler(Event::MouseMoved, nullptr, bind(&ComponentWindow::OnMouseMoved, this, _1));
-  _windowManager->RegisterHandler(Event::MouseButtonReleased, nullptr, bind(&ComponentWindow::OnMouseButtonReleased, this, _1));
-
-  u32 id = 0;
-  for (const Effect& effect : EDITOR.GetEffects())
-  {
-    _modules.push_back({id++, effect.name});
-  }
-
-  return true;
-}
-
-//----------------------------------------------------------------------------------
-void ComponentWindow::Draw()
-{
-  const editor::Settings& settings = EDITOR.Settings();
-
-  _texture.clear();
-
-  u32 rowHeight = settings.module_row_height();
-  int x = 0;
-  int y = 0;
-  Text text;
-  for (const Module& module : _modules)
-  {
-    Color col = module.flags.IsSet(ModuleFlagsF::Selected) ? Color(80, 80, 80) : Color(40, 40, 40);
-    DrawRectOutline(_texture, Vector2f(x,y), Vector2f(_size.x, rowHeight), col, 2);
-    text.setString(module.name);
-    text.setCharacterSize(16);
-    text.setFont(_font);
-    Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
-    text.setPosition(Vector2f(x, y) + (Vector2f(_size.x, rowHeight) - ofs) / 2.0f);
-    _texture.draw(text);
-    y += rowHeight - 2;
-  }
-
-  _texture.display();
-}
-
-//----------------------------------------------------------------------------------
-bool ComponentWindow::OnMouseButtonPressed(const Event& event)
-{
-  return true;
-}
-
-//----------------------------------------------------------------------------------
-bool ComponentWindow::OnMouseMoved(const Event& event)
-{
-  return true;
-}
-
-//----------------------------------------------------------------------------------
-bool ComponentWindow::OnMouseButtonReleased(const Event& event)
-{
-  return true;
-}
-
 //----------------------------------------------------------------------------------
 TimelineWindow::TimelineWindow(
   const string& title,
@@ -110,8 +37,45 @@ TimelineWindow::TimelineWindow(
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 {
-  time_duration t = PixelToTime(event.mouseButton.x - _pos.x) + _panelOffset;
-  EDITOR.SetCurTime(t);
+  int x = event.mouseButton.x;
+  int y = event.mouseButton.y - _pos.y;
+  if (x < EDITOR.Settings().module_view_width())
+  {
+    for (Module& m : _modules)
+    {
+      m.flags.Clear(ModuleFlagsF::Selected);
+    }
+
+    // handle component click
+    for (Module& m : _modules)
+    {
+      if (m.rect.contains(x, y))
+      {
+        m.flags.Set(ModuleFlagsF::Selected);
+        break;
+      }
+    }
+  }
+  else
+  {
+    time_duration t = PixelToTime(event.mouseButton.x - _pos.x) + _panelOffset;
+    if (!t.is_not_a_date_time())
+    {
+      EDITOR.SetCurTime(t);
+    }
+  }
+  return true;
+}
+
+//----------------------------------------------------------------------------------
+bool TimelineWindow::OnMouseMoved(const Event& event)
+{
+  return true;
+}
+
+//----------------------------------------------------------------------------------
+bool TimelineWindow::OnMouseButtonReleased(const Event& event)
+{
   return true;
 }
 
@@ -119,6 +83,9 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 bool TimelineWindow::Init()
 {
   _windowManager->RegisterHandler(Event::MouseButtonPressed, nullptr, bind(&TimelineWindow::OnMouseButtonPressed, this, _1));
+  _windowManager->RegisterHandler(Event::MouseMoved, nullptr, bind(&TimelineWindow::OnMouseMoved, this, _1));
+  _windowManager->RegisterHandler(Event::MouseButtonReleased, nullptr, bind(&TimelineWindow::OnMouseButtonReleased, this, _1));
+
 
   if (!VirtualWindow::Init())
     return false;
@@ -131,33 +98,32 @@ bool TimelineWindow::Init()
     _rows.push_back({i});
   }
 
-  return true;
-}
-
-//----------------------------------------------------------------------------------
-int TimelineWindow::TimeToPixel(const time_duration& t)
-{
-  // p = s * t / 1000
-  // t = 1000 * p / s
-  return (u64)_pixelsPerSecond * t.total_milliseconds() / 1000;
-}
-
-//----------------------------------------------------------------------------------
-time_duration TimelineWindow::PixelToTime(int x)
-{
-  return milliseconds(1000 * x / _pixelsPerSecond);
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::Draw()
-{
-  _texture.clear();
+  const vector<Effect>& effects = EDITOR.GetEffects();
 
   const editor::Settings& settings = EDITOR.Settings();
 
+  Vector2i rectSize(settings.module_view_width(), settings.module_row_height());
+  int y = settings.module_row_height() - 2;
+  for (u32 i = 0; i < effects.size(); ++i)
+  {
+    const Effect& effect = effects[i];
+    _modules.push_back({i, effect.name, IntRect(Vector2i(0, y), rectSize)});
+    y += settings.module_row_height();
+  }
+
+
+  return true;
+}
+//----------------------------------------------------------------------------------
+void TimelineWindow::DrawTimeline()
+{
+  const editor::Settings& settings = EDITOR.Settings();
+
+  Color rowCol = FromProtocol(settings.default_row_color());
+
   // draw the ticker
   RectangleShape ticker;
-  ticker.setFillColor(Color(40, 40, 40));
+  ticker.setFillColor(rowCol);
   ticker.setSize(Vector2f(_size.x, settings.ticker_height()));
   _texture.draw(ticker);
 
@@ -168,7 +134,7 @@ void TimelineWindow::Draw()
   _texture.draw(curTime);
 
   VertexArray lines(sf::Lines);
-  int x = 0;
+  int x = settings.module_view_width();
   int y = settings.ticker_height() - 25;
   int minorInc = settings.ticker_interval() / settings.ticks_per_interval();
   while (x < _size.x)
@@ -185,27 +151,87 @@ void TimelineWindow::Draw()
   }
   _texture.draw(lines);
 
+  // draw the rows
+  u32 rowHeight = settings.module_row_height();
+  x = settings.module_view_width();
+  y = settings.ticker_height();
+  for (const Row& row : _rows)
+  {
+    DrawRectOutline(_texture, Vector2f(x, y), Vector2f(_size.x, rowHeight), rowCol, 2);
+    y += rowHeight - 2;
+  }
+
+  // draw time line
   VertexArray curLine(sf::Lines);
   int w = _size.x;
+  y = settings.ticker_height() - 25;
   while (TimeToPixel(t - _panelOffset) > w)
   {
     _panelOffset += PixelToTime(w);
   }
+
   x = TimeToPixel(EDITOR.CurTime() - _panelOffset);
   curLine.append(sf::Vertex(Vector2f(x, y), Color::Red));
   curLine.append(sf::Vertex(Vector2f(x, _size.y), Color::Red));
   _texture.draw(curLine);
 
-  // draw the rows
-  u32 rowHeight = settings.module_row_height();
-  x = 0;
-  y = settings.ticker_height();
-  for (const Row& row : _rows)
-  {
-    DrawRectOutline(_texture, Vector2f(x, y), Vector2f(_size.x, rowHeight), Color(40, 40, 40), 2);
-    y += rowHeight - 2;
 
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::DrawComponents()
+{
+  const editor::Settings& settings = EDITOR.Settings();
+  Color rowCol = FromProtocol(settings.default_row_color());
+  Color selectedRowCol = FromProtocol(settings.selected_row_color());
+
+
+  u32 rowHeight = settings.module_row_height();
+  int x = 0;
+  int y = settings.module_row_height() - 2;
+  int w = settings.module_view_width();
+
+  Text text;
+  for (const Module& module : _modules)
+  {
+    Color col = module.flags.IsSet(ModuleFlagsF::Selected) ? selectedRowCol : rowCol;
+    DrawRectOutline(_texture, Vector2f(x,y), Vector2f(w, rowHeight), col, 2);
+    text.setString(module.name);
+    text.setCharacterSize(16);
+    text.setFont(_font);
+    Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
+    text.setPosition(Vector2f(x, y) + (Vector2f(w, rowHeight) - ofs) / 2.0f);
+    _texture.draw(text);
+    y += rowHeight - 2;
   }
+}
+
+//----------------------------------------------------------------------------------
+int TimelineWindow::TimeToPixel(const time_duration& t)
+{
+  // p = s * t / 1000
+  // t = 1000 * p / s
+  return (u64)_pixelsPerSecond * t.total_milliseconds() / 1000 + EDITOR.Settings().module_view_width();
+}
+
+//----------------------------------------------------------------------------------
+time_duration TimelineWindow::PixelToTime(int x)
+{
+  x -= EDITOR.Settings().module_view_width();
+  if (x < 0)
+    return time_duration();
+
+  return milliseconds(1000 * x / _pixelsPerSecond);
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::Draw()
+{
+  _texture.clear();
+
+  DrawComponents();
+  DrawTimeline();
+
 
   _texture.display();
 }
