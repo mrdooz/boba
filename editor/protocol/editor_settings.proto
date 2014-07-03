@@ -19,4 +19,5 @@ message Settings
 
   optional Color4 default_row_color = 100;
   optional Color4 selected_row_color = 101;
+  optional Color4 hover_row_color = 102;
 }

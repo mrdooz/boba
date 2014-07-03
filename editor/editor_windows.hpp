@@ -43,45 +43,77 @@ namespace editor
     void DrawComponents();
     void DrawTimeline();
 
-    struct ModuleFlagsF
+    struct EffectTemplateFlagsF
     {
-      enum Enum { Selected = 1 << 0, };
-      struct Bits { u32 selected : 1; };
+      enum Enum { Selected = 1 << 0, Dragging = 1 << 1};
+      struct Bits { u32 selected : 1; u32 dragging : 1; };
     };
 
-    typedef Flags<ModuleFlagsF> ModuleFlags;
+    typedef Flags<EffectTemplateFlagsF> EffectTemplateFlags;
 
-    struct Module
+    struct EffecTemplate
     {
       u32 id;
       string name;
       IntRect rect;
-      ModuleFlags flags;
+      EffectTemplateFlags flags;
     };
 
     struct RowFlagsF
     {
-      enum Enum { Expanded = 1 << 0, };
-      struct Bits { u32 expanded : 1; };
+      enum Enum { Expanded = 1 << 0, Hover = 1 << 1};
+      struct Bits { u32 expanded : 1; u32 hover : 1; };
     };
 
     typedef Flags<RowFlagsF> RowFlags;
 
+    struct EffectInstance
+    {
+
+    };
+
     struct Row
     {
       u32 id;
+      IntRect rect;
       RowFlags flags;
     };
+
+    struct TimelineFlagsF
+    {
+      enum Enum { PendingDrag = 1 << 0, };
+      struct Bits { u32 pendingDraw : 1; };
+    };
+
+    typedef Flags<TimelineFlagsF> TimelineFlags;
+
 
     bool OnMouseButtonPressed(const Event& event);
     bool OnMouseMoved(const Event& event);
     bool OnMouseButtonReleased(const Event& event);
 
+    void DrawModule(float x, float y, const EffecTemplate & m);
+
+    void ResetDragDrop();
+
+    template<typename T>
+    sf::Vector2<T> PointToLocal(int x, int y)
+    {
+      return sf::Vector2<T>((T)(x - _pos.x), (T)(y - _pos.y));
+    }
+
     time_duration _panelOffset;
     u32 _pixelsPerSecond;
     Font _font;
-    vector<Module> _modules;
+    vector<EffecTemplate> _effectTemplates;
     vector<Row> _rows;
+
+    TimelineFlags _timelineFlags;
+
+    EffecTemplate* _draggingTemplate;
+    EffecTemplate* _selectedTemplate;
+    Row* _hoverRow;
+    Vector2i _dragPos;
   };
 
 

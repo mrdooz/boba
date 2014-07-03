@@ -1,6 +1,7 @@
 #include "editor_windows.hpp"
 #include "editor.hpp"
 #include "proto_utils.hpp"
+#import "flags.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -31,27 +32,46 @@ TimelineWindow::TimelineWindow(
     : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
     , _panelOffset(seconds(0))
     , _pixelsPerSecond(100)
+    , _draggingTemplate(nullptr)
+    , _selectedTemplate(nullptr)
+    , _hoverRow(nullptr)
 {
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::ResetDragDrop()
+{
+  if (_hoverRow)
+    _hoverRow->flags.Clear(RowFlagsF::Hover);
+
+  _draggingTemplate = nullptr;
+  _selectedTemplate = nullptr;
+  _hoverRow = nullptr;
+  _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
 }
 
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 {
-  int x = event.mouseButton.x;
+  ResetDragDrop();
+
+  int x = event.mouseButton.x - _pos.x;
   int y = event.mouseButton.y - _pos.y;
   if (x < EDITOR.Settings().module_view_width())
   {
-    for (Module& m : _modules)
+    for (EffecTemplate & m : _effectTemplates)
     {
-      m.flags.Clear(ModuleFlagsF::Selected);
+      m.flags.Clear(EffectTemplateFlagsF::Selected);
     }
 
     // handle component click
-    for (Module& m : _modules)
+    for (EffecTemplate & m : _effectTemplates)
     {
       if (m.rect.contains(x, y))
       {
-        m.flags.Set(ModuleFlagsF::Selected);
+        m.flags.Set(EffectTemplateFlagsF::Selected);
+        _selectedTemplate = &m;
+        _timelineFlags.Set(TimelineFlagsF::PendingDrag);
         break;
       }
     }
@@ -70,12 +90,41 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseMoved(const Event& event)
 {
+  if (_timelineFlags.IsSet(TimelineFlagsF::PendingDrag))
+  {
+    _draggingTemplate = _selectedTemplate;
+    _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
+  }
+
+  if (_draggingTemplate)
+  {
+    _dragPos = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
+
+    if (_hoverRow)
+      _hoverRow->flags.Clear(RowFlagsF::Hover);
+
+    for (Row& row : _rows)
+    {
+      if (row.rect.contains(_dragPos.x, _dragPos.y))
+      {
+        _hoverRow = &row;
+        _hoverRow->flags.Set(RowFlagsF::Hover);
+        break;
+      }
+    }
+  }
   return true;
 }
 
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 {
+  if (_draggingTemplate)
+  {
+    // check if module dropped on any row
+  }
+
+  ResetDragDrop();
   return true;
 }
 
@@ -86,29 +135,32 @@ bool TimelineWindow::Init()
   _windowManager->RegisterHandler(Event::MouseMoved, nullptr, bind(&TimelineWindow::OnMouseMoved, this, _1));
   _windowManager->RegisterHandler(Event::MouseButtonReleased, nullptr, bind(&TimelineWindow::OnMouseButtonReleased, this, _1));
 
-
   if (!VirtualWindow::Init())
     return false;
 
   if (!_font.loadFromFile(EDITOR.GetAppRoot() + "gfx/04b_03b_.ttf"))
     return false;
 
-  for (u32 i = 0; i < 10; ++i)
-  {
-    _rows.push_back({i});
-  }
-
   const vector<Effect>& effects = EDITOR.GetEffects();
-
   const editor::Settings& settings = EDITOR.Settings();
 
-  Vector2i rectSize(settings.module_view_width(), settings.module_row_height());
+  int x = settings.module_view_width();
   int y = settings.module_row_height() - 2;
+  Vector2i rowSize(_size.x - settings.module_view_width(), settings.module_row_height());
+  for (u32 i = 0; i < 10; ++i)
+  {
+    _rows.push_back({i, IntRect(Vector2i(x, y), rowSize)});
+    y += settings.module_row_height() - 2;
+  }
+
+
+  Vector2i moduleSize(settings.module_view_width(), settings.module_row_height());
+  y = settings.module_row_height() - 2;
   for (u32 i = 0; i < effects.size(); ++i)
   {
     const Effect& effect = effects[i];
-    _modules.push_back({i, effect.name, IntRect(Vector2i(0, y), rectSize)});
-    y += settings.module_row_height();
+    _effectTemplates.push_back({i, effect.name, IntRect(Vector2i(0, y), moduleSize)});
+    y += settings.module_row_height() - 2;
   }
 
 
@@ -120,6 +172,7 @@ void TimelineWindow::DrawTimeline()
   const editor::Settings& settings = EDITOR.Settings();
 
   Color rowCol = FromProtocol(settings.default_row_color());
+  Color hoverCol = FromProtocol(settings.hover_row_color());
 
   // draw the ticker
   RectangleShape ticker;
@@ -157,8 +210,8 @@ void TimelineWindow::DrawTimeline()
   y = settings.ticker_height();
   for (const Row& row : _rows)
   {
-    DrawRectOutline(_texture, Vector2f(x, y), Vector2f(_size.x, rowHeight), rowCol, 2);
-    y += rowHeight - 2;
+    DrawRectOutline(_texture, Vector2f(row.rect.left, row.rect.top), Vector2f(row.rect.width, row.rect.height),
+        row.flags.IsSet(RowFlagsF::Hover) ? hoverCol : rowCol, 2);
   }
 
   // draw time line
@@ -178,6 +231,25 @@ void TimelineWindow::DrawTimeline()
 
 }
 
+void TimelineWindow::DrawModule(float x, float y, const EffecTemplate & module)
+{
+  const editor::Settings& settings = EDITOR.Settings();
+  Color rowCol = FromProtocol(settings.default_row_color());
+  Color selectedRowCol = FromProtocol(settings.selected_row_color());
+
+  Vector2f size(module.rect.width, module.rect.height);
+  Color col = module.flags.IsSet(EffectTemplateFlagsF::Selected) ? selectedRowCol : rowCol;
+  DrawRectOutline(_texture, Vector2f(x,y), size, col, 2);
+  Text text;
+  text.setString(module.name);
+  text.setCharacterSize(16);
+  text.setFont(_font);
+  Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
+  text.setPosition(Vector2f(x, y) + (size - ofs) / 2.0f);
+  _texture.draw(text);
+
+}
+
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawComponents()
 {
@@ -185,24 +257,15 @@ void TimelineWindow::DrawComponents()
   Color rowCol = FromProtocol(settings.default_row_color());
   Color selectedRowCol = FromProtocol(settings.selected_row_color());
 
-
   u32 rowHeight = settings.module_row_height();
   int x = 0;
   int y = settings.module_row_height() - 2;
   int w = settings.module_view_width();
 
   Text text;
-  for (const Module& module : _modules)
+  for (const EffecTemplate & module : _effectTemplates)
   {
-    Color col = module.flags.IsSet(ModuleFlagsF::Selected) ? selectedRowCol : rowCol;
-    DrawRectOutline(_texture, Vector2f(x,y), Vector2f(w, rowHeight), col, 2);
-    text.setString(module.name);
-    text.setCharacterSize(16);
-    text.setFont(_font);
-    Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
-    text.setPosition(Vector2f(x, y) + (Vector2f(w, rowHeight) - ofs) / 2.0f);
-    _texture.draw(text);
-    y += rowHeight - 2;
+    DrawModule(module.rect.left, module.rect.top, module);
   }
 }
 
@@ -232,6 +295,8 @@ void TimelineWindow::Draw()
   DrawComponents();
   DrawTimeline();
 
+  if (_draggingTemplate)
+    DrawModule(_dragPos.x, _dragPos.y, *_draggingTemplate);
 
   _texture.display();
 }

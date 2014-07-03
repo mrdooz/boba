@@ -15,3 +15,9 @@ selected_row_color : {
 	g : 220
 	b : 0
 }
+hover_row_color  :
+{
+	r : 40
+	g : 40
+	b : 120
+}
