@@ -43,20 +43,20 @@ namespace editor
     void DrawComponents();
     void DrawTimeline();
 
-    struct EffectTemplateFlagsF
+    struct ModuleFlagsF
     {
       enum Enum { Selected = 1 << 0, Dragging = 1 << 1};
       struct Bits { u32 selected : 1; u32 dragging : 1; };
     };
 
-    typedef Flags<EffectTemplateFlagsF> EffectTemplateFlags;
+    typedef Flags<ModuleFlagsF> ModuleFlags;
 
-    struct EffecTemplate
+    struct Module
     {
       u32 id;
       string name;
       IntRect rect;
-      EffectTemplateFlags flags;
+      ModuleFlags flags;
     };
 
     struct RowFlagsF
@@ -69,14 +69,18 @@ namespace editor
 
     struct EffectInstance
     {
-
+      time_duration _startTime;
+      time_duration _duration;
+      Module * _module;
     };
 
     struct Row
     {
+      time_duration AvailableSlot(const time_duration& start, const time_duration& end);
       u32 id;
       IntRect rect;
       RowFlags flags;
+      vector<EffectInstance> _effects;
     };
 
     struct TimelineFlagsF
@@ -92,7 +96,7 @@ namespace editor
     bool OnMouseMoved(const Event& event);
     bool OnMouseButtonReleased(const Event& event);
 
-    void DrawModule(float x, float y, const EffecTemplate & m);
+    void DrawModule(float x, float y, const Module & m);
 
     void ResetDragDrop();
 
@@ -105,13 +109,13 @@ namespace editor
     time_duration _panelOffset;
     u32 _pixelsPerSecond;
     Font _font;
-    vector<EffecTemplate> _effectTemplates;
+    vector<Module> _modules;
     vector<Row> _rows;
 
     TimelineFlags _timelineFlags;
 
-    EffecTemplate* _draggingTemplate;
-    EffecTemplate* _selectedTemplate;
+    Module* _draggingModule;
+    Module* _selectedModule;
     Row* _hoverRow;
     Vector2i _dragPos;
   };

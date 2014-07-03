@@ -32,8 +32,8 @@ TimelineWindow::TimelineWindow(
     : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
     , _panelOffset(seconds(0))
     , _pixelsPerSecond(100)
-    , _draggingTemplate(nullptr)
-    , _selectedTemplate(nullptr)
+    , _draggingModule(nullptr)
+    , _selectedModule(nullptr)
     , _hoverRow(nullptr)
 {
 }
@@ -44,8 +44,8 @@ void TimelineWindow::ResetDragDrop()
   if (_hoverRow)
     _hoverRow->flags.Clear(RowFlagsF::Hover);
 
-  _draggingTemplate = nullptr;
-  _selectedTemplate = nullptr;
+  _draggingModule = nullptr;
+  _selectedModule = nullptr;
   _hoverRow = nullptr;
   _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
 }
@@ -59,18 +59,18 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   int y = event.mouseButton.y - _pos.y;
   if (x < EDITOR.Settings().module_view_width())
   {
-    for (EffecTemplate & m : _effectTemplates)
+    for (Module & m : _modules)
     {
-      m.flags.Clear(EffectTemplateFlagsF::Selected);
+      m.flags.Clear(ModuleFlagsF::Selected);
     }
 
     // handle component click
-    for (EffecTemplate & m : _effectTemplates)
+    for (Module & m : _modules)
     {
       if (m.rect.contains(x, y))
       {
-        m.flags.Set(EffectTemplateFlagsF::Selected);
-        _selectedTemplate = &m;
+        m.flags.Set(ModuleFlagsF::Selected);
+        _selectedModule = &m;
         _timelineFlags.Set(TimelineFlagsF::PendingDrag);
         break;
       }
@@ -92,11 +92,11 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
 {
   if (_timelineFlags.IsSet(TimelineFlagsF::PendingDrag))
   {
-    _draggingTemplate = _selectedTemplate;
+    _draggingModule = _selectedModule;
     _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
   }
 
-  if (_draggingTemplate)
+  if (_draggingModule)
   {
     _dragPos = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
 
@@ -119,9 +119,20 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 {
-  if (_draggingTemplate)
+  if (_draggingModule)
   {
     // check if module dropped on any row
+    time_duration cur = PixelToTime(event.mouseButton.x);
+    Vector2i pos = PointToLocal<int>(event.mouseButton.x, event.mouseButton.y);
+    for (Row& row : _rows)
+    {
+      if (row.rect.contains(pos))
+      {
+        row._effects.push_back({cur, seconds(5), &_modules[0]});
+        break;
+      }
+    }
+
   }
 
   ResetDragDrop();
@@ -159,7 +170,7 @@ bool TimelineWindow::Init()
   for (u32 i = 0; i < effects.size(); ++i)
   {
     const Effect& effect = effects[i];
-    _effectTemplates.push_back({i, effect.name, IntRect(Vector2i(0, y), moduleSize)});
+    _modules.push_back({i, effect.name, IntRect(Vector2i(0, y), moduleSize)});
     y += settings.module_row_height() - 2;
   }
 
@@ -212,6 +223,13 @@ void TimelineWindow::DrawTimeline()
   {
     DrawRectOutline(_texture, Vector2f(row.rect.left, row.rect.top), Vector2f(row.rect.width, row.rect.height),
         row.flags.IsSet(RowFlagsF::Hover) ? hoverCol : rowCol, 2);
+
+    for (const EffectInstance& e : row._effects)
+    {
+      int start = TimeToPixel(e._startTime);
+      int end = TimeToPixel(e._startTime + e._duration);
+      DrawRectOutline(_texture, Vector2f(start, row.rect.top+2), Vector2f(end - start, row.rect.height-2), hoverCol, 2);
+    }
   }
 
   // draw time line
@@ -231,14 +249,15 @@ void TimelineWindow::DrawTimeline()
 
 }
 
-void TimelineWindow::DrawModule(float x, float y, const EffecTemplate & module)
+//----------------------------------------------------------------------------------
+void TimelineWindow::DrawModule(float x, float y, const Module & module)
 {
   const editor::Settings& settings = EDITOR.Settings();
   Color rowCol = FromProtocol(settings.default_row_color());
   Color selectedRowCol = FromProtocol(settings.selected_row_color());
 
   Vector2f size(module.rect.width, module.rect.height);
-  Color col = module.flags.IsSet(EffectTemplateFlagsF::Selected) ? selectedRowCol : rowCol;
+  Color col = module.flags.IsSet(ModuleFlagsF::Selected) ? selectedRowCol : rowCol;
   DrawRectOutline(_texture, Vector2f(x,y), size, col, 2);
   Text text;
   text.setString(module.name);
@@ -263,7 +282,7 @@ void TimelineWindow::DrawComponents()
   int w = settings.module_view_width();
 
   Text text;
-  for (const EffecTemplate & module : _effectTemplates)
+  for (const Module& module : _modules)
   {
     DrawModule(module.rect.left, module.rect.top, module);
   }
@@ -295,9 +314,21 @@ void TimelineWindow::Draw()
   DrawComponents();
   DrawTimeline();
 
-  if (_draggingTemplate)
-    DrawModule(_dragPos.x, _dragPos.y, *_draggingTemplate);
+  if (_draggingModule)
+    DrawModule(_dragPos.x, _dragPos.y, *_draggingModule);
 
   _texture.display();
 }
 
+//----------------------------------------------------------------------------------
+time_duration TimelineWindow::Row::AvailableSlot(
+    const time_duration& start,
+    const time_duration& end)
+{
+  return seconds(0);
+
+  for (const EffectInstance& e : _effects)
+  {
+
+  }
+}
