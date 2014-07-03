@@ -86,6 +86,16 @@ namespace editor
       vector<EffectInstance> _effects;
     };
 
+    struct DraggingModule
+    {
+      DraggingModule() { Reset(); }
+      void Reset() { module = nullptr; dragStart = not_a_date_time; dragEnd = not_a_date_time; }
+      Module* module;
+      Vector2i dragPos;
+      time_duration dragStart;
+      time_duration dragEnd;
+    };
+
     struct TimelineFlagsF
     {
       enum Enum { PendingDrag = 1 << 0, };
@@ -99,7 +109,8 @@ namespace editor
     bool OnMouseMoved(const Event& event);
     bool OnMouseButtonReleased(const Event& event);
 
-    void DrawModule(float x, float y, const Module & m);
+    void DrawModule(float x, float y, const Module& m);
+    void DrawModule(const IntRect& rect, const string& name, ModuleFlags flags);
 
     void ResetDragDrop();
 
@@ -117,10 +128,9 @@ namespace editor
 
     TimelineFlags _timelineFlags;
 
-    Module* _draggingModule;
+    DraggingModule _draggingModule;
     Module* _selectedModule;
     Row* _hoverRow;
-    Vector2i _dragPos;
   };
 
 

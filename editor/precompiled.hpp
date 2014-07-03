@@ -124,6 +124,7 @@ namespace editor
   using boost::posix_time::microsec_clock;
   using boost::posix_time::milliseconds;
   using boost::posix_time::seconds;
+  using boost::posix_time::not_a_date_time;
 
   using bristol::WindowEventManager;
   using bristol::VirtualWindowManager;

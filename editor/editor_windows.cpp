@@ -31,7 +31,6 @@ TimelineWindow::TimelineWindow(
     : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
     , _panelOffset(seconds(0))
     , _pixelsPerSecond(100)
-    , _draggingModule(nullptr)
     , _selectedModule(nullptr)
     , _hoverRow(nullptr)
 {
@@ -46,7 +45,7 @@ void TimelineWindow::ResetDragDrop()
     _hoverRow->flags.Clear(RowFlagsF::InvalidHover);
   }
 
-  _draggingModule = nullptr;
+  _draggingModule.Reset();
   _selectedModule = nullptr;
   _hoverRow = nullptr;
   _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
@@ -95,14 +94,14 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
   // should we start module drag/drop
   if (_timelineFlags.IsSet(TimelineFlagsF::PendingDrag))
   {
-    _draggingModule = _selectedModule;
+    _draggingModule.module = _selectedModule;
     _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
   }
 
   // check if any module is being dragged
-  if (_draggingModule)
+  if (_draggingModule.module)
   {
-    _dragPos = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
+    Vector2i pos = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
 
     if (_hoverRow)
     {
@@ -113,11 +112,15 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     // check if the module is above any row
     for (Row& row : _rows)
     {
-      if (row.rect.contains(_dragPos.x, _dragPos.y))
+      if (row.rect.contains(pos))
       {
         _hoverRow = &row;
-        // check if there is enough time left for the current module
-        time_duration cur = PixelToTime(_dragPos.x);
+        // check if there is space for the current module
+        time_duration cur = PixelToTime(pos.x);
+        _draggingModule.dragPos.x = pos.x;
+        _draggingModule.dragPos.y = row.rect.top;
+        _draggingModule.dragStart = cur;
+        _draggingModule.dragEnd = row.AvailableSlot(cur, cur + seconds(5));
         time_duration e = row.AvailableSlot(cur, cur + seconds(5));
         _hoverRow->flags.Set(e.is_not_a_date_time() ? RowFlagsF::InvalidHover : RowFlagsF::Hover);
         break;
@@ -130,7 +133,7 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 {
-  if (_draggingModule)
+  if (_draggingModule.module)
   {
     // check if module dropped on any row
     time_duration cur = PixelToTime(event.mouseButton.x);
@@ -262,11 +265,39 @@ void TimelineWindow::DrawTimeline()
   curLine.append(sf::Vertex(Vector2f(x, _size.y), Color::Red));
   _texture.draw(curLine);
 
+  // draw the drag/drop module
+  if (_draggingModule.module)
+  {
+    int xEnd = TimeToPixel(_draggingModule.dragEnd);
+    int x = _draggingModule.dragPos.x;
+    DrawModule(IntRect(x, _draggingModule.dragPos.y, xEnd - x, settings.module_row_height()), _draggingModule.module->name, _draggingModule.module->flags);
+  }
 
 }
 
 //----------------------------------------------------------------------------------
-void TimelineWindow::DrawModule(float x, float y, const Module & module)
+void TimelineWindow::DrawModule(const IntRect& rect, const string& name, ModuleFlags flags)
+{
+  const editor::Settings& settings = EDITOR.Settings();
+  Color rowCol = FromProtocol(settings.default_row_color());
+  Color selectedRowCol = FromProtocol(settings.selected_row_color());
+
+  Vector2f pos(rect.left, rect.top);
+  Vector2f size(rect.width, rect.height);
+  Color col = flags.IsSet(ModuleFlagsF::Selected) ? selectedRowCol : rowCol;
+  DrawRectOutline(_texture, pos, size, col, 2);
+  Text text;
+  text.setString(name);
+  text.setCharacterSize(16);
+  text.setFont(_font);
+  Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
+  text.setPosition(pos + (size - ofs) / 2.0f);
+  _texture.draw(text);
+
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::DrawModule(float x, float y, const Module& module)
 {
   const editor::Settings& settings = EDITOR.Settings();
   Color rowCol = FromProtocol(settings.default_row_color());
@@ -282,7 +313,6 @@ void TimelineWindow::DrawModule(float x, float y, const Module & module)
   Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
   text.setPosition(Vector2f(x, y) + (size - ofs) / 2.0f);
   _texture.draw(text);
-
 }
 
 //----------------------------------------------------------------------------------
@@ -330,8 +360,6 @@ void TimelineWindow::Draw()
   DrawComponents();
   DrawTimeline();
 
-  if (_draggingModule)
-    DrawModule(_dragPos.x, _dragPos.y, *_draggingModule);
 
   _texture.display();
 }
