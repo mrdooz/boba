@@ -55,7 +55,7 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Color4));
   Settings_descriptor_ = file->message_type(1);
-  static const int Settings_offsets_[8] = {
+  static const int Settings_offsets_[9] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_interval_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticks_per_interval_),
@@ -64,6 +64,7 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, default_row_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, selected_row_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, hover_row_color_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, invalid_hover_row_color_),
   };
   Settings_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -112,14 +113,15 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\025editor_settings.proto\022\006editor\"B\n\006Color"
     "4\022\014\n\001r\030\001 \001(\r:\0010\022\014\n\001g\030\002 \001(\r:\0010\022\014\n\001b\030\003 \001(\r"
-    ":\0010\022\016\n\001a\030\004 \001(\r:\003255\"\240\002\n\010Settings\022\031\n\rtick"
+    ":\0010\022\016\n\001a\030\004 \001(\r:\003255\"\321\002\n\010Settings\022\031\n\rtick"
     "er_height\030\001 \001(\r:\00250\022\033\n\017ticker_interval\030\002"
     " \001(\r:\00220\022\035\n\022ticks_per_interval\030\003 \001(\r:\0014\022"
     "\036\n\021module_view_width\030\004 \001(\r:\003200\022\035\n\021modul"
     "e_row_height\030\005 \001(\r:\00250\022)\n\021default_row_co"
     "lor\030d \001(\0132\016.editor.Color4\022*\n\022selected_ro"
     "w_color\030e \001(\0132\016.editor.Color4\022\'\n\017hover_r"
-    "ow_color\030f \001(\0132\016.editor.Color4", 390);
+    "ow_color\030f \001(\0132\016.editor.Color4\022/\n\027invali"
+    "d_hover_row_color\030g \001(\0132\016.editor.Color4", 439);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_settings.proto", &protobuf_RegisterTypes);
   Color4::default_instance_ = new Color4();
@@ -475,6 +477,7 @@ const int Settings::kModuleRowHeightFieldNumber;
 const int Settings::kDefaultRowColorFieldNumber;
 const int Settings::kSelectedRowColorFieldNumber;
 const int Settings::kHoverRowColorFieldNumber;
+const int Settings::kInvalidHoverRowColorFieldNumber;
 #endif  // !_MSC_VER
 
 Settings::Settings()
@@ -486,6 +489,7 @@ void Settings::InitAsDefaultInstance() {
   default_row_color_ = const_cast< ::editor::Color4*>(&::editor::Color4::default_instance());
   selected_row_color_ = const_cast< ::editor::Color4*>(&::editor::Color4::default_instance());
   hover_row_color_ = const_cast< ::editor::Color4*>(&::editor::Color4::default_instance());
+  invalid_hover_row_color_ = const_cast< ::editor::Color4*>(&::editor::Color4::default_instance());
 }
 
 Settings::Settings(const Settings& from)
@@ -504,6 +508,7 @@ void Settings::SharedCtor() {
   default_row_color_ = NULL;
   selected_row_color_ = NULL;
   hover_row_color_ = NULL;
+  invalid_hover_row_color_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -516,6 +521,7 @@ void Settings::SharedDtor() {
     delete default_row_color_;
     delete selected_row_color_;
     delete hover_row_color_;
+    delete invalid_hover_row_color_;
   }
 }
 
@@ -555,6 +561,11 @@ void Settings::Clear() {
     }
     if (has_hover_row_color()) {
       if (hover_row_color_ != NULL) hover_row_color_->::editor::Color4::Clear();
+    }
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (has_invalid_hover_row_color()) {
+      if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::editor::Color4::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -684,6 +695,20 @@ bool Settings::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(826)) goto parse_invalid_hover_row_color;
+        break;
+      }
+
+      // optional .editor.Color4 invalid_hover_row_color = 103;
+      case 103: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_invalid_hover_row_color:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_invalid_hover_row_color()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -749,6 +774,12 @@ void Settings::SerializeWithCachedSizes(
       102, this->hover_row_color(), output);
   }
 
+  // optional .editor.Color4 invalid_hover_row_color = 103;
+  if (has_invalid_hover_row_color()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      103, this->invalid_hover_row_color(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -801,6 +832,13 @@ void Settings::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         102, this->hover_row_color(), target);
+  }
+
+  // optional .editor.Color4 invalid_hover_row_color = 103;
+  if (has_invalid_hover_row_color()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        103, this->invalid_hover_row_color(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -871,6 +909,15 @@ int Settings::ByteSize() const {
     }
 
   }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional .editor.Color4 invalid_hover_row_color = 103;
+    if (has_invalid_hover_row_color()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->invalid_hover_row_color());
+    }
+
+  }
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -922,6 +969,11 @@ void Settings::MergeFrom(const Settings& from) {
       mutable_hover_row_color()->::editor::Color4::MergeFrom(from.hover_row_color());
     }
   }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_invalid_hover_row_color()) {
+      mutable_invalid_hover_row_color()->::editor::Color4::MergeFrom(from.invalid_hover_row_color());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -952,6 +1004,7 @@ void Settings::Swap(Settings* other) {
     std::swap(default_row_color_, other->default_row_color_);
     std::swap(selected_row_color_, other->selected_row_color_);
     std::swap(hover_row_color_, other->hover_row_color_);
+    std::swap(invalid_hover_row_color_, other->invalid_hover_row_color_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

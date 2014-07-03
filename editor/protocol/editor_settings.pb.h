@@ -266,6 +266,15 @@ class Settings : public ::google::protobuf::Message {
   inline ::editor::Color4* release_hover_row_color();
   inline void set_allocated_hover_row_color(::editor::Color4* hover_row_color);
 
+  // optional .editor.Color4 invalid_hover_row_color = 103;
+  inline bool has_invalid_hover_row_color() const;
+  inline void clear_invalid_hover_row_color();
+  static const int kInvalidHoverRowColorFieldNumber = 103;
+  inline const ::editor::Color4& invalid_hover_row_color() const;
+  inline ::editor::Color4* mutable_invalid_hover_row_color();
+  inline ::editor::Color4* release_invalid_hover_row_color();
+  inline void set_allocated_invalid_hover_row_color(::editor::Color4* invalid_hover_row_color);
+
   // @@protoc_insertion_point(class_scope:editor.Settings)
  private:
   inline void set_has_ticker_height();
@@ -284,6 +293,8 @@ class Settings : public ::google::protobuf::Message {
   inline void clear_has_selected_row_color();
   inline void set_has_hover_row_color();
   inline void clear_has_hover_row_color();
+  inline void set_has_invalid_hover_row_color();
+  inline void clear_has_invalid_hover_row_color();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -294,10 +305,11 @@ class Settings : public ::google::protobuf::Message {
   ::editor::Color4* default_row_color_;
   ::editor::Color4* selected_row_color_;
   ::editor::Color4* hover_row_color_;
+  ::editor::Color4* invalid_hover_row_color_;
   ::google::protobuf::uint32 module_row_height_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
 
   friend void  protobuf_AddDesc_editor_5fsettings_2eproto();
   friend void protobuf_AssignDesc_editor_5fsettings_2eproto();
@@ -626,6 +638,44 @@ inline void Settings::set_allocated_hover_row_color(::editor::Color4* hover_row_
     set_has_hover_row_color();
   } else {
     clear_has_hover_row_color();
+  }
+}
+
+// optional .editor.Color4 invalid_hover_row_color = 103;
+inline bool Settings::has_invalid_hover_row_color() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void Settings::set_has_invalid_hover_row_color() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void Settings::clear_has_invalid_hover_row_color() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void Settings::clear_invalid_hover_row_color() {
+  if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::editor::Color4::Clear();
+  clear_has_invalid_hover_row_color();
+}
+inline const ::editor::Color4& Settings::invalid_hover_row_color() const {
+  return invalid_hover_row_color_ != NULL ? *invalid_hover_row_color_ : *default_instance_->invalid_hover_row_color_;
+}
+inline ::editor::Color4* Settings::mutable_invalid_hover_row_color() {
+  set_has_invalid_hover_row_color();
+  if (invalid_hover_row_color_ == NULL) invalid_hover_row_color_ = new ::editor::Color4;
+  return invalid_hover_row_color_;
+}
+inline ::editor::Color4* Settings::release_invalid_hover_row_color() {
+  clear_has_invalid_hover_row_color();
+  ::editor::Color4* temp = invalid_hover_row_color_;
+  invalid_hover_row_color_ = NULL;
+  return temp;
+}
+inline void Settings::set_allocated_invalid_hover_row_color(::editor::Color4* invalid_hover_row_color) {
+  delete invalid_hover_row_color_;
+  invalid_hover_row_color_ = invalid_hover_row_color;
+  if (invalid_hover_row_color) {
+    set_has_invalid_hover_row_color();
+  } else {
+    clear_has_invalid_hover_row_color();
   }
 }
 

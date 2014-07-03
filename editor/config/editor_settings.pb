@@ -21,3 +21,9 @@ hover_row_color  :
 	g : 40
 	b : 120
 }
+invalid_hover_row_color  :
+{
+	r : 120
+	g : 40
+	b : 40
+}

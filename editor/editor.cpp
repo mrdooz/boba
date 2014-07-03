@@ -54,6 +54,7 @@ Editor::Editor()
     : _renderWindow(nullptr)
     , _eventManager(nullptr)
     , _virtualWindowManager(nullptr)
+    , _lastUpdate(boost::posix_time::not_a_date_time)
     , _curTime(seconds(0))
     , _fileWatchAcc(seconds(0))
 {

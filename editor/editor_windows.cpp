@@ -1,7 +1,6 @@
 #include "editor_windows.hpp"
 #include "editor.hpp"
 #include "proto_utils.hpp"
-#import "flags.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -42,7 +41,10 @@ TimelineWindow::TimelineWindow(
 void TimelineWindow::ResetDragDrop()
 {
   if (_hoverRow)
+  {
     _hoverRow->flags.Clear(RowFlagsF::Hover);
+    _hoverRow->flags.Clear(RowFlagsF::InvalidHover);
+  }
 
   _draggingModule = nullptr;
   _selectedModule = nullptr;
@@ -90,25 +92,34 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseMoved(const Event& event)
 {
+  // should we start module drag/drop
   if (_timelineFlags.IsSet(TimelineFlagsF::PendingDrag))
   {
     _draggingModule = _selectedModule;
     _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
   }
 
+  // check if any module is being dragged
   if (_draggingModule)
   {
     _dragPos = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
 
     if (_hoverRow)
+    {
       _hoverRow->flags.Clear(RowFlagsF::Hover);
+      _hoverRow->flags.Clear(RowFlagsF::InvalidHover);
+    }
 
+    // check if the module is above any row
     for (Row& row : _rows)
     {
       if (row.rect.contains(_dragPos.x, _dragPos.y))
       {
         _hoverRow = &row;
-        _hoverRow->flags.Set(RowFlagsF::Hover);
+        // check if there is enough time left for the current module
+        time_duration cur = PixelToTime(_dragPos.x);
+        time_duration e = row.AvailableSlot(cur, cur + seconds(5));
+        _hoverRow->flags.Set(e.is_not_a_date_time() ? RowFlagsF::InvalidHover : RowFlagsF::Hover);
         break;
       }
     }
@@ -128,7 +139,9 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
     {
       if (row.rect.contains(pos))
       {
-        row._effects.push_back({cur, seconds(5), &_modules[0]});
+        time_duration e = row.AvailableSlot(cur, cur + seconds(5));
+        if (!e.is_not_a_date_time())
+          row.AddEffect({cur, e, &_modules[0]});
         break;
       }
     }
@@ -184,6 +197,7 @@ void TimelineWindow::DrawTimeline()
 
   Color rowCol = FromProtocol(settings.default_row_color());
   Color hoverCol = FromProtocol(settings.hover_row_color());
+  Color invalidHoverCol = FromProtocol(settings.invalid_hover_row_color());
 
   // draw the ticker
   RectangleShape ticker;
@@ -222,12 +236,14 @@ void TimelineWindow::DrawTimeline()
   for (const Row& row : _rows)
   {
     DrawRectOutline(_texture, Vector2f(row.rect.left, row.rect.top), Vector2f(row.rect.width, row.rect.height),
-        row.flags.IsSet(RowFlagsF::Hover) ? hoverCol : rowCol, 2);
+        row.flags.IsSet(RowFlagsF::Hover) ? hoverCol : 
+        row.flags.IsSet(RowFlagsF::InvalidHover) ? invalidHoverCol : rowCol,
+        2);
 
     for (const EffectInstance& e : row._effects)
     {
       int start = TimeToPixel(e._startTime);
-      int end = TimeToPixel(e._startTime + e._duration);
+      int end = TimeToPixel(e._endTime);
       DrawRectOutline(_texture, Vector2f(start, row.rect.top+2), Vector2f(end - start, row.rect.height-2), hoverCol, 2);
     }
   }
@@ -301,7 +317,7 @@ time_duration TimelineWindow::PixelToTime(int x)
 {
   x -= EDITOR.Settings().module_view_width();
   if (x < 0)
-    return time_duration();
+    return time_duration(boost::posix_time::not_a_date_time);
 
   return milliseconds(1000 * x / _pixelsPerSecond);
 }
@@ -325,10 +341,32 @@ time_duration TimelineWindow::Row::AvailableSlot(
     const time_duration& start,
     const time_duration& end)
 {
-  return seconds(0);
-
   for (const EffectInstance& e : _effects)
   {
+    // if start overlaps an existing effect
+    if (start >= e._startTime && start <= e._endTime)
+      return time_duration(boost::posix_time::not_a_date_time);
 
+    // check if start/end stradle the currect effect
+    if (start < e._startTime && end > e._endTime)
+      return e._startTime;
+
+    // check for overlap
+    if (start < e._startTime && end > e._startTime)
+      return e._startTime;
   }
+
+  return end;
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::Row::AddEffect(const EffectInstance& effect)
+{
+  _effects.push_back(effect);
+
+  // sort effect by start time
+  sort(_effects.begin(), _effects.end(), [](const EffectInstance& lhs, const EffectInstance& rhs)
+  {
+    return lhs._startTime < rhs._startTime;
+  });
 }

@@ -61,8 +61,8 @@ namespace editor
 
     struct RowFlagsF
     {
-      enum Enum { Expanded = 1 << 0, Hover = 1 << 1};
-      struct Bits { u32 expanded : 1; u32 hover : 1; };
+      enum Enum { Expanded = 1 << 0, Hover = 1 << 1, InvalidHover = 1 << 2, };
+      struct Bits { u32 expanded : 1; u32 hover : 1; u32 invalidHover : 1; };
     };
 
     typedef Flags<RowFlagsF> RowFlags;
@@ -70,13 +70,16 @@ namespace editor
     struct EffectInstance
     {
       time_duration _startTime;
-      time_duration _duration;
+      time_duration _endTime;
       Module * _module;
     };
 
     struct Row
     {
+      // given the start/end, determines an end value
+      // that doesn't overlap with any existing effect
       time_duration AvailableSlot(const time_duration& start, const time_duration& end);
+      void AddEffect(const EffectInstance& effect);
       u32 id;
       IntRect rect;
       RowFlags flags;
