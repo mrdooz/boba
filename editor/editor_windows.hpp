@@ -45,8 +45,8 @@ namespace editor
 
     struct ModuleFlagsF
     {
-      enum Enum { Selected = 1 << 0, Dragging = 1 << 1};
-      struct Bits { u32 selected : 1; u32 dragging : 1; };
+      enum Enum { Selected = 1 << 0, Dragging = 1 << 1, InvalidDrop = 1 << 2, };
+      struct Bits { u32 selected : 1; u32 dragging : 1; u32 invalidDrop : 1; };
     };
 
     typedef Flags<ModuleFlagsF> ModuleFlags;
@@ -61,17 +61,17 @@ namespace editor
 
     struct RowFlagsF
     {
-      enum Enum { Expanded = 1 << 0, Hover = 1 << 1, InvalidHover = 1 << 2, };
-      struct Bits { u32 expanded : 1; u32 hover : 1; u32 invalidHover : 1; };
+      enum Enum { Expanded = 1 << 0 };
+      struct Bits { u32 expanded : 1; };
     };
 
     typedef Flags<RowFlagsF> RowFlags;
 
     struct EffectInstance
     {
-      time_duration _startTime;
-      time_duration _endTime;
-      Module * _module;
+      time_duration startTime;
+      time_duration endTime;
+      Module* module;
     };
 
     struct Row
@@ -83,7 +83,7 @@ namespace editor
       u32 id;
       IntRect rect;
       RowFlags flags;
-      vector<EffectInstance> _effects;
+      vector<EffectInstance> effects;
     };
 
     struct DraggingModule

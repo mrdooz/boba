@@ -39,12 +39,6 @@ TimelineWindow::TimelineWindow(
 //----------------------------------------------------------------------------------
 void TimelineWindow::ResetDragDrop()
 {
-  if (_hoverRow)
-  {
-    _hoverRow->flags.Clear(RowFlagsF::Hover);
-    _hoverRow->flags.Clear(RowFlagsF::InvalidHover);
-  }
-
   _draggingModule.Reset();
   _selectedModule = nullptr;
   _hoverRow = nullptr;
@@ -103,12 +97,6 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
   {
     Vector2i pos = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
 
-    if (_hoverRow)
-    {
-      _hoverRow->flags.Clear(RowFlagsF::Hover);
-      _hoverRow->flags.Clear(RowFlagsF::InvalidHover);
-    }
-
     // check if the module is above any row
     for (Row& row : _rows)
     {
@@ -121,8 +109,6 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
         _draggingModule.dragPos.y = row.rect.top;
         _draggingModule.dragStart = cur;
         _draggingModule.dragEnd = row.AvailableSlot(cur, cur + seconds(5));
-        time_duration e = row.AvailableSlot(cur, cur + seconds(5));
-        _hoverRow->flags.Set(e.is_not_a_date_time() ? RowFlagsF::InvalidHover : RowFlagsF::Hover);
         break;
       }
     }
@@ -144,11 +130,10 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
       {
         time_duration e = row.AvailableSlot(cur, cur + seconds(5));
         if (!e.is_not_a_date_time())
-          row.AddEffect({cur, e, &_modules[0]});
+          row.AddEffect({cur, e, _draggingModule.module});
         break;
       }
     }
-
   }
 
   ResetDragDrop();
@@ -236,18 +221,25 @@ void TimelineWindow::DrawTimeline()
   u32 rowHeight = settings.module_row_height();
   x = settings.module_view_width();
   y = settings.ticker_height();
+  Text text;
+  text.setCharacterSize(16);
+  text.setFont(_font);
   for (const Row& row : _rows)
   {
-    DrawRectOutline(_texture, Vector2f(row.rect.left, row.rect.top), Vector2f(row.rect.width, row.rect.height),
-        row.flags.IsSet(RowFlagsF::Hover) ? hoverCol : 
-        row.flags.IsSet(RowFlagsF::InvalidHover) ? invalidHoverCol : rowCol,
-        2);
+    DrawRectOutline(_texture, Vector2f(row.rect.left, row.rect.top), Vector2f(row.rect.width, row.rect.height), rowCol, 2);
 
-    for (const EffectInstance& e : row._effects)
+    for (const EffectInstance& e : row.effects)
     {
-      int start = TimeToPixel(e._startTime);
-      int end = TimeToPixel(e._endTime);
-      DrawRectOutline(_texture, Vector2f(start, row.rect.top+2), Vector2f(end - start, row.rect.height-2), hoverCol, 2);
+      int start = TimeToPixel(e.startTime);
+      int end = TimeToPixel(e.endTime);
+      Vector2f pos(start, row.rect.top+2);
+      Vector2f size(end - start, row.rect.height-2);
+      DrawRectOutline(_texture, pos, size, hoverCol, 2);
+
+      text.setString(e.module->name);
+      Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
+      text.setPosition(pos + (size - ofs) / 2.0f);
+      _texture.draw(text);
     }
   }
 
@@ -268,9 +260,14 @@ void TimelineWindow::DrawTimeline()
   // draw the drag/drop module
   if (_draggingModule.module)
   {
-    int xEnd = TimeToPixel(_draggingModule.dragEnd);
+    int xEnd = _draggingModule.dragEnd.is_not_a_date_time() ? TimeToPixel(_draggingModule.dragStart + seconds(5)) : TimeToPixel(_draggingModule.dragEnd);
+    ModuleFlags flags = _draggingModule.module->flags;
+    if (_draggingModule.dragEnd.is_not_a_date_time())
+    {
+      flags |= ModuleFlagsF::InvalidDrop;
+    }
     int x = _draggingModule.dragPos.x;
-    DrawModule(IntRect(x, _draggingModule.dragPos.y, xEnd - x, settings.module_row_height()), _draggingModule.module->name, _draggingModule.module->flags);
+    DrawModule(IntRect(x, _draggingModule.dragPos.y, xEnd - x, settings.module_row_height()), _draggingModule.module->name, flags);
   }
 
 }
@@ -281,10 +278,14 @@ void TimelineWindow::DrawModule(const IntRect& rect, const string& name, ModuleF
   const editor::Settings& settings = EDITOR.Settings();
   Color rowCol = FromProtocol(settings.default_row_color());
   Color selectedRowCol = FromProtocol(settings.selected_row_color());
+  Color invalidHover = FromProtocol(settings.invalid_hover_row_color());
 
   Vector2f pos(rect.left, rect.top);
   Vector2f size(rect.width, rect.height);
-  Color col = flags.IsSet(ModuleFlagsF::Selected) ? selectedRowCol : rowCol;
+  Color col =
+      flags.IsSet(ModuleFlagsF::InvalidDrop) ? invalidHover :
+      flags.IsSet(ModuleFlagsF::Selected) ? selectedRowCol :
+      rowCol;
   DrawRectOutline(_texture, pos, size, col, 2);
   Text text;
   text.setString(name);
@@ -369,19 +370,19 @@ time_duration TimelineWindow::Row::AvailableSlot(
     const time_duration& start,
     const time_duration& end)
 {
-  for (const EffectInstance& e : _effects)
+  for (const EffectInstance& e : effects)
   {
     // if start overlaps an existing effect
-    if (start >= e._startTime && start <= e._endTime)
+    if (start >= e.startTime && start <= e.endTime)
       return time_duration(boost::posix_time::not_a_date_time);
 
     // check if start/end stradle the currect effect
-    if (start < e._startTime && end > e._endTime)
-      return e._startTime;
+    if (start < e.startTime && end > e.endTime)
+      return e.startTime;
 
     // check for overlap
-    if (start < e._startTime && end > e._startTime)
-      return e._startTime;
+    if (start < e.startTime && end > e.startTime)
+      return e.startTime;
   }
 
   return end;
@@ -390,11 +391,11 @@ time_duration TimelineWindow::Row::AvailableSlot(
 //----------------------------------------------------------------------------------
 void TimelineWindow::Row::AddEffect(const EffectInstance& effect)
 {
-  _effects.push_back(effect);
+  effects.push_back(effect);
 
   // sort effect by start time
-  sort(_effects.begin(), _effects.end(), [](const EffectInstance& lhs, const EffectInstance& rhs)
+  sort(effects.begin(), effects.end(), [](const EffectInstance& lhs, const EffectInstance& rhs)
   {
-    return lhs._startTime < rhs._startTime;
+    return lhs.startTime < rhs.startTime;
   });
 }
