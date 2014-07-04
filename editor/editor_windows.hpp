@@ -31,6 +31,7 @@ namespace editor
         const string& title,
         const Vector2f& pos,
         const Vector2f& size);
+    ~TimelineWindow();
 
     virtual bool Init();
     virtual void Draw();
@@ -70,8 +71,8 @@ namespace editor
 
     struct EffectInstanceFlagsF
     {
-      enum Enum { Move = 1 << 0, Resize = 1 << 1, Selected = 1 << 2, };
-      struct Bits { u32 move : 1; u32 resize : 1; u32 selected : 1; };
+      enum Enum { Move = 1 << 0, ResizeStart = 1 << 1, ResizeEnd = 1 << 2,  Selected = 1 << 3 };
+      struct Bits { u32 move : 1; u32 resizeStart : 1; u32 resizeEnd : 1; u32 selected : 1; };
     };
 
     typedef Flags<EffectInstanceFlagsF> EffectInstanceFlags;
@@ -121,8 +122,8 @@ namespace editor
 
     struct TimelineFlagsF
     {
-      enum Enum { PendingDrag = 1 << 0, };
-      struct Bits { u32 pendingDraw : 1; };
+      enum Enum { PendingDrag = 1 << 0, PendingEffectMove = 1 << 1};
+      struct Bits { u32 pendingDrag : 1; u32 pendingEffectMove : 1; };
     };
 
     typedef Flags<TimelineFlagsF> TimelineFlags;
@@ -148,14 +149,15 @@ namespace editor
     time_duration _panelOffset;
     u32 _pixelsPerSecond;
     Font _font;
-    vector<Module> _modules;
-    vector<Row> _rows;
+    vector<Module*> _modules;
+    vector<Row*> _rows;
 
     TimelineFlags _timelineFlags;
 
     DraggingEffect _draggingEffect;
     DraggingModule _draggingModule;
     Module* _selectedModule;
+    EffectInstance* _selectedEffect;
     Row* _hoverRow;
   };
 

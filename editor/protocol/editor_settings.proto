@@ -18,6 +18,7 @@ message Settings
   optional uint32 module_row_height = 21 [default = 50];
 
   optional uint32 effect_height = 30 [default = 40];
+  optional uint32 resize_handle = 31 [default = 6];
 
   optional Color4 default_row_color = 100;
   optional Color4 selected_row_color = 101;

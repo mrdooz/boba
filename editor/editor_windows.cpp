@@ -37,6 +37,13 @@ TimelineWindow::TimelineWindow(
 }
 
 //----------------------------------------------------------------------------------
+TimelineWindow::~TimelineWindow()
+{
+  SeqDelete(&_rows);
+  SeqDelete(&_modules);
+}
+
+//----------------------------------------------------------------------------------
 void TimelineWindow::ResetDragDrop()
 {
   _draggingModule.Reset();
@@ -59,18 +66,18 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   if (x < (int)settings.module_view_width())
   {
     // module drag/drop
-    for (Module & m : _modules)
+    for (Module* m : _modules)
     {
-      m.flags.Clear(ModuleFlagsF::Selected);
+      m->flags.Clear(ModuleFlagsF::Selected);
     }
 
     // handle component click
-    for (Module & m : _modules)
+    for (Module* m : _modules)
     {
-      if (m.rect.contains(x, y))
+      if (m->rect.contains(x, y))
       {
-        m.flags.Set(ModuleFlagsF::Selected);
-        _selectedModule = &m;
+        m->flags.Set(ModuleFlagsF::Selected);
+        _selectedModule = m;
         _timelineFlags.Set(TimelineFlagsF::PendingDrag);
         break;
       }
@@ -87,26 +94,24 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   else
   {
     // effect movement
-    for (Row& row : _rows)
+    for (Row* row : _rows)
     {
-      for (EffectInstance* e : row.effects)
+      for (EffectInstance* e : row->effects)
       {
         e->flags.Clear(EffectInstanceFlagsF::Selected);
       }
 
-      if (!row.rect.contains(x, y))
+      if (!row->rect.contains(x, y))
         continue;
 
       time_duration t = PixelToTime(x);
-      for (EffectInstance* e : row.effects)
+      for (EffectInstance* e : row->effects)
       {
         if (t >= e->startTime && t < e->endTime)
         {
+          _timelineFlags.Set(TimelineFlagsF::PendingEffectMove);
           e->flags.Set(EffectInstanceFlagsF::Selected);
-          _draggingEffect.startPos = x;
-          _draggingEffect.orgStart = e->startTime;
-          _draggingEffect.orgEnd = e->endTime;
-          _draggingEffect.effect = e;
+          _selectedEffect = e;
         }
       }
     }
@@ -118,6 +123,9 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseMoved(const Event& event)
 {
+  Vector2i pos = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
+  time_duration curTime = PixelToTime(pos.x);
+
   // should we start module drag/drop
   if (_timelineFlags.IsSet(TimelineFlagsF::PendingDrag))
   {
@@ -125,37 +133,51 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
   }
 
-  Vector2i pos = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
-  time_duration curTime = PixelToTime(pos.x);
-
   // check if any module is being dragged
   if (_draggingModule.module)
   {
-
     // check if the module is above any row
-    for (Row& row : _rows)
+    for (Row* row : _rows)
     {
-      if (row.rect.contains(pos))
+      if (row->rect.contains(pos))
       {
-        _hoverRow = &row;
+        _hoverRow = row;
         // check if there is space for the current module
         _draggingModule.dragStart = curTime;
-        _draggingModule.dragEnd = curTime + seconds(5);
-        row.TimeFixup(&_draggingModule.dragStart, &_draggingModule.dragEnd, nullptr);
+        _draggingModule.dragEnd   = curTime + seconds(5);
+        row->TimeFixup(&_draggingModule.dragStart, &_draggingModule.dragEnd, nullptr);
         _draggingModule.dragPos.x = TimeToPixel(_draggingModule.dragStart);
-        _draggingModule.dragPos.y = row.rect.top;
+        _draggingModule.dragPos.y = row->rect.top;
 
         break;
       }
     }
   }
-  else if (_draggingEffect.effect)
+
+  // check for pending effect move
+  if (_timelineFlags.IsSet(TimelineFlagsF::PendingEffectMove))
+  {
+    const editor::Settings& settings = EDITOR.Settings();
+    _timelineFlags.Clear(TimelineFlagsF::PendingEffectMove);
+
+    _draggingEffect.effect    = _selectedEffect;
+    _draggingEffect.startPos  = pos.x;
+    _draggingEffect.orgStart  = _selectedEffect->startTime;
+    _draggingEffect.orgEnd    = _selectedEffect->endTime;
+
+    const Row* r = _selectedEffect->row;
+    // check if this is a move or a resize
+    if (IntRect())
+
+  }
+
+  if (_draggingEffect.effect)
   {
     // calc delta, and apply
     time_duration delta = AbsPixelToTime(pos.x - _draggingEffect.startPos);
-    EffectInstance* e = _draggingEffect.effect;
-    e->startTime = _draggingEffect.orgStart + delta;
-    e->endTime = _draggingEffect.orgEnd + delta;
+    EffectInstance* e   = _draggingEffect.effect;
+    e->startTime        = _draggingEffect.orgStart + delta;
+    e->endTime          = _draggingEffect.orgEnd + delta;
     e->row->TimeFixup(&e->startTime, &e->endTime, e);
   }
   return true;
@@ -168,11 +190,11 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
   {
     // check if module dropped on any row
     Vector2i pos = PointToLocal<int>(event.mouseButton.x, event.mouseButton.y);
-    for (Row& row : _rows)
+    for (Row* row : _rows)
     {
-      if (row.rect.contains(pos))
+      if (row->rect.contains(pos))
       {
-        row.AddEffect(new EffectInstance { _draggingModule.dragStart, _draggingModule.dragEnd, _draggingModule.module, &row });
+        row->AddEffect(new EffectInstance { _draggingModule.dragStart, _draggingModule.dragEnd, _draggingModule.module, row });
         break;
       }
     }
@@ -203,7 +225,7 @@ bool TimelineWindow::Init()
   Vector2i rowSize(_size.x - settings.module_view_width(), settings.module_row_height());
   for (u32 i = 0; i < 10; ++i)
   {
-    _rows.push_back({i, IntRect(Vector2i(x, y), rowSize)});
+    _rows.push_back(new Row{i, IntRect(Vector2i(x, y), rowSize)});
     y += settings.module_row_height() - 2;
   }
 
@@ -213,7 +235,7 @@ bool TimelineWindow::Init()
   for (u32 i = 0; i < effects.size(); ++i)
   {
     const Effect& effect = effects[i];
-    _modules.push_back({i, effect.name, IntRect(Vector2i(0, y), moduleSize)});
+    _modules.push_back(new Module{i, effect.name, IntRect(Vector2i(0, y), moduleSize)});
     y += settings.module_row_height() - 2;
   }
 
@@ -234,7 +256,8 @@ void TimelineWindow::DrawEffect(const EffectInstance& effect, const Row& row, Te
   int diff = (row.rect.height - settings.effect_height()) / 2;
   Vector2f pos(start, row.rect.top + diff);
   Vector2f size(end - start, settings.effect_height());
-  DrawRectOutline(_texture, pos, size, effect.flags.IsSet(EffectInstanceFlagsF::Selected) ? selectedCol : hoverCol, 2, 6);
+  DrawRectOutline(_texture, pos, size,
+      effect.flags.IsSet(EffectInstanceFlagsF::Selected) ? selectedCol : hoverCol, 2, settings.resize_handle());
 
   text.setString(effect.module->name);
   Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
@@ -286,13 +309,13 @@ void TimelineWindow::DrawTimeline()
   Text text;
   text.setCharacterSize(16);
   text.setFont(_font);
-  for (const Row& row : _rows)
+  for (const Row* row : _rows)
   {
-    DrawRectOutline(_texture, Vector2f(row.rect.left, row.rect.top), Vector2f(row.rect.width, row.rect.height), rowCol, 2);
+    DrawRectOutline(_texture, Vector2f(row->rect.left, row->rect.top), Vector2f(row->rect.width, row->rect.height), rowCol, 2);
 
-    for (const EffectInstance* e : row.effects)
+    for (const EffectInstance* e : row->effects)
     {
-      DrawEffect(*e, row, text);
+      DrawEffect(*e, *row, text);
     }
   }
 
@@ -360,9 +383,9 @@ void TimelineWindow::DrawModule(float x, float y, const Module& module)
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawModules()
 {
-  for (const Module& module : _modules)
+  for (const Module* module : _modules)
   {
-    DrawModule(module.rect.left, module.rect.top, module);
+    DrawModule(module->rect.left, module->rect.top, *module);
   }
 }
 
