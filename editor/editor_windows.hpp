@@ -37,11 +37,11 @@ namespace editor
 
     int TimeToPixel(const time_duration& t);
     time_duration PixelToTime(int x);
-    time_duration PixelDiffToTime(int x);
+    time_duration AbsPixelToTime(int x);
 
   private:
 
-    void DrawComponents();
+    void DrawModules();
     void DrawTimeline();
 
     struct ModuleFlagsF
@@ -76,24 +76,28 @@ namespace editor
 
     typedef Flags<EffectInstanceFlagsF> EffectInstanceFlags;
 
+    struct Row;
+
     struct EffectInstance
     {
       time_duration startTime;
       time_duration endTime;
       Module* module;
+      Row* row;
       EffectInstanceFlags flags;
     };
 
     struct Row
     {
-      // given the start/end, determines an end value
-      // that doesn't overlap with any existing effect
-      time_duration AvailableSlot(const time_duration& start, const time_duration& end);
-      void AddEffect(const EffectInstance& effect);
+      ~Row();
+      // adjust start/ends values so they don't overlap with any
+      // existing effects
+      void TimeFixup(time_duration* start, time_duration* end, EffectInstance* cur);
+      void AddEffect(EffectInstance* effect);
       u32 id;
       IntRect rect;
       RowFlags flags;
-      vector<EffectInstance> effects;
+      vector<EffectInstance*> effects;
     };
 
     struct DraggingModule

@@ -1,7 +1,6 @@
 #include "editor_windows.hpp"
 #include "editor.hpp"
 #include "proto_utils.hpp"
-#import "flags.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -55,9 +54,9 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 
   const editor::Settings& settings = EDITOR.Settings();
 
-  int x = event.mouseButton.x - _pos.x;
-  int y = event.mouseButton.y - _pos.y;
-  if (x < settings.module_view_width())
+  int x = (int)(event.mouseButton.x - _pos.x);
+  int y = (int)(event.mouseButton.y - _pos.y);
+  if (x < (int)settings.module_view_width())
   {
     // module drag/drop
     for (Module & m : _modules)
@@ -77,9 +76,9 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
       }
     }
   }
-  else if (y < settings.module_row_height())
+  else if (y < (int)settings.module_row_height())
   {
-    time_duration t = PixelToTime(event.mouseButton.x - _pos.x) + _panelOffset;
+    time_duration t = PixelToTime(event.mouseButton.x - (int)_pos.x) + _panelOffset;
     if (!t.is_not_a_date_time())
     {
       EDITOR.SetCurTime(t);
@@ -90,24 +89,24 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
     // effect movement
     for (Row& row : _rows)
     {
-      for (EffectInstance& e : row.effects)
+      for (EffectInstance* e : row.effects)
       {
-        e.flags.Clear(EffectInstanceFlagsF::Selected);
+        e->flags.Clear(EffectInstanceFlagsF::Selected);
       }
 
       if (!row.rect.contains(x, y))
         continue;
 
       time_duration t = PixelToTime(x);
-      for (EffectInstance& e : row.effects)
+      for (EffectInstance* e : row.effects)
       {
-        if (t >= e.startTime && t < e.endTime)
+        if (t >= e->startTime && t < e->endTime)
         {
-          e.flags.Set(EffectInstanceFlagsF::Selected);
+          e->flags.Set(EffectInstanceFlagsF::Selected);
           _draggingEffect.startPos = x;
-          _draggingEffect.orgStart = e.startTime;
-          _draggingEffect.orgEnd = e.endTime;
-          _draggingEffect.effect = &e;
+          _draggingEffect.orgStart = e->startTime;
+          _draggingEffect.orgEnd = e->endTime;
+          _draggingEffect.effect = e;
         }
       }
     }
@@ -140,10 +139,12 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
       {
         _hoverRow = &row;
         // check if there is space for the current module
-        _draggingModule.dragPos.x = pos.x;
-        _draggingModule.dragPos.y = row.rect.top;
         _draggingModule.dragStart = curTime;
-        _draggingModule.dragEnd = row.AvailableSlot(curTime, curTime + seconds(5));
+        _draggingModule.dragEnd = curTime + seconds(5);
+        row.TimeFixup(&_draggingModule.dragStart, &_draggingModule.dragEnd, nullptr);
+        _draggingModule.dragPos.x = TimeToPixel(_draggingModule.dragStart);
+        _draggingModule.dragPos.y = row.rect.top;
+
         break;
       }
     }
@@ -151,10 +152,11 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
   else if (_draggingEffect.effect)
   {
     // calc delta, and apply
-    time_duration delta = PixelDiffToTime(pos.x - _draggingEffect.startPos);
-    _draggingEffect.effect->startTime = _draggingEffect.orgStart + delta;
-    _draggingEffect.effect->endTime = _draggingEffect.orgEnd + delta;
-
+    time_duration delta = AbsPixelToTime(pos.x - _draggingEffect.startPos);
+    EffectInstance* e = _draggingEffect.effect;
+    e->startTime = _draggingEffect.orgStart + delta;
+    e->endTime = _draggingEffect.orgEnd + delta;
+    e->row->TimeFixup(&e->startTime, &e->endTime, e);
   }
   return true;
 }
@@ -165,15 +167,12 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
   if (_draggingModule.module)
   {
     // check if module dropped on any row
-    time_duration cur = PixelToTime(event.mouseButton.x);
     Vector2i pos = PointToLocal<int>(event.mouseButton.x, event.mouseButton.y);
     for (Row& row : _rows)
     {
       if (row.rect.contains(pos))
       {
-        time_duration e = row.AvailableSlot(cur, cur + seconds(5));
-        if (!e.is_not_a_date_time())
-          row.AddEffect({cur, e, _draggingModule.module});
+        row.AddEffect(new EffectInstance { _draggingModule.dragStart, _draggingModule.dragEnd, _draggingModule.module, &row });
         break;
       }
     }
@@ -291,9 +290,9 @@ void TimelineWindow::DrawTimeline()
   {
     DrawRectOutline(_texture, Vector2f(row.rect.left, row.rect.top), Vector2f(row.rect.width, row.rect.height), rowCol, 2);
 
-    for (const EffectInstance& e : row.effects)
+    for (const EffectInstance* e : row.effects)
     {
-      DrawEffect(e, row, text);
+      DrawEffect(*e, row, text);
     }
   }
 
@@ -325,19 +324,9 @@ void TimelineWindow::DrawDraggingModule()
   Color selectedRowCol = FromProtocol(settings.selected_row_color());
   Color invalidHover = FromProtocol(settings.invalid_hover_row_color());
 
-  // check if the current drop pos is invalid
   Vector2f pos(_draggingModule.dragPos.x, _draggingModule.dragPos.y);
   Color col = selectedRowCol;
-  Vector2f size(0, settings.module_row_height());
-  if (_draggingModule.dragEnd.is_not_a_date_time())
-  {
-    col = invalidHover;
-    size.x = TimeToPixel(seconds(5));
-  }
-  else
-  {
-    size.x = TimeToPixel(_draggingModule.dragEnd) - pos.x;
-  }
+  Vector2f size(TimeToPixel(_draggingModule.dragEnd) - pos.x, settings.module_row_height());
 
   DrawRectOutline(_texture, pos, size, col, 2);
   Text text;
@@ -369,7 +358,7 @@ void TimelineWindow::DrawModule(float x, float y, const Module& module)
 }
 
 //----------------------------------------------------------------------------------
-void TimelineWindow::DrawComponents()
+void TimelineWindow::DrawModules()
 {
   for (const Module& module : _modules)
   {
@@ -396,7 +385,7 @@ time_duration TimelineWindow::PixelToTime(int x)
 }
 
 //----------------------------------------------------------------------------------
-time_duration TimelineWindow::PixelDiffToTime(int x)
+time_duration TimelineWindow::AbsPixelToTime(int x)
 {
   return milliseconds(1000 * x / (int)_pixelsPerSecond);
 }
@@ -406,43 +395,57 @@ void TimelineWindow::Draw()
 {
   _texture.clear();
 
-  DrawComponents();
+  DrawModules();
   DrawTimeline();
 
   _texture.display();
 }
 
 //----------------------------------------------------------------------------------
-time_duration TimelineWindow::Row::AvailableSlot(
-    const time_duration& start,
-    const time_duration& end)
+void TimelineWindow::Row::TimeFixup(
+    time_duration* start,
+    time_duration* end,
+    EffectInstance* cur)
 {
-  for (const EffectInstance& e : effects)
-  {
-    // if start overlaps an existing effect
-    if (start >= e.startTime && start <= e.endTime)
-      return time_duration(boost::posix_time::not_a_date_time);
+  time_duration delta = *end - *start;
 
-    // check if start/end stradle the currect effect
-    if (start < e.startTime && end > e.endTime)
-      return e.startTime;
+  for (const EffectInstance* e : effects)
+  {
+    if (e == cur)
+      continue;
 
     // check for overlap
-    if (start < e.startTime && end > e.startTime)
-      return e.startTime;
-  }
+    if (*start < e->startTime && *end >= e->startTime)
+    {
+      *end = e->startTime;
+      return;
+    }
 
-  return end;
+    // if start overlaps an existing effect, bump it to after that effect
+    // note, we need to keep going, because this bump might interfere with the
+    // next effects
+    if (*start >= e->startTime && *start <= e->endTime)
+    {
+      *start = e->endTime;
+      *end = *start + delta;
+    }
+  }
 }
 
 //----------------------------------------------------------------------------------
-void TimelineWindow::Row::AddEffect(const EffectInstance& effect)
+void TimelineWindow::Row::AddEffect(EffectInstance* effect)
 {
   effects.push_back(effect);
 
   // sort effect by start time
-  sort(effects.begin(), effects.end(), [](const EffectInstance& lhs, const EffectInstance& rhs)
+  sort(effects.begin(), effects.end(), [](const EffectInstance* lhs, const EffectInstance* rhs)
   {
-    return lhs.startTime < rhs.startTime;
+    return lhs->startTime < rhs->startTime;
   });
+}
+
+//----------------------------------------------------------------------------------
+TimelineWindow::Row::~Row()
+{
+  SeqDelete(&effects);
 }
