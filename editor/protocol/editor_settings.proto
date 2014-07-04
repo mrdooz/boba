@@ -14,8 +14,10 @@ message Settings
   optional uint32 ticker_interval = 2 [default = 20];
   optional uint32 ticks_per_interval = 3 [default = 4];
   
-  optional uint32 module_view_width = 4 [default = 200];
-  optional uint32 module_row_height = 5 [default = 50];
+  optional uint32 module_view_width = 20 [default = 200];
+  optional uint32 module_row_height = 21 [default = 50];
+
+  optional uint32 effect_height = 30 [default = 40];
 
   optional Color4 default_row_color = 100;
   optional Color4 selected_row_color = 101;

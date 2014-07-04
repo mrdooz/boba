@@ -37,6 +37,7 @@ namespace editor
 
     int TimeToPixel(const time_duration& t);
     time_duration PixelToTime(int x);
+    time_duration PixelDiffToTime(int x);
 
   private:
 
@@ -67,11 +68,20 @@ namespace editor
 
     typedef Flags<RowFlagsF> RowFlags;
 
+    struct EffectInstanceFlagsF
+    {
+      enum Enum { Move = 1 << 0, Resize = 1 << 1, Selected = 1 << 2, };
+      struct Bits { u32 move : 1; u32 resize : 1; u32 selected : 1; };
+    };
+
+    typedef Flags<EffectInstanceFlagsF> EffectInstanceFlags;
+
     struct EffectInstance
     {
       time_duration startTime;
       time_duration endTime;
       Module* module;
+      EffectInstanceFlags flags;
     };
 
     struct Row
@@ -96,6 +106,15 @@ namespace editor
       time_duration dragEnd;
     };
 
+    struct DraggingEffect
+    {
+      DraggingEffect() { Reset(); }
+      void Reset() { effect = nullptr; }
+      int startPos;
+      time_duration orgStart, orgEnd;
+      EffectInstance* effect;
+    };
+
     struct TimelineFlagsF
     {
       enum Enum { PendingDrag = 1 << 0, };
@@ -110,9 +129,11 @@ namespace editor
     bool OnMouseButtonReleased(const Event& event);
 
     void DrawModule(float x, float y, const Module& m);
-    void DrawModule(const IntRect& rect, const string& name, ModuleFlags flags);
+    void DrawDraggingModule();
+    void DrawEffect(const EffectInstance& effect, const Row& row, Text& text);
 
     void ResetDragDrop();
+
 
     template<typename T>
     sf::Vector2<T> PointToLocal(int x, int y)
@@ -128,6 +149,7 @@ namespace editor
 
     TimelineFlags _timelineFlags;
 
+    DraggingEffect _draggingEffect;
     DraggingModule _draggingModule;
     Module* _selectedModule;
     Row* _hoverRow;

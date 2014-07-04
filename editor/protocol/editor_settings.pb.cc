@@ -55,12 +55,13 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Color4));
   Settings_descriptor_ = file->message_type(1);
-  static const int Settings_offsets_[9] = {
+  static const int Settings_offsets_[10] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_interval_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticks_per_interval_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, module_view_width_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, module_row_height_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, effect_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, default_row_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, selected_row_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, hover_row_color_),
@@ -113,15 +114,16 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\025editor_settings.proto\022\006editor\"B\n\006Color"
     "4\022\014\n\001r\030\001 \001(\r:\0010\022\014\n\001g\030\002 \001(\r:\0010\022\014\n\001b\030\003 \001(\r"
-    ":\0010\022\016\n\001a\030\004 \001(\r:\003255\"\321\002\n\010Settings\022\031\n\rtick"
+    ":\0010\022\016\n\001a\030\004 \001(\r:\003255\"\354\002\n\010Settings\022\031\n\rtick"
     "er_height\030\001 \001(\r:\00250\022\033\n\017ticker_interval\030\002"
     " \001(\r:\00220\022\035\n\022ticks_per_interval\030\003 \001(\r:\0014\022"
-    "\036\n\021module_view_width\030\004 \001(\r:\003200\022\035\n\021modul"
-    "e_row_height\030\005 \001(\r:\00250\022)\n\021default_row_co"
-    "lor\030d \001(\0132\016.editor.Color4\022*\n\022selected_ro"
-    "w_color\030e \001(\0132\016.editor.Color4\022\'\n\017hover_r"
-    "ow_color\030f \001(\0132\016.editor.Color4\022/\n\027invali"
-    "d_hover_row_color\030g \001(\0132\016.editor.Color4", 439);
+    "\036\n\021module_view_width\030\024 \001(\r:\003200\022\035\n\021modul"
+    "e_row_height\030\025 \001(\r:\00250\022\031\n\reffect_height\030"
+    "\036 \001(\r:\00240\022)\n\021default_row_color\030d \001(\0132\016.e"
+    "ditor.Color4\022*\n\022selected_row_color\030e \001(\013"
+    "2\016.editor.Color4\022\'\n\017hover_row_color\030f \001("
+    "\0132\016.editor.Color4\022/\n\027invalid_hover_row_c"
+    "olor\030g \001(\0132\016.editor.Color4", 466);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_settings.proto", &protobuf_RegisterTypes);
   Color4::default_instance_ = new Color4();
@@ -474,6 +476,7 @@ const int Settings::kTickerIntervalFieldNumber;
 const int Settings::kTicksPerIntervalFieldNumber;
 const int Settings::kModuleViewWidthFieldNumber;
 const int Settings::kModuleRowHeightFieldNumber;
+const int Settings::kEffectHeightFieldNumber;
 const int Settings::kDefaultRowColorFieldNumber;
 const int Settings::kSelectedRowColorFieldNumber;
 const int Settings::kHoverRowColorFieldNumber;
@@ -505,6 +508,7 @@ void Settings::SharedCtor() {
   ticks_per_interval_ = 4u;
   module_view_width_ = 200u;
   module_row_height_ = 50u;
+  effect_height_ = 40u;
   default_row_color_ = NULL;
   selected_row_color_ = NULL;
   hover_row_color_ = NULL;
@@ -553,17 +557,18 @@ void Settings::Clear() {
     ticks_per_interval_ = 4u;
     module_view_width_ = 200u;
     module_row_height_ = 50u;
+    effect_height_ = 40u;
     if (has_default_row_color()) {
       if (default_row_color_ != NULL) default_row_color_->::editor::Color4::Clear();
     }
     if (has_selected_row_color()) {
       if (selected_row_color_ != NULL) selected_row_color_->::editor::Color4::Clear();
     }
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (has_hover_row_color()) {
       if (hover_row_color_ != NULL) hover_row_color_->::editor::Color4::Clear();
     }
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (has_invalid_hover_row_color()) {
       if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::editor::Color4::Clear();
     }
@@ -621,12 +626,12 @@ bool Settings::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(32)) goto parse_module_view_width;
+        if (input->ExpectTag(160)) goto parse_module_view_width;
         break;
       }
 
-      // optional uint32 module_view_width = 4 [default = 200];
-      case 4: {
+      // optional uint32 module_view_width = 20 [default = 200];
+      case 20: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_module_view_width:
@@ -637,12 +642,12 @@ bool Settings::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(40)) goto parse_module_row_height;
+        if (input->ExpectTag(168)) goto parse_module_row_height;
         break;
       }
 
-      // optional uint32 module_row_height = 5 [default = 50];
-      case 5: {
+      // optional uint32 module_row_height = 21 [default = 50];
+      case 21: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_module_row_height:
@@ -650,6 +655,22 @@ bool Settings::MergePartialFromCodedStream(
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &module_row_height_)));
           set_has_module_row_height();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(240)) goto parse_effect_height;
+        break;
+      }
+
+      // optional uint32 effect_height = 30 [default = 40];
+      case 30: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_effect_height:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &effect_height_)));
+          set_has_effect_height();
         } else {
           goto handle_uninterpreted;
         }
@@ -746,14 +767,19 @@ void Settings::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->ticks_per_interval(), output);
   }
 
-  // optional uint32 module_view_width = 4 [default = 200];
+  // optional uint32 module_view_width = 20 [default = 200];
   if (has_module_view_width()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->module_view_width(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(20, this->module_view_width(), output);
   }
 
-  // optional uint32 module_row_height = 5 [default = 50];
+  // optional uint32 module_row_height = 21 [default = 50];
   if (has_module_row_height()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->module_row_height(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(21, this->module_row_height(), output);
+  }
+
+  // optional uint32 effect_height = 30 [default = 40];
+  if (has_effect_height()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(30, this->effect_height(), output);
   }
 
   // optional .editor.Color4 default_row_color = 100;
@@ -803,14 +829,19 @@ void Settings::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->ticks_per_interval(), target);
   }
 
-  // optional uint32 module_view_width = 4 [default = 200];
+  // optional uint32 module_view_width = 20 [default = 200];
   if (has_module_view_width()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->module_view_width(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(20, this->module_view_width(), target);
   }
 
-  // optional uint32 module_row_height = 5 [default = 50];
+  // optional uint32 module_row_height = 21 [default = 50];
   if (has_module_row_height()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->module_row_height(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(21, this->module_row_height(), target);
+  }
+
+  // optional uint32 effect_height = 30 [default = 40];
+  if (has_effect_height()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(30, this->effect_height(), target);
   }
 
   // optional .editor.Color4 default_row_color = 100;
@@ -873,18 +904,25 @@ int Settings::ByteSize() const {
           this->ticks_per_interval());
     }
 
-    // optional uint32 module_view_width = 4 [default = 200];
+    // optional uint32 module_view_width = 20 [default = 200];
     if (has_module_view_width()) {
-      total_size += 1 +
+      total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->module_view_width());
     }
 
-    // optional uint32 module_row_height = 5 [default = 50];
+    // optional uint32 module_row_height = 21 [default = 50];
     if (has_module_row_height()) {
-      total_size += 1 +
+      total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->module_row_height());
+    }
+
+    // optional uint32 effect_height = 30 [default = 40];
+    if (has_effect_height()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->effect_height());
     }
 
     // optional .editor.Color4 default_row_color = 100;
@@ -901,6 +939,8 @@ int Settings::ByteSize() const {
           this->selected_row_color());
     }
 
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional .editor.Color4 hover_row_color = 102;
     if (has_hover_row_color()) {
       total_size += 2 +
@@ -908,8 +948,6 @@ int Settings::ByteSize() const {
           this->hover_row_color());
     }
 
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional .editor.Color4 invalid_hover_row_color = 103;
     if (has_invalid_hover_row_color()) {
       total_size += 2 +
@@ -959,17 +997,20 @@ void Settings::MergeFrom(const Settings& from) {
     if (from.has_module_row_height()) {
       set_module_row_height(from.module_row_height());
     }
+    if (from.has_effect_height()) {
+      set_effect_height(from.effect_height());
+    }
     if (from.has_default_row_color()) {
       mutable_default_row_color()->::editor::Color4::MergeFrom(from.default_row_color());
     }
     if (from.has_selected_row_color()) {
       mutable_selected_row_color()->::editor::Color4::MergeFrom(from.selected_row_color());
     }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_hover_row_color()) {
       mutable_hover_row_color()->::editor::Color4::MergeFrom(from.hover_row_color());
     }
-  }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_invalid_hover_row_color()) {
       mutable_invalid_hover_row_color()->::editor::Color4::MergeFrom(from.invalid_hover_row_color());
     }
@@ -1001,6 +1042,7 @@ void Settings::Swap(Settings* other) {
     std::swap(ticks_per_interval_, other->ticks_per_interval_);
     std::swap(module_view_width_, other->module_view_width_);
     std::swap(module_row_height_, other->module_row_height_);
+    std::swap(effect_height_, other->effect_height_);
     std::swap(default_row_color_, other->default_row_color_);
     std::swap(selected_row_color_, other->selected_row_color_);
     std::swap(hover_row_color_, other->hover_row_color_);

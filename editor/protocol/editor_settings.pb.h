@@ -225,19 +225,26 @@ class Settings : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 ticks_per_interval() const;
   inline void set_ticks_per_interval(::google::protobuf::uint32 value);
 
-  // optional uint32 module_view_width = 4 [default = 200];
+  // optional uint32 module_view_width = 20 [default = 200];
   inline bool has_module_view_width() const;
   inline void clear_module_view_width();
-  static const int kModuleViewWidthFieldNumber = 4;
+  static const int kModuleViewWidthFieldNumber = 20;
   inline ::google::protobuf::uint32 module_view_width() const;
   inline void set_module_view_width(::google::protobuf::uint32 value);
 
-  // optional uint32 module_row_height = 5 [default = 50];
+  // optional uint32 module_row_height = 21 [default = 50];
   inline bool has_module_row_height() const;
   inline void clear_module_row_height();
-  static const int kModuleRowHeightFieldNumber = 5;
+  static const int kModuleRowHeightFieldNumber = 21;
   inline ::google::protobuf::uint32 module_row_height() const;
   inline void set_module_row_height(::google::protobuf::uint32 value);
+
+  // optional uint32 effect_height = 30 [default = 40];
+  inline bool has_effect_height() const;
+  inline void clear_effect_height();
+  static const int kEffectHeightFieldNumber = 30;
+  inline ::google::protobuf::uint32 effect_height() const;
+  inline void set_effect_height(::google::protobuf::uint32 value);
 
   // optional .editor.Color4 default_row_color = 100;
   inline bool has_default_row_color() const;
@@ -287,6 +294,8 @@ class Settings : public ::google::protobuf::Message {
   inline void clear_has_module_view_width();
   inline void set_has_module_row_height();
   inline void clear_has_module_row_height();
+  inline void set_has_effect_height();
+  inline void clear_has_effect_height();
   inline void set_has_default_row_color();
   inline void clear_has_default_row_color();
   inline void set_has_selected_row_color();
@@ -302,14 +311,15 @@ class Settings : public ::google::protobuf::Message {
   ::google::protobuf::uint32 ticker_interval_;
   ::google::protobuf::uint32 ticks_per_interval_;
   ::google::protobuf::uint32 module_view_width_;
+  ::google::protobuf::uint32 module_row_height_;
+  ::google::protobuf::uint32 effect_height_;
   ::editor::Color4* default_row_color_;
   ::editor::Color4* selected_row_color_;
   ::editor::Color4* hover_row_color_;
   ::editor::Color4* invalid_hover_row_color_;
-  ::google::protobuf::uint32 module_row_height_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
 
   friend void  protobuf_AddDesc_editor_5fsettings_2eproto();
   friend void protobuf_AssignDesc_editor_5fsettings_2eproto();
@@ -483,7 +493,7 @@ inline void Settings::set_ticks_per_interval(::google::protobuf::uint32 value) {
   ticks_per_interval_ = value;
 }
 
-// optional uint32 module_view_width = 4 [default = 200];
+// optional uint32 module_view_width = 20 [default = 200];
 inline bool Settings::has_module_view_width() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -505,7 +515,7 @@ inline void Settings::set_module_view_width(::google::protobuf::uint32 value) {
   module_view_width_ = value;
 }
 
-// optional uint32 module_row_height = 5 [default = 50];
+// optional uint32 module_row_height = 21 [default = 50];
 inline bool Settings::has_module_row_height() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
@@ -527,15 +537,37 @@ inline void Settings::set_module_row_height(::google::protobuf::uint32 value) {
   module_row_height_ = value;
 }
 
-// optional .editor.Color4 default_row_color = 100;
-inline bool Settings::has_default_row_color() const {
+// optional uint32 effect_height = 30 [default = 40];
+inline bool Settings::has_effect_height() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
-inline void Settings::set_has_default_row_color() {
+inline void Settings::set_has_effect_height() {
   _has_bits_[0] |= 0x00000020u;
 }
-inline void Settings::clear_has_default_row_color() {
+inline void Settings::clear_has_effect_height() {
   _has_bits_[0] &= ~0x00000020u;
+}
+inline void Settings::clear_effect_height() {
+  effect_height_ = 40u;
+  clear_has_effect_height();
+}
+inline ::google::protobuf::uint32 Settings::effect_height() const {
+  return effect_height_;
+}
+inline void Settings::set_effect_height(::google::protobuf::uint32 value) {
+  set_has_effect_height();
+  effect_height_ = value;
+}
+
+// optional .editor.Color4 default_row_color = 100;
+inline bool Settings::has_default_row_color() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Settings::set_has_default_row_color() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Settings::clear_has_default_row_color() {
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void Settings::clear_default_row_color() {
   if (default_row_color_ != NULL) default_row_color_->::editor::Color4::Clear();
@@ -567,13 +599,13 @@ inline void Settings::set_allocated_default_row_color(::editor::Color4* default_
 
 // optional .editor.Color4 selected_row_color = 101;
 inline bool Settings::has_selected_row_color() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void Settings::set_has_selected_row_color() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void Settings::clear_has_selected_row_color() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void Settings::clear_selected_row_color() {
   if (selected_row_color_ != NULL) selected_row_color_->::editor::Color4::Clear();
@@ -605,13 +637,13 @@ inline void Settings::set_allocated_selected_row_color(::editor::Color4* selecte
 
 // optional .editor.Color4 hover_row_color = 102;
 inline bool Settings::has_hover_row_color() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void Settings::set_has_hover_row_color() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void Settings::clear_has_hover_row_color() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void Settings::clear_hover_row_color() {
   if (hover_row_color_ != NULL) hover_row_color_->::editor::Color4::Clear();
@@ -643,13 +675,13 @@ inline void Settings::set_allocated_hover_row_color(::editor::Color4* hover_row_
 
 // optional .editor.Color4 invalid_hover_row_color = 103;
 inline bool Settings::has_invalid_hover_row_color() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void Settings::set_has_invalid_hover_row_color() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void Settings::clear_has_invalid_hover_row_color() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void Settings::clear_invalid_hover_row_color() {
   if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::editor::Color4::Clear();

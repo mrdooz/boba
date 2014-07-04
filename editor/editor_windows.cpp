@@ -1,6 +1,7 @@
 #include "editor_windows.hpp"
 #include "editor.hpp"
 #include "proto_utils.hpp"
+#import "flags.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -43,6 +44,8 @@ void TimelineWindow::ResetDragDrop()
   _selectedModule = nullptr;
   _hoverRow = nullptr;
   _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
+
+  _draggingEffect.Reset();
 }
 
 //----------------------------------------------------------------------------------
@@ -50,10 +53,13 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 {
   ResetDragDrop();
 
+  const editor::Settings& settings = EDITOR.Settings();
+
   int x = event.mouseButton.x - _pos.x;
   int y = event.mouseButton.y - _pos.y;
-  if (x < EDITOR.Settings().module_view_width())
+  if (x < settings.module_view_width())
   {
+    // module drag/drop
     for (Module & m : _modules)
     {
       m.flags.Clear(ModuleFlagsF::Selected);
@@ -71,13 +77,41 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
       }
     }
   }
-  else
+  else if (y < settings.module_row_height())
   {
     time_duration t = PixelToTime(event.mouseButton.x - _pos.x) + _panelOffset;
     if (!t.is_not_a_date_time())
     {
       EDITOR.SetCurTime(t);
     }
+  }
+  else
+  {
+    // effect movement
+    for (Row& row : _rows)
+    {
+      for (EffectInstance& e : row.effects)
+      {
+        e.flags.Clear(EffectInstanceFlagsF::Selected);
+      }
+
+      if (!row.rect.contains(x, y))
+        continue;
+
+      time_duration t = PixelToTime(x);
+      for (EffectInstance& e : row.effects)
+      {
+        if (t >= e.startTime && t < e.endTime)
+        {
+          e.flags.Set(EffectInstanceFlagsF::Selected);
+          _draggingEffect.startPos = x;
+          _draggingEffect.orgStart = e.startTime;
+          _draggingEffect.orgEnd = e.endTime;
+          _draggingEffect.effect = &e;
+        }
+      }
+    }
+
   }
   return true;
 }
@@ -92,10 +126,12 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
   }
 
+  Vector2i pos = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
+  time_duration curTime = PixelToTime(pos.x);
+
   // check if any module is being dragged
   if (_draggingModule.module)
   {
-    Vector2i pos = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
 
     // check if the module is above any row
     for (Row& row : _rows)
@@ -104,14 +140,21 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
       {
         _hoverRow = &row;
         // check if there is space for the current module
-        time_duration cur = PixelToTime(pos.x);
         _draggingModule.dragPos.x = pos.x;
         _draggingModule.dragPos.y = row.rect.top;
-        _draggingModule.dragStart = cur;
-        _draggingModule.dragEnd = row.AvailableSlot(cur, cur + seconds(5));
+        _draggingModule.dragStart = curTime;
+        _draggingModule.dragEnd = row.AvailableSlot(curTime, curTime + seconds(5));
         break;
       }
     }
+  }
+  else if (_draggingEffect.effect)
+  {
+    // calc delta, and apply
+    time_duration delta = PixelDiffToTime(pos.x - _draggingEffect.startPos);
+    _draggingEffect.effect->startTime = _draggingEffect.orgStart + delta;
+    _draggingEffect.effect->endTime = _draggingEffect.orgEnd + delta;
+
   }
   return true;
 }
@@ -178,14 +221,35 @@ bool TimelineWindow::Init()
 
   return true;
 }
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::DrawEffect(const EffectInstance& effect, const Row& row, Text& text)
+{
+  const editor::Settings& settings = EDITOR.Settings();
+  Color hoverCol = FromProtocol(settings.hover_row_color());
+  Color selectedCol = FromProtocol(settings.selected_row_color());
+
+  int start = TimeToPixel(effect.startTime);
+  int end = TimeToPixel(effect.endTime);
+
+  int diff = (row.rect.height - settings.effect_height()) / 2;
+  Vector2f pos(start, row.rect.top + diff);
+  Vector2f size(end - start, settings.effect_height());
+  DrawRectOutline(_texture, pos, size, effect.flags.IsSet(EffectInstanceFlagsF::Selected) ? selectedCol : hoverCol, 2, 6);
+
+  text.setString(effect.module->name);
+  Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
+  text.setPosition(pos + (size - ofs) / 2.0f);
+  _texture.draw(text);
+
+}
+
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawTimeline()
 {
   const editor::Settings& settings = EDITOR.Settings();
 
   Color rowCol = FromProtocol(settings.default_row_color());
-  Color hoverCol = FromProtocol(settings.hover_row_color());
-  Color invalidHoverCol = FromProtocol(settings.invalid_hover_row_color());
 
   // draw the ticker
   RectangleShape ticker;
@@ -218,7 +282,6 @@ void TimelineWindow::DrawTimeline()
   _texture.draw(lines);
 
   // draw the rows
-  u32 rowHeight = settings.module_row_height();
   x = settings.module_view_width();
   y = settings.ticker_height();
   Text text;
@@ -230,16 +293,7 @@ void TimelineWindow::DrawTimeline()
 
     for (const EffectInstance& e : row.effects)
     {
-      int start = TimeToPixel(e.startTime);
-      int end = TimeToPixel(e.endTime);
-      Vector2f pos(start, row.rect.top+2);
-      Vector2f size(end - start, row.rect.height-2);
-      DrawRectOutline(_texture, pos, size, hoverCol, 2);
-
-      text.setString(e.module->name);
-      Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
-      text.setPosition(pos + (size - ofs) / 2.0f);
-      _texture.draw(text);
+      DrawEffect(e, row, text);
     }
   }
 
@@ -258,43 +312,41 @@ void TimelineWindow::DrawTimeline()
   _texture.draw(curLine);
 
   // draw the drag/drop module
-  if (_draggingModule.module)
-  {
-    int xEnd = _draggingModule.dragEnd.is_not_a_date_time() ? TimeToPixel(_draggingModule.dragStart + seconds(5)) : TimeToPixel(_draggingModule.dragEnd);
-    ModuleFlags flags = _draggingModule.module->flags;
-    if (_draggingModule.dragEnd.is_not_a_date_time())
-    {
-      flags |= ModuleFlagsF::InvalidDrop;
-    }
-    int x = _draggingModule.dragPos.x;
-    DrawModule(IntRect(x, _draggingModule.dragPos.y, xEnd - x, settings.module_row_height()), _draggingModule.module->name, flags);
-  }
-
+  DrawDraggingModule();
 }
 
 //----------------------------------------------------------------------------------
-void TimelineWindow::DrawModule(const IntRect& rect, const string& name, ModuleFlags flags)
+void TimelineWindow::DrawDraggingModule()
 {
+  if (!_draggingModule.module)
+    return;
+
   const editor::Settings& settings = EDITOR.Settings();
-  Color rowCol = FromProtocol(settings.default_row_color());
   Color selectedRowCol = FromProtocol(settings.selected_row_color());
   Color invalidHover = FromProtocol(settings.invalid_hover_row_color());
 
-  Vector2f pos(rect.left, rect.top);
-  Vector2f size(rect.width, rect.height);
-  Color col =
-      flags.IsSet(ModuleFlagsF::InvalidDrop) ? invalidHover :
-      flags.IsSet(ModuleFlagsF::Selected) ? selectedRowCol :
-      rowCol;
+  // check if the current drop pos is invalid
+  Vector2f pos(_draggingModule.dragPos.x, _draggingModule.dragPos.y);
+  Color col = selectedRowCol;
+  Vector2f size(0, settings.module_row_height());
+  if (_draggingModule.dragEnd.is_not_a_date_time())
+  {
+    col = invalidHover;
+    size.x = TimeToPixel(seconds(5));
+  }
+  else
+  {
+    size.x = TimeToPixel(_draggingModule.dragEnd) - pos.x;
+  }
+
   DrawRectOutline(_texture, pos, size, col, 2);
   Text text;
-  text.setString(name);
+  text.setString(_draggingModule.module->name);
   text.setCharacterSize(16);
   text.setFont(_font);
   Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
   text.setPosition(pos + (size - ofs) / 2.0f);
   _texture.draw(text);
-
 }
 
 //----------------------------------------------------------------------------------
@@ -319,16 +371,6 @@ void TimelineWindow::DrawModule(float x, float y, const Module& module)
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawComponents()
 {
-  const editor::Settings& settings = EDITOR.Settings();
-  Color rowCol = FromProtocol(settings.default_row_color());
-  Color selectedRowCol = FromProtocol(settings.selected_row_color());
-
-  u32 rowHeight = settings.module_row_height();
-  int x = 0;
-  int y = settings.module_row_height() - 2;
-  int w = settings.module_view_width();
-
-  Text text;
   for (const Module& module : _modules)
   {
     DrawModule(module.rect.left, module.rect.top, module);
@@ -354,13 +396,18 @@ time_duration TimelineWindow::PixelToTime(int x)
 }
 
 //----------------------------------------------------------------------------------
+time_duration TimelineWindow::PixelDiffToTime(int x)
+{
+  return milliseconds(1000 * x / (int)_pixelsPerSecond);
+}
+
+//----------------------------------------------------------------------------------
 void TimelineWindow::Draw()
 {
   _texture.clear();
 
   DrawComponents();
   DrawTimeline();
-
 
   _texture.display();
 }
