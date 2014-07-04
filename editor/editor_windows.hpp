@@ -93,7 +93,9 @@ namespace editor
       ~Row();
       // adjust start/ends values so they don't overlap with any
       // existing effects
-      void TimeFixup(time_duration* start, time_duration* end, EffectInstance* cur);
+      void TimeFixup(time_duration* start, time_duration* end, EffectInstance* cur) const;
+      bool IsValidPosition(const time_duration& t, EffectInstance* cur) const;
+      time_duration SnappedPosition(const time_duration& t, bool start, EffectInstance* cur) const;
       void AddEffect(EffectInstance* effect);
       u32 id;
       IntRect rect;
@@ -158,7 +160,6 @@ namespace editor
     DraggingModule _draggingModule;
     Module* _selectedModule;
     EffectInstance* _selectedEffect;
-    Row* _hoverRow;
   };
 
 

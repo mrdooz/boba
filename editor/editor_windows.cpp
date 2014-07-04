@@ -32,7 +32,7 @@ TimelineWindow::TimelineWindow(
     , _panelOffset(seconds(0))
     , _pixelsPerSecond(100)
     , _selectedModule(nullptr)
-    , _hoverRow(nullptr)
+    , _selectedEffect(nullptr)
 {
 }
 
@@ -46,12 +46,18 @@ TimelineWindow::~TimelineWindow()
 //----------------------------------------------------------------------------------
 void TimelineWindow::ResetDragDrop()
 {
-  _draggingModule.Reset();
-  _selectedModule = nullptr;
-  _hoverRow = nullptr;
-  _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
-
   _draggingEffect.Reset();
+  if (_selectedEffect)
+    _selectedEffect->flags.Reset();
+  _selectedEffect = nullptr;
+
+  _draggingModule.Reset();
+  if (_selectedModule)
+    _selectedModule->flags.Reset();
+  _selectedModule = nullptr;
+
+  _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
+  _timelineFlags.Clear(TimelineFlagsF::PendingEffectMove);
 }
 
 //----------------------------------------------------------------------------------
@@ -141,7 +147,6 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     {
       if (row->rect.contains(pos))
       {
-        _hoverRow = row;
         // check if there is space for the current module
         _draggingModule.dragStart = curTime;
         _draggingModule.dragEnd   = curTime + seconds(5);
@@ -165,10 +170,31 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     _draggingEffect.orgStart  = _selectedEffect->startTime;
     _draggingEffect.orgEnd    = _selectedEffect->endTime;
 
-    const Row* r = _selectedEffect->row;
-    // check if this is a move or a resize
-    if (IntRect())
+    const Row* r        = _selectedEffect->row;
+    IntRect leftRect    = r->rect;
+    leftRect.width      = settings.resize_handle();
+    leftRect.left       = TimeToPixel(_selectedEffect->startTime);
 
+    IntRect rightRect   = leftRect;
+    rightRect.left      = TimeToPixel(_selectedEffect->endTime) - settings.resize_handle();
+
+    IntRect middleRect  = leftRect;
+    middleRect.left     = leftRect.left + leftRect.width;
+    middleRect.width    = rightRect.left - middleRect.left;
+
+    // check if this is a move or a resize
+    if (leftRect.contains(pos))
+    {
+      _selectedEffect->flags.Set(EffectInstanceFlagsF::ResizeStart);
+    }
+    else if (rightRect.contains(pos))
+    {
+      _selectedEffect->flags.Set(EffectInstanceFlagsF::ResizeEnd);
+    }
+    else if (middleRect.contains(pos))
+    {
+      _selectedEffect->flags.Set(EffectInstanceFlagsF::Move);
+    }
   }
 
   if (_draggingEffect.effect)
@@ -176,9 +202,29 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     // calc delta, and apply
     time_duration delta = AbsPixelToTime(pos.x - _draggingEffect.startPos);
     EffectInstance* e   = _draggingEffect.effect;
-    e->startTime        = _draggingEffect.orgStart + delta;
-    e->endTime          = _draggingEffect.orgEnd + delta;
-    e->row->TimeFixup(&e->startTime, &e->endTime, e);
+
+    EffectInstanceFlags f = _selectedEffect->flags;
+    bool start  = f.IsSet(EffectInstanceFlagsF::Move) || f.IsSet(EffectInstanceFlagsF::ResizeStart);
+    bool end    = f.IsSet(EffectInstanceFlagsF::Move) || f.IsSet(EffectInstanceFlagsF::ResizeEnd);
+
+    const Row* row = e->row;
+    time_duration tmpStart(_draggingEffect.orgStart + delta);
+    time_duration tmpEnd(_draggingEffect.orgEnd + delta);
+    time_duration newStart(tmpStart);
+    time_duration newEnd(tmpEnd);
+
+    if (start)
+      newStart = row->SnappedPosition(tmpStart, false, e);
+
+    if (end)
+      newEnd = row->SnappedPosition(tmpEnd, true, e);
+
+    // if updating both start and end, only update if neither one gets clamped
+    if (start && tmpEnd == newEnd)
+      e->startTime = newStart;
+
+    if (end && tmpStart == newStart)
+      e->endTime = newEnd;
   }
   return true;
 }
@@ -425,10 +471,45 @@ void TimelineWindow::Draw()
 }
 
 //----------------------------------------------------------------------------------
+time_duration TimelineWindow::Row::SnappedPosition(
+    const time_duration& t,
+    bool start,
+    EffectInstance* cur) const
+{
+  for (const EffectInstance* e : effects)
+  {
+    if (e == cur)
+      continue;
+
+    if (t >= e->startTime && t < e->endTime)
+      return start ? e->startTime : e->endTime;
+  }
+
+  return t;
+}
+
+//----------------------------------------------------------------------------------
+bool TimelineWindow::Row::IsValidPosition(
+    const time_duration& t,
+    EffectInstance* cur) const
+{
+  // check if the given time is inside any effect
+  for (const EffectInstance* e : effects)
+  {
+    if (e == cur)
+      continue;
+
+    if (t >= e->startTime && t < e->endTime)
+      return false;
+  }
+  return true;
+}
+
+//----------------------------------------------------------------------------------
 void TimelineWindow::Row::TimeFixup(
     time_duration* start,
     time_duration* end,
-    EffectInstance* cur)
+    EffectInstance* cur) const
 {
   time_duration delta = *end - *start;
 
