@@ -55,7 +55,7 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Color4));
   Settings_descriptor_ = file->message_type(1);
-  static const int Settings_offsets_[11] = {
+  static const int Settings_offsets_[14] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_interval_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticks_per_interval_),
@@ -63,6 +63,9 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, module_row_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, effect_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, resize_handle_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, timeline_zoom_min_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, timeline_zoom_max_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, timeline_zoom_default_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, default_row_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, selected_row_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, hover_row_color_),
@@ -115,17 +118,19 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\025editor_settings.proto\022\006editor\"B\n\006Color"
     "4\022\014\n\001r\030\001 \001(\r:\0010\022\014\n\001g\030\002 \001(\r:\0010\022\014\n\001b\030\003 \001(\r"
-    ":\0010\022\016\n\001a\030\004 \001(\r:\003255\"\206\003\n\010Settings\022\031\n\rtick"
+    ":\0010\022\016\n\001a\030\004 \001(\r:\003255\"\352\003\n\010Settings\022\031\n\rtick"
     "er_height\030\001 \001(\r:\00250\022\033\n\017ticker_interval\030\002"
     " \001(\r:\00220\022\035\n\022ticks_per_interval\030\003 \001(\r:\0014\022"
     "\036\n\021module_view_width\030\024 \001(\r:\003200\022\035\n\021modul"
     "e_row_height\030\025 \001(\r:\00250\022\031\n\reffect_height\030"
-    "\036 \001(\r:\00240\022\030\n\rresize_handle\030\037 \001(\r:\0016\022)\n\021d"
-    "efault_row_color\030d \001(\0132\016.editor.Color4\022*"
-    "\n\022selected_row_color\030e \001(\0132\016.editor.Colo"
-    "r4\022\'\n\017hover_row_color\030f \001(\0132\016.editor.Col"
-    "or4\022/\n\027invalid_hover_row_color\030g \001(\0132\016.e"
-    "ditor.Color4", 492);
+    "\036 \001(\r:\00240\022\030\n\rresize_handle\030\037 \001(\r:\0016\022\035\n\021t"
+    "imeline_zoom_min\030( \001(\r:\00216\022\037\n\021timeline_z"
+    "oom_max\030) \001(\r:\0041024\022\"\n\025timeline_zoom_def"
+    "ault\030* \001(\r:\003128\022)\n\021default_row_color\030d \001"
+    "(\0132\016.editor.Color4\022*\n\022selected_row_color"
+    "\030e \001(\0132\016.editor.Color4\022\'\n\017hover_row_colo"
+    "r\030f \001(\0132\016.editor.Color4\022/\n\027invalid_hover"
+    "_row_color\030g \001(\0132\016.editor.Color4", 592);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_settings.proto", &protobuf_RegisterTypes);
   Color4::default_instance_ = new Color4();
@@ -480,6 +485,9 @@ const int Settings::kModuleViewWidthFieldNumber;
 const int Settings::kModuleRowHeightFieldNumber;
 const int Settings::kEffectHeightFieldNumber;
 const int Settings::kResizeHandleFieldNumber;
+const int Settings::kTimelineZoomMinFieldNumber;
+const int Settings::kTimelineZoomMaxFieldNumber;
+const int Settings::kTimelineZoomDefaultFieldNumber;
 const int Settings::kDefaultRowColorFieldNumber;
 const int Settings::kSelectedRowColorFieldNumber;
 const int Settings::kHoverRowColorFieldNumber;
@@ -513,6 +521,9 @@ void Settings::SharedCtor() {
   module_row_height_ = 50u;
   effect_height_ = 40u;
   resize_handle_ = 6u;
+  timeline_zoom_min_ = 16u;
+  timeline_zoom_max_ = 1024u;
+  timeline_zoom_default_ = 128u;
   default_row_color_ = NULL;
   selected_row_color_ = NULL;
   hover_row_color_ = NULL;
@@ -563,11 +574,14 @@ void Settings::Clear() {
     module_row_height_ = 50u;
     effect_height_ = 40u;
     resize_handle_ = 6u;
+    timeline_zoom_min_ = 16u;
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    timeline_zoom_max_ = 1024u;
+    timeline_zoom_default_ = 128u;
     if (has_default_row_color()) {
       if (default_row_color_ != NULL) default_row_color_->::editor::Color4::Clear();
     }
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (has_selected_row_color()) {
       if (selected_row_color_ != NULL) selected_row_color_->::editor::Color4::Clear();
     }
@@ -695,6 +709,54 @@ bool Settings::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(320)) goto parse_timeline_zoom_min;
+        break;
+      }
+
+      // optional uint32 timeline_zoom_min = 40 [default = 16];
+      case 40: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_timeline_zoom_min:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &timeline_zoom_min_)));
+          set_has_timeline_zoom_min();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(328)) goto parse_timeline_zoom_max;
+        break;
+      }
+
+      // optional uint32 timeline_zoom_max = 41 [default = 1024];
+      case 41: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_timeline_zoom_max:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &timeline_zoom_max_)));
+          set_has_timeline_zoom_max();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(336)) goto parse_timeline_zoom_default;
+        break;
+      }
+
+      // optional uint32 timeline_zoom_default = 42 [default = 128];
+      case 42: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_timeline_zoom_default:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &timeline_zoom_default_)));
+          set_has_timeline_zoom_default();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectTag(802)) goto parse_default_row_color;
         break;
       }
@@ -808,6 +870,21 @@ void Settings::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(31, this->resize_handle(), output);
   }
 
+  // optional uint32 timeline_zoom_min = 40 [default = 16];
+  if (has_timeline_zoom_min()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(40, this->timeline_zoom_min(), output);
+  }
+
+  // optional uint32 timeline_zoom_max = 41 [default = 1024];
+  if (has_timeline_zoom_max()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(41, this->timeline_zoom_max(), output);
+  }
+
+  // optional uint32 timeline_zoom_default = 42 [default = 128];
+  if (has_timeline_zoom_default()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(42, this->timeline_zoom_default(), output);
+  }
+
   // optional .editor.Color4 default_row_color = 100;
   if (has_default_row_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -873,6 +950,21 @@ void Settings::SerializeWithCachedSizes(
   // optional uint32 resize_handle = 31 [default = 6];
   if (has_resize_handle()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(31, this->resize_handle(), target);
+  }
+
+  // optional uint32 timeline_zoom_min = 40 [default = 16];
+  if (has_timeline_zoom_min()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(40, this->timeline_zoom_min(), target);
+  }
+
+  // optional uint32 timeline_zoom_max = 41 [default = 1024];
+  if (has_timeline_zoom_max()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(41, this->timeline_zoom_max(), target);
+  }
+
+  // optional uint32 timeline_zoom_default = 42 [default = 128];
+  if (has_timeline_zoom_default()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(42, this->timeline_zoom_default(), target);
   }
 
   // optional .editor.Color4 default_row_color = 100;
@@ -963,6 +1055,29 @@ int Settings::ByteSize() const {
           this->resize_handle());
     }
 
+    // optional uint32 timeline_zoom_min = 40 [default = 16];
+    if (has_timeline_zoom_min()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->timeline_zoom_min());
+    }
+
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional uint32 timeline_zoom_max = 41 [default = 1024];
+    if (has_timeline_zoom_max()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->timeline_zoom_max());
+    }
+
+    // optional uint32 timeline_zoom_default = 42 [default = 128];
+    if (has_timeline_zoom_default()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->timeline_zoom_default());
+    }
+
     // optional .editor.Color4 default_row_color = 100;
     if (has_default_row_color()) {
       total_size += 2 +
@@ -970,8 +1085,6 @@ int Settings::ByteSize() const {
           this->default_row_color());
     }
 
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional .editor.Color4 selected_row_color = 101;
     if (has_selected_row_color()) {
       total_size += 2 +
@@ -1041,11 +1154,20 @@ void Settings::MergeFrom(const Settings& from) {
     if (from.has_resize_handle()) {
       set_resize_handle(from.resize_handle());
     }
-    if (from.has_default_row_color()) {
-      mutable_default_row_color()->::editor::Color4::MergeFrom(from.default_row_color());
+    if (from.has_timeline_zoom_min()) {
+      set_timeline_zoom_min(from.timeline_zoom_min());
     }
   }
   if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_timeline_zoom_max()) {
+      set_timeline_zoom_max(from.timeline_zoom_max());
+    }
+    if (from.has_timeline_zoom_default()) {
+      set_timeline_zoom_default(from.timeline_zoom_default());
+    }
+    if (from.has_default_row_color()) {
+      mutable_default_row_color()->::editor::Color4::MergeFrom(from.default_row_color());
+    }
     if (from.has_selected_row_color()) {
       mutable_selected_row_color()->::editor::Color4::MergeFrom(from.selected_row_color());
     }
@@ -1085,6 +1207,9 @@ void Settings::Swap(Settings* other) {
     std::swap(module_row_height_, other->module_row_height_);
     std::swap(effect_height_, other->effect_height_);
     std::swap(resize_handle_, other->resize_handle_);
+    std::swap(timeline_zoom_min_, other->timeline_zoom_min_);
+    std::swap(timeline_zoom_max_, other->timeline_zoom_max_);
+    std::swap(timeline_zoom_default_, other->timeline_zoom_default_);
     std::swap(default_row_color_, other->default_row_color_);
     std::swap(selected_row_color_, other->selected_row_color_);
     std::swap(hover_row_color_, other->hover_row_color_);

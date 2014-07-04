@@ -6,6 +6,10 @@ module_row_height : 52
 effect_height : 45
 resize_handle : 10
 
+timeline_zoom_min : 2
+timeline_zoom_max : 1024
+timeline_zoom_default : 128
+
 default_row_color  :
 {
 	r : 40

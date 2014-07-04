@@ -29,8 +29,9 @@ TimelineWindow::TimelineWindow(
   const Vector2f& pos,
   const Vector2f& size)
     : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
+    , _lastDragPos(-1, -1)
     , _panelOffset(seconds(0))
-    , _pixelsPerSecond(100)
+    , _pixelsPerSecond(EDITOR.Settings().timeline_zoom_default())
     , _selectedModule(nullptr)
     , _selectedEffect(nullptr)
 {
@@ -41,6 +42,45 @@ TimelineWindow::~TimelineWindow()
 {
   SeqDelete(&_rows);
   SeqDelete(&_modules);
+}
+
+//----------------------------------------------------------------------------------
+bool TimelineWindow::Init()
+{
+  if (!VirtualWindow::Init())
+    return false;
+
+  _windowManager->RegisterHandler(Event::MouseButtonPressed, nullptr, bind(&TimelineWindow::OnMouseButtonPressed, this, _1));
+  _windowManager->RegisterHandler(Event::MouseMoved, nullptr, bind(&TimelineWindow::OnMouseMoved, this, _1));
+  _windowManager->RegisterHandler(Event::MouseButtonReleased, nullptr, bind(&TimelineWindow::OnMouseButtonReleased, this, _1));
+  _windowManager->RegisterHandler(Event::MouseWheelMoved, nullptr, bind(&TimelineWindow::OnMouseWheelMoved, this, _1));
+
+  if (!_font.loadFromFile(EDITOR.GetAppRoot() + "gfx/04b_03b_.ttf"))
+    return false;
+
+  const vector<Effect>& effects = EDITOR.GetEffects();
+  const editor::Settings& settings = EDITOR.Settings();
+
+  int x = settings.module_view_width();
+  int y = settings.module_row_height() - 2;
+  Vector2i rowSize(_size.x - settings.module_view_width(), settings.module_row_height());
+  for (u32 i = 0; i < 10; ++i)
+  {
+    _rows.push_back(new Row{ i, IntRect(Vector2i(x, y), rowSize) });
+    y += settings.module_row_height() - 2;
+  }
+
+
+  Vector2i moduleSize(settings.module_view_width(), settings.module_row_height());
+  y = settings.module_row_height() - 2;
+  for (u32 i = 0; i < effects.size(); ++i)
+  {
+    const Effect& effect = effects[i];
+    _modules.push_back(new Module{ i, effect.name, IntRect(Vector2i(0, y), moduleSize) });
+    y += settings.module_row_height() - 2;
+  }
+
+  return true;
 }
 
 //----------------------------------------------------------------------------------
@@ -55,6 +95,8 @@ void TimelineWindow::ResetDragDrop()
   if (_selectedModule)
     _selectedModule->flags.Reset();
   _selectedModule = nullptr;
+
+  _lastDragPos = Vector2i(-1, -1);
 
   _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
   _timelineFlags.Clear(TimelineFlagsF::PendingEffectMove);
@@ -131,6 +173,25 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
 {
   Vector2i pos = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
   time_duration curTime = PixelToTime(pos.x);
+
+  // timeline scrolling has priority
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
+  {
+    if (_lastDragPos.x == -1)
+    {
+      _lastDragPos = Vector2i(event.mouseMove.x, event.mouseMove.y);
+      return true;
+    }
+    int delta = event.mouseMove.x - _lastDragPos.x;
+    time_duration d = AbsPixelToTime(delta);
+    if (_panelOffset + d < seconds(0))
+      _panelOffset = seconds(0);
+    else 
+    _panelOffset += AbsPixelToTime(delta);
+
+    _lastDragPos = Vector2i(event.mouseMove.x, event.mouseMove.y);
+    return true;
+  }
 
   // should we start module drag/drop
   if (_timelineFlags.IsSet(TimelineFlagsF::PendingDrag))
@@ -251,40 +312,16 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 }
 
 //----------------------------------------------------------------------------------
-bool TimelineWindow::Init()
+bool TimelineWindow::OnMouseWheelMoved(const Event& event)
 {
-  _windowManager->RegisterHandler(Event::MouseButtonPressed, nullptr, bind(&TimelineWindow::OnMouseButtonPressed, this, _1));
-  _windowManager->RegisterHandler(Event::MouseMoved, nullptr, bind(&TimelineWindow::OnMouseMoved, this, _1));
-  _windowManager->RegisterHandler(Event::MouseButtonReleased, nullptr, bind(&TimelineWindow::OnMouseButtonReleased, this, _1));
-
-  if (!VirtualWindow::Init())
-    return false;
-
-  if (!_font.loadFromFile(EDITOR.GetAppRoot() + "gfx/04b_03b_.ttf"))
-    return false;
-
-  const vector<Effect>& effects = EDITOR.GetEffects();
   const editor::Settings& settings = EDITOR.Settings();
 
-  int x = settings.module_view_width();
-  int y = settings.module_row_height() - 2;
-  Vector2i rowSize(_size.x - settings.module_view_width(), settings.module_row_height());
-  for (u32 i = 0; i < 10; ++i)
-  {
-    _rows.push_back(new Row{i, IntRect(Vector2i(x, y), rowSize)});
-    y += settings.module_row_height() - 2;
-  }
+  if (event.mouseWheel.delta < 0)
+    _pixelsPerSecond *= 2;
+  else if (event.mouseWheel.delta > 0)
+    _pixelsPerSecond /= 2;
 
-
-  Vector2i moduleSize(settings.module_view_width(), settings.module_row_height());
-  y = settings.module_row_height() - 2;
-  for (u32 i = 0; i < effects.size(); ++i)
-  {
-    const Effect& effect = effects[i];
-    _modules.push_back(new Module{i, effect.name, IntRect(Vector2i(0, y), moduleSize)});
-    y += settings.module_row_height() - 2;
-  }
-
+  _pixelsPerSecond = Clamp(settings.timeline_zoom_min(), settings.timeline_zoom_max(), _pixelsPerSecond);
 
   return true;
 }
@@ -326,7 +363,10 @@ void TimelineWindow::DrawTimeline()
   _texture.draw(ticker);
 
   time_duration t = EDITOR.CurTime();
-  Text curTime(to_string("TIME: %.3f", t.total_milliseconds() / 1000.0f), _font);
+  Text curTime(to_string("TIME: %.3f, OFS: %.3f, SCALE: %.3f", 
+    t.total_milliseconds() / 1000.0f, 
+    _panelOffset.total_milliseconds() / 1000.0f,
+    _pixelsPerSecond / 100.0f), _font);
   curTime.setPosition(10, 0);
   curTime.setCharacterSize(16);
   _texture.draw(curTime);

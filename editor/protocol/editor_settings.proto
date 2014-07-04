@@ -19,7 +19,11 @@ message Settings
 
   optional uint32 effect_height = 30 [default = 40];
   optional uint32 resize_handle = 31 [default = 6];
-
+  
+  optional uint32 timeline_zoom_min = 40 [default = 16];
+  optional uint32 timeline_zoom_max = 41 [default = 1024];
+  optional uint32 timeline_zoom_default = 42 [default = 128];
+  
   optional Color4 default_row_color = 100;
   optional Color4 selected_row_color = 101;
   optional Color4 hover_row_color = 102;

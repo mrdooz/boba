@@ -253,6 +253,27 @@ class Settings : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 resize_handle() const;
   inline void set_resize_handle(::google::protobuf::uint32 value);
 
+  // optional uint32 timeline_zoom_min = 40 [default = 16];
+  inline bool has_timeline_zoom_min() const;
+  inline void clear_timeline_zoom_min();
+  static const int kTimelineZoomMinFieldNumber = 40;
+  inline ::google::protobuf::uint32 timeline_zoom_min() const;
+  inline void set_timeline_zoom_min(::google::protobuf::uint32 value);
+
+  // optional uint32 timeline_zoom_max = 41 [default = 1024];
+  inline bool has_timeline_zoom_max() const;
+  inline void clear_timeline_zoom_max();
+  static const int kTimelineZoomMaxFieldNumber = 41;
+  inline ::google::protobuf::uint32 timeline_zoom_max() const;
+  inline void set_timeline_zoom_max(::google::protobuf::uint32 value);
+
+  // optional uint32 timeline_zoom_default = 42 [default = 128];
+  inline bool has_timeline_zoom_default() const;
+  inline void clear_timeline_zoom_default();
+  static const int kTimelineZoomDefaultFieldNumber = 42;
+  inline ::google::protobuf::uint32 timeline_zoom_default() const;
+  inline void set_timeline_zoom_default(::google::protobuf::uint32 value);
+
   // optional .editor.Color4 default_row_color = 100;
   inline bool has_default_row_color() const;
   inline void clear_default_row_color();
@@ -305,6 +326,12 @@ class Settings : public ::google::protobuf::Message {
   inline void clear_has_effect_height();
   inline void set_has_resize_handle();
   inline void clear_has_resize_handle();
+  inline void set_has_timeline_zoom_min();
+  inline void clear_has_timeline_zoom_min();
+  inline void set_has_timeline_zoom_max();
+  inline void clear_has_timeline_zoom_max();
+  inline void set_has_timeline_zoom_default();
+  inline void clear_has_timeline_zoom_default();
   inline void set_has_default_row_color();
   inline void clear_has_default_row_color();
   inline void set_has_selected_row_color();
@@ -322,14 +349,17 @@ class Settings : public ::google::protobuf::Message {
   ::google::protobuf::uint32 module_view_width_;
   ::google::protobuf::uint32 module_row_height_;
   ::google::protobuf::uint32 effect_height_;
+  ::google::protobuf::uint32 resize_handle_;
+  ::google::protobuf::uint32 timeline_zoom_min_;
+  ::google::protobuf::uint32 timeline_zoom_max_;
+  ::google::protobuf::uint32 timeline_zoom_default_;
   ::editor::Color4* default_row_color_;
   ::editor::Color4* selected_row_color_;
   ::editor::Color4* hover_row_color_;
   ::editor::Color4* invalid_hover_row_color_;
-  ::google::protobuf::uint32 resize_handle_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(14 + 31) / 32];
 
   friend void  protobuf_AddDesc_editor_5fsettings_2eproto();
   friend void protobuf_AssignDesc_editor_5fsettings_2eproto();
@@ -591,15 +621,81 @@ inline void Settings::set_resize_handle(::google::protobuf::uint32 value) {
   resize_handle_ = value;
 }
 
-// optional .editor.Color4 default_row_color = 100;
-inline bool Settings::has_default_row_color() const {
+// optional uint32 timeline_zoom_min = 40 [default = 16];
+inline bool Settings::has_timeline_zoom_min() const {
   return (_has_bits_[0] & 0x00000080u) != 0;
 }
-inline void Settings::set_has_default_row_color() {
+inline void Settings::set_has_timeline_zoom_min() {
   _has_bits_[0] |= 0x00000080u;
 }
-inline void Settings::clear_has_default_row_color() {
+inline void Settings::clear_has_timeline_zoom_min() {
   _has_bits_[0] &= ~0x00000080u;
+}
+inline void Settings::clear_timeline_zoom_min() {
+  timeline_zoom_min_ = 16u;
+  clear_has_timeline_zoom_min();
+}
+inline ::google::protobuf::uint32 Settings::timeline_zoom_min() const {
+  return timeline_zoom_min_;
+}
+inline void Settings::set_timeline_zoom_min(::google::protobuf::uint32 value) {
+  set_has_timeline_zoom_min();
+  timeline_zoom_min_ = value;
+}
+
+// optional uint32 timeline_zoom_max = 41 [default = 1024];
+inline bool Settings::has_timeline_zoom_max() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void Settings::set_has_timeline_zoom_max() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void Settings::clear_has_timeline_zoom_max() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void Settings::clear_timeline_zoom_max() {
+  timeline_zoom_max_ = 1024u;
+  clear_has_timeline_zoom_max();
+}
+inline ::google::protobuf::uint32 Settings::timeline_zoom_max() const {
+  return timeline_zoom_max_;
+}
+inline void Settings::set_timeline_zoom_max(::google::protobuf::uint32 value) {
+  set_has_timeline_zoom_max();
+  timeline_zoom_max_ = value;
+}
+
+// optional uint32 timeline_zoom_default = 42 [default = 128];
+inline bool Settings::has_timeline_zoom_default() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void Settings::set_has_timeline_zoom_default() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void Settings::clear_has_timeline_zoom_default() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void Settings::clear_timeline_zoom_default() {
+  timeline_zoom_default_ = 128u;
+  clear_has_timeline_zoom_default();
+}
+inline ::google::protobuf::uint32 Settings::timeline_zoom_default() const {
+  return timeline_zoom_default_;
+}
+inline void Settings::set_timeline_zoom_default(::google::protobuf::uint32 value) {
+  set_has_timeline_zoom_default();
+  timeline_zoom_default_ = value;
+}
+
+// optional .editor.Color4 default_row_color = 100;
+inline bool Settings::has_default_row_color() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void Settings::set_has_default_row_color() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void Settings::clear_has_default_row_color() {
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void Settings::clear_default_row_color() {
   if (default_row_color_ != NULL) default_row_color_->::editor::Color4::Clear();
@@ -631,13 +727,13 @@ inline void Settings::set_allocated_default_row_color(::editor::Color4* default_
 
 // optional .editor.Color4 selected_row_color = 101;
 inline bool Settings::has_selected_row_color() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000800u) != 0;
 }
 inline void Settings::set_has_selected_row_color() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000800u;
 }
 inline void Settings::clear_has_selected_row_color() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000800u;
 }
 inline void Settings::clear_selected_row_color() {
   if (selected_row_color_ != NULL) selected_row_color_->::editor::Color4::Clear();
@@ -669,13 +765,13 @@ inline void Settings::set_allocated_selected_row_color(::editor::Color4* selecte
 
 // optional .editor.Color4 hover_row_color = 102;
 inline bool Settings::has_hover_row_color() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00001000u) != 0;
 }
 inline void Settings::set_has_hover_row_color() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00001000u;
 }
 inline void Settings::clear_has_hover_row_color() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00001000u;
 }
 inline void Settings::clear_hover_row_color() {
   if (hover_row_color_ != NULL) hover_row_color_->::editor::Color4::Clear();
@@ -707,13 +803,13 @@ inline void Settings::set_allocated_hover_row_color(::editor::Color4* hover_row_
 
 // optional .editor.Color4 invalid_hover_row_color = 103;
 inline bool Settings::has_invalid_hover_row_color() const {
-  return (_has_bits_[0] & 0x00000400u) != 0;
+  return (_has_bits_[0] & 0x00002000u) != 0;
 }
 inline void Settings::set_has_invalid_hover_row_color() {
-  _has_bits_[0] |= 0x00000400u;
+  _has_bits_[0] |= 0x00002000u;
 }
 inline void Settings::clear_has_invalid_hover_row_color() {
-  _has_bits_[0] &= ~0x00000400u;
+  _has_bits_[0] &= ~0x00002000u;
 }
 inline void Settings::clear_invalid_hover_row_color() {
   if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::editor::Color4::Clear();

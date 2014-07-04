@@ -134,6 +134,7 @@ namespace editor
     bool OnMouseButtonPressed(const Event& event);
     bool OnMouseMoved(const Event& event);
     bool OnMouseButtonReleased(const Event& event);
+    bool OnMouseWheelMoved(const Event& event);
 
     void DrawModule(float x, float y, const Module& m);
     void DrawDraggingModule();
@@ -147,6 +148,8 @@ namespace editor
     {
       return sf::Vector2<T>((T)(x - _pos.x), (T)(y - _pos.y));
     }
+
+    Vector2i _lastDragPos;
 
     time_duration _panelOffset;
     u32 _pixelsPerSecond;

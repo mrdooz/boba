@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
+#include <SFML/Window/Mouse.hpp>
 
 #include <atomic>
 #include <condition_variable>
