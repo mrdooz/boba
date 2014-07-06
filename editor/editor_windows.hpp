@@ -149,6 +149,11 @@ namespace editor
       return sf::Vector2<T>((T)(x - _pos.x), (T)(y - _pos.y));
     }
 
+    Sprite _moduleSprite;
+    Sprite _timelineSprite;
+    RenderTexture _moduleTexture;
+    RenderTexture _timelineTexture;
+
     Vector2i _lastDragPos;
 
     time_duration _panelOffset;

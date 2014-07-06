@@ -5,6 +5,8 @@
 using namespace editor;
 using namespace bristol;
 
+#pragma warning(disable: 4244)
+
 //----------------------------------------------------------------------------------
 PropertyWindow::PropertyWindow(
   const string& title,
@@ -61,7 +63,7 @@ bool TimelineWindow::Init()
   const vector<Effect>& effects = EDITOR.GetEffects();
   const editor::Settings& settings = EDITOR.Settings();
 
-  int x = settings.module_view_width();
+  int x = 0;
   int y = settings.module_row_height() - 2;
   Vector2i rowSize(_size.x - settings.module_view_width(), settings.module_row_height());
   for (u32 i = 0; i < 10; ++i)
@@ -80,6 +82,14 @@ bool TimelineWindow::Init()
     y += settings.module_row_height() - 2;
   }
 
+  // create render textures and sprites
+  _moduleTexture.create(settings.module_view_width(), _size.y);
+  _moduleSprite.setTexture(_moduleTexture.getTexture(), true);
+
+  _timelineTexture.create(_size.x - settings.module_view_width(), _size.y);
+  _timelineSprite.setTexture(_timelineTexture.getTexture(), true);
+  _timelineSprite.setPosition(settings.module_view_width(), 0);
+
   return true;
 }
 
@@ -88,13 +98,17 @@ void TimelineWindow::ResetDragDrop()
 {
   _draggingEffect.Reset();
   if (_selectedEffect)
-    _selectedEffect->flags.Reset();
-  _selectedEffect = nullptr;
+  {
+    _selectedEffect->flags.Clear(EffectInstanceFlagsF::Move);
+    _selectedEffect->flags.Clear(EffectInstanceFlagsF::ResizeStart);
+    _selectedEffect->flags.Clear(EffectInstanceFlagsF::ResizeEnd);
+  }
 
   _draggingModule.Reset();
   if (_selectedModule)
-    _selectedModule->flags.Reset();
-  _selectedModule = nullptr;
+  {
+    // reset any module flags..
+  }
 
   _lastDragPos = Vector2i(-1, -1);
 
@@ -133,7 +147,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   }
   else if (y < (int)settings.module_row_height())
   {
-    time_duration t = PixelToTime(event.mouseButton.x - (int)_pos.x) + _panelOffset;
+    time_duration t = PixelToTime(event.mouseButton.x - (int)_pos.x);
     if (!t.is_not_a_date_time())
     {
       EDITOR.SetCurTime(t);
@@ -171,8 +185,11 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseMoved(const Event& event)
 {
-  Vector2i pos = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
-  time_duration curTime = PixelToTime(pos.x);
+  const editor::Settings& settings = EDITOR.Settings();
+  Vector2i posModule = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
+  Vector2i posTimeline(posModule.x - settings.module_view_width(), posModule.y);
+
+  time_duration curTime = PixelToTime(posModule.x);
 
   // timeline scrolling has priority
   if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
@@ -206,7 +223,7 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     // check if the module is above any row
     for (Row* row : _rows)
     {
-      if (row->rect.contains(pos))
+      if (row->rect.contains(posModule))
       {
         // check if there is space for the current module
         _draggingModule.dragStart = curTime;
@@ -223,11 +240,10 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
   // check for pending effect move
   if (_timelineFlags.IsSet(TimelineFlagsF::PendingEffectMove))
   {
-    const editor::Settings& settings = EDITOR.Settings();
     _timelineFlags.Clear(TimelineFlagsF::PendingEffectMove);
 
     _draggingEffect.effect    = _selectedEffect;
-    _draggingEffect.startPos  = pos.x;
+    _draggingEffect.startPos  = posTimeline.x;
     _draggingEffect.orgStart  = _selectedEffect->startTime;
     _draggingEffect.orgEnd    = _selectedEffect->endTime;
 
@@ -244,15 +260,15 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     middleRect.width    = rightRect.left - middleRect.left;
 
     // check if this is a move or a resize
-    if (leftRect.contains(pos))
+    if (leftRect.contains(posTimeline))
     {
       _selectedEffect->flags.Set(EffectInstanceFlagsF::ResizeStart);
     }
-    else if (rightRect.contains(pos))
+    else if (rightRect.contains(posTimeline))
     {
       _selectedEffect->flags.Set(EffectInstanceFlagsF::ResizeEnd);
     }
-    else if (middleRect.contains(pos))
+    else if (middleRect.contains(posTimeline))
     {
       _selectedEffect->flags.Set(EffectInstanceFlagsF::Move);
     }
@@ -261,7 +277,7 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
   if (_draggingEffect.effect)
   {
     // calc delta, and apply
-    time_duration delta = AbsPixelToTime(pos.x - _draggingEffect.startPos);
+    time_duration delta = AbsPixelToTime(posTimeline.x - _draggingEffect.startPos);
     EffectInstance* e   = _draggingEffect.effect;
 
     EffectInstanceFlags f = _selectedEffect->flags;
@@ -339,65 +355,68 @@ void TimelineWindow::DrawEffect(const EffectInstance& effect, const Row& row, Te
   int diff = (row.rect.height - settings.effect_height()) / 2;
   Vector2f pos(start, row.rect.top + diff);
   Vector2f size(end - start, settings.effect_height());
-  DrawRectOutline(_texture, pos, size,
+  DrawRectOutline(_timelineTexture, pos, size,
       effect.flags.IsSet(EffectInstanceFlagsF::Selected) ? selectedCol : hoverCol, 2, settings.resize_handle());
 
   text.setString(effect.module->name);
   Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
   text.setPosition(pos + (size - ofs) / 2.0f);
-  _texture.draw(text);
+  _timelineTexture.draw(text);
 
 }
 
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawTimeline()
 {
+  _timelineTexture.clear();
+
   const editor::Settings& settings = EDITOR.Settings();
 
   Color rowCol = FromProtocol(settings.default_row_color());
+  time_duration curTime = EDITOR.CurTime();
 
   // draw the ticker
   RectangleShape ticker;
   ticker.setFillColor(rowCol);
   ticker.setSize(Vector2f(_size.x, settings.ticker_height()));
-  _texture.draw(ticker);
-
-  time_duration t = EDITOR.CurTime();
-  Text curTime(to_string("TIME: %.3f, OFS: %.3f, SCALE: %.3f", 
-    t.total_milliseconds() / 1000.0f, 
-    _panelOffset.total_milliseconds() / 1000.0f,
-    _pixelsPerSecond / 100.0f), _font);
-  curTime.setPosition(10, 0);
-  curTime.setCharacterSize(16);
-  _texture.draw(curTime);
+  _timelineTexture.draw(ticker);
 
   VertexArray lines(sf::Lines);
-  int x = settings.module_view_width();
+  int x = 0;
   int y = settings.ticker_height() - 25;
   int minorInc = settings.ticker_interval() / settings.ticks_per_interval();
+  Text text;
+  text.setFont(_font);
+  text.setCharacterSize(8);
   while (x < _size.x)
   {
+    // need to cheese the 'x' value to make it relative the whole window, and not just the
+    // timline part
+    time_duration t = PixelToTime(x + settings.module_view_width());
+    text.setString(to_string("%.1f", t.total_milliseconds() / 1000.0f));
+    text.setPosition(x, y-20);
+    _timelineTexture.draw(text);
     lines.append(sf::Vertex(Vector2f(x, y + 0)));
     lines.append(sf::Vertex(Vector2f(x, y + 20)));
     int tmpX = x;
-    for (int i = 0; i < settings.ticks_per_interval(); ++i)
+    for (int i = 0; i < (int)settings.ticks_per_interval(); ++i)
     {
       lines.append(sf::Vertex(Vector2f(x + i * minorInc, y + 5)));
       lines.append(sf::Vertex(Vector2f(x + i * minorInc, y + 15)));
     }
     x = tmpX + settings.ticker_interval();
   }
-  _texture.draw(lines);
+  _timelineTexture.draw(lines);
 
   // draw the rows
-  x = settings.module_view_width();
+  x = 0;
   y = settings.ticker_height();
-  Text text;
   text.setCharacterSize(16);
   text.setFont(_font);
   for (const Row* row : _rows)
   {
-    DrawRectOutline(_texture, Vector2f(row->rect.left, row->rect.top), Vector2f(row->rect.width, row->rect.height), rowCol, 2);
+    DrawRectOutline(_timelineTexture, Vector2f(row->rect.left, row->rect.top), 
+        Vector2f(row->rect.width, row->rect.height), rowCol, 2);
 
     for (const EffectInstance* e : row->effects)
     {
@@ -409,18 +428,21 @@ void TimelineWindow::DrawTimeline()
   VertexArray curLine(sf::Lines);
   int w = _size.x;
   y = settings.ticker_height() - 25;
-  while (TimeToPixel(t - _panelOffset) > w)
+  while (TimeToPixel(curTime - _panelOffset) > w)
   {
     _panelOffset += PixelToTime(w);
   }
 
-  x = TimeToPixel(EDITOR.CurTime() - _panelOffset);
+  x = TimeToPixel(EDITOR.CurTime());
   curLine.append(sf::Vertex(Vector2f(x, y), Color::Red));
   curLine.append(sf::Vertex(Vector2f(x, _size.y), Color::Red));
-  _texture.draw(curLine);
+  _timelineTexture.draw(curLine);
 
   // draw the drag/drop module
   DrawDraggingModule();
+
+  _timelineTexture.display();
+  _texture.draw(_timelineSprite);
 }
 
 //----------------------------------------------------------------------------------
@@ -437,14 +459,14 @@ void TimelineWindow::DrawDraggingModule()
   Color col = selectedRowCol;
   Vector2f size(TimeToPixel(_draggingModule.dragEnd) - pos.x, settings.module_row_height());
 
-  DrawRectOutline(_texture, pos, size, col, 2);
+  DrawRectOutline(_timelineTexture, pos, size, col, 2);
   Text text;
   text.setString(_draggingModule.module->name);
   text.setCharacterSize(16);
   text.setFont(_font);
   Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
   text.setPosition(pos + (size - ofs) / 2.0f);
-  _texture.draw(text);
+  _timelineTexture.draw(text);
 }
 
 //----------------------------------------------------------------------------------
@@ -456,41 +478,58 @@ void TimelineWindow::DrawModule(float x, float y, const Module& module)
 
   Vector2f size(module.rect.width, module.rect.height);
   Color col = module.flags.IsSet(ModuleFlagsF::Selected) ? selectedRowCol : rowCol;
-  DrawRectOutline(_texture, Vector2f(x,y), size, col, 2);
+  DrawRectOutline(_moduleTexture, Vector2f(x,y), size, col, 2);
   Text text;
   text.setString(module.name);
   text.setCharacterSize(16);
   text.setFont(_font);
   Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
   text.setPosition(Vector2f(x, y) + (size - ofs) / 2.0f);
-  _texture.draw(text);
+  _moduleTexture.draw(text);
 }
 
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawModules()
 {
+  _moduleTexture.clear();
+
+  // draw the header
+  time_duration t = EDITOR.CurTime();
+  Text text(to_string("TIME: %.3f, OFS: %.3f, SCALE: %.3f",
+    t.total_milliseconds() / 1000.0f,
+    _panelOffset.total_milliseconds() / 1000.0f,
+    _pixelsPerSecond / 100.0f), _font);
+  text.setPosition(10, 0);
+  text.setCharacterSize(14);
+  _moduleTexture.draw(text);
+
   for (const Module* module : _modules)
   {
     DrawModule(module->rect.left, module->rect.top, *module);
   }
+  _moduleTexture.display();
+  _texture.draw(_moduleSprite);
 }
 
 //----------------------------------------------------------------------------------
 int TimelineWindow::TimeToPixel(const time_duration& t)
 {
-  // p = s * t / 1000
-  // t = 1000 * p / s
-  return (u64)_pixelsPerSecond * t.total_milliseconds() / 1000 + EDITOR.Settings().module_view_width();
+  // p = s * (t + a) + m
+  // t = (p - m) / s - a
+  double s = (double)_pixelsPerSecond / 1000.0;
+  return s * (t.total_milliseconds() - _panelOffset.total_milliseconds());
 }
 
 //----------------------------------------------------------------------------------
 time_duration TimelineWindow::PixelToTime(int x)
 {
+  double s = (double)_pixelsPerSecond / 1000.0;
+
   x -= EDITOR.Settings().module_view_width();
   if (x < 0)
     return time_duration(boost::posix_time::not_a_date_time);
 
-  return milliseconds(1000 * x / _pixelsPerSecond);
+  return milliseconds(x / s) + _panelOffset;
 }
 
 //----------------------------------------------------------------------------------
