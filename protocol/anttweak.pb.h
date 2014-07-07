@@ -78,6 +78,10 @@ static const int kStepIFieldNumber = 50009;
 extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
     ::google::protobuf::internal::PrimitiveTypeTraits< ::google::protobuf::int32 >, 5, false >
   stepI;
+static const int kIsEffectFieldNumber = 50030;
+extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::MessageOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< bool >, 8, false >
+  is_effect;
 
 // ===================================================================
 

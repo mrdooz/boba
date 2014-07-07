@@ -18,3 +18,9 @@ extend google.protobuf.FieldOptions
   optional int32 maxI     = 50008;
   optional int32 stepI    = 50009;
 }
+
+extend google.protobuf.MessageOptions
+{
+  optional bool is_effect = 50030;
+}
+

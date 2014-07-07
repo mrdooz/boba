@@ -84,9 +84,10 @@ void protobuf_AddDesc_particle_2eproto() {
   ::anttweak::protobuf_AddDesc_anttweak_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\016particle.proto\022\010particle\032\016anttweak.pro"
-    "to\"s\n\006Config\022\025\n\rnum_particles\030\001 \001(\r\022\026\n\010b"
+    "to\"y\n\006Config\022\025\n\rnum_particles\030\001 \001(\r\022\026\n\010b"
     "b_col3f\030\003 \003(\002B\004\200\265\030\001\022\026\n\010bb_col4f\030\004 \003(\002B\004\210"
-    "\265\030\001\022\026\n\010bb_dir3f\030\005 \003(\002B\004\220\265\030\001\022\n\n\002cc\030\006 \001(\010", 159);
+    "\265\030\001\022\026\n\010bb_dir3f\030\005 \003(\002B\004\220\265\030\001\022\n\n\002cc\030\006 \001(\010:"
+    "\004\360\266\030\001", 165);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "particle.proto", &protobuf_RegisterTypes);
   Config::default_instance_ = new Config();

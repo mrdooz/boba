@@ -4,6 +4,8 @@ import "common.proto";
 
 message Spiky
 {
+  option (anttweak.is_effect) = true;
+  
   optional float radius                 = 1;
   optional float height                 = 2;
   optional uint32 radial_segments       = 3;
@@ -18,6 +20,8 @@ message Spiky
 
 message Plane
 {
+  option (anttweak.is_effect) = true;
+
   optional float width                  = 1;
   optional float height                 = 2;
   optional uint32 width_segments        = 3;

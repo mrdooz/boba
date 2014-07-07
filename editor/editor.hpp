@@ -1,6 +1,7 @@
 #pragma once
 
 #include "protocol/editor_settings.pb.h"
+#include "protocol/descriptor.pb.h"
 
 namespace bristol
 {
@@ -65,6 +66,7 @@ namespace editor
 
     static Editor* _instance;
     editor::Settings _settings;
+    google::protobuf::FileDescriptorSet _descriptorSet;
     string _appRoot;
     ptime _lastUpdate;
     time_duration _curTime;

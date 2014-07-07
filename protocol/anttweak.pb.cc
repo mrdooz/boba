@@ -70,7 +70,8 @@ void protobuf_AddDesc_anttweak_2eproto() {
     "-\n\004minI\022\035.google.protobuf.FieldOptions\030\327"
     "\206\003 \001(\005:-\n\004maxI\022\035.google.protobuf.FieldOp"
     "tions\030\330\206\003 \001(\005:.\n\005stepI\022\035.google.protobuf"
-    ".FieldOptions\030\331\206\003 \001(\005", 541);
+    ".FieldOptions\030\331\206\003 \001(\005:4\n\tis_effect\022\037.goo"
+    "gle.protobuf.MessageOptions\030\356\206\003 \001(\010", 595);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "anttweak.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::ExtensionSet::RegisterExtension(
@@ -103,6 +104,9 @@ void protobuf_AddDesc_anttweak_2eproto() {
   ::google::protobuf::internal::ExtensionSet::RegisterExtension(
     &::google::protobuf::FieldOptions::default_instance(),
     50009, 5, false, false);
+  ::google::protobuf::internal::ExtensionSet::RegisterExtension(
+    &::google::protobuf::MessageOptions::default_instance(),
+    50030, 8, false, false);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_anttweak_2eproto);
 }
 
@@ -142,6 +146,9 @@ struct StaticDescriptorInitializer_anttweak_2eproto {
 ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
     ::google::protobuf::internal::PrimitiveTypeTraits< ::google::protobuf::int32 >, 5, false >
   stepI(kStepIFieldNumber, 0);
+::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::MessageOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< bool >, 8, false >
+  is_effect(kIsEffectFieldNumber, false);
 
 // @@protoc_insertion_point(namespace_scope)
 

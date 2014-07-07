@@ -2,12 +2,13 @@
 #include "editor_windows.hpp"
 
 using namespace editor;
+using namespace google::protobuf;
 
 Editor* Editor::_instance;
 
 //----------------------------------------------------------------------------------
 template <typename T>
-bool LoadProto(const char* filename, T* out)
+bool LoadProto(const char* filename, T* out, bool textFormat = true)
 {
 #pragma warning(suppress: 4996)
   FILE* f = fopen(filename, "rb");
@@ -22,7 +23,9 @@ bool LoadProto(const char* filename, T* out)
   fread((char*)str.c_str(), 1, s, f);
   fclose(f);
 
-  return google::protobuf::TextFormat::ParseFromString(str, out);
+  return textFormat 
+    ? google::protobuf::TextFormat::ParseFromString(str, out)
+    : out->ParseFromString(str);
 }
 
 //----------------------------------------------------------------------------------
@@ -81,6 +84,47 @@ bool Editor::Init()
   {
       return LoadProto(filename.c_str(), &_settings);
   });
+
+  if (!LoadProto("config/desc.pb", &_descriptorSet, false))
+  {
+    return false;
+  }
+
+  for (const FileDescriptorProto& fileProto : _descriptorSet.file())
+  {
+    for (auto x : fileProto.extension())
+    {
+      int a = 10;
+    }
+
+    for (const DescriptorProto& descProto : fileProto.message_type())
+    {
+
+      bool isEffect = false;
+      // look for message option indicating an effect
+      for (int i = 0; i < descProto.options().unknown_fields().field_count(); ++i)
+      {
+        const UnknownField& f = descProto.options().unknown_fields().field(i);
+        if (f.number() == 50030)
+        {
+          isEffect = true;
+          break;
+        }
+      }
+
+      if (isEffect)
+      {
+        printf("name: %s\n", descProto.name().c_str());
+        for (const FieldDescriptorProto& fieldProto : descProto.field())
+        {
+          printf("  field: %s, %d\n", fieldProto.name().c_str(), fieldProto.type());
+        }
+
+      }
+    }
+
+  }
+
 
   size_t width, height;
 #ifdef _WIN32
