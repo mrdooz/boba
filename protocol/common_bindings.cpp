@@ -13,6 +13,7 @@ void BindVector2(common::Vector2* data, bool *dirty)
   cfg.data = data;
   cfg.dirty = dirty;
 
+#if WITH_ANT_TWEAK_BAR
   TwBar* bar = TwNewBar("common.Vector2");
   // Add x
   TwAddVarCB(bar, "x", TW_TYPE_FLOAT,
@@ -24,6 +25,7 @@ void BindVector2(common::Vector2* data, bool *dirty)
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_y(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->y(); }, (void*)&cfg, nullptr);
 
+#endif
 }
 void BindVector3(common::Vector3* data, bool *dirty)
 {
@@ -37,6 +39,7 @@ void BindVector3(common::Vector3* data, bool *dirty)
   cfg.data = data;
   cfg.dirty = dirty;
 
+#if WITH_ANT_TWEAK_BAR
   TwBar* bar = TwNewBar("common.Vector3");
   // Add x
   TwAddVarCB(bar, "x", TW_TYPE_FLOAT,
@@ -53,6 +56,7 @@ void BindVector3(common::Vector3* data, bool *dirty)
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_z(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->z(); }, (void*)&cfg, nullptr);
 
+#endif
 }
 void BindVector4(common::Vector4* data, bool *dirty)
 {
@@ -66,6 +70,7 @@ void BindVector4(common::Vector4* data, bool *dirty)
   cfg.data = data;
   cfg.dirty = dirty;
 
+#if WITH_ANT_TWEAK_BAR
   TwBar* bar = TwNewBar("common.Vector4");
   // Add x
   TwAddVarCB(bar, "x", TW_TYPE_FLOAT,
@@ -87,6 +92,7 @@ void BindVector4(common::Vector4* data, bool *dirty)
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_w(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->w(); }, (void*)&cfg, nullptr);
 
+#endif
 }
 void BindMatrix3x3(common::Matrix3x3* data, bool *dirty)
 {
@@ -100,7 +106,9 @@ void BindMatrix3x3(common::Matrix3x3* data, bool *dirty)
   cfg.data = data;
   cfg.dirty = dirty;
 
+#if WITH_ANT_TWEAK_BAR
   TwBar* bar = TwNewBar("common.Matrix3x3");
+#endif
 }
 void BindMatrix4x4(common::Matrix4x4* data, bool *dirty)
 {
@@ -114,6 +122,8 @@ void BindMatrix4x4(common::Matrix4x4* data, bool *dirty)
   cfg.data = data;
   cfg.dirty = dirty;
 
+#if WITH_ANT_TWEAK_BAR
   TwBar* bar = TwNewBar("common.Matrix4x4");
+#endif
 }
 }

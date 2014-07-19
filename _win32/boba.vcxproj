@@ -432,8 +432,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ANTTWEAKBAR_ROOT)/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ANTTWEAKBAR_ROOT)/lib/$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ANTTWEAKBAR_ROOT)/include;D:\projects\bristol;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ANTTWEAKBAR_ROOT)/lib/$(Configuration);D:\projects\protobuf-2.5.0\vsprojects\Release;D:\projects\bristol\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -470,7 +470,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>libprotobuf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libprotobuf.lib;bristol_main.lib;bristol_dx.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

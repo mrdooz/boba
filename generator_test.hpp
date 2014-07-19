@@ -124,6 +124,7 @@ namespace boba
       float tau;
       float key;
       float delta;
+      float ofs;
     };
     ConstantBuffer<CBufferToneMapping> _cbToneMapping;
 
@@ -137,8 +138,10 @@ namespace boba
       float radius;
     };
     ConstantBuffer<CBufferBlur> _cbBlur;
+    GraphicsObjectHandle _csBlurTranspose;
     GraphicsObjectHandle _csBlurX;
     GraphicsObjectHandle _csBlurY;
+    GraphicsObjectHandle _csCopyTranspose;
 
     struct CBufferBloom
     {

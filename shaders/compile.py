@@ -20,10 +20,16 @@ ps = {
 }
 
 cs = {
-    'blur' : ['BoxBlurX', 'BoxBlurY'],
+#    'blur' : ['BoxBlurX', 'BoxBlurY', 'BlurTranspose'],
+    'blur' : ['CopyTranspose', 'BlurTranspose'],
 }
 
+first_run = True
+
 def time_cmp(t, f):
+    global first_run
+    if first_run:
+        return True
     try:
         obj_time = os.path.getmtime(f)
         return t > obj_time
@@ -31,6 +37,7 @@ def time_cmp(t, f):
         return True
 
 while True:
+    #import pdb; pdb.set_trace()
     for g in glob.glob('*.hlsl'):
         (cur, e) = os.path.splitext(g)
 
@@ -62,5 +69,6 @@ while True:
                     out_name = cur + '_' + c
                     subprocess.call(['fxc', '/Tcs_5_0', '/Od', '/Zi', ('/E%s' % c), ('/Fo%sD.cso' % out_name), ('/Fc%sD.csa' % out_name), ('%s.hlsl' % cur)])
                     subprocess.call(['fxc', '/Tcs_5_0', '/O3',        ('/E%s' % c), ('/Fo%s.cso' % out_name),  ('/Fc%s.csa' % out_name),  ('%s.hlsl' % cur)])
-            
+
+    first_run = False
     time.sleep(1)

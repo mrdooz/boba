@@ -59,7 +59,7 @@ void protobuf_AssignDesc_generator_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Spiky));
   Plane_descriptor_ = file->message_type(1);
-  static const int Plane_offsets_[13] = {
+  static const int Plane_offsets_[14] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, width_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, width_segments_),
@@ -70,6 +70,7 @@ void protobuf_AssignDesc_generator_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, obj_r_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, tau_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, key_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, ofs_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, blur_radius_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, bloom_threshold_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, bloom_multiplier_),
@@ -129,18 +130,20 @@ void protobuf_AddDesc_generator_2eproto() {
     "era_dir\030\006 \001(\0132\017.common.Vector3B\004\230\265\030\001\022$\n\005"
     "obj_t\030\007 \001(\0132\017.common.Vector3B\004\230\265\030\001\022&\n\005ob"
     "j_r\030\010 \001(\0132\021.common.Matrix4x4B\004\230\265\030\001:\004\360\266\030\001"
-    "\"\326\003\n\005Plane\022\r\n\005width\030\001 \001(\002\022\016\n\006height\030\002 \001("
+    "\"\227\004\n\005Plane\022\r\n\005width\030\001 \001(\002\022\016\n\006height\030\002 \001("
     "\002\022\026\n\016width_segments\030\003 \001(\r\022\027\n\017height_segm"
     "ents\030\004 \001(\r\022)\n\ncamera_pos\030\005 \001(\0132\017.common."
     "Vector3B\004\230\265\030\001\022)\n\ncamera_dir\030\006 \001(\0132\017.comm"
     "on.Vector3B\004\230\265\030\001\022$\n\005obj_t\030\007 \001(\0132\017.common"
     ".Vector3B\004\230\265\030\001\022&\n\005obj_r\030\010 \001(\0132\021.common.M"
-    "atrix4x4B\004\230\265\030\001\022\020\n\003tau\030\t \001(\002:\0030.5\022(\n\003key\030"
-    "\n \001(\002:\0040.18B\025\245\265\030\n\327#<\255\265\030\000\000\200\?\265\265\030\n\327#<\022.\n\013bl"
-    "ur_radius\030\013 \001(\002:\00210B\025\245\265\030\000\000\000\000\255\265\030\000\000HC\265\265\030\000\000"
-    "\200\?\0223\n\017bloom_threshold\030\014 \001(\002:\0030.8B\025\245\265\030\000\000\000"
-    "\000\255\265\030\000\000\200\?\265\265\030\n\327#<\0222\n\020bloom_multiplier\030\r \001("
-    "\002:\0011B\025\245\265\030\000\000\000\000\255\265\030\000\000\240@\265\265\030\315\314\314=:\004\360\266\030\001", 793);
+    "atrix4x4B\004\230\265\030\001\022\'\n\003tau\030\t \001(\002:\0030.5B\025\245\265\030\n\327#"
+    "<\255\265\030\000\000\000@\265\265\030\n\327#<\022(\n\003key\030\n \001(\002:\0040.18B\025\245\265\030\n"
+    "\327#<\255\265\030\000\000\200\?\265\265\030\n\327#<\022(\n\003ofs\030\013 \001(\002:\0040.18B\025\245\265"
+    "\030\n\327#<\255\265\030\000\000\200\?\265\265\030\n\327#<\022.\n\013blur_radius\030\014 \001(\002"
+    ":\00210B\025\245\265\030\000\000\000\000\255\265\030\000\000HC\265\265\030\000\000\200\?\0223\n\017bloom_thr"
+    "eshold\030\r \001(\002:\0030.8B\025\245\265\030\000\000\000\000\255\265\030\000\000\200\?\265\265\030\n\327#<"
+    "\0222\n\020bloom_multiplier\030\016 \001(\002:\0011B\025\245\265\030\000\000\000\000\255\265"
+    "\030\000\000\240@\265\265\030\315\314\314=:\004\360\266\030\001", 858);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "generator.proto", &protobuf_RegisterTypes);
   Spiky::default_instance_ = new Spiky();
@@ -674,6 +677,7 @@ const int Plane::kObjTFieldNumber;
 const int Plane::kObjRFieldNumber;
 const int Plane::kTauFieldNumber;
 const int Plane::kKeyFieldNumber;
+const int Plane::kOfsFieldNumber;
 const int Plane::kBlurRadiusFieldNumber;
 const int Plane::kBloomThresholdFieldNumber;
 const int Plane::kBloomMultiplierFieldNumber;
@@ -709,6 +713,7 @@ void Plane::SharedCtor() {
   obj_r_ = NULL;
   tau_ = 0.5f;
   key_ = 0.18f;
+  ofs_ = 0.18f;
   blur_radius_ = 10;
   bloom_threshold_ = 0.8f;
   bloom_multiplier_ = 1;
@@ -771,6 +776,7 @@ void Plane::Clear() {
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     tau_ = 0.5f;
     key_ = 0.18f;
+    ofs_ = 0.18f;
     blur_radius_ = 10;
     bloom_threshold_ = 0.8f;
     bloom_multiplier_ = 1;
@@ -932,12 +938,28 @@ bool Plane::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(93)) goto parse_blur_radius;
+        if (input->ExpectTag(93)) goto parse_ofs;
         break;
       }
 
-      // optional float blur_radius = 11 [default = 10];
+      // optional float ofs = 11 [default = 0.18];
       case 11: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_ofs:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &ofs_)));
+          set_has_ofs();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(101)) goto parse_blur_radius;
+        break;
+      }
+
+      // optional float blur_radius = 12 [default = 10];
+      case 12: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_blur_radius:
@@ -948,12 +970,12 @@ bool Plane::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(101)) goto parse_bloom_threshold;
+        if (input->ExpectTag(109)) goto parse_bloom_threshold;
         break;
       }
 
-      // optional float bloom_threshold = 12 [default = 0.8];
-      case 12: {
+      // optional float bloom_threshold = 13 [default = 0.8];
+      case 13: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_bloom_threshold:
@@ -964,12 +986,12 @@ bool Plane::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(109)) goto parse_bloom_multiplier;
+        if (input->ExpectTag(117)) goto parse_bloom_multiplier;
         break;
       }
 
-      // optional float bloom_multiplier = 13 [default = 1];
-      case 13: {
+      // optional float bloom_multiplier = 14 [default = 1];
+      case 14: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_bloom_multiplier:
@@ -1056,19 +1078,24 @@ void Plane::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(10, this->key(), output);
   }
 
-  // optional float blur_radius = 11 [default = 10];
+  // optional float ofs = 11 [default = 0.18];
+  if (has_ofs()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(11, this->ofs(), output);
+  }
+
+  // optional float blur_radius = 12 [default = 10];
   if (has_blur_radius()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(11, this->blur_radius(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(12, this->blur_radius(), output);
   }
 
-  // optional float bloom_threshold = 12 [default = 0.8];
+  // optional float bloom_threshold = 13 [default = 0.8];
   if (has_bloom_threshold()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(12, this->bloom_threshold(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(13, this->bloom_threshold(), output);
   }
 
-  // optional float bloom_multiplier = 13 [default = 1];
+  // optional float bloom_multiplier = 14 [default = 1];
   if (has_bloom_multiplier()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(13, this->bloom_multiplier(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(14, this->bloom_multiplier(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1137,19 +1164,24 @@ void Plane::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(10, this->key(), target);
   }
 
-  // optional float blur_radius = 11 [default = 10];
+  // optional float ofs = 11 [default = 0.18];
+  if (has_ofs()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(11, this->ofs(), target);
+  }
+
+  // optional float blur_radius = 12 [default = 10];
   if (has_blur_radius()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(11, this->blur_radius(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(12, this->blur_radius(), target);
   }
 
-  // optional float bloom_threshold = 12 [default = 0.8];
+  // optional float bloom_threshold = 13 [default = 0.8];
   if (has_bloom_threshold()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(12, this->bloom_threshold(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(13, this->bloom_threshold(), target);
   }
 
-  // optional float bloom_multiplier = 13 [default = 1];
+  // optional float bloom_multiplier = 14 [default = 1];
   if (has_bloom_multiplier()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(13, this->bloom_multiplier(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(14, this->bloom_multiplier(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1227,17 +1259,22 @@ int Plane::ByteSize() const {
       total_size += 1 + 4;
     }
 
-    // optional float blur_radius = 11 [default = 10];
+    // optional float ofs = 11 [default = 0.18];
+    if (has_ofs()) {
+      total_size += 1 + 4;
+    }
+
+    // optional float blur_radius = 12 [default = 10];
     if (has_blur_radius()) {
       total_size += 1 + 4;
     }
 
-    // optional float bloom_threshold = 12 [default = 0.8];
+    // optional float bloom_threshold = 13 [default = 0.8];
     if (has_bloom_threshold()) {
       total_size += 1 + 4;
     }
 
-    // optional float bloom_multiplier = 13 [default = 1];
+    // optional float bloom_multiplier = 14 [default = 1];
     if (has_bloom_multiplier()) {
       total_size += 1 + 4;
     }
@@ -1301,6 +1338,9 @@ void Plane::MergeFrom(const Plane& from) {
     if (from.has_key()) {
       set_key(from.key());
     }
+    if (from.has_ofs()) {
+      set_ofs(from.ofs());
+    }
     if (from.has_blur_radius()) {
       set_blur_radius(from.blur_radius());
     }
@@ -1343,6 +1383,7 @@ void Plane::Swap(Plane* other) {
     std::swap(obj_r_, other->obj_r_);
     std::swap(tau_, other->tau_);
     std::swap(key_, other->key_);
+    std::swap(ofs_, other->ofs_);
     std::swap(blur_radius_, other->blur_radius_);
     std::swap(bloom_threshold_, other->bloom_threshold_);
     std::swap(bloom_multiplier_, other->bloom_multiplier_);

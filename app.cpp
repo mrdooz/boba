@@ -160,7 +160,6 @@ bool App::Init(HINSTANCE hinstance)
     return false;
   }
 
-
 #if WITH_MUSIC
   FMOD_CHECKED(FMOD::System_Create(&_system));
 

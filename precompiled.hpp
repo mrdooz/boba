@@ -1,29 +1,55 @@
 #pragma once
 
-#ifdef _DEBUG
-#define WITH_UNPACKED_RESOUCES 1
-#define WITH_ANT_TWEAK_BAR 1
-#define WITH_PROTOBUF_TEXTFORMAT 1
-#else
-#define WITH_UNPACKED_RESOUCES 0
 #define WITH_ANT_TWEAK_BAR 0
-#define WITH_PROTOBUF_TEXTFORMAT 0
+#define WITH_FONT_RENDERING 0
+#define WITH_MEMORY_TRACKING 0
+#define WITH_GPU_PERF 1
+
+#define WITH_DXGI_DEBUG 0
+
+#define WITH_CONFIG_DLG 0
+#define WITH_UNPACKED_RESOUCES 1
+
+#define WITH_PROTOBUF_TEXTFORMAT 1
+
+#define WITH_DEBUG_SHADERS 0
+
+#ifdef _DEBUG
+  #ifndef WITH_UNPACKED_RESOUCES 
+    #define WITH_UNPACKED_RESOUCES 1
+  #endif
+  #ifndef WITH_ANT_TWEAK_BAR
+    #define WITH_ANT_TWEAK_BAR 1
+  #endif
+  #ifndef WITH_PROTOBUF_TEXTFORMAT
+    #define WITH_PROTOBUF_TEXTFORMAT 1
+  #endif
+  #ifndef WITH_DEBUG_SHADERS
+    #define WITH_DEBUG_SHADERS 1
+  #endif
+  #ifndef WITH_DXGI_DEBUG
+    #define WITH_DXGI_DEBUG 1
+  #endif
+#else
+  #ifndef WITH_UNPACKED_RESOUCES 
+    #define WITH_UNPACKED_RESOUCES 0
+  #endif
+  #ifndef WITH_ANT_TWEAK_BAR
+    #define WITH_ANT_TWEAK_BAR 0
+  #endif
+  #ifndef WITH_PROTOBUF_TEXTFORMAT
+    #define WITH_PROTOBUF_TEXTFORMAT 0
+  #endif
+  #ifndef WITH_DEBUG_SHADERS
+    #define WITH_DEBUG_SHADERS 0
+  #endif
+  #ifndef WITH_DXGI_DEBUG
+    #define WITH_DXGI_DEBUG 0
+  #endif
 #endif
 
 #if !defined(NOMINMAX)
 #define NOMINMAX
-#endif
-
-#define WITH_FONT_RENDERING 1
-
-#define WITH_MEMORY_TRACKING 0
-
-#define WITH_GPU_PERF 1
-
-#ifdef _DEBUG
-#define WITH_DEBUG_SHADERS 1
-#else
-#define WITH_DEBUG_SHADERS 0
 #endif
 
 
@@ -40,7 +66,18 @@
 #include <D3DX11tex.h>
 #include <DirectXMath.h>
 
+#if WITH_GPU_PERF
 #include <d3d9.h>
+#define GPU_BeginEvent(col, wszName) D3DPERF_BeginEvent(col, wszName)
+#define GPU_EndEvent() D3DPERF_EndEvent()
+#define GPU_SetMarker(col, wszName) D3DPERF_SetMarker(col, wszName)
+#define GPU_SetRegion(col, wszName) D3DPERF_SetRegion(col, wszName)
+#else
+#define GPU_BeginEvent(col, wszName)
+#define GPU_EndEvent()
+#define GPU_SetMarker(col, wszName)
+#define GPU_SetRegion(col, wszName)
+#endif
 
 #include <atlbase.h>
 #include <windows.h>
@@ -153,7 +190,7 @@ namespace boba
 #ifdef _DEBUG
 #pragma comment(lib, "libboost_date_time-vc120-mt-sgd-1_55.lib")
 #else
-#pragma comment(lib, "libboost_date_time-vc120-mt-sg-1_55.lib")
+#pragma comment(lib, "libboost_date_time-vc120-mt-s-1_55.lib")
 #endif
 
 #if WITH_ANT_TWEAK_BAR

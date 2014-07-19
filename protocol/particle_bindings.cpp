@@ -13,6 +13,7 @@ void BindConfig(particle::Config* data, bool *dirty)
   cfg.data = data;
   cfg.dirty = dirty;
 
+#if WITH_ANT_TWEAK_BAR
   TwBar* bar = TwNewBar("particle.Config");
   // Add num_particles
   TwAddVarCB(bar, "num_particles", TW_TYPE_UINT32,
@@ -39,5 +40,6 @@ void BindConfig(particle::Config* data, bool *dirty)
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_cc(*(bool*)value); if (cfg->dirty) *cfg->dirty = true; },
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(bool*)value = cfg->data->cc(); }, (void*)&cfg, nullptr);
 
+#endif
 }
 }

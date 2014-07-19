@@ -332,24 +332,31 @@ class Plane : public ::google::protobuf::Message {
   inline float key() const;
   inline void set_key(float value);
 
-  // optional float blur_radius = 11 [default = 10];
+  // optional float ofs = 11 [default = 0.18];
+  inline bool has_ofs() const;
+  inline void clear_ofs();
+  static const int kOfsFieldNumber = 11;
+  inline float ofs() const;
+  inline void set_ofs(float value);
+
+  // optional float blur_radius = 12 [default = 10];
   inline bool has_blur_radius() const;
   inline void clear_blur_radius();
-  static const int kBlurRadiusFieldNumber = 11;
+  static const int kBlurRadiusFieldNumber = 12;
   inline float blur_radius() const;
   inline void set_blur_radius(float value);
 
-  // optional float bloom_threshold = 12 [default = 0.8];
+  // optional float bloom_threshold = 13 [default = 0.8];
   inline bool has_bloom_threshold() const;
   inline void clear_bloom_threshold();
-  static const int kBloomThresholdFieldNumber = 12;
+  static const int kBloomThresholdFieldNumber = 13;
   inline float bloom_threshold() const;
   inline void set_bloom_threshold(float value);
 
-  // optional float bloom_multiplier = 13 [default = 1];
+  // optional float bloom_multiplier = 14 [default = 1];
   inline bool has_bloom_multiplier() const;
   inline void clear_bloom_multiplier();
-  static const int kBloomMultiplierFieldNumber = 13;
+  static const int kBloomMultiplierFieldNumber = 14;
   inline float bloom_multiplier() const;
   inline void set_bloom_multiplier(float value);
 
@@ -375,6 +382,8 @@ class Plane : public ::google::protobuf::Message {
   inline void clear_has_tau();
   inline void set_has_key();
   inline void clear_has_key();
+  inline void set_has_ofs();
+  inline void clear_has_ofs();
   inline void set_has_blur_radius();
   inline void clear_has_blur_radius();
   inline void set_has_bloom_threshold();
@@ -394,12 +403,13 @@ class Plane : public ::google::protobuf::Message {
   ::common::Matrix4x4* obj_r_;
   float tau_;
   float key_;
+  float ofs_;
   float blur_radius_;
   float bloom_threshold_;
   float bloom_multiplier_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(13 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(14 + 31) / 32];
 
   friend void  protobuf_AddDesc_generator_2eproto();
   friend void protobuf_AssignDesc_generator_2eproto();
@@ -943,15 +953,37 @@ inline void Plane::set_key(float value) {
   key_ = value;
 }
 
-// optional float blur_radius = 11 [default = 10];
-inline bool Plane::has_blur_radius() const {
+// optional float ofs = 11 [default = 0.18];
+inline bool Plane::has_ofs() const {
   return (_has_bits_[0] & 0x00000400u) != 0;
 }
-inline void Plane::set_has_blur_radius() {
+inline void Plane::set_has_ofs() {
   _has_bits_[0] |= 0x00000400u;
 }
-inline void Plane::clear_has_blur_radius() {
+inline void Plane::clear_has_ofs() {
   _has_bits_[0] &= ~0x00000400u;
+}
+inline void Plane::clear_ofs() {
+  ofs_ = 0.18f;
+  clear_has_ofs();
+}
+inline float Plane::ofs() const {
+  return ofs_;
+}
+inline void Plane::set_ofs(float value) {
+  set_has_ofs();
+  ofs_ = value;
+}
+
+// optional float blur_radius = 12 [default = 10];
+inline bool Plane::has_blur_radius() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void Plane::set_has_blur_radius() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void Plane::clear_has_blur_radius() {
+  _has_bits_[0] &= ~0x00000800u;
 }
 inline void Plane::clear_blur_radius() {
   blur_radius_ = 10;
@@ -965,15 +997,15 @@ inline void Plane::set_blur_radius(float value) {
   blur_radius_ = value;
 }
 
-// optional float bloom_threshold = 12 [default = 0.8];
+// optional float bloom_threshold = 13 [default = 0.8];
 inline bool Plane::has_bloom_threshold() const {
-  return (_has_bits_[0] & 0x00000800u) != 0;
+  return (_has_bits_[0] & 0x00001000u) != 0;
 }
 inline void Plane::set_has_bloom_threshold() {
-  _has_bits_[0] |= 0x00000800u;
+  _has_bits_[0] |= 0x00001000u;
 }
 inline void Plane::clear_has_bloom_threshold() {
-  _has_bits_[0] &= ~0x00000800u;
+  _has_bits_[0] &= ~0x00001000u;
 }
 inline void Plane::clear_bloom_threshold() {
   bloom_threshold_ = 0.8f;
@@ -987,15 +1019,15 @@ inline void Plane::set_bloom_threshold(float value) {
   bloom_threshold_ = value;
 }
 
-// optional float bloom_multiplier = 13 [default = 1];
+// optional float bloom_multiplier = 14 [default = 1];
 inline bool Plane::has_bloom_multiplier() const {
-  return (_has_bits_[0] & 0x00001000u) != 0;
+  return (_has_bits_[0] & 0x00002000u) != 0;
 }
 inline void Plane::set_has_bloom_multiplier() {
-  _has_bits_[0] |= 0x00001000u;
+  _has_bits_[0] |= 0x00002000u;
 }
 inline void Plane::clear_has_bloom_multiplier() {
-  _has_bits_[0] &= ~0x00001000u;
+  _has_bits_[0] &= ~0x00002000u;
 }
 inline void Plane::clear_bloom_multiplier() {
   bloom_multiplier_ = 1;

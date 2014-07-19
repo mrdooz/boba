@@ -191,7 +191,7 @@ string ResourceManager::ResolveFilename(const char* filename, bool fullPath)
   for (size_t i = 0; i < _paths.size(); ++i)
   {
     string cand(_paths[i] + filename);
-    if (boba::FileExists(cand.c_str()))
+    if (bristol::FileExists(cand.c_str()))
     {
       res = cand.c_str();
       break;

@@ -13,6 +13,7 @@ void BindSpiky(generator::Spiky* data, bool *dirty)
   cfg.data = data;
   cfg.dirty = dirty;
 
+#if WITH_ANT_TWEAK_BAR
   TwBar* bar = TwNewBar("generator.Spiky");
   // Add radius
   TwAddVarCB(bar, "radius", TW_TYPE_FLOAT,
@@ -34,6 +35,7 @@ void BindSpiky(generator::Spiky* data, bool *dirty)
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_height_segments(*(uint32_t*)value); if (cfg->dirty) *cfg->dirty = true; },
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(uint32_t*)value = cfg->data->height_segments(); }, (void*)&cfg, nullptr);
 
+#endif
 }
 void BindPlane(generator::Plane* data, bool *dirty)
 {
@@ -47,6 +49,7 @@ void BindPlane(generator::Plane* data, bool *dirty)
   cfg.data = data;
   cfg.dirty = dirty;
 
+#if WITH_ANT_TWEAK_BAR
   TwBar* bar = TwNewBar("generator.Plane");
   // Add width
   TwAddVarCB(bar, "width", TW_TYPE_FLOAT,
@@ -71,12 +74,17 @@ void BindPlane(generator::Plane* data, bool *dirty)
   // Add tau
   TwAddVarCB(bar, "tau", TW_TYPE_FLOAT,
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_tau(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
-    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->tau(); }, (void*)&cfg, nullptr);
+    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->tau(); }, (void*)&cfg, "min=0.010000 max=2.000000 step=0.010000 ");
 
   // Add key
   TwAddVarCB(bar, "key", TW_TYPE_FLOAT,
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_key(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->key(); }, (void*)&cfg, "min=0.010000 max=1.000000 step=0.010000 ");
+
+  // Add ofs
+  TwAddVarCB(bar, "ofs", TW_TYPE_FLOAT,
+    [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_ofs(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
+    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->ofs(); }, (void*)&cfg, "min=0.010000 max=1.000000 step=0.010000 ");
 
   // Add blur_radius
   TwAddVarCB(bar, "blur_radius", TW_TYPE_FLOAT,
@@ -93,5 +101,6 @@ void BindPlane(generator::Plane* data, bool *dirty)
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_bloom_multiplier(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->bloom_multiplier(); }, (void*)&cfg, "min=0.000000 max=5.000000 step=0.100000 ");
 
+#endif
 }
 }

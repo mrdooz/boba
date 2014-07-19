@@ -312,7 +312,7 @@ void PostProcess::Execute(
     const Color* clearColor,
     WCHAR* name)
 {
-  D3DPERF_BeginEvent(0xffffffff, name);
+  GPU_BeginEvent(0xffffffff, name);
 
   _ctx->SetLayout(GraphicsObjectHandle());
 
@@ -345,7 +345,7 @@ void PostProcess::Execute(
 
   _ctx->UnsetSRVs(0, input.size(), ShaderType::PixelShader);
 
-  D3DPERF_EndEvent();
+  GPU_EndEvent();
 }
 
 //------------------------------------------------------------------------------
@@ -432,6 +432,12 @@ bool GeneratorTest::Init(const char* config)
     return false;
 
   if (!GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csBlurY, "BoxBlurY"))
+    return false;
+
+  if (!GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csCopyTranspose, "CopyTranspose"))
+    return false;
+
+  if (!GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csBlurTranspose, "BlurTranspose"))
     return false;
 
   _cbBlur.Create();
@@ -661,9 +667,11 @@ bool GeneratorTest::Render()
     // luminance level adaption
     _cbToneMapping.data.tau = _planeConfig.tau();
     _cbToneMapping.data.key = _planeConfig.key();
+    _cbToneMapping.data.ofs = _planeConfig.ofs();
     _cbToneMapping.data.delta = _updateState.delta.total_microseconds() / 1e6f;
     _ctx->SetCBuffer(_cbToneMapping, ShaderType::PixelShader, 1);
 
+    // Adaption will perform the exp() on the average luminance
     _postProcess->Execute({_luminanceAdaption[!_curAdaption], rtLuminance.h },
         _luminanceAdaption[_curAdaption], _psAdaption, 0, L"Adaption");
 
@@ -674,12 +682,16 @@ bool GeneratorTest::Render()
     ScopedRenderTarget threshold(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, BufferFlags(BufferFlag::CreateSrv));
     _cbBloom.data.threshold = _planeConfig.bloom_threshold();
     _ctx->SetCBuffer(_cbBloom, ShaderType::PixelShader, 2);
-    _postProcess->Execute({ _renderTarget }, threshold.h, _psThreshold, 0, L"BloomThreshold");
+    _postProcess->Execute({ _renderTarget, _luminanceAdaption[_curAdaption] }, threshold.h, _psThreshold, 0, L"BloomThreshold");
 
-    // blur the bloom
     auto f = BufferFlags(BufferFlag::CreateSrv) | BufferFlag::CreateUav;
     ScopedRenderTarget blur0(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
     ScopedRenderTarget blur1(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
+
+    // scratch buffer for the blur
+    int s = max(w, h);
+    ScopedRenderTarget scratch0(s, s, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
+    ScopedRenderTarget scratch1(s, s, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
 
     // set constant buffers
     _cbBlur.data.inputSize.x = (float)w;
@@ -687,6 +699,7 @@ bool GeneratorTest::Render()
     _cbBlur.data.radius = _planeConfig.blur_radius();
     _ctx->SetCBuffer(_cbBlur, ShaderType::ComputeShader, 0);
 
+#if 0
     GraphicsObjectHandle srcDst[] =
     {
       threshold.h, blur0.h, blur0.h, blur1.h,
@@ -696,7 +709,7 @@ bool GeneratorTest::Render()
 
     for (int i = 0; i < 3; ++i)
     {
-      D3DPERF_BeginEvent(0xffffffff, L"blurX");
+      GPU_BeginEvent(0xffffffff, L"blurX");
 
       _ctx->SetShaderResources({ srcDst[i*4+0] }, ShaderType::ComputeShader);
       _ctx->SetUav(srcDst[i*4+1]);
@@ -707,8 +720,8 @@ bool GeneratorTest::Render()
       _ctx->UnsetUAVs(0, 1);
       _ctx->UnsetSRVs(0, 1, ShaderType::ComputeShader);
 
-      D3DPERF_EndEvent();
-      D3DPERF_BeginEvent(0xffffffff, L"blurX");
+      GPU_EndEvent();
+      GPU_BeginEvent(0xffffffff, L"blurY");
 
       _ctx->SetShaderResources({ srcDst[i*4+2] }, ShaderType::ComputeShader);
       _ctx->SetUav(srcDst[i*4+3]);
@@ -719,12 +732,77 @@ bool GeneratorTest::Render()
       _ctx->UnsetUAVs(0, 1);
       _ctx->UnsetSRVs(0, 1, ShaderType::ComputeShader);
 
-      D3DPERF_EndEvent();
+      GPU_EndEvent();
     }
+#else
+    // set constant buffers
+    _cbBlur.data.inputSize.x = (float)w;
+    _cbBlur.data.inputSize.y = (float)h;
+    _cbBlur.data.radius = _planeConfig.blur_radius();
+    _ctx->SetCBuffer(_cbBlur, ShaderType::ComputeShader, 0);
 
-    // calc the bloom
+    GPU_BeginEvent(0xffffffff, L"blurX_T");
 
-    
+    // blur from input -> scratch0
+    _ctx->SetShaderResources({ threshold.h }, ShaderType::ComputeShader);
+    _ctx->SetUav(scratch0.h);
+
+    _ctx->SetCS(_csBlurTranspose);
+    _ctx->Dispatch(h/32+1, 1, 1);
+
+    _ctx->UnsetUAVs(0, 1);
+    _ctx->UnsetSRVs(0, 1, ShaderType::ComputeShader);
+
+    // copy/transpose from scratch0 -> scratch1
+    GPU_BeginEvent(0xffffffff, L"CopyTranspose");
+
+    _ctx->SetShaderResources({ scratch0.h }, ShaderType::ComputeShader);
+    _ctx->SetUav(scratch1.h);
+
+    _ctx->SetCS(_csCopyTranspose);
+    _ctx->Dispatch(h/32+1, 1, 1);
+
+    _ctx->UnsetUAVs(0, 1);
+    _ctx->UnsetSRVs(0, 1, ShaderType::ComputeShader);
+
+    GPU_EndEvent();
+    GPU_EndEvent();
+
+
+    // blur from scratch1 -> scratch0
+    _cbBlur.data.inputSize.x = (float)h;
+    _cbBlur.data.inputSize.y = (float)w;
+    _cbBlur.data.radius = _planeConfig.blur_radius();
+    _ctx->SetCBuffer(_cbBlur, ShaderType::ComputeShader, 0);
+
+    GPU_BeginEvent(0xffffffff, L"blurY_T");
+
+    _ctx->SetShaderResources({ scratch1.h }, ShaderType::ComputeShader);
+    _ctx->SetUav(scratch0.h);
+
+    _ctx->SetCS(_csBlurTranspose);
+    _ctx->Dispatch(w/32+1, 1, 1);
+
+    _ctx->UnsetUAVs(0, 1);
+    _ctx->UnsetSRVs(0, 1, ShaderType::ComputeShader);
+
+    // copy/transpose from scratch0 -> blur1
+    GPU_BeginEvent(0xffffffff, L"CopyTranspose");
+
+    _ctx->SetShaderResources({ scratch0.h }, ShaderType::ComputeShader);
+    _ctx->SetUav(blur1.h);
+
+    _ctx->SetCS(_csCopyTranspose);
+    _ctx->Dispatch(w/32+1, 1, 1);
+
+    _ctx->UnsetUAVs(0, 1);
+    _ctx->UnsetSRVs(0, 1, ShaderType::ComputeShader);
+
+    GPU_EndEvent();
+    GPU_EndEvent();
+#endif
+
+
     // apply tone mapping and bloom
     GraphicsObjectHandle rtDest = GRAPHICS.RenderTargetForSwapChain(GRAPHICS.DefaultSwapChain());
 

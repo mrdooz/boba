@@ -333,6 +333,7 @@ namespace boba
     static INT_PTR CALLBACK dialogWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     static bool EnumerateDisplayModes(HWND hWnd);
 
+#if WITH_FONT_RENDERING 
     struct TextElement
     {
       TextElement(const wstring& str, IFW1FontWrapper* font, float size, float x, float y, u32 color)
@@ -351,14 +352,14 @@ namespace boba
       float x, y;
       u32 color;
     };
-
+#endif
     Setup _curSetup;
 
     CComPtr<ID3D11Device> _device;
 
     CComPtr<ID3D11DeviceContext> _immediateContext;
 
-#ifdef _DEBUG
+#if WITH_DXGI_DEBUG
     CComPtr<ID3D11Debug> _d3dDebug;
 #endif
 
@@ -419,9 +420,9 @@ namespace boba
 #if WITH_FONT_RENDERING
     CComPtr<IFW1Factory> _fw1Factory;
     CComPtr<IFW1FontWrapper> _fw1FontWrapper;
+    vector<TextElement> _textElements;
 #endif
 
-    vector<TextElement> _textElements;
   };
 
 #define GRAPHICS Graphics::Instance()

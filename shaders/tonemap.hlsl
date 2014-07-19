@@ -1,5 +1,5 @@
-// Tonemapping, using http://mynameismjp.wordpress.com/2011/08/10/average-luminance-compute-shader/
-// as a reference
+// Tonemapping, based on : http://mynameismjp.wordpress.com/2011/08/10/average-luminance-compute-shader/
+// and Realtime HDR Rendering by Christian Luksch
 
 Texture2D Texture0 : register(t0);
 Texture2D Texture1 : register(t1);
@@ -24,6 +24,7 @@ cbuffer settings : register(b1)
   float tua : packoffset(c0.x);
   float key : packoffset(c0.y);
   float timeDelta : packoffset(c0.z);
+  float ofs : packoffset(c0.w);
 };
 
 cbuffer bloomSettings : register(b2)
@@ -44,17 +45,19 @@ float CalcLuminance(float3 color)
 }
 
 //------------------------------------------------------------------------------
-// Retrieves the log-average luminance from the texture
-float GetAvgLuminance(Texture2D lumTex)
+// Applies tonemapping to the given pixel
+float3 ToneMap(float3 color, float pixelLuminance, float avgLuminance, float threshold, float key)
 {
-  return lumTex.Load(uint3(0, 0, 0)).x;
-}
-
-//------------------------------------------------------------------------------
-// Reinhart tonemapping
-float3 ToneMap(float3 color, float avgLuminance, float key)
-{
-  return key / avgLuminance * color;
+  // linear mapping
+  float s = key * pixelLuminance / avgLuminance;
+  
+  // apply threshold
+  s = max(s - threshold, 0);
+  
+  // scale to [0..1] range
+  s = s / (ofs + s);
+  
+  return s * color;
 }
 
 //------------------------------------------------------------------------------
@@ -65,7 +68,7 @@ float4 AdaptLuminance(in PSInput input) : SV_Target
   float currentLum = exp(Texture1.SampleLevel(PointSampler, float2(0.5f, 0.5f), 10.0f).x);
 
   // Adapt the luminance using Pattanaik's technique
-  float adaptedLum = lastLum + (currentLum - lastLum) * (1 - exp(-timeDelta * tua));
+  float adaptedLum = lastLum + (currentLum - lastLum) * (1 - exp(-timeDelta / tua));
 
   return float4(adaptedLum, 1.0f, 1.0f, 1.0f);
 }
@@ -77,6 +80,7 @@ float4 LuminanceMap(in PSInput input) : SV_Target
   // Sample the input
 
   float3 color = Texture0.Sample(LinearSampler, input.uv).rgb;
+  
   // calculate the luminance using a weighted average
   float luminance = log(max(CalcLuminance(color), 0.00001f));
   
@@ -92,8 +96,9 @@ float4 Composite(in PSInput input) : SV_Target
   // texture_2 = bloom
   
   float3 color = Texture0.Sample(PointSampler, input.uv).rgb;
-  float avgLuminance = GetAvgLuminance(Texture1);
-  color = ToneMap(color, avgLuminance, key);
+  float avgLuminance = Texture1.Load(uint3(0, 0, 0)).x;
+  float pixelLuminance = CalcLuminance(color);
+  color = ToneMap(color, pixelLuminance, avgLuminance, 0, key);
 
   float3 bloom = Texture2.Sample(LinearSampler, input.uv).rgb;
   color += bloomMultiplier * bloom;
@@ -105,6 +110,14 @@ float4 Composite(in PSInput input) : SV_Target
 // Perform bloom threshold computation
 float4 BloomThreshold(in PSInput input) : SV_Target
 {
-  float3 c = Texture0.Sample(PointSampler, input.uv).rgb;
-  return CalcLuminance(c) > bloomThreshold ? float4(c,1) : 0;
+  float3 color = Texture0.Sample(PointSampler, input.uv).rgb;
+  
+  float avgLuminance = Texture1.Load(uint3(0, 0, 0)).x;
+  float pixelLuminance = CalcLuminance(color);
+  color = ToneMap(color, pixelLuminance, avgLuminance, bloomThreshold, key);
+
+  if (dot(color, 0.333f) <= 0.001f)
+    color = 0.0f;
+
+  return float4(color, 1.0f);
 }

@@ -8,7 +8,6 @@ extern const TCHAR* g_AppWindowTitle;
 using namespace boba;
 using namespace bristol;
 
-#define USE_CONFIG_DLG 0
 
 //------------------------------------------------------------------------------
 Vector3 boba::ScreenToViewSpace(const Matrix& proj, u32 x, u32 y)
@@ -23,39 +22,6 @@ Vector3 boba::ScreenToViewSpace(const Matrix& proj, u32 x, u32 y)
 
 namespace
 {
-  //------------------------------------------------------------------------------
-#if WITH_TRACKED_LOCATION
-  HMODULE g_dbghelp;
-  struct MyStackWalker : public StackWalker
-  {
-  public:
-    MyStackWalker() : StackWalker(StackWalker::RetrieveLine) {}
-    virtual void OnOutput(LPCSTR szText)
-    {
-      // skip everything that doesn't contain a ".cpp" or ".hpp"
-      if (strstr(szText, ".cpp") || strstr(szText, ".hpp"))
-      {
-        m_callStack += szText;
-      }
-    }
-
-    string m_callStack;
-  };
-  template <class T>
-  void SetPrivateData(T *t)
-  {
-    MyStackWalker sw;
-    sw.ShowCallstack();
-    t->SetPrivateData(WKPDID_D3DDebugObjectName, sw.m_callStack.size(), sw.m_callStack.c_str());
-  }
-
-#else
-  template <class T>
-  void SetPrivateData(T *t)
-  {
-  }
-#endif
-
   //------------------------------------------------------------------------------
   void SetClientSize(HWND hwnd, int width, int height)
   {
@@ -102,7 +68,6 @@ bool Graphics::SwapChain::CreateBackBuffers(size_t width, size_t height, DXGI_FO
   if (FAILED(g._device->CreateRenderTargetView(rt->texture.resource, &rtViewDesc, &rt->rtv.resource)))
     return false;
 
-  SetPrivateData(rt->rtv.resource.p);
   rt->rtv.resource->GetDesc(&rt->rtv.desc);
 
   CD3D11_TEXTURE2D_DESC depthStencilDesc(
@@ -114,12 +79,10 @@ bool Graphics::SwapChain::CreateBackBuffers(size_t width, size_t height, DXGI_FO
     return false;
 
   rt->depth_stencil.resource->GetDesc(&rt->depth_stencil.desc);
-  SetPrivateData(rt->depth_stencil.resource.p);
 
   if (FAILED(g._device->CreateDepthStencilView(rt->depth_stencil.resource, NULL, &rt->dsv.resource)))
     return false;
 
-  SetPrivateData(rt->dsv.resource.p);
   rt->dsv.resource->GetDesc(&rt->dsv.desc);
 
   // Register the buffer with GRAPHICS
@@ -139,8 +102,11 @@ void Graphics::SwapChain::Present()
 //------------------------------------------------------------------------------
 static GraphicsObjectHandle emptyGoh;
 Graphics* Graphics::_instance;
+
+#if WITH_DXGI_DEBUG
 IDXGIDebug* Graphics::_debugInterface;
 HMODULE Graphics::_debugModule;
+#endif
 
 //------------------------------------------------------------------------------
 bool Graphics::EnumerateDisplayModes(HWND hWnd)
@@ -273,7 +239,7 @@ INT_PTR CALLBACK Graphics::dialogWndProc(HWND hWnd, UINT message, WPARAM wParam,
       {
         EndDialog(hWnd, -1);
       }
-#if !USE_CONFIG_DLG
+#if !WITH_CONFIG_DLG
       if (!GRAPHICS._curSetup.videoAdapters.empty())
       {
         ComboBox_SetCurSel(GetDlgItem(hWnd, IDC_DISPLAY_MODES), 3 * GRAPHICS._curSetup.videoAdapters[0].displayModes.size() / 4);
@@ -365,10 +331,7 @@ bool Graphics::Create(HINSTANCE hInstance)
   assert(!_instance);
   _instance = new Graphics();
 
-#if WITH_TRACKED_LOCATION
-  g_dbghelp = LoadLibrary("dbghelp.dll");
-#endif
-
+#if WITH_DXGI_DEBUG
   // Get the DXGIGetDebugInterface
   if (_debugModule = LoadLibraryA("Dxgidebug.dll"))
   {
@@ -376,6 +339,7 @@ bool Graphics::Create(HINSTANCE hInstance)
     auto fn = (DXGIGetDebugInterfaceFunc)GetProcAddress(_debugModule, "DXGIGetDebugInterface");
     fn(__uuidof(IDXGIDebug), (void**)&_debugInterface);
   }
+#endif
 
   return _instance->Init(hInstance);
 }
@@ -418,24 +382,16 @@ bool Graphics::Init(HINSTANCE hInstance)
 //------------------------------------------------------------------------------
 bool Graphics::Destroy()
 {
-#if WITH_TRACKED_LOCATION
-  if (g_dbghelp)
-  {
-    FreeLibrary(g_dbghelp);
-  }
-#endif
-
   delete exch_null(_instance);
+#if WITH_DXGI_DEBUG
   if (_debugModule)
   {
-#ifdef _DEBUG
     OutputDebugStringA("** Dumping live objects\n");
     // todo: figure this out
     //_debugInterface->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
-#endif
-
     FreeLibrary(_debugModule);
   }
+#endif
 
   return true;
 }
@@ -450,11 +406,9 @@ const DXGI_MODE_DESC &Graphics::selectedDisplayMode() const
 bool Graphics::CreateDevice()
 {
   int flags = 0;
-  bool createDebugDevice = true;
-  if (createDebugDevice)
-  {
-    flags |= D3D11_CREATE_DEVICE_DEBUG;
-  }
+#if WITH_DXGI_DEBUG
+  flags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
 
   flags |= D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
@@ -468,13 +422,10 @@ bool Graphics::CreateDevice()
   if (_featureLevel < D3D_FEATURE_LEVEL_9_3)
     return false;
 
-  SetPrivateData(_immediateContext.p);
-
-  if (createDebugDevice)
-  {
-    if (FAILED(_device->QueryInterface(IID_ID3D11Debug, (void **)&(_d3dDebug.p))))
-      return false;
-  }
+#if WITH_DXGI_DEBUG
+  if (FAILED(_device->QueryInterface(IID_ID3D11Debug, (void **)&(_d3dDebug.p))))
+    return false;
+#endif
 
   return true;
 }
@@ -534,7 +485,6 @@ bool Graphics::CreateBufferInner(
   HRESULT hr = _device->CreateBuffer(&desc, data ? &init_data : NULL, buffer);
   if (SUCCEEDED(hr))
   {
-    SetPrivateData(*buffer);
     _totalBytesAllocated += size;
   }
   return SUCCEEDED(hr);
@@ -669,7 +619,6 @@ GraphicsObjectHandle Graphics::CreateStructuredBuffer(
     return emptyGoh;
 
   auto buf = sb->buffer.resource.p;
-  SetPrivateData(sb->buffer.resource.p);
 
   // create the UAV for the structured buffer
   D3D11_UNORDERED_ACCESS_VIEW_DESC sbUAVDesc;
@@ -680,8 +629,6 @@ GraphicsObjectHandle Graphics::CreateStructuredBuffer(
   sbUAVDesc.ViewDimension             = D3D11_UAV_DIMENSION_BUFFER;
   if (FAILED(_device->CreateUnorderedAccessView(buf, &sbUAVDesc, &sb->uav.resource)))
     return emptyGoh;
-
-  SetPrivateData(sb->uav.resource.p);
 
   if (createSrv)
   {
@@ -695,8 +642,6 @@ GraphicsObjectHandle Graphics::CreateStructuredBuffer(
     sbSRVDesc.ViewDimension                 = D3D11_SRV_DIMENSION_BUFFER;
     if (FAILED(_device->CreateShaderResourceView(buf, &sbSRVDesc, &sb->srv.resource)))
       return emptyGoh;
-
-    SetPrivateData(sb->srv.resource.p);
   }
 
   return MakeObjectHandle(
@@ -744,13 +689,11 @@ bool Graphics::CreateRenderTarget(
   out->texture.desc.MiscFlags = bufferFlags.IsSet(BufferFlag::CreateMipMaps) ? D3D11_RESOURCE_MISC_GENERATE_MIPS : 0;
   if (FAILED(_device->CreateTexture2D(&out->texture.desc, NULL, &out->texture.resource.p)))
     return false;
-  SetPrivateData(out->texture.resource.p);
 
   // create the render target view
   out->rtv.desc = CD3D11_RENDER_TARGET_VIEW_DESC(D3D11_RTV_DIMENSION_TEXTURE2D, out->texture.desc.Format);
   if (FAILED(_device->CreateRenderTargetView(out->texture.resource, &out->rtv.desc, &out->rtv.resource.p)))
     return false;
-  SetPrivateData(out->rtv.resource.p);
 
   if (bufferFlags.IsSet(BufferFlag::CreateDepthBuffer))
   {
@@ -758,13 +701,11 @@ bool Graphics::CreateRenderTarget(
     out->depth_stencil.desc = CD3D11_TEXTURE2D_DESC(DXGI_FORMAT_D24_UNORM_S8_UINT, width, height, 1, 1, D3D11_BIND_DEPTH_STENCIL);
     if (FAILED(_device->CreateTexture2D(&out->depth_stencil.desc, NULL, &out->depth_stencil.resource.p)))
       return false;
-    SetPrivateData(out->depth_stencil.resource.p);
 
     // create depth stencil view
     out->dsv.desc = CD3D11_DEPTH_STENCIL_VIEW_DESC(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D24_UNORM_S8_UINT);
     if (FAILED(_device->CreateDepthStencilView(out->depth_stencil.resource, &out->dsv.desc, &out->dsv.resource.p)))
       return false;
-    SetPrivateData(out->dsv.resource.p);
   }
 
   if (bufferFlags.IsSet(BufferFlag::CreateSrv))
@@ -773,7 +714,6 @@ bool Graphics::CreateRenderTarget(
     out->srv.desc = CD3D11_SHADER_RESOURCE_VIEW_DESC(D3D11_SRV_DIMENSION_TEXTURE2D, out->texture.desc.Format);
     if (FAILED(_device->CreateShaderResourceView(out->texture.resource, &out->srv.desc, &out->srv.resource.p)))
       return false;
-    SetPrivateData(out->srv.resource.p);
   }
 
   if (bufferFlags.IsSet(BufferFlag::CreateUav))
@@ -925,15 +865,12 @@ bool Graphics::CreateTexture(
   if (FAILED(_device->CreateTexture2D(&out->texture.desc, NULL, &out->texture.resource.p)))
     return false;
 
-  SetPrivateData(out->texture.resource.p);
-
   // create the shader resource view if the texture has a shader resource bind flag
   if (desc.BindFlags & D3D11_BIND_SHADER_RESOURCE)
   {
     out->view.desc = CD3D11_SHADER_RESOURCE_VIEW_DESC(D3D11_SRV_DIMENSION_TEXTURE2D, out->texture.desc.Format);
     if (FAILED(_device->CreateShaderResourceView(out->texture.resource, &out->view.desc, &out->view.resource.p)))
       return false;
-    SetPrivateData(out->view.resource.p);
   }
 
   return true;
@@ -1056,7 +993,6 @@ GraphicsObjectHandle AddShader(
     const string &id,
     GraphicsObjectHandle::Type type)
 {
-  SetPrivateData(shader);
   return Graphics::MakeObjectHandle(type, cont.Insert(id, shader));
 }
 
@@ -1375,6 +1311,7 @@ void Graphics::CreateDefaultSwapChain(
 //------------------------------------------------------------------------------
 void Graphics::Present()
 {
+#if WITH_FONT_RENDERING
   for (const TextElement& text : _textElements)
   {
     _fw1FontWrapper->DrawString(
@@ -1382,6 +1319,7 @@ void Graphics::Present()
   }
 
   _textElements.clear();
+#endif
 
   _swapChains.Get(_swapChain)->Present();
 }
@@ -1409,7 +1347,9 @@ void Graphics::AddText(
     float y,
     u32 color)
 {
+#if WITH_FONT_RENDERING
   _textElements.emplace_back(utf8_to_wide(text), _fw1FontWrapper, size, x, y, color);
+#endif
 }
 
 //------------------------------------------------------------------------------
@@ -1421,7 +1361,9 @@ void Graphics::AddText(
     float y,
     u32 color)
 {
+#if WITH_FONT_RENDERING
   _textElements.emplace_back(text, _fw1FontWrapper, size, x, y, color);
+#endif
 }
 
 //------------------------------------------------------------------------------

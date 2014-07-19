@@ -13,6 +13,7 @@ void BindPart(demo::Part* data, bool *dirty)
   cfg.data = data;
   cfg.dirty = dirty;
 
+#if WITH_ANT_TWEAK_BAR
   TwBar* bar = TwNewBar("demo.Part");
   // Add start
   TwAddVarCB(bar, "start", TW_TYPE_UINT32,
@@ -24,6 +25,7 @@ void BindPart(demo::Part* data, bool *dirty)
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_end(*(uint32_t*)value); if (cfg->dirty) *cfg->dirty = true; },
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(uint32_t*)value = cfg->data->end(); }, (void*)&cfg, nullptr);
 
+#endif
 }
 void BindConfig(demo::Config* data, bool *dirty)
 {
@@ -37,6 +39,8 @@ void BindConfig(demo::Config* data, bool *dirty)
   cfg.data = data;
   cfg.dirty = dirty;
 
+#if WITH_ANT_TWEAK_BAR
   TwBar* bar = TwNewBar("demo.Config");
+#endif
 }
 }
