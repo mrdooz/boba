@@ -676,7 +676,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ANTTWEAKBAR_ROOT)/include;$(FW1);D:\projects\bristol;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ANTTWEAKBAR_ROOT)/lib/$(Configuration);$(FW1)/x86;D:\projects\protobuf-2.5.0\vsprojects\Debug;D:\projects\bristol\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ANTTWEAKBAR_ROOT)/lib/$(Configuration);$(FW1)/x86;D:\projects\protobuf-2.5.0\vsprojects\x64\Debug;D:\projects\bristol\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -686,7 +686,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ANTTWEAKBAR_ROOT)/include;D:\projects\bristol;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ANTTWEAKBAR_ROOT)/lib/$(Configuration);D:\projects\protobuf-2.5.0\vsprojects\Release;D:\projects\bristol\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ANTTWEAKBAR_ROOT)/lib/$(Configuration);D:\projects\protobuf-2.5.0\vsprojects\x64\Release;D:\projects\bristol\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
