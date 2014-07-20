@@ -40,6 +40,6 @@ float4 PsMain(VsOut p) : SV_Target
   if (d < 0.02)
     t = 1;
   else
-    t = 0.1 + 0.5 * saturate(dot(normalize(p.normal), float3(0,-1,0)));
-  return float4(t*0.3, t*0.6, t*0.3, 1);
+    t = 0.1 + 0.6 * saturate(dot(normalize(p.normal), float3(0,-1,0)));
+  return float4(t*0.3, t*0.2, t*0.7, 1);
 }

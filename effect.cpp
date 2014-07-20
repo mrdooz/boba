@@ -73,14 +73,14 @@ bool Effect::Close()
 }
 
 //------------------------------------------------------------------------------
-void Effect::SetDuration(time_duration startTime, time_duration endTime)
+void Effect::SetDuration(TimeDuration startTime, TimeDuration endTime)
 {
   _startTime = startTime;
   _endTime = endTime;
 }
 
 //------------------------------------------------------------------------------
-void Effect::SetStartTime(time_duration startTime)
+void Effect::SetStartTime(TimeDuration startTime)
 {
   _startTime = startTime;
 }

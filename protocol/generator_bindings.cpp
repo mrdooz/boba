@@ -101,6 +101,11 @@ void BindPlane(generator::Plane* data, bool *dirty)
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_bloom_multiplier(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(float*)value = cfg->data->bloom_multiplier(); }, (void*)&cfg, "min=0.000000 max=5.000000 step=0.100000 ");
 
+  // Add transpose
+  TwAddVarCB(bar, "transpose", TW_TYPE_BOOLCPP,
+    [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_transpose(*(bool*)value); if (cfg->dirty) *cfg->dirty = true; },
+    [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(bool*)value = cfg->data->transpose(); }, (void*)&cfg, nullptr);
+
 #endif
 }
 }

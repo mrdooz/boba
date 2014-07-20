@@ -8,9 +8,9 @@ using namespace boba;
 using namespace bristol;
 
 //------------------------------------------------------------------------------
-float TimeDurationToFloat(time_duration t)
+float TimeDurationToFloat(TimeDuration t)
 {
-  return t.total_microseconds() / 1e6f;
+  return t.TotalMicroseconds() / 1e6f;
 }
 
 //------------------------------------------------------------------------------
@@ -43,25 +43,25 @@ void Timer::Stop()
 }
 
 //------------------------------------------------------------------------------
-void Timer::SetElapsed(time_duration us)
+void Timer::SetElapsed(TimeDuration us)
 {
-  s64 ticks = us.total_microseconds() * _frequency / 1000000;
+  s64 ticks = us.TotalMicroseconds() * _frequency / 1000000;
   _startTime = max((s64)0, _curTime - ticks);
 }
 
 //------------------------------------------------------------------------------
-time_duration Timer::Elapsed(time_duration* delta) const
+TimeDuration Timer::Elapsed(TimeDuration* delta) const
 {
   s64 prev = _curTime;
   if (_running)
     QueryPerformanceCounter((LARGE_INTEGER*)&_curTime);
 
   if (delta)
-    *delta = microseconds(1000000 * (_curTime - prev) / _frequency);
+    *delta = TimeDuration::Microseconds(1000000 * (_curTime - prev) / _frequency);
 
   // return elapsed time in us
   s64 elapsed = _curTime - _startTime;
-  return microseconds(1000000 * elapsed / _frequency);
+  return TimeDuration::Microseconds(1000000 * elapsed / _frequency);
 }
 
 //------------------------------------------------------------------------------
@@ -95,7 +95,7 @@ DemoEngine& DemoEngine::Instance()
 //------------------------------------------------------------------------------
 DemoEngine::DemoEngine() 
   : _cur_effect(0)
-  , _duration(seconds(180))
+  , _duration(TimeDuration::Seconds(180))
 {
 }
 
@@ -145,20 +145,20 @@ bool DemoEngine::Paused() const
 }
 
 //------------------------------------------------------------------------------
-void DemoEngine::SetPos(time_duration pos)
+void DemoEngine::SetPos(TimeDuration pos)
 {
   _timer.SetElapsed(pos);
   ReclassifyEffects();
 }
 
 //------------------------------------------------------------------------------
-time_duration DemoEngine::Pos()
+TimeDuration DemoEngine::Pos()
 {
   return _timer.Elapsed(nullptr);
 }
 
 //------------------------------------------------------------------------------
-time_duration DemoEngine::Duration() const
+TimeDuration DemoEngine::Duration() const
 {
   return _duration;
 }
@@ -166,7 +166,7 @@ time_duration DemoEngine::Duration() const
 //------------------------------------------------------------------------------
 void DemoEngine::ReclassifyEffects()
 {
-  time_duration currentTime = _timer.Elapsed(nullptr);
+  TimeDuration currentTime = _timer.Elapsed(nullptr);
 
   sort(_effects.begin(), _effects.end(),
       [](const Effect *a, const Effect *b) { return a->StartTime() < b->StartTime(); });
@@ -192,7 +192,7 @@ void DemoEngine::ReclassifyEffects()
 //------------------------------------------------------------------------------
 bool DemoEngine::Tick()
 {
-  time_duration delta, current = _timer.Elapsed(&delta);
+  TimeDuration delta, current = _timer.Elapsed(&delta);
 
   // check for any effects that have ended
   while (!_activeEffects.empty() && _activeEffects.front()->EndTime() <= current)
@@ -228,8 +228,8 @@ bool DemoEngine::Tick()
 
   Effect::UpdateState initialState;
   initialState.globalTime = current;
-  initialState.localTime = seconds(0);
-  initialState.delta = seconds(0);
+  initialState.localTime = TimeDuration::Seconds(0);
+  initialState.delta = TimeDuration::Seconds(0);
   initialState.paused = paused;
   initialState.frequency = 100;
   initialState.numTicks = 1;
@@ -297,7 +297,7 @@ bool DemoEngine::Init(const char* config, HINSTANCE instance)
 
       EffectFactory factory = factoryIt->second;
       Effect* effect = factory(name);
-      effect->SetDuration(milliseconds(part.start()), milliseconds(part.end()));
+      effect->SetDuration(TimeDuration::Milliseconds(part.start()), TimeDuration::Milliseconds(part.end()));
       if (!effect->Init(part.config().c_str()))
       {
         return false;

@@ -16,8 +16,8 @@ namespace boba
 
     void Start();
     void Stop();
-    void SetElapsed(time_duration us);
-    time_duration Elapsed(time_duration* delta) const;
+    void SetElapsed(TimeDuration us);
+    TimeDuration Elapsed(TimeDuration* delta) const;
     bool IsRunning() const;
 
   private:
@@ -43,10 +43,10 @@ namespace boba
     void SetPaused(bool pause);
     bool Paused() const;
 
-    void SetPos(time_duration pos);
-    time_duration Pos();
+    void SetPos(TimeDuration pos);
+    TimeDuration Pos();
 
-    time_duration Duration() const;
+    TimeDuration Duration() const;
     bool Tick();
 
     void WndProc(UINT message, WPARAM wParam, LPARAM lParam);
@@ -70,7 +70,7 @@ namespace boba
     deque<Effect *> _expiredEffects;
     vector<Effect *> _effects;
     int _cur_effect;
-    time_duration _duration;
+    TimeDuration _duration;
 
     Timer _timer;
 

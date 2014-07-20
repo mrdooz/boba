@@ -39,4 +39,6 @@ message Plane
   optional float blur_radius            = 12 [(anttweak.minF) = 0, (anttweak.maxF) = 200, (anttweak.stepF) = 1, default = 10];
   optional float bloom_threshold        = 13 [(anttweak.minF) = 0, (anttweak.maxF) = 1, (anttweak.stepF) = 0.01, default = 0.8];
   optional float bloom_multiplier       = 14 [(anttweak.minF) = 0, (anttweak.maxF) = 5, (anttweak.stepF) = 0.1, default = 1.0];
+  
+  optional bool transpose               = 15 [default = true];
 }

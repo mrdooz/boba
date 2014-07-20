@@ -12,9 +12,9 @@ namespace boba
 
     struct UpdateState
     {
-      time_duration globalTime;
-      time_duration localTime;
-      time_duration delta;
+      TimeDuration globalTime;
+      TimeDuration localTime;
+      TimeDuration delta;
       s64 frequency;
       s32 numTicks;
       float ticksFraction;
@@ -35,12 +35,12 @@ namespace boba
     virtual void WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 
     const string& Name() const { return _name; }
-    time_duration StartTime() const { return _startTime; }
-    time_duration EndTime() const { return _endTime; }
+    TimeDuration StartTime() const { return _startTime; }
+    TimeDuration EndTime() const { return _endTime; }
     bool Running() const;
     void SetRunning(bool b);
-    void SetDuration(time_duration startTime, time_duration endTime);
-    void SetStartTime(time_duration startTime);
+    void SetDuration(TimeDuration startTime, TimeDuration endTime);
+    void SetStartTime(TimeDuration startTime);
 
   protected:
 
@@ -53,7 +53,7 @@ namespace boba
     DWORD _mouse_pos_prev;
     int _keystate[256];
 
-    time_duration _startTime, _endTime;
+    TimeDuration _startTime, _endTime;
     bool _running;
 
     DeferredContext *_ctx;

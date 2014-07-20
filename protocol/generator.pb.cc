@@ -59,7 +59,7 @@ void protobuf_AssignDesc_generator_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Spiky));
   Plane_descriptor_ = file->message_type(1);
-  static const int Plane_offsets_[14] = {
+  static const int Plane_offsets_[15] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, width_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, width_segments_),
@@ -74,6 +74,7 @@ void protobuf_AssignDesc_generator_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, blur_radius_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, bloom_threshold_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, bloom_multiplier_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plane, transpose_),
   };
   Plane_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -130,7 +131,7 @@ void protobuf_AddDesc_generator_2eproto() {
     "era_dir\030\006 \001(\0132\017.common.Vector3B\004\230\265\030\001\022$\n\005"
     "obj_t\030\007 \001(\0132\017.common.Vector3B\004\230\265\030\001\022&\n\005ob"
     "j_r\030\010 \001(\0132\021.common.Matrix4x4B\004\230\265\030\001:\004\360\266\030\001"
-    "\"\227\004\n\005Plane\022\r\n\005width\030\001 \001(\002\022\016\n\006height\030\002 \001("
+    "\"\260\004\n\005Plane\022\r\n\005width\030\001 \001(\002\022\016\n\006height\030\002 \001("
     "\002\022\026\n\016width_segments\030\003 \001(\r\022\027\n\017height_segm"
     "ents\030\004 \001(\r\022)\n\ncamera_pos\030\005 \001(\0132\017.common."
     "Vector3B\004\230\265\030\001\022)\n\ncamera_dir\030\006 \001(\0132\017.comm"
@@ -143,7 +144,8 @@ void protobuf_AddDesc_generator_2eproto() {
     ":\00210B\025\245\265\030\000\000\000\000\255\265\030\000\000HC\265\265\030\000\000\200\?\0223\n\017bloom_thr"
     "eshold\030\r \001(\002:\0030.8B\025\245\265\030\000\000\000\000\255\265\030\000\000\200\?\265\265\030\n\327#<"
     "\0222\n\020bloom_multiplier\030\016 \001(\002:\0011B\025\245\265\030\000\000\000\000\255\265"
-    "\030\000\000\240@\265\265\030\315\314\314=:\004\360\266\030\001", 858);
+    "\030\000\000\240@\265\265\030\315\314\314=\022\027\n\ttranspose\030\017 \001(\010:\004true:\004\360"
+    "\266\030\001", 883);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "generator.proto", &protobuf_RegisterTypes);
   Spiky::default_instance_ = new Spiky();
@@ -681,6 +683,7 @@ const int Plane::kOfsFieldNumber;
 const int Plane::kBlurRadiusFieldNumber;
 const int Plane::kBloomThresholdFieldNumber;
 const int Plane::kBloomMultiplierFieldNumber;
+const int Plane::kTransposeFieldNumber;
 #endif  // !_MSC_VER
 
 Plane::Plane()
@@ -717,6 +720,7 @@ void Plane::SharedCtor() {
   blur_radius_ = 10;
   bloom_threshold_ = 0.8f;
   bloom_multiplier_ = 1;
+  transpose_ = true;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -780,6 +784,7 @@ void Plane::Clear() {
     blur_radius_ = 10;
     bloom_threshold_ = 0.8f;
     bloom_multiplier_ = 1;
+    transpose_ = true;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1002,6 +1007,22 @@ bool Plane::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(120)) goto parse_transpose;
+        break;
+      }
+
+      // optional bool transpose = 15 [default = true];
+      case 15: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_transpose:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &transpose_)));
+          set_has_transpose();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1098,6 +1119,11 @@ void Plane::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(14, this->bloom_multiplier(), output);
   }
 
+  // optional bool transpose = 15 [default = true];
+  if (has_transpose()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(15, this->transpose(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1182,6 +1208,11 @@ void Plane::SerializeWithCachedSizes(
   // optional float bloom_multiplier = 14 [default = 1];
   if (has_bloom_multiplier()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(14, this->bloom_multiplier(), target);
+  }
+
+  // optional bool transpose = 15 [default = true];
+  if (has_transpose()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(15, this->transpose(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1279,6 +1310,11 @@ int Plane::ByteSize() const {
       total_size += 1 + 4;
     }
 
+    // optional bool transpose = 15 [default = true];
+    if (has_transpose()) {
+      total_size += 1 + 1;
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -1350,6 +1386,9 @@ void Plane::MergeFrom(const Plane& from) {
     if (from.has_bloom_multiplier()) {
       set_bloom_multiplier(from.bloom_multiplier());
     }
+    if (from.has_transpose()) {
+      set_transpose(from.transpose());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1387,6 +1426,7 @@ void Plane::Swap(Plane* other) {
     std::swap(blur_radius_, other->blur_radius_);
     std::swap(bloom_threshold_, other->bloom_threshold_);
     std::swap(bloom_multiplier_, other->bloom_multiplier_);
+    std::swap(transpose_, other->transpose_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

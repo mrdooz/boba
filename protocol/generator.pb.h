@@ -360,6 +360,13 @@ class Plane : public ::google::protobuf::Message {
   inline float bloom_multiplier() const;
   inline void set_bloom_multiplier(float value);
 
+  // optional bool transpose = 15 [default = true];
+  inline bool has_transpose() const;
+  inline void clear_transpose();
+  static const int kTransposeFieldNumber = 15;
+  inline bool transpose() const;
+  inline void set_transpose(bool value);
+
   // @@protoc_insertion_point(class_scope:generator.Plane)
  private:
   inline void set_has_width();
@@ -390,6 +397,8 @@ class Plane : public ::google::protobuf::Message {
   inline void clear_has_bloom_threshold();
   inline void set_has_bloom_multiplier();
   inline void clear_has_bloom_multiplier();
+  inline void set_has_transpose();
+  inline void clear_has_transpose();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -407,9 +416,10 @@ class Plane : public ::google::protobuf::Message {
   float blur_radius_;
   float bloom_threshold_;
   float bloom_multiplier_;
+  bool transpose_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(14 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(15 + 31) / 32];
 
   friend void  protobuf_AddDesc_generator_2eproto();
   friend void protobuf_AssignDesc_generator_2eproto();
@@ -1039,6 +1049,28 @@ inline float Plane::bloom_multiplier() const {
 inline void Plane::set_bloom_multiplier(float value) {
   set_has_bloom_multiplier();
   bloom_multiplier_ = value;
+}
+
+// optional bool transpose = 15 [default = true];
+inline bool Plane::has_transpose() const {
+  return (_has_bits_[0] & 0x00004000u) != 0;
+}
+inline void Plane::set_has_transpose() {
+  _has_bits_[0] |= 0x00004000u;
+}
+inline void Plane::clear_has_transpose() {
+  _has_bits_[0] &= ~0x00004000u;
+}
+inline void Plane::clear_transpose() {
+  transpose_ = true;
+  clear_has_transpose();
+}
+inline bool Plane::transpose() const {
+  return transpose_;
+}
+inline void Plane::set_transpose(bool value) {
+  set_has_transpose();
+  transpose_ = value;
 }
 
 

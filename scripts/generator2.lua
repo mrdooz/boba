@@ -7,7 +7,7 @@ function get_y(x, z, y_values)
   local key = tostring(x) .. '|' .. tostring(z)
   local y = y_values[key]
   if y == nil then
-    y = 25 * math.random()
+    y = 35 * math.random()
     y_values[key] = y
   end
   return y

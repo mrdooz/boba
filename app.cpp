@@ -330,23 +330,23 @@ LRESULT App::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         return 0;
 
       case VK_PRIOR:
-        DEMO_ENGINE.SetPos(DEMO_ENGINE.Pos() - seconds(1));
+        DEMO_ENGINE.SetPos(DEMO_ENGINE.Pos() - TimeDuration::Seconds(1));
         return 0;
 
       case VK_NEXT:
-        DEMO_ENGINE.SetPos(DEMO_ENGINE.Pos() + seconds(1));
+        DEMO_ENGINE.SetPos(DEMO_ENGINE.Pos() + TimeDuration::Seconds(1));
         return 0;
 
       case VK_LEFT:
-        DEMO_ENGINE.SetPos(DEMO_ENGINE.Pos() - milliseconds(100));
+        DEMO_ENGINE.SetPos(DEMO_ENGINE.Pos() - TimeDuration::Milliseconds(100));
         return 0;
 
       case VK_RIGHT:
-        DEMO_ENGINE.SetPos(DEMO_ENGINE.Pos() + milliseconds(100));
+        DEMO_ENGINE.SetPos(DEMO_ENGINE.Pos() + TimeDuration::Milliseconds(100));
         return 0;
 
       case VK_HOME:
-        DEMO_ENGINE.SetPos(seconds(0));
+        DEMO_ENGINE.SetPos(TimeDuration::Seconds(0));
         return 0;
 
       default:
@@ -414,18 +414,18 @@ void App::AddMessage(MessageType type, const string& str)
   else if (type == MessageType::Info)
   {
     msg.r = msg.g = msg.b = 0.8f;
-    msg.endTime = microsec_clock::local_time() + seconds(5);
+    msg.endTime = TimeStamp::Now() + TimeDuration::Seconds(5);
   }
   else if (type == MessageType::Warning)
   {
     msg.r = msg.g = 0.9f; msg.b = 0;
-    msg.endTime = microsec_clock::local_time() + seconds(10);
+    msg.endTime = TimeStamp::Now() + TimeDuration::Seconds(10);
   }
   else
   {
     // error
     msg.r = 0.9f; msg.g = 0.2f; msg.b = 0.0f;
-    msg.endTime = microsec_clock::local_time() + seconds(20);
+    msg.endTime = TimeStamp::Now() + TimeDuration::Seconds(20);
   }
 
   _messages.push_back(msg);
@@ -434,7 +434,7 @@ void App::AddMessage(MessageType type, const string& str)
 //------------------------------------------------------------------------------
 void App::UpdateMessages()
 {
-  ptime now = microsec_clock::local_time();
+  TimeStamp now = TimeStamp::Now();
 
   float x = 300;
   float y = 0;
@@ -442,20 +442,20 @@ void App::UpdateMessages()
   for (auto it = _messages.begin(); it != _messages.end(); )
   {
     const Message& msg = *it;
-    if (msg.endTime.is_not_a_date_time() || msg.endTime > now)
+    if (!msg.endTime.IsValid() || msg.endTime > now)
     {
       y += 15;
       // blend out alpha over the last second
-      time_duration left = msg.endTime - now;
+      TimeDuration left = msg.endTime - now;
       float a = 1;
-      if (left < seconds(1))
+      if (left < TimeDuration::Seconds(1))
       {
-        a = Clamp(0.0f, 1.0f, left.total_milliseconds() / 1000.0f);
+        a = Clamp(0.0f, 1.0f, left.TotalMilliseconds() / 1000.0f);
       }
       GRAPHICS.AddText(msg.str.c_str(), "Arial", 15, x, y, ColorToU32(msg.r, msg.g, msg.b, a));
     }
 
-    if (!msg.endTime.is_not_a_date_time() && msg.endTime > now)
+    if (msg.endTime.IsValid() && msg.endTime > now)
     {
       ++it;
     }

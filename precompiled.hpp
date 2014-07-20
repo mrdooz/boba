@@ -1,6 +1,6 @@
 #pragma once
 
-#define WITH_ANT_TWEAK_BAR 0
+#define WITH_ANT_TWEAK_BAR 1
 #define WITH_FONT_RENDERING 0
 #define WITH_MEMORY_TRACKING 0
 #define WITH_GPU_PERF 1
@@ -98,11 +98,6 @@
 #include <google/protobuf/text_format.h>
 #include <google/protobuf/repeated_field.h>
 
-#define BOOST_ALL_NO_LIB
-#include <boost/date_time.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
-#include <boost/algorithm/string/replace.hpp>
-
 #if WITH_ANT_TWEAK_BAR
 #include <AntTweakBar.h>
 #endif
@@ -117,6 +112,7 @@
 #include <bristol/utils.hpp>
 #include <bristol/error.hpp>
 #include <bristol/file_utils.hpp>
+#include <bristol/time_utils.hpp>
 #include <bristol/file_watcher.hpp>
 #include <bristol/dx/graphics_utils.hpp>
 #include <bristol/dx/vertex_types.hpp>
@@ -162,19 +158,13 @@ namespace boba
   using DirectX::SimpleMath::Vector4;
   using DirectX::SimpleMath::Matrix;
 
-  using boost::posix_time::ptime;
-  using boost::posix_time::time_duration;
-  using boost::posix_time::seconds;
-  using boost::posix_time::milliseconds;
-  using boost::posix_time::microseconds;
-  using boost::posix_time::microsec_clock;
-
-  using boost::algorithm::replace_all;
-
   using namespace std::tr1::placeholders;
 
   using bristol::Flags;
   using bristol::FileWatcher;
+
+  using bristol::TimeStamp;
+  using bristol::TimeDuration;
 }
 
 #pragma comment(lib, "DXGI.lib")
@@ -185,12 +175,6 @@ namespace boba
 
 #if WITH_GPU_PERF
 #pragma comment(lib, "D3D9.lib")
-#endif
-
-#ifdef _DEBUG
-#pragma comment(lib, "libboost_date_time-vc120-mt-sgd-1_55.lib")
-#else
-#pragma comment(lib, "libboost_date_time-vc120-mt-s-1_55.lib")
 #endif
 
 #if WITH_ANT_TWEAK_BAR

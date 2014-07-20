@@ -23,7 +23,12 @@ static bool FileExists(const char *filename)
 static string NormalizePath(const string &path, bool addTrailingSlash)
 {
   string res(path);
-  boost::replace_all(res, "\\", "/");
+  for (char& ch : res)
+  {
+    if (ch == '\\')
+      ch = '/';
+  }
+
   if (addTrailingSlash) {
     if (!res.empty() && res.back() != '/')
       res.push_back('/');

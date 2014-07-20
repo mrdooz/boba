@@ -66,7 +66,7 @@ namespace boba
     struct Message
     {
       wstring str;
-      ptime endTime;
+      TimeStamp endTime;
       float r, g, b;
     };
 
