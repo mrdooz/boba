@@ -13,7 +13,7 @@ static const int WM_APP_CLOSE = WM_APP + 2;
 #define FMOD_CHECKED(x) { \
   FMOD_RESULT result = x; \
   if (result != FMOD_OK) { \
-  LOG_ERROR_LN("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result)); \
+  LOG_ERROR(ToString("FMOD error! (%d) %s\n", result, FMOD_ErrorString(result)).c_str()); \
   return false; \
   } \
 }
@@ -32,8 +32,6 @@ const TCHAR* g_AppWindowTitle = _T("boba - neurotica e.f.s");
 #ifndef GET_Y_LPARAM
 #define GET_Y_LPARAM(lParam)	((int)(short)HIWORD(lParam))
 #endif
-
-#define WITH_MUSIC 0
 
 LogSinkApp* g_logSinkApp;
 LogSinkConsole* g_logSinkConsole;
@@ -168,26 +166,26 @@ bool App::Init(HINSTANCE hinstance)
 
   if (version < FMOD_VERSION)
   {
-    LOG_ERROR_LN("Error!  You are using an old version of FMOD %08x.  This program requires %08x\n", version, FMOD_VERSION);
+    LOG_ERROR(ToString("Error!  You are using an old version of FMOD %08x.  This program requires %08x\n", version, FMOD_VERSION).c_str());
     return false;
   }
 
   FMOD_CHECKED(_system->init(1, FMOD_INIT_NORMAL, 0));
-  FMOD_CHECKED(_system->createStream("Never lose your smile.mp3", FMOD_HARDWARE | FMOD_LOOP_NORMAL | FMOD_2D, 0, &_sound));
+  FMOD_CHECKED(_system->createStream("All Night (Luke Carpenter Bootleg).mp3", FMOD_HARDWARE | FMOD_LOOP_NORMAL | FMOD_2D, 0, &_sound));
 #endif
 
   return true;
 }
 
 //------------------------------------------------------------------------------
-void App::Run()
+bool App::Run()
 {
   MSG msg = {0};
 
   DEMO_ENGINE.Start();
 
 #if WITH_MUSIC
-  FMOD_RESULT result = _system->playSound(FMOD_CHANNEL_FREE, _sound, false, &_channel);
+  //FMOD_RESULT result = _system->playSound(FMOD_CHANNEL_FREE, _sound, false, &_channel);
 #endif
 
   while (WM_QUIT != msg.message)
@@ -223,8 +221,9 @@ void App::Run()
   FMOD_CHECKED(_system->close());
   FMOD_CHECKED(_system->release());
 #endif
-}
 
+  return true;
+}
 
 //------------------------------------------------------------------------------
 void App::LoadSettings()
@@ -296,7 +295,7 @@ LRESULT App::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
       case 'V':
-        GRAPHICS.set_vsync(!GRAPHICS.vsync());
+        GRAPHICS.SetVSync(!GRAPHICS.VSync());
         return 0;
 
       case 'M': {

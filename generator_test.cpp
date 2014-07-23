@@ -344,7 +344,7 @@ void PostProcess::Execute(
   if (output.IsValid())
     _ctx->UnsetRenderTargets(0, 1);
 
-  _ctx->UnsetSRVs(0, input.size(), ShaderType::PixelShader);
+  _ctx->UnsetSRVs(0, (u32)input.size(), ShaderType::PixelShader);
 
   GPU_EndEvent();
 }
@@ -518,7 +518,7 @@ void GeneratorTest::RenderPlane()
     else
     {
       // check if the buffers need to be resized
-      u32 vbSize = g_mesh.verts.size() * sizeof(g_mesh.verts[0]);
+      u32 vbSize = (u32)(g_mesh.verts.size() * sizeof(g_mesh.verts[0]));
       if (vbSize > _meshObjects._vbSize)
       {
         while (_meshObjects._vbSize < vbSize)
@@ -526,7 +526,7 @@ void GeneratorTest::RenderPlane()
         _meshObjects._vb = GRAPHICS.CreateBuffer(D3D11_BIND_VERTEX_BUFFER, _meshObjects._vbSize, true, nullptr, sizeof(PosNormal));
       }
 
-      u32 ibSize = g_mesh.indices.size() * sizeof(u32);
+      u32 ibSize = (u32)(g_mesh.indices.size() * sizeof(u32));
       if (ibSize > _meshObjects._ibSize)
       {
         while (_meshObjects._ibSize < ibSize)
@@ -549,7 +549,7 @@ void GeneratorTest::RenderPlane()
         _ctx->Unmap(_meshObjects._ib, 0);
       }
 
-      _numIndices = g_mesh.indices.size();
+      _numIndices = (u32)g_mesh.indices.size();
     }
     lua_pop(_lua, 1);
 
@@ -587,7 +587,7 @@ void GeneratorTest::RenderSpiky()
     else
     {
       // check if the buffers need to be resized
-      u32 vbSize = g_mesh.verts.size() * sizeof(g_mesh.verts[0]);
+      u32 vbSize = (u32)g_mesh.verts.size() * sizeof(g_mesh.verts[0]);
       if (vbSize > _meshObjects._vbSize)
       {
         while (_meshObjects._vbSize < vbSize)
@@ -595,7 +595,7 @@ void GeneratorTest::RenderSpiky()
         _meshObjects._vb = GRAPHICS.CreateBuffer(D3D11_BIND_VERTEX_BUFFER, _meshObjects._vbSize, true, nullptr, sizeof(PosNormal));
       }
 
-      u32 ibSize = g_mesh.indices.size() * sizeof(u32);
+      u32 ibSize = (u32)g_mesh.indices.size() * sizeof(u32);
       if (ibSize > _meshObjects._ibSize)
       {
         while (_meshObjects._ibSize < ibSize)
@@ -618,7 +618,7 @@ void GeneratorTest::RenderSpiky()
         _ctx->Unmap(_meshObjects._ib, 0);
       }
 
-      _numIndices = g_mesh.indices.size();
+      _numIndices = (u32)g_mesh.indices.size();
     }
     lua_pop(_lua, 1);
 
@@ -662,7 +662,7 @@ bool GeneratorTest::Render()
     // exp(avg(log(x)), where the avg(log) term can be obtained as the lowest mip level
     // from a texture containing the log luminance
     _postProcess->Setup();
-    _postProcess->Execute({_renderTarget}, rtLuminance.h, _psLuminance, 0, L"Luminance");
+    _postProcess->Execute({_renderTarget}, rtLuminance.h, _psLuminance, &black, L"Luminance");
     _ctx->GenerateMips(rtLuminance.h);
 
     // luminance level adaption
@@ -674,7 +674,7 @@ bool GeneratorTest::Render()
 
     // Adaption will perform the exp() on the average luminance
     _postProcess->Execute({_luminanceAdaption[!_curAdaption], rtLuminance.h },
-        _luminanceAdaption[_curAdaption], _psAdaption, 0, L"Adaption");
+        _luminanceAdaption[_curAdaption], _psAdaption, &black, L"Adaption");
 
     int w, h;
     GRAPHICS.GetBackBufferSize(&w, &h);
@@ -683,7 +683,7 @@ bool GeneratorTest::Render()
     ScopedRenderTarget threshold(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, BufferFlags(BufferFlag::CreateSrv));
     _cbBloom.data.threshold = _planeConfig.bloom_threshold();
     _ctx->SetCBuffer(_cbBloom, ShaderType::PixelShader, 2);
-    _postProcess->Execute({ _renderTarget, _luminanceAdaption[_curAdaption] }, threshold.h, _psThreshold, 0, L"BloomThreshold");
+    _postProcess->Execute({ _renderTarget, _luminanceAdaption[_curAdaption] }, threshold.h, _psThreshold, &black, L"BloomThreshold");
 
     auto f = BufferFlags(BufferFlag::CreateSrv) | BufferFlag::CreateUav;
     ScopedRenderTarget blur0(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
@@ -711,18 +711,12 @@ bool GeneratorTest::Render()
         scratch1.h, scratch0.h, scratch0.h, scratch1.h, scratch1.h, scratch0.h,
       };
 
-      _cbBlur.data.inputSize.x = (float)w;
-      _cbBlur.data.inputSize.y = (float)h;
-      _cbBlur.data.radius = _planeConfig.blur_radius();
-      _ctx->SetCBuffer(_cbBlur, ShaderType::ComputeShader, 0);
-
-
       GPU_BeginEvent(0xffffffff, L"blurX_T");
       // horizontal blur (ends up in scratch0)
       for (int i = 0; i < 3; ++i)
       {
         _ctx->SetShaderResources({ srcDst[i*2+0] }, ShaderType::ComputeShader);
-        _ctx->SetUav(srcDst[i*2+1]);
+        _ctx->SetUav(srcDst[i*2+1], &black);
 
         _ctx->SetCS(_csBlurTranspose);
         _ctx->Dispatch(h/32+1, 1, 1);
@@ -737,7 +731,7 @@ bool GeneratorTest::Render()
       // copy/transpose from scratch0 -> scratch1
       GPU_BeginEvent(0xffffffff, L"CopyTranspose");
       _ctx->SetShaderResources({ scratch0.h }, ShaderType::ComputeShader);
-      _ctx->SetUav(scratch1.h);
+      _ctx->SetUav(scratch1.h, &black);
 
       _ctx->SetCS(_csCopyTranspose);
       _ctx->Dispatch(h/32+1, 1, 1);
@@ -747,19 +741,18 @@ bool GeneratorTest::Render()
       GPU_EndEvent();
 
 
-      // blur from scratch1 -> scratch0
+      // "vertical" blur, ends up in scratch 0
       _cbBlur.data.inputSize.x = (float)h;
       _cbBlur.data.inputSize.y = (float)w;
       _cbBlur.data.radius = _planeConfig.blur_radius();
       _ctx->SetCBuffer(_cbBlur, ShaderType::ComputeShader, 0);
 
       GPU_BeginEvent(0xffffffff, L"blurY_T");
-      // "vertical" blur
       for (int i = 0; i < 3; ++i)
       {
 
         _ctx->SetShaderResources({ srcDst[6+i*2+0] }, ShaderType::ComputeShader);
-        _ctx->SetUav(srcDst[6+i*2+1]);
+        _ctx->SetUav(srcDst[6+i*2+1], &black);
 
         _ctx->SetCS(_csBlurTranspose);
         _ctx->Dispatch(w/32+1, 1, 1);
@@ -773,7 +766,7 @@ bool GeneratorTest::Render()
       GPU_BeginEvent(0xffffffff, L"CopyTranspose");
 
       _ctx->SetShaderResources({ scratch0.h }, ShaderType::ComputeShader);
-      _ctx->SetUav(blur1.h);
+      _ctx->SetUav(blur1.h, &black);
 
       _ctx->SetCS(_csCopyTranspose);
       _ctx->Dispatch(w/32+1, 1, 1);
@@ -797,7 +790,7 @@ bool GeneratorTest::Render()
         GPU_BeginEvent(0xffffffff, L"blurX");
 
         _ctx->SetShaderResources({ srcDst[i*4+0] }, ShaderType::ComputeShader);
-        _ctx->SetUav(srcDst[i*4+1]);
+        _ctx->SetUav(srcDst[i*4+1], &black);
 
         _ctx->SetCS(_csBlurX);
         _ctx->Dispatch(h/32+1, 1, 1);
@@ -809,7 +802,7 @@ bool GeneratorTest::Render()
         GPU_BeginEvent(0xffffffff, L"blurY");
 
         _ctx->SetShaderResources({ srcDst[i*4+2] }, ShaderType::ComputeShader);
-        _ctx->SetUav(srcDst[i*4+3]);
+        _ctx->SetUav(srcDst[i*4+3], &black);
 
         _ctx->SetCS(_csBlurY);
         _ctx->Dispatch(w/32+1, 1, 1);

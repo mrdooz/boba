@@ -33,7 +33,7 @@ namespace boba
     void SetBlendState(GraphicsObjectHandle bs, const float *blendFactors, UINT sampleMask);
     void SetShaderResource(GraphicsObjectHandle h, ShaderType shaderType);
     void SetShaderResources(const vector<GraphicsObjectHandle>& handles, ShaderType shaderType);
-    void SetUav(GraphicsObjectHandle h);
+    void SetUav(GraphicsObjectHandle h, Color* clearColor);
     void SetSamplerState(GraphicsObjectHandle h, u32 slot, ShaderType shaderType);
     void SetSamplers(GraphicsObjectHandle* h, u32 slot, u32 numSamplers, ShaderType shaderType);
     template <typename T>

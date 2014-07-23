@@ -1,7 +1,12 @@
 #pragma once
 
 #include "effect.hpp"
+
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
 #include "protocol/particle.pb.h"
+#pragma warning(pop)
+
 
 namespace boba
 {

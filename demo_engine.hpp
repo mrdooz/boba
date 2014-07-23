@@ -1,7 +1,10 @@
 #pragma once
 
 #include "graphics.hpp"
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
 #include "protocol/demo.pb.h"
+#pragma warning(pop)
 
 namespace boba
 {

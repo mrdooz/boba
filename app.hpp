@@ -28,7 +28,7 @@ namespace boba
     static App& Instance();
 
     bool Init(HINSTANCE hinstance);
-    void Run();
+    bool Run();
 
     static bool Create();
     static bool Destroy();

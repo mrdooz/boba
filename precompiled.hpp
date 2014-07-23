@@ -14,6 +14,8 @@
 
 #define WITH_DEBUG_SHADERS 0
 
+#define WITH_MUSIC 1
+
 #ifdef _DEBUG
   #ifndef WITH_UNPACKED_RESOUCES 
     #define WITH_UNPACKED_RESOUCES 1
@@ -95,8 +97,11 @@
 
 #include "lua/lua.hpp"
 
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
 #include <google/protobuf/text_format.h>
 #include <google/protobuf/repeated_field.h>
+#pragma warning(pop)
 
 #if WITH_ANT_TWEAK_BAR
 #include <AntTweakBar.h>
@@ -105,6 +110,11 @@
 #if WITH_FONT_RENDERING
 #include <FW1FontWrapper.h>
 #pragma comment(lib, "FW1FontWrapper.lib")
+#endif
+
+#if WITH_MUSIC
+#include <fmod.hpp>
+#include <fmod_errors.h>
 #endif
 
 #include <bristol/string_utils.hpp>

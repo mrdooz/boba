@@ -346,7 +346,7 @@ void DeferredContext::SetShaderResource(GraphicsObjectHandle h, ShaderType shade
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetUav(GraphicsObjectHandle h)
+void DeferredContext::SetUav(GraphicsObjectHandle h, Color* clearColor)
 {
   auto type = h.type();
 
@@ -360,6 +360,11 @@ void DeferredContext::SetUav(GraphicsObjectHandle h)
   {
     Graphics::RenderTargetResource* res = GRAPHICS._renderTargets.Get(h);
     view = res->uav.resource;
+
+    if (clearColor)
+    {
+      _ctx->ClearRenderTargetView(res->rtv.resource, &clearColor->x);
+    }
   }
   else
   {

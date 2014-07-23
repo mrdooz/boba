@@ -314,7 +314,7 @@ Graphics::Graphics()
   , _resources(DeleteObj<SimpleResource *>)
   , _structuredBuffers(DeleteObj<StructuredBuffer *>)
   , _swapChains(DeleteObj<SwapChain*>)
-  , _vsync(false)
+  , _vsync(true)
   , _totalBytesAllocated(0)
   , _displayAllModes(false)
 {

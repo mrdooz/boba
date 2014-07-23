@@ -2,7 +2,12 @@
 
 #include "effect.hpp"
 #include "deferred_context.hpp"
+
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
 #include "protocol/generator.pb.h"
+#pragma warning(pop)
+
 #include "gpu_objects.hpp"
 
 namespace boba

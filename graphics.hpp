@@ -265,8 +265,8 @@ namespace boba
     void DestroyDeferredContext(DeferredContext *ctx);
     void AddCommandList(ID3D11CommandList *cmd_list);
 
-    bool vsync() const { return _vsync; }
-    void set_vsync(bool value) { _vsync = value; }
+    bool VSync() const { return _vsync; }
+    void SetVSync(bool value) { _vsync = value; }
 
     static GraphicsObjectHandle MakeObjectHandle(GraphicsObjectHandle::Type type, int idx, int data = 0);
 
@@ -284,7 +284,7 @@ namespace boba
         WNDPROC wndProc,
         HINSTANCE instance);
 
-    void Clear();
+    void ClearRenderTarget(GraphicsObjectHandle h);
     void Present();
     
     void GetBackBufferSize(int* width, int* height);
