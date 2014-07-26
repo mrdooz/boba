@@ -6,7 +6,7 @@
 #include "proto_helpers.hpp"
 #include "resource_manager.hpp"
 
-#include "boba_io.hpp"
+#include "boba_loader.hpp"
 #include "protocol/generator_bindings.hpp"
 #include "debug_drawer.hpp"
 
@@ -21,9 +21,9 @@ struct Face
   Vector3 normal;
 };
 
-struct Mesh
+struct DynamicMesh
 {
-  Mesh()
+  DynamicMesh()
   {
     Reset();
   }
@@ -106,13 +106,13 @@ struct Mesh
 
 #define DEBUG_DRAW DebugDrawer::Instance()
 
-Mesh g_mesh;
+DynamicMesh g_mesh;
 
 // vertex[index]
 int VertexIndex(lua_State* L)
 {
   // note, indices are 0 bases
-  Mesh* mesh = *(Mesh**)luaL_checkudata(L, 1, "vertices");
+  DynamicMesh* mesh = *(DynamicMesh**)luaL_checkudata(L, 1, "vertices");
   int index = luaL_checkint(L, 2);
   luaL_argcheck(L, index >= 0 && index < (int)mesh->verts.size(), 2, "index out of range");
   lua_pushnumber(L, mesh->verts[index]);
@@ -122,7 +122,7 @@ int VertexIndex(lua_State* L)
 // metatable method for handle "vertex[index] = value"
 int VertexNewIndex(lua_State* L)
 {
-  Mesh* mesh = *(Mesh**)luaL_checkudata(L, 1, "vertices");
+  DynamicMesh* mesh = *(DynamicMesh**)luaL_checkudata(L, 1, "vertices");
   int index = luaL_checkint(L, 2);
   float value = luaL_checknumber(L, 3);
   if (index >= (int)mesh->verts.size())
@@ -135,7 +135,7 @@ int VertexNewIndex(lua_State* L)
 int FaceIndex(lua_State* L)
 {
   // note, indices are 0 bases
-  Mesh* mesh = *(Mesh**)luaL_checkudata(L, 1, "indices");
+  DynamicMesh* mesh = *(DynamicMesh**)luaL_checkudata(L, 1, "indices");
   int index = luaL_checkint(L, 2);
   luaL_argcheck(L, index >= 0 && index < (int)mesh->indices.size(), 2, "index out of range");
   lua_pushinteger(L, mesh->indices[index]);
@@ -145,7 +145,7 @@ int FaceIndex(lua_State* L)
 // metatable method for handle "face[index] = value"
 int FaceNewIndex(lua_State* L)
 {
-  Mesh* mesh = *(Mesh**)luaL_checkudata(L, 1, "indices");
+  DynamicMesh* mesh = *(DynamicMesh**)luaL_checkudata(L, 1, "indices");
   int index = luaL_checkint(L, 2);
   int value = luaL_checkint(L, 3);
   if (index >= (int)mesh->indices.size())
@@ -156,7 +156,7 @@ int FaceNewIndex(lua_State* L)
 
 int GetMeshVertices(lua_State* L)
 {
-  Mesh** mesh = (Mesh**)lua_newuserdata(L, sizeof(Mesh**));
+  DynamicMesh** mesh = (DynamicMesh**)lua_newuserdata(L, sizeof(DynamicMesh**));
   *mesh = &g_mesh;
   luaL_setmetatable(L, "vertices");
   return 1;
@@ -164,7 +164,7 @@ int GetMeshVertices(lua_State* L)
 
 int GetMeshIndices(lua_State* L)
 {
-  Mesh** mesh = (Mesh**)lua_newuserdata(L, sizeof(Mesh**));
+  DynamicMesh** mesh = (DynamicMesh**)lua_newuserdata(L, sizeof(DynamicMesh**));
   *mesh = &g_mesh;
   luaL_setmetatable(L, "indices");
   return 1;
@@ -448,6 +448,9 @@ bool GeneratorTest::Init(const char* config)
   _depthStencilState = GRAPHICS.CreateDepthStencilState(CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT()));
   _blendState = GRAPHICS.CreateBlendState(CD3D11_BLEND_DESC(CD3D11_DEFAULT()));
   _rasterizerState = GRAPHICS.CreateRasterizerState(CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT()));
+
+  BobaLoader loader;
+  loader.Load("meshes/test1.c4d.boba");
 
   return true;
 }
