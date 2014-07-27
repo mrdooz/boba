@@ -25,6 +25,7 @@
     <ClCompile Include="..\debug_drawer.cpp" />
     <ClCompile Include="..\deferred_context.cpp" />
     <ClCompile Include="..\demo_engine.cpp" />
+    <ClCompile Include="..\dynamic_mesh.cpp" />
     <ClCompile Include="..\effect.cpp" />
     <ClCompile Include="..\generator_test.cpp" />
     <ClCompile Include="..\gpu_objects.cpp" />
@@ -492,6 +493,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\particle_test.cpp" />
+    <ClCompile Include="..\post_process.cpp" />
     <ClCompile Include="..\precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -516,6 +518,7 @@
     <ClInclude Include="..\debug_drawer.hpp" />
     <ClInclude Include="..\deferred_context.hpp" />
     <ClInclude Include="..\demo_engine.hpp" />
+    <ClInclude Include="..\dynamic_mesh.hpp" />
     <ClInclude Include="..\effect.hpp" />
     <ClInclude Include="..\generator_test.hpp" />
     <ClInclude Include="..\gpu_objects.hpp" />
@@ -548,6 +551,7 @@
     <ClInclude Include="..\lua\lvm.h" />
     <ClInclude Include="..\lua\lzio.h" />
     <ClInclude Include="..\particle_test.hpp" />
+    <ClInclude Include="..\post_process.hpp" />
     <ClInclude Include="..\precompiled.hpp" />
     <ClInclude Include="..\protocol\anttweak.pb.h" />
     <ClInclude Include="..\protocol\common.pb.h" />

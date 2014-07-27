@@ -63,4 +63,6 @@ namespace boba
     float _width;
   };
 
+#define DEBUG_DRAW DebugDrawer::Instance()
+
 }

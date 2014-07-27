@@ -37,6 +37,7 @@ shaders/*.cso
 shaders/*.psa
 shaders/*.vsa
 shaders/*.csa
+meshes/*
 _win32/Graphics*
 **/CMakeFiles/*
 **/CMakeCache.txt
