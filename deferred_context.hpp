@@ -20,6 +20,7 @@ namespace boba
     void EndFrame();
 
     void SetVB(ID3D11Buffer *buf, uint32_t stride);
+    void SetIB(ID3D11Buffer *buf, DXGI_FORMAT format);
     void SetVS(GraphicsObjectHandle vs);
     void SetPS(GraphicsObjectHandle ps);
     void SetCS(GraphicsObjectHandle cs);
@@ -55,6 +56,7 @@ namespace boba
 
     bool Map(GraphicsObjectHandle h, UINT sub, D3D11_MAP type, UINT flags, D3D11_MAPPED_SUBRESOURCE *res);
     void Unmap(GraphicsObjectHandle h, UINT sub);
+    void CopyToBuffer(GraphicsObjectHandle h, UINT sub, D3D11_MAP type, UINT flags, const void* data, u32 len);
 
     void Flush();
 

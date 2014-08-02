@@ -44,7 +44,6 @@ namespace boba
     };
 
     bool Load(const char* filename);
-    bool LoadMesh(const string& name, u32 flags, Mesh* mesh);
     void ProcessFixups(u32 fixupOffset);
 
     vector<MeshElement*> meshes;

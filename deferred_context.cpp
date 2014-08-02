@@ -136,6 +136,18 @@ void DeferredContext::SetLayout(GraphicsObjectHandle layout)
 }
 
 //------------------------------------------------------------------------------
+void DeferredContext::SetIB(GraphicsObjectHandle ib)
+{
+  _ctx->IASetIndexBuffer(GRAPHICS._indexBuffers.Get(ib), (DXGI_FORMAT)ib.data(), 0);
+}
+
+//------------------------------------------------------------------------------
+void DeferredContext::SetIB(ID3D11Buffer *buf, DXGI_FORMAT format)
+{
+  _ctx->IASetIndexBuffer(buf, format, 0);
+}
+
+//------------------------------------------------------------------------------
 void DeferredContext::SetVB(ID3D11Buffer *buf, u32 stride)
 {
   UINT ofs[] = { 0 };
@@ -148,12 +160,6 @@ void DeferredContext::SetVB(ID3D11Buffer *buf, u32 stride)
 void DeferredContext::SetVB(GraphicsObjectHandle vb) 
 {
   SetVB(GRAPHICS._vertexBuffers.Get(vb), vb.data());
-}
-
-//------------------------------------------------------------------------------
-void DeferredContext::SetIB(GraphicsObjectHandle ib)
-{
-  _ctx->IASetIndexBuffer(GRAPHICS._indexBuffers.Get(ib), (DXGI_FORMAT)ib.data(), 0);
 }
 
 //------------------------------------------------------------------------------
@@ -259,6 +265,23 @@ void DeferredContext::Unmap(GraphicsObjectHandle h, UINT sub)
 }
 
 //------------------------------------------------------------------------------
+void DeferredContext::CopyToBuffer(
+    GraphicsObjectHandle h,
+    UINT sub,
+    D3D11_MAP type,
+    UINT flags,
+    const void* data,
+    u32 len)
+{
+  D3D11_MAPPED_SUBRESOURCE res;
+  if (Map(h, 0, D3D11_MAP_WRITE_DISCARD, 0, &res))
+  {
+    memcpy(res.pData, data, len);
+    Unmap(h, 0);
+  }
+}
+
+//------------------------------------------------------------------------------
 void DeferredContext::DrawIndexed(int count, int start_index, int base_vertex)
 {
   _ctx->DrawIndexed(count, start_index, base_vertex);
@@ -310,7 +333,7 @@ void DeferredContext::SetShaderResources(
     *t++ = GRAPHICS.GetShaderResourceView(h);
   }
 
-  size_t count = handles.size();
+  u32 count = (u32)handles.size();
   if (shaderType == ShaderType::VertexShader)
     _ctx->VSSetShaderResources(0, count, v);
   else if (shaderType == ShaderType::PixelShader)

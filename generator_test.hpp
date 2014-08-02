@@ -37,6 +37,7 @@ namespace boba
 
     virtual void WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 
+    void RenderText();
     void RenderSpiky();
     void RenderPlane();
     void InitGeneratorScript();
@@ -123,7 +124,7 @@ namespace boba
     ConstantBuffer<CBufferBloom> _cbBloom;
     GraphicsObjectHandle _psThreshold;
 
-    Mesh* _mesh;
+    GraphicsObjectHandle _psEdgeDetect;
   };
 
 }

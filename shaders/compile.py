@@ -9,12 +9,14 @@ vs = {
     'debug_draw' : ['VsMain'],
     'fullscreen' : ['VsMain'],
     'generator' : ['VsMain'],
+    'text_shader' : ['VsMain'],
 }
 
 ps = {
     'debug_draw' : ['PsMain'],
     'fullscreen' : ['PsMain'],
     'generator' : ['PsMain'],
+    'text_shader' : ['PsMain', 'EdgeDetect'],
     'tonemap' : ['LuminanceMap', 'Composite', 'AdaptLuminance', 'BloomThreshold'],
     'copy' : ['PsMain'],
 }

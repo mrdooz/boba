@@ -43,8 +43,10 @@ bool SceneTest::Init(const char* config)
   BobaLoader loader;
   loader.Load("D:\\projects\\model\\thing1.lxo.boba");
   u32 vertexFlags = VF_POS | VF_NORMAL;
-  if (!loader.LoadMesh("mesh1", vertexFlags, &mesh))
+  auto tmp = unique_ptr<Mesh>(MeshFromLoader(loader, "mesh1", vertexFlags));
+  if (!tmp)
     return false;
+  mesh = *tmp;
 
   if (!GRAPHICS.LoadShadersFromFile("shaders/simple_mesh", &_vs, &_ps, &mesh._layout, vertexFlags))
     return false;

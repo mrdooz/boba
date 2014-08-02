@@ -4,6 +4,10 @@
 
 using namespace boba;
 
+namespace {
+  DynamicMesh* g_mesh = nullptr;
+}
+
 DynamicMesh::DynamicMesh()
 {
   Reset();
@@ -119,7 +123,6 @@ namespace boba
     return 0;
   }
 
-  DynamicMesh* g_mesh = nullptr;
 
   void SetDynamicMesh(DynamicMesh* mesh)
   {

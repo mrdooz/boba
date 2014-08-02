@@ -4,6 +4,8 @@
 
 namespace boba
 {
+  struct BobaLoader;
+
   struct Mesh
   {
     Mesh();
@@ -17,6 +19,8 @@ namespace boba
     BoundingSphere _boundingSphere;
     Matrix _world;
   };
+
+  Mesh* MeshFromLoader(const BobaLoader& loader, const string& name, u32 flags);
 
   struct Scene
   {

@@ -60,6 +60,8 @@ void PostProcess::Setup()
   _ctx->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   _ctx->SetVS(_vsQuad);
   _ctx->SetGS(GraphicsObjectHandle());
+  _ctx->SetIB(nullptr, DXGI_FORMAT_R32_UINT);
+  _ctx->SetVB(nullptr, 24);
 }
 
 //------------------------------------------------------------------------------
@@ -96,7 +98,7 @@ void PostProcess::Execute(
   _ctx->SetViewports(viewport, 1);
 
   _ctx->SetPS(shader);
-  _ctx->DrawIndexed(6, 0, 0);
+  _ctx->Draw(6, 0);
 
   if (output.IsValid())
     _ctx->UnsetRenderTargets(0, 1);

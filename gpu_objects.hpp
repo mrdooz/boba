@@ -10,6 +10,10 @@ namespace boba
         u32 ibSize, DXGI_FORMAT ibFormat,
         u32 vbSize, u32 vbElemSize);
 
+    void CreateDynamic(
+        u32 ibSize, DXGI_FORMAT ibFormat, const void* ibData,
+        u32 vbSize, u32 vbElemSize, const void* vbData);
+
     GraphicsObjectHandle _vs;
     GraphicsObjectHandle _ps;
     GraphicsObjectHandle _layout;
