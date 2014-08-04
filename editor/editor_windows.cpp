@@ -2,6 +2,8 @@
 #include "editor.hpp"
 #include "proto_utils.hpp"
 
+#include "protocol/effects_proto.hpp"
+
 using namespace editor;
 using namespace bristol;
 

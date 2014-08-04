@@ -43,8 +43,8 @@ void protobuf_AssignDesc_effect_5fsettings_5fplexus_2eproto() {
   GOOGLE_CHECK(file != NULL);
   Plexus_descriptor_ = file->message_type(0);
   static const int Plexus_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plexus, text_path_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plexus, noise_effector_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plexus, text_paths_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plexus, noise_effectors_),
   };
   Plexus_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -129,14 +129,14 @@ void protobuf_AddDesc_effect_5fsettings_5fplexus_2eproto() {
   ::common::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\034effect_settings_plexus.proto\022\reffect.p"
-    "lexus\032\014common.proto\"j\n\006Plexus\022*\n\ttext_pa"
-    "th\030\001 \003(\0132\027.effect.plexus.TextPath\0224\n\016noi"
-    "se_effector\030\002 \003(\0132\034.effect.plexus.NoiseE"
-    "ffector\"\030\n\010TextPath\022\014\n\004text\030\001 \001(\t\"\240\001\n\rNo"
-    "iseEffector\022@\n\010apply_to\030\001 \001(\0162$.effect.p"
-    "lexus.NoiseEffector.ApplyTo:\010POSITION\022)\n"
-    "\014displacement\030\002 \001(\0132\023.common.Vector3Anim"
-    "\"\"\n\007ApplyTo\022\014\n\010POSITION\020\001\022\t\n\005SCALE\020\002", 356);
+    "lexus\032\014common.proto\"l\n\006Plexus\022+\n\ntext_pa"
+    "ths\030\001 \003(\0132\027.effect.plexus.TextPath\0225\n\017no"
+    "ise_effectors\030\002 \003(\0132\034.effect.plexus.Nois"
+    "eEffector\"\030\n\010TextPath\022\014\n\004text\030\001 \001(\t\"\240\001\n\r"
+    "NoiseEffector\022@\n\010apply_to\030\001 \001(\0162$.effect"
+    ".plexus.NoiseEffector.ApplyTo:\010Position\022"
+    ")\n\014displacement\030\002 \001(\0132\023.common.Vector3An"
+    "im\"\"\n\007ApplyTo\022\014\n\010Position\020\001\022\t\n\005Scale\020\002", 358);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "effect_settings_plexus.proto", &protobuf_RegisterTypes);
   Plexus::default_instance_ = new Plexus();
@@ -158,8 +158,8 @@ struct StaticDescriptorInitializer_effect_5fsettings_5fplexus_2eproto {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Plexus::kTextPathFieldNumber;
-const int Plexus::kNoiseEffectorFieldNumber;
+const int Plexus::kTextPathsFieldNumber;
+const int Plexus::kNoiseEffectorsFieldNumber;
 #endif  // !_MSC_VER
 
 Plexus::Plexus()
@@ -212,8 +212,8 @@ Plexus* Plexus::New() const {
 }
 
 void Plexus::Clear() {
-  text_path_.Clear();
-  noise_effector_.Clear();
+  text_paths_.Clear();
+  noise_effectors_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -224,32 +224,32 @@ bool Plexus::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .effect.plexus.TextPath text_path = 1;
+      // repeated .effect.plexus.TextPath text_paths = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_text_path:
+         parse_text_paths:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_text_path()));
+                input, add_text_paths()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(10)) goto parse_text_path;
-        if (input->ExpectTag(18)) goto parse_noise_effector;
+        if (input->ExpectTag(10)) goto parse_text_paths;
+        if (input->ExpectTag(18)) goto parse_noise_effectors;
         break;
       }
 
-      // repeated .effect.plexus.NoiseEffector noise_effector = 2;
+      // repeated .effect.plexus.NoiseEffector noise_effectors = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_noise_effector:
+         parse_noise_effectors:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_noise_effector()));
+                input, add_noise_effectors()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_noise_effector;
+        if (input->ExpectTag(18)) goto parse_noise_effectors;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -272,16 +272,16 @@ bool Plexus::MergePartialFromCodedStream(
 
 void Plexus::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .effect.plexus.TextPath text_path = 1;
-  for (int i = 0; i < this->text_path_size(); i++) {
+  // repeated .effect.plexus.TextPath text_paths = 1;
+  for (int i = 0; i < this->text_paths_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->text_path(i), output);
+      1, this->text_paths(i), output);
   }
 
-  // repeated .effect.plexus.NoiseEffector noise_effector = 2;
-  for (int i = 0; i < this->noise_effector_size(); i++) {
+  // repeated .effect.plexus.NoiseEffector noise_effectors = 2;
+  for (int i = 0; i < this->noise_effectors_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->noise_effector(i), output);
+      2, this->noise_effectors(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -292,18 +292,18 @@ void Plexus::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Plexus::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .effect.plexus.TextPath text_path = 1;
-  for (int i = 0; i < this->text_path_size(); i++) {
+  // repeated .effect.plexus.TextPath text_paths = 1;
+  for (int i = 0; i < this->text_paths_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, this->text_path(i), target);
+        1, this->text_paths(i), target);
   }
 
-  // repeated .effect.plexus.NoiseEffector noise_effector = 2;
-  for (int i = 0; i < this->noise_effector_size(); i++) {
+  // repeated .effect.plexus.NoiseEffector noise_effectors = 2;
+  for (int i = 0; i < this->noise_effectors_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->noise_effector(i), target);
+        2, this->noise_effectors(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -316,20 +316,20 @@ void Plexus::SerializeWithCachedSizes(
 int Plexus::ByteSize() const {
   int total_size = 0;
 
-  // repeated .effect.plexus.TextPath text_path = 1;
-  total_size += 1 * this->text_path_size();
-  for (int i = 0; i < this->text_path_size(); i++) {
+  // repeated .effect.plexus.TextPath text_paths = 1;
+  total_size += 1 * this->text_paths_size();
+  for (int i = 0; i < this->text_paths_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->text_path(i));
+        this->text_paths(i));
   }
 
-  // repeated .effect.plexus.NoiseEffector noise_effector = 2;
-  total_size += 1 * this->noise_effector_size();
-  for (int i = 0; i < this->noise_effector_size(); i++) {
+  // repeated .effect.plexus.NoiseEffector noise_effectors = 2;
+  total_size += 1 * this->noise_effectors_size();
+  for (int i = 0; i < this->noise_effectors_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->noise_effector(i));
+        this->noise_effectors(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -357,8 +357,8 @@ void Plexus::MergeFrom(const ::google::protobuf::Message& from) {
 
 void Plexus::MergeFrom(const Plexus& from) {
   GOOGLE_CHECK_NE(&from, this);
-  text_path_.MergeFrom(from.text_path_);
-  noise_effector_.MergeFrom(from.noise_effector_);
+  text_paths_.MergeFrom(from.text_paths_);
+  noise_effectors_.MergeFrom(from.noise_effectors_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -381,8 +381,8 @@ bool Plexus::IsInitialized() const {
 
 void Plexus::Swap(Plexus* other) {
   if (other != this) {
-    text_path_.Swap(&other->text_path_);
-    noise_effector_.Swap(&other->noise_effector_);
+    text_paths_.Swap(&other->text_paths_);
+    noise_effectors_.Swap(&other->noise_effectors_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -640,8 +640,8 @@ bool NoiseEffector_ApplyTo_IsValid(int value) {
 }
 
 #ifndef _MSC_VER
-const NoiseEffector_ApplyTo NoiseEffector::POSITION;
-const NoiseEffector_ApplyTo NoiseEffector::SCALE;
+const NoiseEffector_ApplyTo NoiseEffector::Position;
+const NoiseEffector_ApplyTo NoiseEffector::Scale;
 const NoiseEffector_ApplyTo NoiseEffector::ApplyTo_MIN;
 const NoiseEffector_ApplyTo NoiseEffector::ApplyTo_MAX;
 const int NoiseEffector::ApplyTo_ARRAYSIZE;
@@ -721,7 +721,7 @@ bool NoiseEffector::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = POSITION];
+      // optional .effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -773,7 +773,7 @@ bool NoiseEffector::MergePartialFromCodedStream(
 
 void NoiseEffector::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = POSITION];
+  // optional .effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
   if (has_apply_to()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       1, this->apply_to(), output);
@@ -793,7 +793,7 @@ void NoiseEffector::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* NoiseEffector::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = POSITION];
+  // optional .effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
   if (has_apply_to()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->apply_to(), target);
@@ -817,7 +817,7 @@ int NoiseEffector::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = POSITION];
+    // optional .effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
     if (has_apply_to()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->apply_to());

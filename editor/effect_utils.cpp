@@ -9,21 +9,21 @@ namespace editor
     if (keyframes.empty())
       return Vector3f(0,0,0);
 
-    if (time_ms <= keyframes.front().time_ms)
+    if (time_ms <= keyframes.front().time)
       return keyframes.front().value;
 
-    if (time_ms >= keyframes.back().time_ms)
+    if (time_ms >= keyframes.back().time)
       return keyframes.back().value;
 
     int idxUpper = 0;
-    while (time_ms > keyframes[idxUpper].time_ms)
+    while (time_ms > keyframes[idxUpper].time)
       ++idxUpper;
 
     int idxLower = max(0, idxUpper-1);
     const Vector3Keyframe& kLower = keyframes[idxLower];
     const Vector3Keyframe& kUpper = keyframes[idxUpper];
 
-    float t = (time_ms - kLower.time_ms) / (float)(kUpper.time_ms - kLower.time_ms);
+    float t = (time_ms - kLower.time) / (float)(kUpper.time - kLower.time);
     return kLower.value + t * (kUpper.value - kLower.value);
   }
 }

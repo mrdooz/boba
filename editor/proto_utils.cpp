@@ -13,7 +13,7 @@ namespace editor
   {
     return Vector3f(v.x(), v.y(), v.z());
   }
-
+#if 0
   //----------------------------------------------------------------------------------
   Vector3Keyframe FromProtocol(const common::Vector3Keyframe& x)
   {
@@ -58,4 +58,5 @@ namespace editor
     res.noiseEffectors = FromProtocolRepeated<NoiseEffector>(plexus.noise_effector());
     return res;
   }
+  #endif
 }

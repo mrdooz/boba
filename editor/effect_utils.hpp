@@ -1,7 +1,9 @@
 #pragma once
+#include "protocol/effects_proto.hpp"
 
 namespace editor
 {
+#if 0
   struct Vector3Keyframe
   {
     Vector3Keyframe(u32 time, const Vector3f& v) : time_ms(time), value(v) {}
@@ -36,7 +38,7 @@ namespace editor
     vector<TextPath> textPaths;
     vector<NoiseEffector> noiseEffectors;
   };
-
+#endif
   struct Effect
   {
     enum class Type

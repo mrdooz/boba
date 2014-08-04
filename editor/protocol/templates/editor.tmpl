@@ -1,3 +1,10 @@
+#pragma once
+#include "common.pb.h"
+#include "effect_settings.pb.h"
+#include "effect_settings_plexus.pb.h"
+
+namespace editor
+{
 {% for class in all_classes %}
 struct {{ class }};
 {%- endfor %}
@@ -17,4 +24,25 @@ struct {{ class.name }}
   {{ member.type }} {{ member.name }};
 {%- endfor %}
 };
-{% endfor %}
+
+inline {{ class.name }} FromProtocol(const {{ class.proto_type}}& p)
+{
+	{{ class.name }} res;
+{%- for member in class.members %}
+{%- if member.is_native %}
+  res.{{ member.name }} = p.{{ member.name }}();
+{%- else %}
+{%- if member.is_repeated %}
+  res.{{ member.name }} = FromProtocolRepeated<{{ member.type }}>(p.{{ member.name }}());
+{%- else %}
+  res.{{ member.name }} = FromProtocol(p.{{ member.name }}());
+{%- endif %}
+
+  res.{{ member.name }} = FromProtocol(p.{{ member.name }}());
+{%- endif %}
+{%- endfor %}
+	return res;
+}
+{% endfor %}	
+}
+

@@ -19,7 +19,7 @@ include_directories(${SFML_INCLUDE_DIR})
 include_directories(${PROTOBUF_INCLUDE_DIR})
 include_directories(${BRISTOL_INCLUDE_DIR})
 
-file(GLOB SRC "*.cpp" "*.hpp" "protocol/*.pb.cc")
+file(GLOB SRC "*.cpp" "*.hpp" "protocol/*.pb.cc" "protocol/*.h" "protocol/*.hpp")
 
 add_executable(${PROJECT_NAME} ${SRC})
 
