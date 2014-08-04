@@ -1,0 +1,20 @@
+{% for class in all_classes %}
+struct {{ class }};
+{%- endfor %}
+{% for class in classes %}
+struct {{ class.name }}
+{
+{%- for enum in class.enums %}
+  enum class {{ enum.name }}
+  {
+  {%- for value in enum.vals %}
+    {{ value.name }} = {{ value.number }},
+  {%- endfor %}
+  };
+{% endfor %}
+
+{%- for member in class.members %}
+  {{ member.type }} {{ member.name }};
+{%- endfor %}
+};
+{% endfor %}
