@@ -1,5 +1,6 @@
 #include "editor.hpp"
 #include "editor_windows.hpp"
+#include "proto_utils.hpp"
 
 using namespace editor;
 using namespace google::protobuf;
@@ -75,58 +76,18 @@ Editor::~Editor()
 //----------------------------------------------------------------------------------
 bool Editor::Init()
 {
-  _effects.push_back({ "tjong", 20 });
-  _effects.push_back({ "tjong2", 20 });
-  _effects.push_back({ "tjong3", 20 });
-  _effects.push_back({ "tjong4", 20 });
-
   _fileWatcher.AddFileWatch(GetAppRoot() + "config/editor_settings.pb", 0, true, 0, [this](const string& filename, void* token)
   {
       return LoadProto(filename.c_str(), &_settings);
   });
 
-  if (!LoadProto("config/desc.pb", &_descriptorSet, false))
-  {
+  effect::plexus::Plexus plexusSettings;
+  if (!LoadProto("config/plexus1.pb", &plexusSettings, true))
     return false;
-  }
 
-  for (const FileDescriptorProto& fileProto : _descriptorSet.file())
-  {
-    for (auto x : fileProto.extension())
-    {
-      int a = 10;
-    }
+  _plexus = FromProtocol(plexusSettings);
 
-    for (const DescriptorProto& descProto : fileProto.message_type())
-    {
-
-      bool isEffect = false;
-      // look for message option indicating an effect
-      for (int i = 0; i < descProto.options().unknown_fields().field_count(); ++i)
-      {
-        const UnknownField& f = descProto.options().unknown_fields().field(i);
-        if (f.number() == 50030)
-        {
-          isEffect = true;
-          break;
-        }
-      }
-
-      if (isEffect)
-      {
-        printf("name: %s\n", descProto.name().c_str());
-        for (const FieldDescriptorProto& fieldProto : descProto.field())
-        {
-          printf("  field: %s, %d\n", fieldProto.name().c_str(), fieldProto.type());
-        }
-
-      }
-    }
-
-  }
-
-
-  size_t width, height;
+  u32 width, height;
 #ifdef _WIN32
   width = GetSystemMetrics(SM_CXFULLSCREEN);
   height = GetSystemMetrics(SM_CYFULLSCREEN);

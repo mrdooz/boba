@@ -3,6 +3,8 @@
 namespace editor
 {
 
+  struct Plexus;
+
   //----------------------------------------------------------------------------------
   class PropertyWindow : public VirtualWindow
   {
@@ -42,8 +44,14 @@ namespace editor
 
   private:
 
-    void DrawModules();
+    void DrawEffects();
     void DrawTimeline();
+
+    void DrawPlexus(const Plexus& plexus);
+
+    struct Effect {
+
+    };
 
     struct ModuleFlagsF
     {

@@ -454,13 +454,11 @@ void GeneratorTest::RenderText()
   _ctx->SetBlendState(_blendState, blendFactor, 0xffffffff);
   _ctx->SetDepthStencilState(_depthStencilState, 0);
 
-  //_ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), true);
-
   int w, h;
   GRAPHICS.GetBackBufferSize(&w, &h);
 
   auto f = BufferFlags(BufferFlag::CreateSrv) | BufferFlags(BufferFlag::CreateDepthBuffer);
-  ScopedRenderTarget scratch(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, f);
+  ScopedRenderTarget scratch(w, h, DXGI_FORMAT_R8G8B8A8_UNORM, f);
   _ctx->SetRenderTarget(scratch.h, &black);
 
   _ctx->BeginFrame();
@@ -508,6 +506,7 @@ bool GeneratorTest::Render()
 
   Color black(0,0,0,0);
   float blendFactor[4] ={ 1, 1, 1, 1 };
+
   _ctx->SetRasterizerState(_rasterizerState);
   _ctx->SetBlendState(_blendState, blendFactor, 0xffffffff);
   _ctx->SetDepthStencilState(_depthStencilState, 0);

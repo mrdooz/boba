@@ -1,6 +1,6 @@
 #pragma once
 
-#define WITH_ANT_TWEAK_BAR 0
+#define WITH_ANT_TWEAK_BAR 1
 #define WITH_FONT_RENDERING 0
 #define WITH_MEMORY_TRACKING 0
 #define WITH_GPU_PERF 1

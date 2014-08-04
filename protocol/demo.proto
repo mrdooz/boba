@@ -1,4 +1,5 @@
 package demo;
+import "common.proto";
 
 message Part
 {

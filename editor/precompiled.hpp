@@ -21,7 +21,10 @@
 #include <sys/stat.h>
 #include <stdio.h>
 
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
 #include <google/protobuf/text_format.h>
+#pragma warning(pop)
 
 #define BOOST_ALL_NO_LIB
 #include <boost/date_time/posix_time/posix_time_types.hpp>
@@ -108,6 +111,7 @@ namespace editor
   using sf::VertexArray;
 
   using sf::Vector2f;
+  using sf::Vector3f;
   using sf::Vector2i;
   using sf::Vector2u;
   using sf::IntRect;
@@ -138,7 +142,7 @@ namespace editor
 }
 
 #ifdef _DEBUG
-#pragma comment(lib, "libboost_date_time-vc120-mt-sgd-1_55.lib")
+//#pragma comment(lib, "libboost_date_time-vc120-mt-sgd-1_55.lib")
 #else
 #pragma comment(lib, "libboost_date_time-vc120-mt-s-1_55.lib")
 #endif

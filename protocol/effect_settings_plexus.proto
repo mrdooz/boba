@@ -1,0 +1,24 @@
+package effect.plexus;
+import "common.proto";
+
+
+message Plexus
+{
+  repeated TextPath text_path = 1;
+  repeated NoiseEffector noise_effector = 2;
+}
+
+message TextPath
+{
+  optional string text = 1;
+}
+
+message NoiseEffector
+{
+  enum ApplyTo {
+    POSITION = 1;
+    SCALE = 2;
+  };
+  optional ApplyTo apply_to = 1 [default = POSITION];
+  optional common.Vector3Anim displacement = 2;
+}

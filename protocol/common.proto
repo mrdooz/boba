@@ -35,3 +35,15 @@ message Matrix4x4
   optional Vector4 row_3 = 3;
   optional Vector4 row_4 = 4;
 }
+
+message Vector3Keyframe
+{
+  optional uint32 time = 1;
+  optional Vector3 value = 2;
+}
+
+message Vector3Anim
+{
+  optional uint32 type = 1;
+  repeated Vector3Keyframe keyframes = 2;
+}

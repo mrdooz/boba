@@ -86,6 +86,8 @@ float4 EdgeDetect(in PSInput input) : SV_Target
   //return float4(l11, 1);
   float3 e = sqrt(gx*gx+gy*gy);
   float t = max(e.x, e.y);
+  //return t * float4(0.3 * t * t, 0.9 * t, 0.1, 1);
+
   return t > 0.3 ? 1 : 0;
   
   
@@ -119,7 +121,6 @@ float4 EdgeDetect2(in PSInput input) : SV_Target
   float gy = +1 * l00 +2 * l01 +1 * l02 -1 * l20 -2 * l21 -1 * l22;
   
   float e = sqrt(gx*gx+gy*gy);
-  return e;
   //return e > 0.2 ? 1 : e;
   
   

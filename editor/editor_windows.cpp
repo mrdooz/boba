@@ -57,30 +57,14 @@ bool TimelineWindow::Init()
   _windowManager->RegisterHandler(Event::MouseButtonReleased, nullptr, bind(&TimelineWindow::OnMouseButtonReleased, this, _1));
   _windowManager->RegisterHandler(Event::MouseWheelMoved, nullptr, bind(&TimelineWindow::OnMouseWheelMoved, this, _1));
 
-  if (!_font.loadFromFile(EDITOR.GetAppRoot() + "gfx/04b_03b_.ttf"))
+  if (!_font.loadFromFile(EDITOR.GetAppRoot() + "gfx/coders_crux.ttf"))
     return false;
 
-  const vector<Effect>& effects = EDITOR.GetEffects();
   const editor::Settings& settings = EDITOR.Settings();
 
-  int x = 0;
-  int y = settings.module_row_height() - 2;
-  Vector2i rowSize(_size.x - settings.module_view_width(), settings.module_row_height());
-  for (u32 i = 0; i < 10; ++i)
-  {
-    _rows.push_back(new Row{ i, IntRect(Vector2i(x, y), rowSize) });
-    y += settings.module_row_height() - 2;
-  }
-
-
+  
   Vector2i moduleSize(settings.module_view_width(), settings.module_row_height());
-  y = settings.module_row_height() - 2;
-  for (u32 i = 0; i < effects.size(); ++i)
-  {
-    const Effect& effect = effects[i];
-    _modules.push_back(new Module{ i, effect.name, IntRect(Vector2i(0, y), moduleSize) });
-    y += settings.module_row_height() - 2;
-  }
+  int y = settings.module_row_height() - 2;
 
   // create render textures and sprites
   _moduleTexture.create(settings.module_view_width(), _size.y);
@@ -387,7 +371,7 @@ void TimelineWindow::DrawTimeline()
   int minorInc = settings.ticker_interval() / settings.ticks_per_interval();
   Text text;
   text.setFont(_font);
-  text.setCharacterSize(8);
+  text.setCharacterSize(16);
   while (x < _size.x)
   {
     // need to cheese the 'x' value to make it relative the whole window, and not just the
@@ -488,8 +472,69 @@ void TimelineWindow::DrawModule(float x, float y, const Module& module)
   _moduleTexture.draw(text);
 }
 
+struct RowDrawer
+{
+  RowDrawer(Text& text, int rowHeight, RenderTexture& texture, int x, int* y) 
+    : text(text)
+    , rowHeight(rowHeight)
+    , texture(texture)
+    , x(x)
+    , y(y)
+  {}
+
+  void DrawText(const char* str)
+  {
+    text.setString(str);
+    text.setPosition(10, *y);
+    texture.draw(text);
+    *y += rowHeight + 1;
+  }
+
+  Text& text;
+  int rowHeight;
+  RenderTexture& texture;
+  int x;
+  int* y;
+};
+
 //----------------------------------------------------------------------------------
-void TimelineWindow::DrawModules()
+void TimelineWindow::DrawPlexus(const Plexus& plexus)
+{
+  const editor::Settings& settings = EDITOR.Settings();
+  Color rowCol = FromProtocol(settings.default_row_color());
+
+  int fontSize = 16;
+  int y = 100;
+
+  Text text;
+  text.setCharacterSize(fontSize);
+  text.setFont(_font);
+
+  RowDrawer row(text, fontSize + 1, _moduleTexture, 10, &y);
+  row.DrawText("PLEXUS");
+
+  // draw paths
+  for (const TextPath& p : plexus.textPaths)
+  {
+    row.DrawText(to_string(">> TEXT PATH: %s", p.text.c_str()).c_str());
+  }
+
+  // draw effectors
+  for (const NoiseEffector& p : plexus.noiseEffectors)
+  {
+    row.DrawText(to_string(">> NOISE EFFECTOR (%s)", p.applyTo == NoiseEffector::ApplyTo::Scale ? "SCALE" : "POS").c_str());
+
+    // calc the interpolated values
+    Vector3f v = Interpolate(p.displacement, EDITOR.CurTime().total_milliseconds());
+    row.DrawText(to_string("    X: %.2f", v.x).c_str());
+    row.DrawText(to_string("    Y: %.2f", v.y).c_str());
+    row.DrawText(to_string("    Z: %.2f", v.z).c_str());
+  }
+
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::DrawEffects()
 {
   _moduleTexture.clear();
 
@@ -502,6 +547,8 @@ void TimelineWindow::DrawModules()
   text.setPosition(10, 0);
   text.setCharacterSize(14);
   _moduleTexture.draw(text);
+
+  DrawPlexus(EDITOR._plexus);
 
   for (const Module* module : _modules)
   {
@@ -543,7 +590,7 @@ void TimelineWindow::Draw()
 {
   _texture.clear();
 
-  DrawModules();
+  DrawEffects();
   DrawTimeline();
 
   _texture.display();

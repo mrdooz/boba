@@ -1,7 +1,13 @@
 #pragma once
 
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
 #include "protocol/editor_settings.pb.h"
-#include "protocol/descriptor.pb.h"
+#include "protocol/effect_settings.pb.h"
+#include "protocol/effect_settings_plexus.pb.h"
+#pragma warning(pop)
+
+#include "effect_utils.hpp"
 
 namespace bristol
 {
@@ -11,14 +17,6 @@ namespace bristol
 
 namespace editor
 {
-
-  struct Effect
-  {
-    string name;
-    u32 tjong;
-  };
-
-
   class Editor
   {
   public:
@@ -44,9 +42,6 @@ namespace editor
     time_duration CurTime() const { return _curTime; }
     void SetCurTime(const time_duration& t);
 
-    const vector<Effect>& GetEffects() const { return _effects; }
-
-  private:
     Editor();
     ~Editor();
 
@@ -66,14 +61,13 @@ namespace editor
 
     static Editor* _instance;
     editor::Settings _settings;
-    google::protobuf::FileDescriptorSet _descriptorSet;
+    Plexus _plexus;
     string _appRoot;
     ptime _lastUpdate;
     time_duration _curTime;
     time_duration _fileWatchAcc;
     StateFlags _stateFlags;
 
-    vector<Effect> _effects;
     FileWatcher _fileWatcher;
   };
 
