@@ -27,7 +27,7 @@ NATIVE_TYPES = {
 env = Environment(loader=PackageLoader('codegen', 'templates'))
 
 fds = descriptor_pb2.FileDescriptorSet()
-fds.ParseFromString(open('effects.desc').read())
+fds.ParseFromString(open('effects.desc', 'rb').read())
 
 args = { 'classes' : [], 'all_classes' : [] }
 

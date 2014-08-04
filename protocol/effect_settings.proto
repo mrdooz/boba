@@ -1,13 +1,1 @@
 package effect;
-
-message Plexus
-{
-}
-
-message TextPath
-{
-}
-
-message NoiseEffector
-{
-}
