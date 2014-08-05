@@ -1,6 +1,5 @@
 #include "editor_windows.hpp"
 #include "editor.hpp"
-#include "proto_utils.hpp"
 
 #include "protocol/effects_proto.hpp"
 
@@ -62,7 +61,7 @@ bool TimelineWindow::Init()
   if (!_font.loadFromFile(EDITOR.GetAppRoot() + "gfx/coders_crux.ttf"))
     return false;
 
-  const editor::Settings& settings = EDITOR.Settings();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
 
   // create render textures and sprites
   _effectTexture.create(settings.module_view_width(), _size.y);
@@ -72,13 +71,31 @@ bool TimelineWindow::Init()
   _timelineSprite.setTexture(_timelineTexture.getTexture(), true);
   _timelineSprite.setPosition(settings.module_view_width(), 0);
 
+  int y = settings.module_row_height();
+
+  // create the effect rows
+  const Plexus& p = EDITOR._plexus;
+
+  for (const TextPath& t : p.textPaths)
+  {
+/*
+    _effectRows.push_back(new EffectRow(_font, "PLEXUS", ))
+    EffectRow* row = new EffectRow(_font);
+    row->str = "MAGNUS";
+    row->bounds = IntRect(0, 0, 100, 20);
+    _effectRows.push_back(row);
+*/
+  }
+
+
+
   return true;
 }
 
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 {
-  const editor::Settings& settings = EDITOR.Settings();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
 
   int x = (int)(event.mouseButton.x - _pos.x);
   int y = (int)(event.mouseButton.y - _pos.y);
@@ -121,7 +138,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseMoved(const Event& event)
 {
-  const editor::Settings& settings = EDITOR.Settings();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
   Vector2i posModule = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
   Vector2i posTimeline(posModule.x - settings.module_view_width(), posModule.y);
 
@@ -158,7 +175,7 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseWheelMoved(const Event& event)
 {
-  const editor::Settings& settings = EDITOR.Settings();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
 
   if (event.mouseWheel.delta < 0)
     _pixelsPerSecond *= 2;
@@ -173,7 +190,7 @@ bool TimelineWindow::OnMouseWheelMoved(const Event& event)
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawEffect(const EffectInstance& effect, const Row& row, Text& text)
 {
-  const editor::Settings& settings = EDITOR.Settings();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
   Color hoverCol = FromProtocol(settings.hover_row_color());
   Color selectedCol = FromProtocol(settings.selected_row_color());
 
@@ -198,7 +215,7 @@ void TimelineWindow::DrawTimeline()
 {
   _timelineTexture.clear();
 
-  const editor::Settings& settings = EDITOR.Settings();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
 
   Color rowCol = FromProtocol(settings.default_row_color());
   time_duration curTime = EDITOR.CurTime();
@@ -273,7 +290,7 @@ void TimelineWindow::DrawTimeline()
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawModule(float x, float y, const Module& module)
 {
-  const editor::Settings& settings = EDITOR.Settings();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
   Color rowCol = FromProtocol(settings.default_row_color());
   Color selectedRowCol = FromProtocol(settings.selected_row_color());
 
@@ -317,7 +334,7 @@ struct RowDrawer
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawPlexus(const Plexus& plexus)
 {
-  const editor::Settings& settings = EDITOR.Settings();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
   Color rowCol = FromProtocol(settings.default_row_color());
 
   int fontSize = 16;
@@ -353,7 +370,7 @@ void TimelineWindow::DrawPlexus(const Plexus& plexus)
 //----------------------------------------------------------------------------------
 void TimelineWindow::EffectRow::Draw(RenderTexture& texture)
 {
-  const editor::Settings& settings = EDITOR.Settings();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
   Color rowCol = FromProtocol(settings.default_row_color());
 
   RectangleShape rect;
@@ -361,6 +378,30 @@ void TimelineWindow::EffectRow::Draw(RenderTexture& texture)
   rect.setPosition(bounds.left, bounds.top);
   rect.setSize(Vector2f(bounds.width, bounds.height));
   texture.draw(rect);
+
+  text.setString(str);
+  text.setPosition(bounds.left, bounds.top);
+  texture.draw(text);
+}
+
+//----------------------------------------------------------------------------------
+TimelineWindow::EffectRow::EffectRow(const Font& font)
+  : parent(nullptr)
+{
+  text.setFont(font);
+  text.setCharacterSize(16);
+}
+
+//----------------------------------------------------------------------------------
+TimelineWindow::EffectRow::EffectRow(
+    const Font& font,
+    const string& str,
+    const IntRect& bounds)
+  : str(str)
+  , bounds(bounds)
+{
+  text.setFont(font);
+  text.setCharacterSize(16);
 }
 
 //----------------------------------------------------------------------------------
@@ -377,16 +418,6 @@ void TimelineWindow::DrawEffects()
   text.setPosition(10, 0);
   text.setCharacterSize(14);
   _effectTexture.draw(text);
-
-  static bool hax = false;
-  if (!hax)
-  {
-    EffectRow* row = new EffectRow();
-    row->text = "magnus";
-    row->bounds = IntRect(0, 0, 100, 20);
-    _effectRows.push_back(row);
-    hax = true;
-  }
 
   for (EffectRow* row : _effectRows)
   {

@@ -1,8 +1,18 @@
 #pragma once
+
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
+#endif
+
 #include "common.pb.h"
+#include "editor_settings.pb.h"
 #include "effect_settings.pb.h"
 #include "effect_settings_plexus.pb.h"
-#include "../proto_utils.hpp"
+
+#ifdef _WIN32
+#pragma warning(pop)
+#endif
 
 namespace editor
 {
@@ -11,17 +21,19 @@ namespace editor
   struct Vector4;
   struct Vector3Keyframe;
   struct Vector3Anim;
+  struct Settings;
   struct Plexus;
   struct TextPath;
   struct NoiseEffector;
 
   Vector3Keyframe FromProtocol(const common::Vector3Keyframe& p);
   Vector3Anim FromProtocol(const common::Vector3Anim& p);
+  Settings FromProtocol(const editor::protocol::Settings& p);
   Plexus FromProtocol(const effect::plexus::Plexus& p);
   TextPath FromProtocol(const effect::plexus::TextPath& p);
   NoiseEffector FromProtocol(const effect::plexus::NoiseEffector& p);
   Vector3f FromProtocol(const common::Vector3& p);
-
+  
   template<typename T, typename U>
   vector<T> FromProtocolRepeated(const google::protobuf::RepeatedPtrField<U>& v)
   {
@@ -31,6 +43,16 @@ namespace editor
       res.push_back(FromProtocol(x));
     }
     return res;
+  }
+  
+  inline Color FromProtocol(const editor::protocol::Color4& col)
+  {
+    return Color(col.r(), col.g(), col.b(), col.a());
+  }
+
+  inline Vector3f FromProtocol(const common::Vector3& v)
+  {
+    return Vector3f(v.x(), v.y(), v.z());
   }
 
   struct Vector3Keyframe
@@ -58,6 +80,44 @@ namespace editor
     Vector3Anim res;
     res.type = p.type();
     res.keyframes = FromProtocolRepeated<Vector3Keyframe>(p.keyframes());
+    return res;
+  }
+
+  struct Settings
+  {
+    uint32_t tickerHeight;
+    uint32_t tickerInterval;
+    uint32_t ticksPerInterval;
+    uint32_t moduleViewWidth;
+    uint32_t moduleRowHeight;
+    uint32_t effectHeight;
+    uint32_t resizeHandle;
+    uint32_t timelineZoomMin;
+    uint32_t timelineZoomMax;
+    uint32_t timelineZoomDefault;
+    Color defaultRowColor;
+    Color selectedRowColor;
+    Color hoverRowColor;
+    Color invalidHoverRowColor;
+  };
+
+  inline Settings FromProtocol(const editor::protocol::Settings& p)
+  {
+    Settings res;
+    res.tickerHeight = p.ticker_height();
+    res.tickerInterval = p.ticker_interval();
+    res.ticksPerInterval = p.ticks_per_interval();
+    res.moduleViewWidth = p.module_view_width();
+    res.moduleRowHeight = p.module_row_height();
+    res.effectHeight = p.effect_height();
+    res.resizeHandle = p.resize_handle();
+    res.timelineZoomMin = p.timeline_zoom_min();
+    res.timelineZoomMax = p.timeline_zoom_max();
+    res.timelineZoomDefault = p.timeline_zoom_default();
+    res.defaultRowColor = FromProtocol(p.default_row_color());
+    res.selectedRowColor = FromProtocol(p.selected_row_color());
+    res.hoverRowColor = FromProtocol(p.hover_row_color());
+    res.invalidHoverRowColor = FromProtocol(p.invalid_hover_row_color());
     return res;
   }
 

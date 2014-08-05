@@ -97,12 +97,12 @@ namespace editor
 
       typedef Flags<RowFlagsF> RowFlags;
 
-      EffectRow()
-          : parent(nullptr)
-      {
-      }
+      EffectRow(const Font& font);
+      EffectRow(const Font& font, const string& str, const IntRect& bounds);
+
       void Draw(RenderTexture& texture);
-      string text;
+
+      string str;
       IntRect bounds;
       RowFlags flags;
       EffectRow* parent;

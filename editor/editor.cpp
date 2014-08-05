@@ -1,6 +1,5 @@
 #include "editor.hpp"
 #include "editor_windows.hpp"
-#include "proto_utils.hpp"
 
 using namespace editor;
 using namespace google::protobuf;

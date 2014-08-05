@@ -37,7 +37,7 @@ namespace editor
     bool Run();
     bool Close();
 
-    editor::Settings& Settings() { return _settings; }
+    editor::protocol::Settings& Settings() { return _settings; }
     string GetAppRoot() const { return _appRoot; }
     time_duration CurTime() const { return _curTime; }
     void SetCurTime(const time_duration& t);
@@ -60,7 +60,7 @@ namespace editor
     VirtualWindowManager* _virtualWindowManager;
 
     static Editor* _instance;
-    editor::Settings _settings;
+    editor::protocol::Settings _settings;
     Plexus _plexus;
     string _appRoot;
     ptime _lastUpdate;

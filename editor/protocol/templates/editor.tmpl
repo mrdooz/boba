@@ -1,21 +1,21 @@
 #pragma once
+
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
+#endif
+
 #include "common.pb.h"
+#include "editor_settings.pb.h"
 #include "effect_settings.pb.h"
 #include "effect_settings_plexus.pb.h"
 
+#ifdef _WIN32
+#pragma warning(pop)
+#endif
+
 namespace editor
 {
-  template<typename T, typename U>
-  vector<T> FromProtocolRepeated(const google::protobuf::RepeatedPtrField<U>& v)
-  {
-    vector<T> res;
-    for (const auto& x : v)
-    {
-      res.push_back(FromProtocol(x));
-    }
-    return res;
-  }
-
   {% for class in all_classes %}
   struct {{ class }};
   {% endfor %}
@@ -26,6 +26,27 @@ namespace editor
   {% for fwd in forward_decls %}
   {{ fwd }}
   {% endfor %}
+  
+  template<typename T, typename U>
+  vector<T> FromProtocolRepeated(const google::protobuf::RepeatedPtrField<U>& v)
+  {
+    vector<T> res;
+    for (const auto& x : v)
+    {
+      res.push_back(FromProtocol(x));
+    }
+    return res;
+  }
+  
+  inline Color FromProtocol(const editor::protocol::Color4& col)
+  {
+    return Color(col.r(), col.g(), col.b(), col.a());
+  }
+
+  inline Vector3f FromProtocol(const common::Vector3& v)
+  {
+    return Vector3f(v.x(), v.y(), v.z());
+  }
 
   {% for class in classes %}
   struct {{ class.name }}

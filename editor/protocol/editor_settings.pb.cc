@@ -17,6 +17,7 @@
 // @@protoc_insertion_point(includes)
 
 namespace editor {
+namespace protocol {
 
 namespace {
 
@@ -116,21 +117,22 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\025editor_settings.proto\022\006editor\"B\n\006Color"
-    "4\022\014\n\001r\030\001 \001(\r:\0010\022\014\n\001g\030\002 \001(\r:\0010\022\014\n\001b\030\003 \001(\r"
-    ":\0010\022\016\n\001a\030\004 \001(\r:\003255\"\352\003\n\010Settings\022\031\n\rtick"
-    "er_height\030\001 \001(\r:\00250\022\033\n\017ticker_interval\030\002"
-    " \001(\r:\00220\022\035\n\022ticks_per_interval\030\003 \001(\r:\0014\022"
-    "\036\n\021module_view_width\030\024 \001(\r:\003200\022\035\n\021modul"
-    "e_row_height\030\025 \001(\r:\00250\022\031\n\reffect_height\030"
-    "\036 \001(\r:\00240\022\030\n\rresize_handle\030\037 \001(\r:\0016\022\035\n\021t"
-    "imeline_zoom_min\030( \001(\r:\00216\022\037\n\021timeline_z"
-    "oom_max\030) \001(\r:\0041024\022\"\n\025timeline_zoom_def"
-    "ault\030* \001(\r:\003128\022)\n\021default_row_color\030d \001"
-    "(\0132\016.editor.Color4\022*\n\022selected_row_color"
-    "\030e \001(\0132\016.editor.Color4\022\'\n\017hover_row_colo"
-    "r\030f \001(\0132\016.editor.Color4\022/\n\027invalid_hover"
-    "_row_color\030g \001(\0132\016.editor.Color4", 592);
+    "\n\025editor_settings.proto\022\017editor.protocol"
+    "\"B\n\006Color4\022\014\n\001r\030\001 \001(\r:\0010\022\014\n\001g\030\002 \001(\r:\0010\022\014"
+    "\n\001b\030\003 \001(\r:\0010\022\016\n\001a\030\004 \001(\r:\003255\"\216\004\n\010Setting"
+    "s\022\031\n\rticker_height\030\001 \001(\r:\00250\022\033\n\017ticker_i"
+    "nterval\030\002 \001(\r:\00220\022\035\n\022ticks_per_interval\030"
+    "\003 \001(\r:\0014\022\036\n\021module_view_width\030\024 \001(\r:\003200"
+    "\022\035\n\021module_row_height\030\025 \001(\r:\00250\022\031\n\reffec"
+    "t_height\030\036 \001(\r:\00240\022\030\n\rresize_handle\030\037 \001("
+    "\r:\0016\022\035\n\021timeline_zoom_min\030( \001(\r:\00216\022\037\n\021t"
+    "imeline_zoom_max\030) \001(\r:\0041024\022\"\n\025timeline"
+    "_zoom_default\030* \001(\r:\003128\0222\n\021default_row_"
+    "color\030d \001(\0132\027.editor.protocol.Color4\0223\n\022"
+    "selected_row_color\030e \001(\0132\027.editor.protoc"
+    "ol.Color4\0220\n\017hover_row_color\030f \001(\0132\027.edi"
+    "tor.protocol.Color4\0228\n\027invalid_hover_row"
+    "_color\030g \001(\0132\027.editor.protocol.Color4", 637);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_settings.proto", &protobuf_RegisterTypes);
   Color4::default_instance_ = new Color4();
@@ -500,10 +502,10 @@ Settings::Settings()
 }
 
 void Settings::InitAsDefaultInstance() {
-  default_row_color_ = const_cast< ::editor::Color4*>(&::editor::Color4::default_instance());
-  selected_row_color_ = const_cast< ::editor::Color4*>(&::editor::Color4::default_instance());
-  hover_row_color_ = const_cast< ::editor::Color4*>(&::editor::Color4::default_instance());
-  invalid_hover_row_color_ = const_cast< ::editor::Color4*>(&::editor::Color4::default_instance());
+  default_row_color_ = const_cast< ::editor::protocol::Color4*>(&::editor::protocol::Color4::default_instance());
+  selected_row_color_ = const_cast< ::editor::protocol::Color4*>(&::editor::protocol::Color4::default_instance());
+  hover_row_color_ = const_cast< ::editor::protocol::Color4*>(&::editor::protocol::Color4::default_instance());
+  invalid_hover_row_color_ = const_cast< ::editor::protocol::Color4*>(&::editor::protocol::Color4::default_instance());
 }
 
 Settings::Settings(const Settings& from)
@@ -580,16 +582,16 @@ void Settings::Clear() {
     timeline_zoom_max_ = 1024u;
     timeline_zoom_default_ = 128u;
     if (has_default_row_color()) {
-      if (default_row_color_ != NULL) default_row_color_->::editor::Color4::Clear();
+      if (default_row_color_ != NULL) default_row_color_->::editor::protocol::Color4::Clear();
     }
     if (has_selected_row_color()) {
-      if (selected_row_color_ != NULL) selected_row_color_->::editor::Color4::Clear();
+      if (selected_row_color_ != NULL) selected_row_color_->::editor::protocol::Color4::Clear();
     }
     if (has_hover_row_color()) {
-      if (hover_row_color_ != NULL) hover_row_color_->::editor::Color4::Clear();
+      if (hover_row_color_ != NULL) hover_row_color_->::editor::protocol::Color4::Clear();
     }
     if (has_invalid_hover_row_color()) {
-      if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::editor::Color4::Clear();
+      if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::editor::protocol::Color4::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -761,7 +763,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .editor.Color4 default_row_color = 100;
+      // optional .editor.protocol.Color4 default_row_color = 100;
       case 100: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -775,7 +777,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .editor.Color4 selected_row_color = 101;
+      // optional .editor.protocol.Color4 selected_row_color = 101;
       case 101: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -789,7 +791,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .editor.Color4 hover_row_color = 102;
+      // optional .editor.protocol.Color4 hover_row_color = 102;
       case 102: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -803,7 +805,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .editor.Color4 invalid_hover_row_color = 103;
+      // optional .editor.protocol.Color4 invalid_hover_row_color = 103;
       case 103: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -885,25 +887,25 @@ void Settings::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(42, this->timeline_zoom_default(), output);
   }
 
-  // optional .editor.Color4 default_row_color = 100;
+  // optional .editor.protocol.Color4 default_row_color = 100;
   if (has_default_row_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       100, this->default_row_color(), output);
   }
 
-  // optional .editor.Color4 selected_row_color = 101;
+  // optional .editor.protocol.Color4 selected_row_color = 101;
   if (has_selected_row_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       101, this->selected_row_color(), output);
   }
 
-  // optional .editor.Color4 hover_row_color = 102;
+  // optional .editor.protocol.Color4 hover_row_color = 102;
   if (has_hover_row_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       102, this->hover_row_color(), output);
   }
 
-  // optional .editor.Color4 invalid_hover_row_color = 103;
+  // optional .editor.protocol.Color4 invalid_hover_row_color = 103;
   if (has_invalid_hover_row_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       103, this->invalid_hover_row_color(), output);
@@ -967,28 +969,28 @@ void Settings::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(42, this->timeline_zoom_default(), target);
   }
 
-  // optional .editor.Color4 default_row_color = 100;
+  // optional .editor.protocol.Color4 default_row_color = 100;
   if (has_default_row_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         100, this->default_row_color(), target);
   }
 
-  // optional .editor.Color4 selected_row_color = 101;
+  // optional .editor.protocol.Color4 selected_row_color = 101;
   if (has_selected_row_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         101, this->selected_row_color(), target);
   }
 
-  // optional .editor.Color4 hover_row_color = 102;
+  // optional .editor.protocol.Color4 hover_row_color = 102;
   if (has_hover_row_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         102, this->hover_row_color(), target);
   }
 
-  // optional .editor.Color4 invalid_hover_row_color = 103;
+  // optional .editor.protocol.Color4 invalid_hover_row_color = 103;
   if (has_invalid_hover_row_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1078,28 +1080,28 @@ int Settings::ByteSize() const {
           this->timeline_zoom_default());
     }
 
-    // optional .editor.Color4 default_row_color = 100;
+    // optional .editor.protocol.Color4 default_row_color = 100;
     if (has_default_row_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->default_row_color());
     }
 
-    // optional .editor.Color4 selected_row_color = 101;
+    // optional .editor.protocol.Color4 selected_row_color = 101;
     if (has_selected_row_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->selected_row_color());
     }
 
-    // optional .editor.Color4 hover_row_color = 102;
+    // optional .editor.protocol.Color4 hover_row_color = 102;
     if (has_hover_row_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->hover_row_color());
     }
 
-    // optional .editor.Color4 invalid_hover_row_color = 103;
+    // optional .editor.protocol.Color4 invalid_hover_row_color = 103;
     if (has_invalid_hover_row_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1166,16 +1168,16 @@ void Settings::MergeFrom(const Settings& from) {
       set_timeline_zoom_default(from.timeline_zoom_default());
     }
     if (from.has_default_row_color()) {
-      mutable_default_row_color()->::editor::Color4::MergeFrom(from.default_row_color());
+      mutable_default_row_color()->::editor::protocol::Color4::MergeFrom(from.default_row_color());
     }
     if (from.has_selected_row_color()) {
-      mutable_selected_row_color()->::editor::Color4::MergeFrom(from.selected_row_color());
+      mutable_selected_row_color()->::editor::protocol::Color4::MergeFrom(from.selected_row_color());
     }
     if (from.has_hover_row_color()) {
-      mutable_hover_row_color()->::editor::Color4::MergeFrom(from.hover_row_color());
+      mutable_hover_row_color()->::editor::protocol::Color4::MergeFrom(from.hover_row_color());
     }
     if (from.has_invalid_hover_row_color()) {
-      mutable_invalid_hover_row_color()->::editor::Color4::MergeFrom(from.invalid_hover_row_color());
+      mutable_invalid_hover_row_color()->::editor::protocol::Color4::MergeFrom(from.invalid_hover_row_color());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1231,6 +1233,7 @@ void Settings::Swap(Settings* other) {
 
 // @@protoc_insertion_point(namespace_scope)
 
+}  // namespace protocol
 }  // namespace editor
 
 // @@protoc_insertion_point(global_scope)
