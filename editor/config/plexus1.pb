@@ -1,11 +1,11 @@
-text_path
+text_paths
 {
   text : "neurotica efs"
 }
 
-noise_effector
+noise_effectors
 {
-  apply_to : POSITION
+  apply_to : Position
   displacement : {
     type : 1
     keyframes: {

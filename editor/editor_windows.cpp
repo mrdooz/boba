@@ -33,11 +33,11 @@ TimelineWindow::TimelineWindow(
   const Vector2f& pos,
   const Vector2f& size)
     : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
-    , _lastDragPos(-1, -1)
     , _panelOffset(seconds(0))
     , _pixelsPerSecond(EDITOR.Settings().timeline_zoom_default())
     , _selectedModule(nullptr)
     , _selectedEffect(nullptr)
+    , _lastDragPos(-1, -1)
 {
 }
 
@@ -64,13 +64,9 @@ bool TimelineWindow::Init()
 
   const editor::Settings& settings = EDITOR.Settings();
 
-  
-  Vector2i moduleSize(settings.module_view_width(), settings.module_row_height());
-  int y = settings.module_row_height() - 2;
-
   // create render textures and sprites
-  _moduleTexture.create(settings.module_view_width(), _size.y);
-  _moduleSprite.setTexture(_moduleTexture.getTexture(), true);
+  _effectTexture.create(settings.module_view_width(), _size.y);
+  _effectSprite.setTexture(_effectTexture.getTexture(), true);
 
   _timelineTexture.create(_size.x - settings.module_view_width(), _size.y);
   _timelineSprite.setTexture(_timelineTexture.getTexture(), true);
@@ -80,55 +76,31 @@ bool TimelineWindow::Init()
 }
 
 //----------------------------------------------------------------------------------
-void TimelineWindow::ResetDragDrop()
-{
-  _draggingEffect.Reset();
-  if (_selectedEffect)
-  {
-    _selectedEffect->flags.Clear(EffectInstanceFlagsF::Move);
-    _selectedEffect->flags.Clear(EffectInstanceFlagsF::ResizeStart);
-    _selectedEffect->flags.Clear(EffectInstanceFlagsF::ResizeEnd);
-  }
-
-  _draggingModule.Reset();
-  if (_selectedModule)
-  {
-    // reset any module flags..
-  }
-
-  _lastDragPos = Vector2i(-1, -1);
-
-  _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
-  _timelineFlags.Clear(TimelineFlagsF::PendingEffectMove);
-}
-
-//----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 {
-  ResetDragDrop();
-
   const editor::Settings& settings = EDITOR.Settings();
 
   int x = (int)(event.mouseButton.x - _pos.x);
   int y = (int)(event.mouseButton.y - _pos.y);
+  Vector2i mousePos(x, y);
+
   if (x < (int)settings.module_view_width())
   {
-    // module drag/drop
-    for (Module* m : _modules)
-    {
-      m->flags.Clear(ModuleFlagsF::Selected);
-    }
+    // effect select
+    EffectRow* selectedRow = nullptr;
 
-    // handle component click
-    for (Module* m : _modules)
+    for (EffectRow* row : _effectRows)
     {
-      if (m->rect.contains(x, y))
+      if (row->bounds.contains(mousePos))
       {
-        m->flags.Set(ModuleFlagsF::Selected);
-        _selectedModule = m;
-        _timelineFlags.Set(TimelineFlagsF::PendingDrag);
+        selectedRow = row;
         break;
       }
+    }
+
+    if (selectedRow)
+    {
+      selectedRow->flags.Toggle(EffectRow::RowFlagsF::Selected);
     }
   }
   else if (y < (int)settings.module_row_height())
@@ -141,29 +113,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   }
   else
   {
-    // effect movement
-    for (Row* row : _rows)
-    {
-      for (EffectInstance* e : row->effects)
-      {
-        e->flags.Clear(EffectInstanceFlagsF::Selected);
-      }
-
-      if (!row->rect.contains(x, y))
-        continue;
-
-      time_duration t = PixelToTime(x);
-      for (EffectInstance* e : row->effects)
-      {
-        if (t >= e->startTime && t < e->endTime)
-        {
-          _timelineFlags.Set(TimelineFlagsF::PendingEffectMove);
-          e->flags.Set(EffectInstanceFlagsF::Selected);
-          _selectedEffect = e;
-        }
-      }
-    }
-
+    // check for keyframe intersection
   }
   return true;
 }
@@ -196,120 +146,12 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     return true;
   }
 
-  // should we start module drag/drop
-  if (_timelineFlags.IsSet(TimelineFlagsF::PendingDrag))
-  {
-    _draggingModule.module = _selectedModule;
-    _timelineFlags.Clear(TimelineFlagsF::PendingDrag);
-  }
-
-  // check if any module is being dragged
-  if (_draggingModule.module)
-  {
-    // check if the module is above any row
-    for (Row* row : _rows)
-    {
-      if (row->rect.contains(posModule))
-      {
-        // check if there is space for the current module
-        _draggingModule.dragStart = curTime;
-        _draggingModule.dragEnd   = curTime + seconds(5);
-        row->TimeFixup(&_draggingModule.dragStart, &_draggingModule.dragEnd, nullptr);
-        _draggingModule.dragPos.x = TimeToPixel(_draggingModule.dragStart);
-        _draggingModule.dragPos.y = row->rect.top;
-
-        break;
-      }
-    }
-  }
-
-  // check for pending effect move
-  if (_timelineFlags.IsSet(TimelineFlagsF::PendingEffectMove))
-  {
-    _timelineFlags.Clear(TimelineFlagsF::PendingEffectMove);
-
-    _draggingEffect.effect    = _selectedEffect;
-    _draggingEffect.startPos  = posTimeline.x;
-    _draggingEffect.orgStart  = _selectedEffect->startTime;
-    _draggingEffect.orgEnd    = _selectedEffect->endTime;
-
-    const Row* r        = _selectedEffect->row;
-    IntRect leftRect    = r->rect;
-    leftRect.width      = settings.resize_handle();
-    leftRect.left       = TimeToPixel(_selectedEffect->startTime);
-
-    IntRect rightRect   = leftRect;
-    rightRect.left      = TimeToPixel(_selectedEffect->endTime) - settings.resize_handle();
-
-    IntRect middleRect  = leftRect;
-    middleRect.left     = leftRect.left + leftRect.width;
-    middleRect.width    = rightRect.left - middleRect.left;
-
-    // check if this is a move or a resize
-    if (leftRect.contains(posTimeline))
-    {
-      _selectedEffect->flags.Set(EffectInstanceFlagsF::ResizeStart);
-    }
-    else if (rightRect.contains(posTimeline))
-    {
-      _selectedEffect->flags.Set(EffectInstanceFlagsF::ResizeEnd);
-    }
-    else if (middleRect.contains(posTimeline))
-    {
-      _selectedEffect->flags.Set(EffectInstanceFlagsF::Move);
-    }
-  }
-
-  if (_draggingEffect.effect)
-  {
-    // calc delta, and apply
-    time_duration delta = AbsPixelToTime(posTimeline.x - _draggingEffect.startPos);
-    EffectInstance* e   = _draggingEffect.effect;
-
-    EffectInstanceFlags f = _selectedEffect->flags;
-    bool start  = f.IsSet(EffectInstanceFlagsF::Move) || f.IsSet(EffectInstanceFlagsF::ResizeStart);
-    bool end    = f.IsSet(EffectInstanceFlagsF::Move) || f.IsSet(EffectInstanceFlagsF::ResizeEnd);
-
-    const Row* row = e->row;
-    time_duration tmpStart(_draggingEffect.orgStart + delta);
-    time_duration tmpEnd(_draggingEffect.orgEnd + delta);
-    time_duration newStart(tmpStart);
-    time_duration newEnd(tmpEnd);
-
-    if (start)
-      newStart = row->SnappedPosition(tmpStart, false, e);
-
-    if (end)
-      newEnd = row->SnappedPosition(tmpEnd, true, e);
-
-    // if updating both start and end, only update if neither one gets clamped
-    if (start && tmpEnd == newEnd)
-      e->startTime = newStart;
-
-    if (end && tmpStart == newStart)
-      e->endTime = newEnd;
-  }
   return true;
 }
 
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 {
-  if (_draggingModule.module)
-  {
-    // check if module dropped on any row
-    Vector2i pos = PointToLocal<int>(event.mouseButton.x, event.mouseButton.y);
-    for (Row* row : _rows)
-    {
-      if (row->rect.contains(pos))
-      {
-        row->AddEffect(new EffectInstance { _draggingModule.dragStart, _draggingModule.dragEnd, _draggingModule.module, row });
-        break;
-      }
-    }
-  }
-
-  ResetDragDrop();
   return true;
 }
 
@@ -424,35 +266,8 @@ void TimelineWindow::DrawTimeline()
   curLine.append(sf::Vertex(Vector2f(x, _size.y), Color::Red));
   _timelineTexture.draw(curLine);
 
-  // draw the drag/drop module
-  DrawDraggingModule();
-
   _timelineTexture.display();
   _texture.draw(_timelineSprite);
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::DrawDraggingModule()
-{
-  if (!_draggingModule.module)
-    return;
-
-  const editor::Settings& settings = EDITOR.Settings();
-  Color selectedRowCol = FromProtocol(settings.selected_row_color());
-  Color invalidHover = FromProtocol(settings.invalid_hover_row_color());
-
-  Vector2f pos(_draggingModule.dragPos.x, _draggingModule.dragPos.y);
-  Color col = selectedRowCol;
-  Vector2f size(TimeToPixel(_draggingModule.dragEnd) - pos.x, settings.module_row_height());
-
-  DrawRectOutline(_timelineTexture, pos, size, col, 2);
-  Text text;
-  text.setString(_draggingModule.module->name);
-  text.setCharacterSize(16);
-  text.setFont(_font);
-  Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
-  text.setPosition(pos + (size - ofs) / 2.0f);
-  _timelineTexture.draw(text);
 }
 
 //----------------------------------------------------------------------------------
@@ -464,14 +279,14 @@ void TimelineWindow::DrawModule(float x, float y, const Module& module)
 
   Vector2f size(module.rect.width, module.rect.height);
   Color col = module.flags.IsSet(ModuleFlagsF::Selected) ? selectedRowCol : rowCol;
-  DrawRectOutline(_moduleTexture, Vector2f(x,y), size, col, 2);
+  DrawRectOutline(_effectTexture, Vector2f(x,y), size, col, 2);
   Text text;
   text.setString(module.name);
   text.setCharacterSize(16);
   text.setFont(_font);
   Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
   text.setPosition(Vector2f(x, y) + (size - ofs) / 2.0f);
-  _moduleTexture.draw(text);
+  _effectTexture.draw(text);
 }
 
 struct RowDrawer
@@ -512,7 +327,7 @@ void TimelineWindow::DrawPlexus(const Plexus& plexus)
   text.setCharacterSize(fontSize);
   text.setFont(_font);
 
-  RowDrawer row(text, fontSize + 1, _moduleTexture, 10, &y);
+  RowDrawer row(text, fontSize + 1, _effectTexture, 10, &y);
   row.DrawText("PLEXUS");
 
   // draw paths
@@ -536,9 +351,22 @@ void TimelineWindow::DrawPlexus(const Plexus& plexus)
 }
 
 //----------------------------------------------------------------------------------
+void TimelineWindow::EffectRow::Draw(RenderTexture& texture)
+{
+  const editor::Settings& settings = EDITOR.Settings();
+  Color rowCol = FromProtocol(settings.default_row_color());
+
+  RectangleShape rect;
+  rect.setFillColor(rowCol);
+  rect.setPosition(bounds.left, bounds.top);
+  rect.setSize(Vector2f(bounds.width, bounds.height));
+  texture.draw(rect);
+}
+
+//----------------------------------------------------------------------------------
 void TimelineWindow::DrawEffects()
 {
-  _moduleTexture.clear();
+  _effectTexture.clear();
 
   // draw the header
   time_duration t = EDITOR.CurTime();
@@ -548,7 +376,22 @@ void TimelineWindow::DrawEffects()
     _pixelsPerSecond / 100.0f), _font);
   text.setPosition(10, 0);
   text.setCharacterSize(14);
-  _moduleTexture.draw(text);
+  _effectTexture.draw(text);
+
+  static bool hax = false;
+  if (!hax)
+  {
+    EffectRow* row = new EffectRow();
+    row->text = "magnus";
+    row->bounds = IntRect(0, 0, 100, 20);
+    _effectRows.push_back(row);
+    hax = true;
+  }
+
+  for (EffectRow* row : _effectRows)
+  {
+    row->Draw(_effectTexture);
+  }
 
   DrawPlexus(EDITOR._plexus);
 
@@ -556,8 +399,8 @@ void TimelineWindow::DrawEffects()
   {
     DrawModule(module->rect.left, module->rect.top, *module);
   }
-  _moduleTexture.display();
-  _texture.draw(_moduleSprite);
+  _effectTexture.display();
+  _texture.draw(_effectSprite);
 }
 
 //----------------------------------------------------------------------------------
@@ -596,84 +439,6 @@ void TimelineWindow::Draw()
   DrawTimeline();
 
   _texture.display();
-}
-
-//----------------------------------------------------------------------------------
-time_duration TimelineWindow::Row::SnappedPosition(
-    const time_duration& t,
-    bool start,
-    EffectInstance* cur) const
-{
-  for (const EffectInstance* e : effects)
-  {
-    if (e == cur)
-      continue;
-
-    if (t >= e->startTime && t < e->endTime)
-      return start ? e->startTime : e->endTime;
-  }
-
-  return t;
-}
-
-//----------------------------------------------------------------------------------
-bool TimelineWindow::Row::IsValidPosition(
-    const time_duration& t,
-    EffectInstance* cur) const
-{
-  // check if the given time is inside any effect
-  for (const EffectInstance* e : effects)
-  {
-    if (e == cur)
-      continue;
-
-    if (t >= e->startTime && t < e->endTime)
-      return false;
-  }
-  return true;
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::Row::TimeFixup(
-    time_duration* start,
-    time_duration* end,
-    EffectInstance* cur) const
-{
-  time_duration delta = *end - *start;
-
-  for (const EffectInstance* e : effects)
-  {
-    if (e == cur)
-      continue;
-
-    // check for overlap
-    if (*start < e->startTime && *end >= e->startTime)
-    {
-      *end = e->startTime;
-      return;
-    }
-
-    // if start overlaps an existing effect, bump it to after that effect
-    // note, we need to keep going, because this bump might interfere with the
-    // next effects
-    if (*start >= e->startTime && *start <= e->endTime)
-    {
-      *start = e->endTime;
-      *end = *start + delta;
-    }
-  }
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::Row::AddEffect(EffectInstance* effect)
-{
-  effects.push_back(effect);
-
-  // sort effect by start time
-  sort(effects.begin(), effects.end(), [](const EffectInstance* lhs, const EffectInstance* rhs)
-  {
-    return lhs->startTime < rhs->startTime;
-  });
 }
 
 //----------------------------------------------------------------------------------

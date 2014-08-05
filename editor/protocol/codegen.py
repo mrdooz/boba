@@ -14,6 +14,10 @@ NATIVE_MESSAGE_TYPES = {
 	'Vector4' : 'Vector4f',	
 }
 
+FORWARD_DECL = {
+	'Vector3f FromProtocol(const common::Vector3& p);',
+}
+
 NATIVE_TYPES = {
 	1 	: 'double',
 	2	: 'float',
@@ -36,7 +40,10 @@ def underscore_to_camel_case(str):
 	x = str.split('_')
 	return x[0] + ''.join(map(lambda x : x.title(), x[1:]))
 
-env = Environment(loader=PackageLoader('codegen', 'templates'))
+env = Environment(
+	loader=PackageLoader('codegen', 'templates'),
+	trim_blocks = True,
+	lstrip_blocks = True)
 
 fds = descriptor_pb2.FileDescriptorSet()
 fds.ParseFromString(open('effects.desc', 'rb').read())
@@ -56,6 +63,7 @@ for file_desc in fds.file:
 			continue
 
 		args['all_classes'].append(msg_desc.name)
+		args['forward_decls'] = FORWARD_DECL
 
 		# don't create structs for message types we have native implementations for
 		if msg_desc.name in NATIVE_MESSAGE_TYPES:
@@ -91,29 +99,37 @@ for file_desc in fds.file:
 
 			if type_number in NATIVE_TYPES:
 				field_type = NATIVE_TYPES[type_number]
+				base_type = field_type
 			elif is_msg:
 				s = field_desc.type_name.split('.')
 				proto_type = ''.join(s[1:])
 				suffix = field_desc.type_name.split('.')[-1]
 				# use the native message type if one exists
 				field_type = NATIVE_MESSAGE_TYPES.get(suffix, suffix)
+				base_type = field_type
 			elif is_enum:
 				s = field_desc.type_name.split('.')
 				# convert .effect.plexus.NoiseEffector.ApplyTo to NoiseEffector::ApplyTo
 				outer = field_desc.type_name.split('.')[-2]
 				field_type = outer + '::' + field_desc.type_name.split('.')[-1]
+				base_type = field_type
 
 			# if repeated, convert to 'vector<type_name>'
 			if is_repeated:
+				base_type = field_type
 				field_type = 'vector<%s>' % field_type
 
+			proto_field_name = field_desc.name
 			field_name = underscore_to_camel_case(field_desc.name)
 
 			cur_member = { 
-				'name' : field_name, 
+				'name' : field_name,
 				'type' : field_type,
+				'base_type' : base_type,
 				'is_repeated' : is_repeated,
 				'is_native' : not is_msg,
+				'is_enum' : is_enum,
+				'proto_name' : proto_field_name, 
 				'proto_type' : proto_type,
 				}
 			cur_class['members'].append(cur_member)

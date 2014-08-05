@@ -5,44 +5,64 @@
 
 namespace editor
 {
-{% for class in all_classes %}
-struct {{ class }};
-{%- endfor %}
-{% for class in classes %}
-struct {{ class.name }}
-{
-{%- for enum in class.enums %}
-  enum class {{ enum.name }}
+  template<typename T, typename U>
+  vector<T> FromProtocolRepeated(const google::protobuf::RepeatedPtrField<U>& v)
   {
-  {%- for value in enum.vals %}
-    {{ value.name }} = {{ value.number }},
-  {%- endfor %}
+    vector<T> res;
+    for (const auto& x : v)
+    {
+      res.push_back(FromProtocol(x));
+    }
+    return res;
+  }
+
+  {% for class in all_classes %}
+  struct {{ class }};
+  {% endfor %}
+
+  {% for class in classes %}
+  {{ class.name }} FromProtocol(const {{ class.proto_type }}& p);
+  {% endfor %}
+  {% for fwd in forward_decls %}
+  {{ fwd }}
+  {% endfor %}
+
+  {% for class in classes %}
+  struct {{ class.name }}
+  {
+    {% for enum in class.enums %}
+    enum class {{ enum.name }}
+    {
+    {% for value in enum.vals %}
+      {{ value.name }} = {{ value.number }},
+    {% endfor %}
+    };
+
+    {% endfor %}
+    {% for member in class.members %}
+    {{ member.type }} {{ member.name }};
+    {% endfor %}
   };
-{% endfor %}
 
-{%- for member in class.members %}
-  {{ member.type }} {{ member.name }};
-{%- endfor %}
-};
+  inline {{ class.name }} FromProtocol(const {{ class.proto_type }}& p)
+  {
+    {{ class.name }} res;
+    {% for member in class.members %}
+    {% if member.is_enum %}
+    res.{{ member.name }} = ({{ member.type}})p.{{ member.proto_name }}();
+    {% elif member.is_native %}
+    res.{{ member.name }} = p.{{ member.proto_name }}();
+    {% else %}
+    {% if member.is_repeated %}
+    res.{{ member.name }} = FromProtocolRepeated<{{ member.base_type }}>(p.{{ member.proto_name }}());
+    {% else %}
+    res.{{ member.name }} = FromProtocol(p.{{ member.proto_name }}());
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+    return res;
+  }
 
-inline {{ class.name }} FromProtocol(const {{ class.proto_type}}& p)
-{
-	{{ class.name }} res;
-{%- for member in class.members %}
-{%- if member.is_native %}
-  res.{{ member.name }} = p.{{ member.name }}();
-{%- else %}
-{%- if member.is_repeated %}
-  res.{{ member.name }} = FromProtocolRepeated<{{ member.type }}>(p.{{ member.name }}());
-{%- else %}
-  res.{{ member.name }} = FromProtocol(p.{{ member.name }}());
-{%- endif %}
-
-  res.{{ member.name }} = FromProtocol(p.{{ member.name }}());
-{%- endif %}
-{%- endfor %}
-	return res;
-}
-{% endfor %}	
+  {% endfor %}	
 }
 
