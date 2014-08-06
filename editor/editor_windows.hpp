@@ -94,6 +94,8 @@ namespace editor
     bool OnMouseButtonReleased(const Event& event);
     bool OnMouseWheelMoved(const Event& event);
 
+    void RecalcEffecRows();
+
     template<typename T>
     sf::Vector2<T> PointToLocal(int x, int y)
     {

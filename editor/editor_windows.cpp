@@ -99,7 +99,23 @@ bool TimelineWindow::Init()
     }
   }
 
+  RecalcEffecRows();
+
   return true;
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::RecalcEffecRows()
+{
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  float rowHeight = settings.effect_row_height();
+
+  float curY = rowHeight;
+  for (EffectRow* row : _effectRows)
+  {
+    EffectRow::Reposition(row, curY, rowHeight);
+    curY += EffectRow::RowHeight(row, rowHeight);
+  }
 }
 
 //----------------------------------------------------------------------------------
@@ -110,7 +126,6 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   int x = (int)(event.mouseButton.x - _pos.x);
   int y = (int)(event.mouseButton.y - _pos.y);
   Vector2f mousePos(x, y);
-  Vector2f globalMousePos(event.mouseButton.x, event.mouseButton.y);
 
   if (x < (int)settings.effect_view_width())
   {
@@ -134,13 +149,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
     if (selectedRow)
     {
       selectedRow->flags.Toggle(EffectRow::RowFlagsF::Selected);
-
-      float curY = 0;
-      for (EffectRow* row : _effectRows)
-      {
-        EffectRow::Reposition(row, curY, settings.effect_row_height());
-        curY += EffectRow::RowHeight(row, settings.effect_row_height());
-      }
+      RecalcEffecRows();
     }
   }
   else if (y < (int)settings.effect_row_height())
@@ -408,11 +417,12 @@ void TimelineWindow::EffectRow::Reposition(EffectRow* cur, float curY, float row
     const Vector2f& size = cur->rect->_shape.getSize();
     cur->rect->_shape.setPosition(pos.x, curY);
     cur->rect->_shape.setSize(Vector2f(size.x, rowHeight));
+    curY += rowHeight;
     if (cur->flags.IsSet(EffectRow::RowFlagsF::Expanded))
-      curY += rowHeight;
-
-    for (EffectRow* c : cur->children)
-      q.push_back(c);
+    {
+      for (EffectRow* c : cur->children)
+        q.push_back(c);
+    }
   }
 }
 
@@ -426,10 +436,12 @@ float TimelineWindow::EffectRow::RowHeight(EffectRow* cur, float rowHeight)
     EffectRow* cur = q.front();
     q.pop_front();
 
-    if (!cur->flags.IsSet(EffectRow::RowFlagsF::Expanded))
-      break;
-
     res += rowHeight;
+    if (cur->flags.IsSet(EffectRow::RowFlagsF::Expanded))
+    {
+      for (EffectRow* c : cur->children)
+        q.push_back(c);
+    }
   }
 
   return res;
