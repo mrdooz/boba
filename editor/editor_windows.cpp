@@ -2,14 +2,11 @@
 #include "editor.hpp"
 
 #include "protocol/effects_proto.hpp"
-#import "flags.hpp"
 
 using namespace editor;
 using namespace bristol;
 
 #pragma warning(disable: 4244)
-
-
 
 //----------------------------------------------------------------------------------
 PropertyWindow::PropertyWindow(
@@ -77,25 +74,29 @@ bool TimelineWindow::Init()
 
   // create the effect rows
   const Plexus& p = EDITOR._plexus;
-  EffectRow* parent = new EffectRow(_font, "PLEXUS", IntRect(0, rowHeight, width, rowHeight));
-  _effectRows.push_back(parent);
-  curY += rowHeight;
 
-  for (const TextPath& t : p.textPaths)
+  for (int i = 0; i < 5; ++i)
   {
-    string str = to_string("TextPath: %s", t.text.c_str());
-    parent->children.push_back(
-        new EffectRow(_font, str, IntRect(0, curY, width, rowHeight), parent));
+    EffectRow* parent = new EffectRow(_font, "PLEXUS", IntRect(0, curY, width, rowHeight));
+    _effectRows.push_back(parent);
     curY += rowHeight;
-  }
 
-  for (const NoiseEffector& e : p.noiseEffectors)
-  {
-    string str = to_string("Noise (%s)",
+    for (const TextPath& t : p.textPaths)
+    {
+      string str = to_string("TextPath: %s", t.text.c_str());
+      parent->children.push_back(
+        new EffectRow(_font, str, IntRect(0, curY, width, rowHeight), parent));
+      curY += rowHeight;
+    }
+
+    for (const NoiseEffector& e : p.noiseEffectors)
+    {
+      string str = to_string("Noise (%s)",
         e.applyTo == NoiseEffector::ApplyTo::Position ? "POS" : "SCALE");
-    parent->children.push_back(
+      parent->children.push_back(
         new EffectRow(_font, str, IntRect(0, curY, width, rowHeight), parent));
-    curY += rowHeight;
+      curY += rowHeight;
+    }
   }
 
   return true;
@@ -116,9 +117,13 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
     // effect select
     EffectRow* selectedRow = nullptr;
 
+    vector<EffectRow*> effects;
     for (EffectRow* row : _effectRows)
+      EffectRow::Flatten(row, &effects);
+
+    for (EffectRow* row : effects)
     {
-      if (row->rect->_shape.getLocalBounds().contains(mousePos))
+      if (row->rect->_shape.getGlobalBounds().contains(mousePos))
       {
         row->flags.Toggle(EffectRow::RowFlagsF::Expanded);
         selectedRow = row;
@@ -129,6 +134,13 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
     if (selectedRow)
     {
       selectedRow->flags.Toggle(EffectRow::RowFlagsF::Selected);
+
+      float curY = 0;
+      for (EffectRow* row : _effectRows)
+      {
+        EffectRow::Reposition(row, curY, settings.effect_row_height());
+        curY += EffectRow::RowHeight(row, settings.effect_row_height());
+      }
     }
   }
   else if (y < (int)settings.effect_row_height())
@@ -355,6 +367,7 @@ TimelineWindow::EffectRow::EffectRow(
     EffectRow* parent)
     : str(str)
     , parent(parent)
+    , level(0)
 {
   rect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
   rect->_shape.setPosition(bounds.left, bounds.top);
@@ -363,12 +376,63 @@ TimelineWindow::EffectRow::EffectRow(
   text.setCharacterSize(16);
   flags.Set(EffectRow::RowFlagsF::Expanded);
 
-  EffectRow* tmp = parent;
-  while (tmp)
+  if (parent)
+    level = parent->level + 1;
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::EffectRow::Flatten(EffectRow* cur, vector<TimelineWindow::EffectRow*>* res)
+{
+  deque<EffectRow*> q({cur});
+  while (!q.empty())
   {
-    ++level;
-    tmp = tmp->parent;
+    EffectRow* cur = q.front();
+    q.pop_front();
+
+    res->push_back(cur);
+    for (EffectRow* c : cur->children)
+      q.push_back(c);
   }
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::EffectRow::Reposition(EffectRow* cur, float curY, float rowHeight)
+{
+  deque<EffectRow*> q({ cur });
+  while (!q.empty())
+  {
+    EffectRow* cur = q.front();
+    q.pop_front();
+
+    const Vector2f& pos = cur->rect->_shape.getPosition();
+    const Vector2f& size = cur->rect->_shape.getSize();
+    cur->rect->_shape.setPosition(pos.x, curY);
+    cur->rect->_shape.setSize(Vector2f(size.x, rowHeight));
+    if (cur->flags.IsSet(EffectRow::RowFlagsF::Expanded))
+      curY += rowHeight;
+
+    for (EffectRow* c : cur->children)
+      q.push_back(c);
+  }
+}
+
+//----------------------------------------------------------------------------------
+float TimelineWindow::EffectRow::RowHeight(EffectRow* cur, float rowHeight)
+{
+  float res = 0;
+  deque<EffectRow*> q({ cur });
+  while (!q.empty())
+  {
+    EffectRow* cur = q.front();
+    q.pop_front();
+
+    if (!cur->flags.IsSet(EffectRow::RowFlagsF::Expanded))
+      break;
+
+    res += rowHeight;
+  }
+
+  return res;
 }
 
 //----------------------------------------------------------------------------------

@@ -67,6 +67,9 @@ namespace editor
           EffectRow* parent = nullptr);
 
       void Draw(RenderTexture& texture);
+      static void Flatten(EffectRow* cur, vector<TimelineWindow::EffectRow*>* res);
+      static void Reposition(EffectRow* cur, float curY, float rowHeight);
+      static float RowHeight(EffectRow* cur, float rowHeight);
 
       string str;
       RowFlags flags;
