@@ -5,6 +5,12 @@ styles {
 		g : 40
 		b : 80
 	}
+	outline_color {
+		r : 80
+		g : 80
+		b : 160
+	}
+	outline_thickness : 1
 }
 
 styles {

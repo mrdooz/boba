@@ -39,6 +39,17 @@ bool StyleFactory::Init(const char* config)
   {
     _styles[style.id] = style;
   }
+
+  // notify all owned shapes of changes
+  for (auto& kv : _ownedShapes)
+  {
+    const string& id = kv.first;
+    for (auto& shape : kv.second)
+    {
+      shape->UpdateStyle(_styles[id]);
+    }
+
+  }
   return true;
 }
 
