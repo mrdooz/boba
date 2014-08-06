@@ -8,6 +8,7 @@
 #pragma warning(pop)
 
 #include "effect_utils.hpp"
+#include "style_factory.hpp"
 
 namespace bristol
 {
@@ -41,6 +42,7 @@ namespace editor
     string GetAppRoot() const { return _appRoot; }
     time_duration CurTime() const { return _curTime; }
     void SetCurTime(const time_duration& t);
+    StyleFactory& GetStyleFactory() { return _styleFactory; }
 
     Editor();
     ~Editor();
@@ -69,7 +71,9 @@ namespace editor
     StateFlags _stateFlags;
 
     FileWatcher _fileWatcher;
+    StyleFactory _styleFactory;
   };
 
   #define EDITOR Editor::Instance()
+  #define STYLE_FACTORY Editor::Instance().GetStyleFactory()
 }

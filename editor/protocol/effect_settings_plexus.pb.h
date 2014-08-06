@@ -331,14 +331,14 @@ class NoiseEffector : public ::google::protobuf::Message {
   inline ::effect::plexus::NoiseEffector_ApplyTo apply_to() const;
   inline void set_apply_to(::effect::plexus::NoiseEffector_ApplyTo value);
 
-  // optional .common.Vector3Anim displacement = 2;
+  // optional .common.protocol.Vector3Anim displacement = 2;
   inline bool has_displacement() const;
   inline void clear_displacement();
   static const int kDisplacementFieldNumber = 2;
-  inline const ::common::Vector3Anim& displacement() const;
-  inline ::common::Vector3Anim* mutable_displacement();
-  inline ::common::Vector3Anim* release_displacement();
-  inline void set_allocated_displacement(::common::Vector3Anim* displacement);
+  inline const ::common::protocol::Vector3Anim& displacement() const;
+  inline ::common::protocol::Vector3Anim* mutable_displacement();
+  inline ::common::protocol::Vector3Anim* release_displacement();
+  inline void set_allocated_displacement(::common::protocol::Vector3Anim* displacement);
 
   // @@protoc_insertion_point(class_scope:effect.plexus.NoiseEffector)
  private:
@@ -349,7 +349,7 @@ class NoiseEffector : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::common::Vector3Anim* displacement_;
+  ::common::protocol::Vector3Anim* displacement_;
   int apply_to_;
 
   mutable int _cached_size_;
@@ -520,7 +520,7 @@ inline void NoiseEffector::set_apply_to(::effect::plexus::NoiseEffector_ApplyTo 
   apply_to_ = value;
 }
 
-// optional .common.Vector3Anim displacement = 2;
+// optional .common.protocol.Vector3Anim displacement = 2;
 inline bool NoiseEffector::has_displacement() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -531,24 +531,24 @@ inline void NoiseEffector::clear_has_displacement() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void NoiseEffector::clear_displacement() {
-  if (displacement_ != NULL) displacement_->::common::Vector3Anim::Clear();
+  if (displacement_ != NULL) displacement_->::common::protocol::Vector3Anim::Clear();
   clear_has_displacement();
 }
-inline const ::common::Vector3Anim& NoiseEffector::displacement() const {
+inline const ::common::protocol::Vector3Anim& NoiseEffector::displacement() const {
   return displacement_ != NULL ? *displacement_ : *default_instance_->displacement_;
 }
-inline ::common::Vector3Anim* NoiseEffector::mutable_displacement() {
+inline ::common::protocol::Vector3Anim* NoiseEffector::mutable_displacement() {
   set_has_displacement();
-  if (displacement_ == NULL) displacement_ = new ::common::Vector3Anim;
+  if (displacement_ == NULL) displacement_ = new ::common::protocol::Vector3Anim;
   return displacement_;
 }
-inline ::common::Vector3Anim* NoiseEffector::release_displacement() {
+inline ::common::protocol::Vector3Anim* NoiseEffector::release_displacement() {
   clear_has_displacement();
-  ::common::Vector3Anim* temp = displacement_;
+  ::common::protocol::Vector3Anim* temp = displacement_;
   displacement_ = NULL;
   return temp;
 }
-inline void NoiseEffector::set_allocated_displacement(::common::Vector3Anim* displacement) {
+inline void NoiseEffector::set_allocated_displacement(::common::protocol::Vector3Anim* displacement) {
   delete displacement_;
   displacement_ = displacement;
   if (displacement) {

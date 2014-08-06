@@ -17,6 +17,7 @@
 // @@protoc_insertion_point(includes)
 
 namespace common {
+namespace protocol {
 
 namespace {
 
@@ -223,20 +224,22 @@ void protobuf_AddDesc_common_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\014common.proto\022\006common\"\037\n\007Vector2\022\t\n\001x\030\001"
-    " \001(\002\022\t\n\001y\030\002 \001(\002\"*\n\007Vector3\022\t\n\001x\030\001 \001(\002\022\t\n"
-    "\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\"5\n\007Vector4\022\t\n\001x\030\001 \001("
-    "\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\022\t\n\001w\030\004 \001(\002\"k\n\tMa"
-    "trix3x3\022\036\n\005row_1\030\001 \001(\0132\017.common.Vector3\022"
-    "\036\n\005row_2\030\002 \001(\0132\017.common.Vector3\022\036\n\005row_3"
-    "\030\003 \001(\0132\017.common.Vector3\"\213\001\n\tMatrix4x4\022\036\n"
-    "\005row_1\030\001 \001(\0132\017.common.Vector4\022\036\n\005row_2\030\002"
-    " \001(\0132\017.common.Vector4\022\036\n\005row_3\030\003 \001(\0132\017.c"
-    "ommon.Vector4\022\036\n\005row_4\030\004 \001(\0132\017.common.Ve"
-    "ctor4\"\?\n\017Vector3Keyframe\022\014\n\004time\030\001 \001(\r\022\036"
-    "\n\005value\030\002 \001(\0132\017.common.Vector3\"G\n\013Vector"
-    "3Anim\022\014\n\004type\030\001 \001(\r\022*\n\tkeyframes\030\002 \003(\0132\027"
-    ".common.Vector3Keyframe", 543);
+    "\n\014common.proto\022\017common.protocol\"\037\n\007Vecto"
+    "r2\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\"*\n\007Vector3\022\t\n\001x"
+    "\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\"5\n\007Vector4\022"
+    "\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\022\t\n\001w\030\004 "
+    "\001(\002\"\206\001\n\tMatrix3x3\022\'\n\005row_1\030\001 \001(\0132\030.commo"
+    "n.protocol.Vector3\022\'\n\005row_2\030\002 \001(\0132\030.comm"
+    "on.protocol.Vector3\022\'\n\005row_3\030\003 \001(\0132\030.com"
+    "mon.protocol.Vector3\"\257\001\n\tMatrix4x4\022\'\n\005ro"
+    "w_1\030\001 \001(\0132\030.common.protocol.Vector4\022\'\n\005r"
+    "ow_2\030\002 \001(\0132\030.common.protocol.Vector4\022\'\n\005"
+    "row_3\030\003 \001(\0132\030.common.protocol.Vector4\022\'\n"
+    "\005row_4\030\004 \001(\0132\030.common.protocol.Vector4\"H"
+    "\n\017Vector3Keyframe\022\014\n\004time\030\001 \001(\r\022\'\n\005value"
+    "\030\002 \001(\0132\030.common.protocol.Vector3\"P\n\013Vect"
+    "or3Anim\022\014\n\004type\030\001 \001(\r\0223\n\tkeyframes\030\002 \003(\013"
+    "2 .common.protocol.Vector3Keyframe", 634);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "common.proto", &protobuf_RegisterTypes);
   Vector2::default_instance_ = new Vector2();
@@ -1123,9 +1126,9 @@ Matrix3x3::Matrix3x3()
 }
 
 void Matrix3x3::InitAsDefaultInstance() {
-  row_1_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
-  row_2_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
-  row_3_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
+  row_1_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
+  row_2_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
+  row_3_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
 }
 
 Matrix3x3::Matrix3x3(const Matrix3x3& from)
@@ -1178,13 +1181,13 @@ Matrix3x3* Matrix3x3::New() const {
 void Matrix3x3::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_row_1()) {
-      if (row_1_ != NULL) row_1_->::common::Vector3::Clear();
+      if (row_1_ != NULL) row_1_->::common::protocol::Vector3::Clear();
     }
     if (has_row_2()) {
-      if (row_2_ != NULL) row_2_->::common::Vector3::Clear();
+      if (row_2_ != NULL) row_2_->::common::protocol::Vector3::Clear();
     }
     if (has_row_3()) {
-      if (row_3_ != NULL) row_3_->::common::Vector3::Clear();
+      if (row_3_ != NULL) row_3_->::common::protocol::Vector3::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1197,7 +1200,7 @@ bool Matrix3x3::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .common.Vector3 row_1 = 1;
+      // optional .common.protocol.Vector3 row_1 = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1210,7 +1213,7 @@ bool Matrix3x3::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Vector3 row_2 = 2;
+      // optional .common.protocol.Vector3 row_2 = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1224,7 +1227,7 @@ bool Matrix3x3::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Vector3 row_3 = 3;
+      // optional .common.protocol.Vector3 row_3 = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1256,19 +1259,19 @@ bool Matrix3x3::MergePartialFromCodedStream(
 
 void Matrix3x3::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .common.Vector3 row_1 = 1;
+  // optional .common.protocol.Vector3 row_1 = 1;
   if (has_row_1()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->row_1(), output);
   }
 
-  // optional .common.Vector3 row_2 = 2;
+  // optional .common.protocol.Vector3 row_2 = 2;
   if (has_row_2()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->row_2(), output);
   }
 
-  // optional .common.Vector3 row_3 = 3;
+  // optional .common.protocol.Vector3 row_3 = 3;
   if (has_row_3()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->row_3(), output);
@@ -1282,21 +1285,21 @@ void Matrix3x3::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Matrix3x3::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .common.Vector3 row_1 = 1;
+  // optional .common.protocol.Vector3 row_1 = 1;
   if (has_row_1()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         1, this->row_1(), target);
   }
 
-  // optional .common.Vector3 row_2 = 2;
+  // optional .common.protocol.Vector3 row_2 = 2;
   if (has_row_2()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         2, this->row_2(), target);
   }
 
-  // optional .common.Vector3 row_3 = 3;
+  // optional .common.protocol.Vector3 row_3 = 3;
   if (has_row_3()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1314,21 +1317,21 @@ int Matrix3x3::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .common.Vector3 row_1 = 1;
+    // optional .common.protocol.Vector3 row_1 = 1;
     if (has_row_1()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->row_1());
     }
 
-    // optional .common.Vector3 row_2 = 2;
+    // optional .common.protocol.Vector3 row_2 = 2;
     if (has_row_2()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->row_2());
     }
 
-    // optional .common.Vector3 row_3 = 3;
+    // optional .common.protocol.Vector3 row_3 = 3;
     if (has_row_3()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1363,13 +1366,13 @@ void Matrix3x3::MergeFrom(const Matrix3x3& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_row_1()) {
-      mutable_row_1()->::common::Vector3::MergeFrom(from.row_1());
+      mutable_row_1()->::common::protocol::Vector3::MergeFrom(from.row_1());
     }
     if (from.has_row_2()) {
-      mutable_row_2()->::common::Vector3::MergeFrom(from.row_2());
+      mutable_row_2()->::common::protocol::Vector3::MergeFrom(from.row_2());
     }
     if (from.has_row_3()) {
-      mutable_row_3()->::common::Vector3::MergeFrom(from.row_3());
+      mutable_row_3()->::common::protocol::Vector3::MergeFrom(from.row_3());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1427,10 +1430,10 @@ Matrix4x4::Matrix4x4()
 }
 
 void Matrix4x4::InitAsDefaultInstance() {
-  row_1_ = const_cast< ::common::Vector4*>(&::common::Vector4::default_instance());
-  row_2_ = const_cast< ::common::Vector4*>(&::common::Vector4::default_instance());
-  row_3_ = const_cast< ::common::Vector4*>(&::common::Vector4::default_instance());
-  row_4_ = const_cast< ::common::Vector4*>(&::common::Vector4::default_instance());
+  row_1_ = const_cast< ::common::protocol::Vector4*>(&::common::protocol::Vector4::default_instance());
+  row_2_ = const_cast< ::common::protocol::Vector4*>(&::common::protocol::Vector4::default_instance());
+  row_3_ = const_cast< ::common::protocol::Vector4*>(&::common::protocol::Vector4::default_instance());
+  row_4_ = const_cast< ::common::protocol::Vector4*>(&::common::protocol::Vector4::default_instance());
 }
 
 Matrix4x4::Matrix4x4(const Matrix4x4& from)
@@ -1485,16 +1488,16 @@ Matrix4x4* Matrix4x4::New() const {
 void Matrix4x4::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_row_1()) {
-      if (row_1_ != NULL) row_1_->::common::Vector4::Clear();
+      if (row_1_ != NULL) row_1_->::common::protocol::Vector4::Clear();
     }
     if (has_row_2()) {
-      if (row_2_ != NULL) row_2_->::common::Vector4::Clear();
+      if (row_2_ != NULL) row_2_->::common::protocol::Vector4::Clear();
     }
     if (has_row_3()) {
-      if (row_3_ != NULL) row_3_->::common::Vector4::Clear();
+      if (row_3_ != NULL) row_3_->::common::protocol::Vector4::Clear();
     }
     if (has_row_4()) {
-      if (row_4_ != NULL) row_4_->::common::Vector4::Clear();
+      if (row_4_ != NULL) row_4_->::common::protocol::Vector4::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1507,7 +1510,7 @@ bool Matrix4x4::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .common.Vector4 row_1 = 1;
+      // optional .common.protocol.Vector4 row_1 = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1520,7 +1523,7 @@ bool Matrix4x4::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Vector4 row_2 = 2;
+      // optional .common.protocol.Vector4 row_2 = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1534,7 +1537,7 @@ bool Matrix4x4::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Vector4 row_3 = 3;
+      // optional .common.protocol.Vector4 row_3 = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1548,7 +1551,7 @@ bool Matrix4x4::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Vector4 row_4 = 4;
+      // optional .common.protocol.Vector4 row_4 = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1580,25 +1583,25 @@ bool Matrix4x4::MergePartialFromCodedStream(
 
 void Matrix4x4::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .common.Vector4 row_1 = 1;
+  // optional .common.protocol.Vector4 row_1 = 1;
   if (has_row_1()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->row_1(), output);
   }
 
-  // optional .common.Vector4 row_2 = 2;
+  // optional .common.protocol.Vector4 row_2 = 2;
   if (has_row_2()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->row_2(), output);
   }
 
-  // optional .common.Vector4 row_3 = 3;
+  // optional .common.protocol.Vector4 row_3 = 3;
   if (has_row_3()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->row_3(), output);
   }
 
-  // optional .common.Vector4 row_4 = 4;
+  // optional .common.protocol.Vector4 row_4 = 4;
   if (has_row_4()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       4, this->row_4(), output);
@@ -1612,28 +1615,28 @@ void Matrix4x4::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Matrix4x4::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .common.Vector4 row_1 = 1;
+  // optional .common.protocol.Vector4 row_1 = 1;
   if (has_row_1()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         1, this->row_1(), target);
   }
 
-  // optional .common.Vector4 row_2 = 2;
+  // optional .common.protocol.Vector4 row_2 = 2;
   if (has_row_2()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         2, this->row_2(), target);
   }
 
-  // optional .common.Vector4 row_3 = 3;
+  // optional .common.protocol.Vector4 row_3 = 3;
   if (has_row_3()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         3, this->row_3(), target);
   }
 
-  // optional .common.Vector4 row_4 = 4;
+  // optional .common.protocol.Vector4 row_4 = 4;
   if (has_row_4()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1651,28 +1654,28 @@ int Matrix4x4::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .common.Vector4 row_1 = 1;
+    // optional .common.protocol.Vector4 row_1 = 1;
     if (has_row_1()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->row_1());
     }
 
-    // optional .common.Vector4 row_2 = 2;
+    // optional .common.protocol.Vector4 row_2 = 2;
     if (has_row_2()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->row_2());
     }
 
-    // optional .common.Vector4 row_3 = 3;
+    // optional .common.protocol.Vector4 row_3 = 3;
     if (has_row_3()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->row_3());
     }
 
-    // optional .common.Vector4 row_4 = 4;
+    // optional .common.protocol.Vector4 row_4 = 4;
     if (has_row_4()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1707,16 +1710,16 @@ void Matrix4x4::MergeFrom(const Matrix4x4& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_row_1()) {
-      mutable_row_1()->::common::Vector4::MergeFrom(from.row_1());
+      mutable_row_1()->::common::protocol::Vector4::MergeFrom(from.row_1());
     }
     if (from.has_row_2()) {
-      mutable_row_2()->::common::Vector4::MergeFrom(from.row_2());
+      mutable_row_2()->::common::protocol::Vector4::MergeFrom(from.row_2());
     }
     if (from.has_row_3()) {
-      mutable_row_3()->::common::Vector4::MergeFrom(from.row_3());
+      mutable_row_3()->::common::protocol::Vector4::MergeFrom(from.row_3());
     }
     if (from.has_row_4()) {
-      mutable_row_4()->::common::Vector4::MergeFrom(from.row_4());
+      mutable_row_4()->::common::protocol::Vector4::MergeFrom(from.row_4());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1773,7 +1776,7 @@ Vector3Keyframe::Vector3Keyframe()
 }
 
 void Vector3Keyframe::InitAsDefaultInstance() {
-  value_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
+  value_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
 }
 
 Vector3Keyframe::Vector3Keyframe(const Vector3Keyframe& from)
@@ -1824,7 +1827,7 @@ void Vector3Keyframe::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     time_ = 0u;
     if (has_value()) {
-      if (value_ != NULL) value_->::common::Vector3::Clear();
+      if (value_ != NULL) value_->::common::protocol::Vector3::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1852,7 +1855,7 @@ bool Vector3Keyframe::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Vector3 value = 2;
+      // optional .common.protocol.Vector3 value = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1889,7 +1892,7 @@ void Vector3Keyframe::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->time(), output);
   }
 
-  // optional .common.Vector3 value = 2;
+  // optional .common.protocol.Vector3 value = 2;
   if (has_value()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->value(), output);
@@ -1908,7 +1911,7 @@ void Vector3Keyframe::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->time(), target);
   }
 
-  // optional .common.Vector3 value = 2;
+  // optional .common.protocol.Vector3 value = 2;
   if (has_value()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1933,7 +1936,7 @@ int Vector3Keyframe::ByteSize() const {
           this->time());
     }
 
-    // optional .common.Vector3 value = 2;
+    // optional .common.protocol.Vector3 value = 2;
     if (has_value()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1971,7 +1974,7 @@ void Vector3Keyframe::MergeFrom(const Vector3Keyframe& from) {
       set_time(from.time());
     }
     if (from.has_value()) {
-      mutable_value()->::common::Vector3::MergeFrom(from.value());
+      mutable_value()->::common::protocol::Vector3::MergeFrom(from.value());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2100,7 +2103,7 @@ bool Vector3Anim::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .common.Vector3Keyframe keyframes = 2;
+      // repeated .common.protocol.Vector3Keyframe keyframes = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -2138,7 +2141,7 @@ void Vector3Anim::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->type(), output);
   }
 
-  // repeated .common.Vector3Keyframe keyframes = 2;
+  // repeated .common.protocol.Vector3Keyframe keyframes = 2;
   for (int i = 0; i < this->keyframes_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->keyframes(i), output);
@@ -2157,7 +2160,7 @@ void Vector3Anim::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->type(), target);
   }
 
-  // repeated .common.Vector3Keyframe keyframes = 2;
+  // repeated .common.protocol.Vector3Keyframe keyframes = 2;
   for (int i = 0; i < this->keyframes_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -2183,7 +2186,7 @@ int Vector3Anim::ByteSize() const {
     }
 
   }
-  // repeated .common.Vector3Keyframe keyframes = 2;
+  // repeated .common.protocol.Vector3Keyframe keyframes = 2;
   total_size += 1 * this->keyframes_size();
   for (int i = 0; i < this->keyframes_size(); i++) {
     total_size +=
@@ -2263,6 +2266,7 @@ void Vector3Anim::Swap(Vector3Anim* other) {
 
 // @@protoc_insertion_point(namespace_scope)
 
+}  // namespace protocol
 }  // namespace common
 
 // @@protoc_insertion_point(global_scope)

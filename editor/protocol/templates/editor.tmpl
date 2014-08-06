@@ -9,6 +9,7 @@
 #include "editor_settings.pb.h"
 #include "effect_settings.pb.h"
 #include "effect_settings_plexus.pb.h"
+#include "editor_styles.pb.h"
 
 #ifdef _WIN32
 #pragma warning(pop)
@@ -43,7 +44,7 @@ namespace editor
     return Color(col.r(), col.g(), col.b(), col.a());
   }
 
-  inline Vector3f FromProtocol(const common::Vector3& v)
+  inline Vector3f FromProtocol(const common::protocol::Vector3& v)
   {
     return Vector3f(v.x(), v.y(), v.z());
   }

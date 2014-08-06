@@ -27,6 +27,7 @@
 // @@protoc_insertion_point(includes)
 
 namespace common {
+namespace protocol {
 
 // Internal implementation detail -- do not call these.
 void  protobuf_AddDesc_common_2eproto();
@@ -111,7 +112,7 @@ class Vector2 : public ::google::protobuf::Message {
   inline float y() const;
   inline void set_y(float value);
 
-  // @@protoc_insertion_point(class_scope:common.Vector2)
+  // @@protoc_insertion_point(class_scope:common.protocol.Vector2)
  private:
   inline void set_has_x();
   inline void clear_has_x();
@@ -210,7 +211,7 @@ class Vector3 : public ::google::protobuf::Message {
   inline float z() const;
   inline void set_z(float value);
 
-  // @@protoc_insertion_point(class_scope:common.Vector3)
+  // @@protoc_insertion_point(class_scope:common.protocol.Vector3)
  private:
   inline void set_has_x();
   inline void clear_has_x();
@@ -319,7 +320,7 @@ class Vector4 : public ::google::protobuf::Message {
   inline float w() const;
   inline void set_w(float value);
 
-  // @@protoc_insertion_point(class_scope:common.Vector4)
+  // @@protoc_insertion_point(class_scope:common.protocol.Vector4)
  private:
   inline void set_has_x();
   inline void clear_has_x();
@@ -403,34 +404,34 @@ class Matrix3x3 : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .common.Vector3 row_1 = 1;
+  // optional .common.protocol.Vector3 row_1 = 1;
   inline bool has_row_1() const;
   inline void clear_row_1();
   static const int kRow1FieldNumber = 1;
-  inline const ::common::Vector3& row_1() const;
-  inline ::common::Vector3* mutable_row_1();
-  inline ::common::Vector3* release_row_1();
-  inline void set_allocated_row_1(::common::Vector3* row_1);
+  inline const ::common::protocol::Vector3& row_1() const;
+  inline ::common::protocol::Vector3* mutable_row_1();
+  inline ::common::protocol::Vector3* release_row_1();
+  inline void set_allocated_row_1(::common::protocol::Vector3* row_1);
 
-  // optional .common.Vector3 row_2 = 2;
+  // optional .common.protocol.Vector3 row_2 = 2;
   inline bool has_row_2() const;
   inline void clear_row_2();
   static const int kRow2FieldNumber = 2;
-  inline const ::common::Vector3& row_2() const;
-  inline ::common::Vector3* mutable_row_2();
-  inline ::common::Vector3* release_row_2();
-  inline void set_allocated_row_2(::common::Vector3* row_2);
+  inline const ::common::protocol::Vector3& row_2() const;
+  inline ::common::protocol::Vector3* mutable_row_2();
+  inline ::common::protocol::Vector3* release_row_2();
+  inline void set_allocated_row_2(::common::protocol::Vector3* row_2);
 
-  // optional .common.Vector3 row_3 = 3;
+  // optional .common.protocol.Vector3 row_3 = 3;
   inline bool has_row_3() const;
   inline void clear_row_3();
   static const int kRow3FieldNumber = 3;
-  inline const ::common::Vector3& row_3() const;
-  inline ::common::Vector3* mutable_row_3();
-  inline ::common::Vector3* release_row_3();
-  inline void set_allocated_row_3(::common::Vector3* row_3);
+  inline const ::common::protocol::Vector3& row_3() const;
+  inline ::common::protocol::Vector3* mutable_row_3();
+  inline ::common::protocol::Vector3* release_row_3();
+  inline void set_allocated_row_3(::common::protocol::Vector3* row_3);
 
-  // @@protoc_insertion_point(class_scope:common.Matrix3x3)
+  // @@protoc_insertion_point(class_scope:common.protocol.Matrix3x3)
  private:
   inline void set_has_row_1();
   inline void clear_has_row_1();
@@ -441,9 +442,9 @@ class Matrix3x3 : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::common::Vector3* row_1_;
-  ::common::Vector3* row_2_;
-  ::common::Vector3* row_3_;
+  ::common::protocol::Vector3* row_1_;
+  ::common::protocol::Vector3* row_2_;
+  ::common::protocol::Vector3* row_3_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -511,43 +512,43 @@ class Matrix4x4 : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .common.Vector4 row_1 = 1;
+  // optional .common.protocol.Vector4 row_1 = 1;
   inline bool has_row_1() const;
   inline void clear_row_1();
   static const int kRow1FieldNumber = 1;
-  inline const ::common::Vector4& row_1() const;
-  inline ::common::Vector4* mutable_row_1();
-  inline ::common::Vector4* release_row_1();
-  inline void set_allocated_row_1(::common::Vector4* row_1);
+  inline const ::common::protocol::Vector4& row_1() const;
+  inline ::common::protocol::Vector4* mutable_row_1();
+  inline ::common::protocol::Vector4* release_row_1();
+  inline void set_allocated_row_1(::common::protocol::Vector4* row_1);
 
-  // optional .common.Vector4 row_2 = 2;
+  // optional .common.protocol.Vector4 row_2 = 2;
   inline bool has_row_2() const;
   inline void clear_row_2();
   static const int kRow2FieldNumber = 2;
-  inline const ::common::Vector4& row_2() const;
-  inline ::common::Vector4* mutable_row_2();
-  inline ::common::Vector4* release_row_2();
-  inline void set_allocated_row_2(::common::Vector4* row_2);
+  inline const ::common::protocol::Vector4& row_2() const;
+  inline ::common::protocol::Vector4* mutable_row_2();
+  inline ::common::protocol::Vector4* release_row_2();
+  inline void set_allocated_row_2(::common::protocol::Vector4* row_2);
 
-  // optional .common.Vector4 row_3 = 3;
+  // optional .common.protocol.Vector4 row_3 = 3;
   inline bool has_row_3() const;
   inline void clear_row_3();
   static const int kRow3FieldNumber = 3;
-  inline const ::common::Vector4& row_3() const;
-  inline ::common::Vector4* mutable_row_3();
-  inline ::common::Vector4* release_row_3();
-  inline void set_allocated_row_3(::common::Vector4* row_3);
+  inline const ::common::protocol::Vector4& row_3() const;
+  inline ::common::protocol::Vector4* mutable_row_3();
+  inline ::common::protocol::Vector4* release_row_3();
+  inline void set_allocated_row_3(::common::protocol::Vector4* row_3);
 
-  // optional .common.Vector4 row_4 = 4;
+  // optional .common.protocol.Vector4 row_4 = 4;
   inline bool has_row_4() const;
   inline void clear_row_4();
   static const int kRow4FieldNumber = 4;
-  inline const ::common::Vector4& row_4() const;
-  inline ::common::Vector4* mutable_row_4();
-  inline ::common::Vector4* release_row_4();
-  inline void set_allocated_row_4(::common::Vector4* row_4);
+  inline const ::common::protocol::Vector4& row_4() const;
+  inline ::common::protocol::Vector4* mutable_row_4();
+  inline ::common::protocol::Vector4* release_row_4();
+  inline void set_allocated_row_4(::common::protocol::Vector4* row_4);
 
-  // @@protoc_insertion_point(class_scope:common.Matrix4x4)
+  // @@protoc_insertion_point(class_scope:common.protocol.Matrix4x4)
  private:
   inline void set_has_row_1();
   inline void clear_has_row_1();
@@ -560,10 +561,10 @@ class Matrix4x4 : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::common::Vector4* row_1_;
-  ::common::Vector4* row_2_;
-  ::common::Vector4* row_3_;
-  ::common::Vector4* row_4_;
+  ::common::protocol::Vector4* row_1_;
+  ::common::protocol::Vector4* row_2_;
+  ::common::protocol::Vector4* row_3_;
+  ::common::protocol::Vector4* row_4_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
@@ -638,16 +639,16 @@ class Vector3Keyframe : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 time() const;
   inline void set_time(::google::protobuf::uint32 value);
 
-  // optional .common.Vector3 value = 2;
+  // optional .common.protocol.Vector3 value = 2;
   inline bool has_value() const;
   inline void clear_value();
   static const int kValueFieldNumber = 2;
-  inline const ::common::Vector3& value() const;
-  inline ::common::Vector3* mutable_value();
-  inline ::common::Vector3* release_value();
-  inline void set_allocated_value(::common::Vector3* value);
+  inline const ::common::protocol::Vector3& value() const;
+  inline ::common::protocol::Vector3* mutable_value();
+  inline ::common::protocol::Vector3* release_value();
+  inline void set_allocated_value(::common::protocol::Vector3* value);
 
-  // @@protoc_insertion_point(class_scope:common.Vector3Keyframe)
+  // @@protoc_insertion_point(class_scope:common.protocol.Vector3Keyframe)
  private:
   inline void set_has_time();
   inline void clear_has_time();
@@ -656,7 +657,7 @@ class Vector3Keyframe : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::common::Vector3* value_;
+  ::common::protocol::Vector3* value_;
   ::google::protobuf::uint32 time_;
 
   mutable int _cached_size_;
@@ -732,26 +733,26 @@ class Vector3Anim : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 type() const;
   inline void set_type(::google::protobuf::uint32 value);
 
-  // repeated .common.Vector3Keyframe keyframes = 2;
+  // repeated .common.protocol.Vector3Keyframe keyframes = 2;
   inline int keyframes_size() const;
   inline void clear_keyframes();
   static const int kKeyframesFieldNumber = 2;
-  inline const ::common::Vector3Keyframe& keyframes(int index) const;
-  inline ::common::Vector3Keyframe* mutable_keyframes(int index);
-  inline ::common::Vector3Keyframe* add_keyframes();
-  inline const ::google::protobuf::RepeatedPtrField< ::common::Vector3Keyframe >&
+  inline const ::common::protocol::Vector3Keyframe& keyframes(int index) const;
+  inline ::common::protocol::Vector3Keyframe* mutable_keyframes(int index);
+  inline ::common::protocol::Vector3Keyframe* add_keyframes();
+  inline const ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe >&
       keyframes() const;
-  inline ::google::protobuf::RepeatedPtrField< ::common::Vector3Keyframe >*
+  inline ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe >*
       mutable_keyframes();
 
-  // @@protoc_insertion_point(class_scope:common.Vector3Anim)
+  // @@protoc_insertion_point(class_scope:common.protocol.Vector3Anim)
  private:
   inline void set_has_type();
   inline void clear_has_type();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::common::Vector3Keyframe > keyframes_;
+  ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe > keyframes_;
   ::google::protobuf::uint32 type_;
 
   mutable int _cached_size_;
@@ -981,7 +982,7 @@ inline void Vector4::set_w(float value) {
 
 // Matrix3x3
 
-// optional .common.Vector3 row_1 = 1;
+// optional .common.protocol.Vector3 row_1 = 1;
 inline bool Matrix3x3::has_row_1() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -992,24 +993,24 @@ inline void Matrix3x3::clear_has_row_1() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void Matrix3x3::clear_row_1() {
-  if (row_1_ != NULL) row_1_->::common::Vector3::Clear();
+  if (row_1_ != NULL) row_1_->::common::protocol::Vector3::Clear();
   clear_has_row_1();
 }
-inline const ::common::Vector3& Matrix3x3::row_1() const {
+inline const ::common::protocol::Vector3& Matrix3x3::row_1() const {
   return row_1_ != NULL ? *row_1_ : *default_instance_->row_1_;
 }
-inline ::common::Vector3* Matrix3x3::mutable_row_1() {
+inline ::common::protocol::Vector3* Matrix3x3::mutable_row_1() {
   set_has_row_1();
-  if (row_1_ == NULL) row_1_ = new ::common::Vector3;
+  if (row_1_ == NULL) row_1_ = new ::common::protocol::Vector3;
   return row_1_;
 }
-inline ::common::Vector3* Matrix3x3::release_row_1() {
+inline ::common::protocol::Vector3* Matrix3x3::release_row_1() {
   clear_has_row_1();
-  ::common::Vector3* temp = row_1_;
+  ::common::protocol::Vector3* temp = row_1_;
   row_1_ = NULL;
   return temp;
 }
-inline void Matrix3x3::set_allocated_row_1(::common::Vector3* row_1) {
+inline void Matrix3x3::set_allocated_row_1(::common::protocol::Vector3* row_1) {
   delete row_1_;
   row_1_ = row_1;
   if (row_1) {
@@ -1019,7 +1020,7 @@ inline void Matrix3x3::set_allocated_row_1(::common::Vector3* row_1) {
   }
 }
 
-// optional .common.Vector3 row_2 = 2;
+// optional .common.protocol.Vector3 row_2 = 2;
 inline bool Matrix3x3::has_row_2() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1030,24 +1031,24 @@ inline void Matrix3x3::clear_has_row_2() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void Matrix3x3::clear_row_2() {
-  if (row_2_ != NULL) row_2_->::common::Vector3::Clear();
+  if (row_2_ != NULL) row_2_->::common::protocol::Vector3::Clear();
   clear_has_row_2();
 }
-inline const ::common::Vector3& Matrix3x3::row_2() const {
+inline const ::common::protocol::Vector3& Matrix3x3::row_2() const {
   return row_2_ != NULL ? *row_2_ : *default_instance_->row_2_;
 }
-inline ::common::Vector3* Matrix3x3::mutable_row_2() {
+inline ::common::protocol::Vector3* Matrix3x3::mutable_row_2() {
   set_has_row_2();
-  if (row_2_ == NULL) row_2_ = new ::common::Vector3;
+  if (row_2_ == NULL) row_2_ = new ::common::protocol::Vector3;
   return row_2_;
 }
-inline ::common::Vector3* Matrix3x3::release_row_2() {
+inline ::common::protocol::Vector3* Matrix3x3::release_row_2() {
   clear_has_row_2();
-  ::common::Vector3* temp = row_2_;
+  ::common::protocol::Vector3* temp = row_2_;
   row_2_ = NULL;
   return temp;
 }
-inline void Matrix3x3::set_allocated_row_2(::common::Vector3* row_2) {
+inline void Matrix3x3::set_allocated_row_2(::common::protocol::Vector3* row_2) {
   delete row_2_;
   row_2_ = row_2;
   if (row_2) {
@@ -1057,7 +1058,7 @@ inline void Matrix3x3::set_allocated_row_2(::common::Vector3* row_2) {
   }
 }
 
-// optional .common.Vector3 row_3 = 3;
+// optional .common.protocol.Vector3 row_3 = 3;
 inline bool Matrix3x3::has_row_3() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -1068,24 +1069,24 @@ inline void Matrix3x3::clear_has_row_3() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void Matrix3x3::clear_row_3() {
-  if (row_3_ != NULL) row_3_->::common::Vector3::Clear();
+  if (row_3_ != NULL) row_3_->::common::protocol::Vector3::Clear();
   clear_has_row_3();
 }
-inline const ::common::Vector3& Matrix3x3::row_3() const {
+inline const ::common::protocol::Vector3& Matrix3x3::row_3() const {
   return row_3_ != NULL ? *row_3_ : *default_instance_->row_3_;
 }
-inline ::common::Vector3* Matrix3x3::mutable_row_3() {
+inline ::common::protocol::Vector3* Matrix3x3::mutable_row_3() {
   set_has_row_3();
-  if (row_3_ == NULL) row_3_ = new ::common::Vector3;
+  if (row_3_ == NULL) row_3_ = new ::common::protocol::Vector3;
   return row_3_;
 }
-inline ::common::Vector3* Matrix3x3::release_row_3() {
+inline ::common::protocol::Vector3* Matrix3x3::release_row_3() {
   clear_has_row_3();
-  ::common::Vector3* temp = row_3_;
+  ::common::protocol::Vector3* temp = row_3_;
   row_3_ = NULL;
   return temp;
 }
-inline void Matrix3x3::set_allocated_row_3(::common::Vector3* row_3) {
+inline void Matrix3x3::set_allocated_row_3(::common::protocol::Vector3* row_3) {
   delete row_3_;
   row_3_ = row_3;
   if (row_3) {
@@ -1099,7 +1100,7 @@ inline void Matrix3x3::set_allocated_row_3(::common::Vector3* row_3) {
 
 // Matrix4x4
 
-// optional .common.Vector4 row_1 = 1;
+// optional .common.protocol.Vector4 row_1 = 1;
 inline bool Matrix4x4::has_row_1() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1110,24 +1111,24 @@ inline void Matrix4x4::clear_has_row_1() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void Matrix4x4::clear_row_1() {
-  if (row_1_ != NULL) row_1_->::common::Vector4::Clear();
+  if (row_1_ != NULL) row_1_->::common::protocol::Vector4::Clear();
   clear_has_row_1();
 }
-inline const ::common::Vector4& Matrix4x4::row_1() const {
+inline const ::common::protocol::Vector4& Matrix4x4::row_1() const {
   return row_1_ != NULL ? *row_1_ : *default_instance_->row_1_;
 }
-inline ::common::Vector4* Matrix4x4::mutable_row_1() {
+inline ::common::protocol::Vector4* Matrix4x4::mutable_row_1() {
   set_has_row_1();
-  if (row_1_ == NULL) row_1_ = new ::common::Vector4;
+  if (row_1_ == NULL) row_1_ = new ::common::protocol::Vector4;
   return row_1_;
 }
-inline ::common::Vector4* Matrix4x4::release_row_1() {
+inline ::common::protocol::Vector4* Matrix4x4::release_row_1() {
   clear_has_row_1();
-  ::common::Vector4* temp = row_1_;
+  ::common::protocol::Vector4* temp = row_1_;
   row_1_ = NULL;
   return temp;
 }
-inline void Matrix4x4::set_allocated_row_1(::common::Vector4* row_1) {
+inline void Matrix4x4::set_allocated_row_1(::common::protocol::Vector4* row_1) {
   delete row_1_;
   row_1_ = row_1;
   if (row_1) {
@@ -1137,7 +1138,7 @@ inline void Matrix4x4::set_allocated_row_1(::common::Vector4* row_1) {
   }
 }
 
-// optional .common.Vector4 row_2 = 2;
+// optional .common.protocol.Vector4 row_2 = 2;
 inline bool Matrix4x4::has_row_2() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1148,24 +1149,24 @@ inline void Matrix4x4::clear_has_row_2() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void Matrix4x4::clear_row_2() {
-  if (row_2_ != NULL) row_2_->::common::Vector4::Clear();
+  if (row_2_ != NULL) row_2_->::common::protocol::Vector4::Clear();
   clear_has_row_2();
 }
-inline const ::common::Vector4& Matrix4x4::row_2() const {
+inline const ::common::protocol::Vector4& Matrix4x4::row_2() const {
   return row_2_ != NULL ? *row_2_ : *default_instance_->row_2_;
 }
-inline ::common::Vector4* Matrix4x4::mutable_row_2() {
+inline ::common::protocol::Vector4* Matrix4x4::mutable_row_2() {
   set_has_row_2();
-  if (row_2_ == NULL) row_2_ = new ::common::Vector4;
+  if (row_2_ == NULL) row_2_ = new ::common::protocol::Vector4;
   return row_2_;
 }
-inline ::common::Vector4* Matrix4x4::release_row_2() {
+inline ::common::protocol::Vector4* Matrix4x4::release_row_2() {
   clear_has_row_2();
-  ::common::Vector4* temp = row_2_;
+  ::common::protocol::Vector4* temp = row_2_;
   row_2_ = NULL;
   return temp;
 }
-inline void Matrix4x4::set_allocated_row_2(::common::Vector4* row_2) {
+inline void Matrix4x4::set_allocated_row_2(::common::protocol::Vector4* row_2) {
   delete row_2_;
   row_2_ = row_2;
   if (row_2) {
@@ -1175,7 +1176,7 @@ inline void Matrix4x4::set_allocated_row_2(::common::Vector4* row_2) {
   }
 }
 
-// optional .common.Vector4 row_3 = 3;
+// optional .common.protocol.Vector4 row_3 = 3;
 inline bool Matrix4x4::has_row_3() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -1186,24 +1187,24 @@ inline void Matrix4x4::clear_has_row_3() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void Matrix4x4::clear_row_3() {
-  if (row_3_ != NULL) row_3_->::common::Vector4::Clear();
+  if (row_3_ != NULL) row_3_->::common::protocol::Vector4::Clear();
   clear_has_row_3();
 }
-inline const ::common::Vector4& Matrix4x4::row_3() const {
+inline const ::common::protocol::Vector4& Matrix4x4::row_3() const {
   return row_3_ != NULL ? *row_3_ : *default_instance_->row_3_;
 }
-inline ::common::Vector4* Matrix4x4::mutable_row_3() {
+inline ::common::protocol::Vector4* Matrix4x4::mutable_row_3() {
   set_has_row_3();
-  if (row_3_ == NULL) row_3_ = new ::common::Vector4;
+  if (row_3_ == NULL) row_3_ = new ::common::protocol::Vector4;
   return row_3_;
 }
-inline ::common::Vector4* Matrix4x4::release_row_3() {
+inline ::common::protocol::Vector4* Matrix4x4::release_row_3() {
   clear_has_row_3();
-  ::common::Vector4* temp = row_3_;
+  ::common::protocol::Vector4* temp = row_3_;
   row_3_ = NULL;
   return temp;
 }
-inline void Matrix4x4::set_allocated_row_3(::common::Vector4* row_3) {
+inline void Matrix4x4::set_allocated_row_3(::common::protocol::Vector4* row_3) {
   delete row_3_;
   row_3_ = row_3;
   if (row_3) {
@@ -1213,7 +1214,7 @@ inline void Matrix4x4::set_allocated_row_3(::common::Vector4* row_3) {
   }
 }
 
-// optional .common.Vector4 row_4 = 4;
+// optional .common.protocol.Vector4 row_4 = 4;
 inline bool Matrix4x4::has_row_4() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -1224,24 +1225,24 @@ inline void Matrix4x4::clear_has_row_4() {
   _has_bits_[0] &= ~0x00000008u;
 }
 inline void Matrix4x4::clear_row_4() {
-  if (row_4_ != NULL) row_4_->::common::Vector4::Clear();
+  if (row_4_ != NULL) row_4_->::common::protocol::Vector4::Clear();
   clear_has_row_4();
 }
-inline const ::common::Vector4& Matrix4x4::row_4() const {
+inline const ::common::protocol::Vector4& Matrix4x4::row_4() const {
   return row_4_ != NULL ? *row_4_ : *default_instance_->row_4_;
 }
-inline ::common::Vector4* Matrix4x4::mutable_row_4() {
+inline ::common::protocol::Vector4* Matrix4x4::mutable_row_4() {
   set_has_row_4();
-  if (row_4_ == NULL) row_4_ = new ::common::Vector4;
+  if (row_4_ == NULL) row_4_ = new ::common::protocol::Vector4;
   return row_4_;
 }
-inline ::common::Vector4* Matrix4x4::release_row_4() {
+inline ::common::protocol::Vector4* Matrix4x4::release_row_4() {
   clear_has_row_4();
-  ::common::Vector4* temp = row_4_;
+  ::common::protocol::Vector4* temp = row_4_;
   row_4_ = NULL;
   return temp;
 }
-inline void Matrix4x4::set_allocated_row_4(::common::Vector4* row_4) {
+inline void Matrix4x4::set_allocated_row_4(::common::protocol::Vector4* row_4) {
   delete row_4_;
   row_4_ = row_4;
   if (row_4) {
@@ -1277,7 +1278,7 @@ inline void Vector3Keyframe::set_time(::google::protobuf::uint32 value) {
   time_ = value;
 }
 
-// optional .common.Vector3 value = 2;
+// optional .common.protocol.Vector3 value = 2;
 inline bool Vector3Keyframe::has_value() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1288,24 +1289,24 @@ inline void Vector3Keyframe::clear_has_value() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void Vector3Keyframe::clear_value() {
-  if (value_ != NULL) value_->::common::Vector3::Clear();
+  if (value_ != NULL) value_->::common::protocol::Vector3::Clear();
   clear_has_value();
 }
-inline const ::common::Vector3& Vector3Keyframe::value() const {
+inline const ::common::protocol::Vector3& Vector3Keyframe::value() const {
   return value_ != NULL ? *value_ : *default_instance_->value_;
 }
-inline ::common::Vector3* Vector3Keyframe::mutable_value() {
+inline ::common::protocol::Vector3* Vector3Keyframe::mutable_value() {
   set_has_value();
-  if (value_ == NULL) value_ = new ::common::Vector3;
+  if (value_ == NULL) value_ = new ::common::protocol::Vector3;
   return value_;
 }
-inline ::common::Vector3* Vector3Keyframe::release_value() {
+inline ::common::protocol::Vector3* Vector3Keyframe::release_value() {
   clear_has_value();
-  ::common::Vector3* temp = value_;
+  ::common::protocol::Vector3* temp = value_;
   value_ = NULL;
   return temp;
 }
-inline void Vector3Keyframe::set_allocated_value(::common::Vector3* value) {
+inline void Vector3Keyframe::set_allocated_value(::common::protocol::Vector3* value) {
   delete value_;
   value_ = value;
   if (value) {
@@ -1341,27 +1342,27 @@ inline void Vector3Anim::set_type(::google::protobuf::uint32 value) {
   type_ = value;
 }
 
-// repeated .common.Vector3Keyframe keyframes = 2;
+// repeated .common.protocol.Vector3Keyframe keyframes = 2;
 inline int Vector3Anim::keyframes_size() const {
   return keyframes_.size();
 }
 inline void Vector3Anim::clear_keyframes() {
   keyframes_.Clear();
 }
-inline const ::common::Vector3Keyframe& Vector3Anim::keyframes(int index) const {
+inline const ::common::protocol::Vector3Keyframe& Vector3Anim::keyframes(int index) const {
   return keyframes_.Get(index);
 }
-inline ::common::Vector3Keyframe* Vector3Anim::mutable_keyframes(int index) {
+inline ::common::protocol::Vector3Keyframe* Vector3Anim::mutable_keyframes(int index) {
   return keyframes_.Mutable(index);
 }
-inline ::common::Vector3Keyframe* Vector3Anim::add_keyframes() {
+inline ::common::protocol::Vector3Keyframe* Vector3Anim::add_keyframes() {
   return keyframes_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::common::Vector3Keyframe >&
+inline const ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe >&
 Vector3Anim::keyframes() const {
   return keyframes_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::common::Vector3Keyframe >*
+inline ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe >*
 Vector3Anim::mutable_keyframes() {
   return &keyframes_;
 }
@@ -1369,6 +1370,7 @@ Vector3Anim::mutable_keyframes() {
 
 // @@protoc_insertion_point(namespace_scope)
 
+}  // namespace protocol
 }  // namespace common
 
 #ifndef SWIG

@@ -16,7 +16,7 @@ NATIVE_MESSAGE_TYPES = {
 }
 
 FORWARD_DECL = {
-    'Vector3f FromProtocol(const common::Vector3& p);',
+#    'Vector3f FromProtocol(const common::Vector3& p);',
 }
 
 NATIVE_TYPES = {

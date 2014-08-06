@@ -2,11 +2,14 @@
 #include "editor.hpp"
 
 #include "protocol/effects_proto.hpp"
+#import "flags.hpp"
 
 using namespace editor;
 using namespace bristol;
 
 #pragma warning(disable: 4244)
+
+
 
 //----------------------------------------------------------------------------------
 PropertyWindow::PropertyWindow(
@@ -34,8 +37,6 @@ TimelineWindow::TimelineWindow(
     : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
     , _panelOffset(seconds(0))
     , _pixelsPerSecond(EDITOR.Settings().timeline_zoom_default())
-    , _selectedModule(nullptr)
-    , _selectedEffect(nullptr)
     , _lastDragPos(-1, -1)
 {
 }
@@ -43,8 +44,6 @@ TimelineWindow::TimelineWindow(
 //----------------------------------------------------------------------------------
 TimelineWindow::~TimelineWindow()
 {
-  SeqDelete(&_rows);
-  SeqDelete(&_modules);
 }
 
 //----------------------------------------------------------------------------------
@@ -62,32 +61,42 @@ bool TimelineWindow::Init()
     return false;
 
   const editor::protocol::Settings& settings = EDITOR.Settings();
+  int width = settings.effect_view_width();
+  int height = 20;
 
   // create render textures and sprites
-  _effectTexture.create(settings.module_view_width(), _size.y);
+  _effectTexture.create(settings.effect_view_width(), _size.y);
   _effectSprite.setTexture(_effectTexture.getTexture(), true);
 
-  _timelineTexture.create(_size.x - settings.module_view_width(), _size.y);
+  _timelineTexture.create(_size.x - settings.effect_view_width(), _size.y);
   _timelineSprite.setTexture(_timelineTexture.getTexture(), true);
-  _timelineSprite.setPosition(settings.module_view_width(), 0);
+  _timelineSprite.setPosition(settings.effect_view_width(), 0);
 
-  int y = settings.module_row_height();
+  int rowHeight = settings.effect_row_height();
+  int curY = rowHeight;
 
   // create the effect rows
   const Plexus& p = EDITOR._plexus;
+  EffectRow* parent = new EffectRow(_font, "PLEXUS", IntRect(0, rowHeight, width, rowHeight));
+  _effectRows.push_back(parent);
+  curY += rowHeight;
 
   for (const TextPath& t : p.textPaths)
   {
-/*
-    _effectRows.push_back(new EffectRow(_font, "PLEXUS", ))
-    EffectRow* row = new EffectRow(_font);
-    row->str = "MAGNUS";
-    row->bounds = IntRect(0, 0, 100, 20);
-    _effectRows.push_back(row);
-*/
+    string str = to_string("TextPath: %s", t.text.c_str());
+    parent->children.push_back(
+        new EffectRow(_font, str, IntRect(0, curY, width, rowHeight), parent));
+    curY += rowHeight;
   }
 
-
+  for (const NoiseEffector& e : p.noiseEffectors)
+  {
+    string str = to_string("Noise (%s)",
+        e.applyTo == NoiseEffector::ApplyTo::Position ? "POS" : "SCALE");
+    parent->children.push_back(
+        new EffectRow(_font, str, IntRect(0, curY, width, rowHeight), parent));
+    curY += rowHeight;
+  }
 
   return true;
 }
@@ -99,17 +108,19 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 
   int x = (int)(event.mouseButton.x - _pos.x);
   int y = (int)(event.mouseButton.y - _pos.y);
-  Vector2i mousePos(x, y);
+  Vector2f mousePos(x, y);
+  Vector2f globalMousePos(event.mouseButton.x, event.mouseButton.y);
 
-  if (x < (int)settings.module_view_width())
+  if (x < (int)settings.effect_view_width())
   {
     // effect select
     EffectRow* selectedRow = nullptr;
 
     for (EffectRow* row : _effectRows)
     {
-      if (row->bounds.contains(mousePos))
+      if (row->rect->_shape.getLocalBounds().contains(mousePos))
       {
+        row->flags.Toggle(EffectRow::RowFlagsF::Expanded);
         selectedRow = row;
         break;
       }
@@ -120,7 +131,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
       selectedRow->flags.Toggle(EffectRow::RowFlagsF::Selected);
     }
   }
-  else if (y < (int)settings.module_row_height())
+  else if (y < (int)settings.effect_row_height())
   {
     time_duration t = PixelToTime(event.mouseButton.x - (int)_pos.x);
     if (!t.is_not_a_date_time())
@@ -140,7 +151,7 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
   Vector2i posModule = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
-  Vector2i posTimeline(posModule.x - settings.module_view_width(), posModule.y);
+  Vector2i posTimeline(posModule.x - settings.effect_view_width(), posModule.y);
 
   time_duration curTime = PixelToTime(posModule.x);
 
@@ -188,29 +199,6 @@ bool TimelineWindow::OnMouseWheelMoved(const Event& event)
 }
 
 //----------------------------------------------------------------------------------
-void TimelineWindow::DrawEffect(const EffectInstance& effect, const Row& row, Text& text)
-{
-  const editor::protocol::Settings& settings = EDITOR.Settings();
-  Color hoverCol = FromProtocol(settings.hover_row_color());
-  Color selectedCol = FromProtocol(settings.selected_row_color());
-
-  int start = TimeToPixel(effect.startTime);
-  int end = TimeToPixel(effect.endTime);
-
-  int diff = (row.rect.height - settings.effect_height()) / 2;
-  Vector2f pos(start, row.rect.top + diff);
-  Vector2f size(end - start, settings.effect_height());
-  DrawRectOutline(_timelineTexture, pos, size,
-      effect.flags.IsSet(EffectInstanceFlagsF::Selected) ? selectedCol : hoverCol, 2, settings.resize_handle());
-
-  text.setString(effect.module->name);
-  Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
-  text.setPosition(pos + (size - ofs) / 2.0f);
-  _timelineTexture.draw(text);
-
-}
-
-//----------------------------------------------------------------------------------
 void TimelineWindow::DrawTimeline()
 {
   _timelineTexture.clear();
@@ -237,7 +225,7 @@ void TimelineWindow::DrawTimeline()
   {
     // need to cheese the 'x' value to make it relative the whole window, and not just the
     // timline part
-    time_duration t = PixelToTime(x + settings.module_view_width());
+    time_duration t = PixelToTime(x + settings.effect_view_width());
     text.setString(to_string("%.1f", t.total_milliseconds() / 1000.0f));
     text.setPosition(x, y-20);
     _timelineTexture.draw(text);
@@ -252,22 +240,6 @@ void TimelineWindow::DrawTimeline()
     x = tmpX + settings.ticker_interval();
   }
   _timelineTexture.draw(lines);
-
-  // draw the rows
-  x = 0;
-  y = settings.ticker_height();
-  text.setCharacterSize(16);
-  text.setFont(_font);
-  for (const Row* row : _rows)
-  {
-    DrawRectOutline(_timelineTexture, Vector2f(row->rect.left, row->rect.top), 
-        Vector2f(row->rect.width, row->rect.height), rowCol, 2);
-
-    for (const EffectInstance* e : row->effects)
-    {
-      DrawEffect(*e, *row, text);
-    }
-  }
 
   // draw time line
   VertexArray curLine(sf::Lines);
@@ -285,25 +257,6 @@ void TimelineWindow::DrawTimeline()
 
   _timelineTexture.display();
   _texture.draw(_timelineSprite);
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::DrawModule(float x, float y, const Module& module)
-{
-  const editor::protocol::Settings& settings = EDITOR.Settings();
-  Color rowCol = FromProtocol(settings.default_row_color());
-  Color selectedRowCol = FromProtocol(settings.selected_row_color());
-
-  Vector2f size(module.rect.width, module.rect.height);
-  Color col = module.flags.IsSet(ModuleFlagsF::Selected) ? selectedRowCol : rowCol;
-  DrawRectOutline(_effectTexture, Vector2f(x,y), size, col, 2);
-  Text text;
-  text.setString(module.name);
-  text.setCharacterSize(16);
-  text.setFont(_font);
-  Vector2f ofs(text.getLocalBounds().width, text.getLocalBounds().height);
-  text.setPosition(Vector2f(x, y) + (size - ofs) / 2.0f);
-  _effectTexture.draw(text);
 }
 
 struct RowDrawer
@@ -331,78 +284,6 @@ struct RowDrawer
   int* y;
 };
 
-//----------------------------------------------------------------------------------
-void TimelineWindow::DrawPlexus(const Plexus& plexus)
-{
-  const editor::protocol::Settings& settings = EDITOR.Settings();
-  Color rowCol = FromProtocol(settings.default_row_color());
-
-  int fontSize = 16;
-  int y = 100;
-
-  Text text;
-  text.setCharacterSize(fontSize);
-  text.setFont(_font);
-
-  RowDrawer row(text, fontSize + 1, _effectTexture, 10, &y);
-  row.DrawText("PLEXUS");
-
-  // draw paths
-  for (const TextPath& p : plexus.textPaths)
-  {
-    row.DrawText(to_string(">> TEXT PATH: %s", p.text.c_str()).c_str());
-  }
-
-  // draw effectors
-  for (const NoiseEffector& p : plexus.noiseEffectors)
-  {
-    row.DrawText(to_string(">> NOISE EFFECTOR (%s)", p.applyTo == NoiseEffector::ApplyTo::Scale ? "SCALE" : "POS").c_str());
-
-    // calc the interpolated values
-    Vector3f v = Interpolate(p.displacement, EDITOR.CurTime().total_milliseconds());
-    row.DrawText(to_string("    X: %.2f", v.x).c_str());
-    row.DrawText(to_string("    Y: %.2f", v.y).c_str());
-    row.DrawText(to_string("    Z: %.2f", v.z).c_str());
-  }
-
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::EffectRow::Draw(RenderTexture& texture)
-{
-  const editor::protocol::Settings& settings = EDITOR.Settings();
-  Color rowCol = FromProtocol(settings.default_row_color());
-
-  RectangleShape rect;
-  rect.setFillColor(rowCol);
-  rect.setPosition(bounds.left, bounds.top);
-  rect.setSize(Vector2f(bounds.width, bounds.height));
-  texture.draw(rect);
-
-  text.setString(str);
-  text.setPosition(bounds.left, bounds.top);
-  texture.draw(text);
-}
-
-//----------------------------------------------------------------------------------
-TimelineWindow::EffectRow::EffectRow(const Font& font)
-  : parent(nullptr)
-{
-  text.setFont(font);
-  text.setCharacterSize(16);
-}
-
-//----------------------------------------------------------------------------------
-TimelineWindow::EffectRow::EffectRow(
-    const Font& font,
-    const string& str,
-    const IntRect& bounds)
-  : str(str)
-  , bounds(bounds)
-{
-  text.setFont(font);
-  text.setCharacterSize(16);
-}
 
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawEffects()
@@ -424,12 +305,6 @@ void TimelineWindow::DrawEffects()
     row->Draw(_effectTexture);
   }
 
-  DrawPlexus(EDITOR._plexus);
-
-  for (const Module* module : _modules)
-  {
-    DrawModule(module->rect.left, module->rect.top, *module);
-  }
   _effectTexture.display();
   _texture.draw(_effectSprite);
 }
@@ -448,7 +323,7 @@ time_duration TimelineWindow::PixelToTime(int x)
 {
   double s = (double)_pixelsPerSecond / 1000.0;
 
-  x -= EDITOR.Settings().module_view_width();
+  x -= EDITOR.Settings().effect_view_width();
   if (x < 0)
     return time_duration(boost::posix_time::not_a_date_time);
 
@@ -473,7 +348,74 @@ void TimelineWindow::Draw()
 }
 
 //----------------------------------------------------------------------------------
-TimelineWindow::Row::~Row()
+TimelineWindow::EffectRow::EffectRow(
+    const Font& font,
+    const string& str,
+    const IntRect& bounds,
+    EffectRow* parent)
+    : str(str)
+    , parent(parent)
 {
-  SeqDelete(&effects);
+  rect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
+  rect->_shape.setPosition(bounds.left, bounds.top);
+  rect->_shape.setSize(Vector2f(bounds.width, bounds.height));
+  text.setFont(font);
+  text.setCharacterSize(16);
+  flags.Set(EffectRow::RowFlagsF::Expanded);
+
+  EffectRow* tmp = parent;
+  while (tmp)
+  {
+    ++level;
+    tmp = tmp->parent;
+  }
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::EffectRow::Draw(RenderTexture& texture)
+{
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  Color rowCol = FromProtocol(settings.default_row_color());
+
+  // draw background
+  texture.draw(rect->_shape);
+
+  // draw text
+  text.setString(str);
+  text.setPosition(rect->_shape.getPosition() + Vector2f(20 + level * 15, 0) );
+  texture.draw(text);
+
+  // draw expanded indicator
+  VertexArray triangle;
+
+  VertexArray tri(sf::Triangles);
+  float left = rect->_shape.getPosition().x;
+  float top = rect->_shape.getPosition().y;
+  float y = top;
+
+  if (!flags.IsSet(EffectRow::RowFlagsF::Expanded))
+  {
+    // draw expanded indicator
+
+    // y increases downwards
+    const Style* s = STYLE_FACTORY.GetStyle("effect_icon_collapsed_color");
+    tri.append(sf::Vertex(Vector2f(left+5, y+5), s->fillColor));
+    tri.append(sf::Vertex(Vector2f(left+5, y+15), s->fillColor));
+    tri.append(sf::Vertex(Vector2f(left+15, y+10), s->fillColor));
+    texture.draw(tri);
+  }
+  else
+  {
+    // y increases downwards
+    const Style* s = STYLE_FACTORY.GetStyle("effect_icon_expanded_color");
+    tri.append(sf::Vertex(Vector2f(left+5, y+5), s->fillColor));
+    tri.append(sf::Vertex(Vector2f(left+15, y+5), s->fillColor));
+    tri.append(sf::Vertex(Vector2f(left+10, y+15), s->fillColor));
+    texture.draw(tri);
+
+    for (EffectRow* child : children)
+    {
+      child->Draw(texture);
+    }
+  }
 }

@@ -1,8 +1,8 @@
 ticker_height : 50
 ticker_interval : 100
 ticks_per_interval : 10
-module_view_width : 300
-module_row_height : 52
+effect_view_width : 300
+effect_row_height : 20
 effect_height : 45
 resize_handle : 10
 
@@ -31,5 +31,19 @@ invalid_hover_row_color  :
 {
 	r : 120
 	g : 40
+	b : 40
+}
+
+effect_icon_expanded_color  :
+{
+	r : 120
+	g : 40
+	b : 40
+}
+
+effect_icon_collapsed_color  :
+{
+	r : 120
+	g : 120
 	b : 40
 }

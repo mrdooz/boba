@@ -9,6 +9,7 @@
 #include "editor_settings.pb.h"
 #include "effect_settings.pb.h"
 #include "effect_settings_plexus.pb.h"
+#include "editor_styles.pb.h"
 
 #ifdef _WIN32
 #pragma warning(pop)
@@ -22,17 +23,20 @@ namespace editor
   struct Vector3Keyframe;
   struct Vector3Anim;
   struct Settings;
+  struct Style;
+  struct Styles;
   struct Plexus;
   struct TextPath;
   struct NoiseEffector;
 
-  Vector3Keyframe FromProtocol(const common::Vector3Keyframe& p);
-  Vector3Anim FromProtocol(const common::Vector3Anim& p);
+  Vector3Keyframe FromProtocol(const common::protocol::Vector3Keyframe& p);
+  Vector3Anim FromProtocol(const common::protocol::Vector3Anim& p);
   Settings FromProtocol(const editor::protocol::Settings& p);
+  Style FromProtocol(const editor::protocol::Style& p);
+  Styles FromProtocol(const editor::protocol::Styles& p);
   Plexus FromProtocol(const effect::plexus::Plexus& p);
   TextPath FromProtocol(const effect::plexus::TextPath& p);
   NoiseEffector FromProtocol(const effect::plexus::NoiseEffector& p);
-  Vector3f FromProtocol(const common::Vector3& p);
   
   template<typename T, typename U>
   vector<T> FromProtocolRepeated(const google::protobuf::RepeatedPtrField<U>& v)
@@ -50,7 +54,7 @@ namespace editor
     return Color(col.r(), col.g(), col.b(), col.a());
   }
 
-  inline Vector3f FromProtocol(const common::Vector3& v)
+  inline Vector3f FromProtocol(const common::protocol::Vector3& v)
   {
     return Vector3f(v.x(), v.y(), v.z());
   }
@@ -61,7 +65,7 @@ namespace editor
     Vector3f value;
   };
 
-  inline Vector3Keyframe FromProtocol(const common::Vector3Keyframe& p)
+  inline Vector3Keyframe FromProtocol(const common::protocol::Vector3Keyframe& p)
   {
     Vector3Keyframe res;
     res.time = p.time();
@@ -75,7 +79,7 @@ namespace editor
     vector<Vector3Keyframe> keyframes;
   };
 
-  inline Vector3Anim FromProtocol(const common::Vector3Anim& p)
+  inline Vector3Anim FromProtocol(const common::protocol::Vector3Anim& p)
   {
     Vector3Anim res;
     res.type = p.type();
@@ -88,8 +92,8 @@ namespace editor
     uint32_t tickerHeight;
     uint32_t tickerInterval;
     uint32_t ticksPerInterval;
-    uint32_t moduleViewWidth;
-    uint32_t moduleRowHeight;
+    uint32_t effectViewWidth;
+    uint32_t effectRowHeight;
     uint32_t effectHeight;
     uint32_t resizeHandle;
     uint32_t timelineZoomMin;
@@ -99,6 +103,8 @@ namespace editor
     Color selectedRowColor;
     Color hoverRowColor;
     Color invalidHoverRowColor;
+    Color effectIconExpandedColor;
+    Color effectIconCollapsedColor;
   };
 
   inline Settings FromProtocol(const editor::protocol::Settings& p)
@@ -107,8 +113,8 @@ namespace editor
     res.tickerHeight = p.ticker_height();
     res.tickerInterval = p.ticker_interval();
     res.ticksPerInterval = p.ticks_per_interval();
-    res.moduleViewWidth = p.module_view_width();
-    res.moduleRowHeight = p.module_row_height();
+    res.effectViewWidth = p.effect_view_width();
+    res.effectRowHeight = p.effect_row_height();
     res.effectHeight = p.effect_height();
     res.resizeHandle = p.resize_handle();
     res.timelineZoomMin = p.timeline_zoom_min();
@@ -118,6 +124,38 @@ namespace editor
     res.selectedRowColor = FromProtocol(p.selected_row_color());
     res.hoverRowColor = FromProtocol(p.hover_row_color());
     res.invalidHoverRowColor = FromProtocol(p.invalid_hover_row_color());
+    res.effectIconExpandedColor = FromProtocol(p.effect_icon_expanded_color());
+    res.effectIconCollapsedColor = FromProtocol(p.effect_icon_collapsed_color());
+    return res;
+  }
+
+  struct Style
+  {
+    string id;
+    Color fillColor;
+    Color outlineColor;
+    float outlineThickness;
+  };
+
+  inline Style FromProtocol(const editor::protocol::Style& p)
+  {
+    Style res;
+    res.id = p.id();
+    res.fillColor = FromProtocol(p.fill_color());
+    res.outlineColor = FromProtocol(p.outline_color());
+    res.outlineThickness = p.outline_thickness();
+    return res;
+  }
+
+  struct Styles
+  {
+    vector<Style> styles;
+  };
+
+  inline Styles FromProtocol(const editor::protocol::Styles& p)
+  {
+    Styles res;
+    res.styles = FromProtocolRepeated<Style>(p.styles());
     return res;
   }
 

@@ -1,0 +1,17 @@
+package editor.protocol;
+
+import "editor_settings.proto";
+
+message Style
+{
+	optional string id = 1;
+
+	optional Color4 fill_color = 2;
+	optional Color4 outline_color = 3;
+	optional float outline_thickness = 4 [default = 0];
+}
+
+message Styles
+{
+	repeated Style style = 1;
+}

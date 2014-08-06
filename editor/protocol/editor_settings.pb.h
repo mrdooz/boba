@@ -226,19 +226,19 @@ class Settings : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 ticks_per_interval() const;
   inline void set_ticks_per_interval(::google::protobuf::uint32 value);
 
-  // optional uint32 module_view_width = 20 [default = 200];
-  inline bool has_module_view_width() const;
-  inline void clear_module_view_width();
-  static const int kModuleViewWidthFieldNumber = 20;
-  inline ::google::protobuf::uint32 module_view_width() const;
-  inline void set_module_view_width(::google::protobuf::uint32 value);
+  // optional uint32 effect_view_width = 20 [default = 200];
+  inline bool has_effect_view_width() const;
+  inline void clear_effect_view_width();
+  static const int kEffectViewWidthFieldNumber = 20;
+  inline ::google::protobuf::uint32 effect_view_width() const;
+  inline void set_effect_view_width(::google::protobuf::uint32 value);
 
-  // optional uint32 module_row_height = 21 [default = 50];
-  inline bool has_module_row_height() const;
-  inline void clear_module_row_height();
-  static const int kModuleRowHeightFieldNumber = 21;
-  inline ::google::protobuf::uint32 module_row_height() const;
-  inline void set_module_row_height(::google::protobuf::uint32 value);
+  // optional uint32 effect_row_height = 21 [default = 20];
+  inline bool has_effect_row_height() const;
+  inline void clear_effect_row_height();
+  static const int kEffectRowHeightFieldNumber = 21;
+  inline ::google::protobuf::uint32 effect_row_height() const;
+  inline void set_effect_row_height(::google::protobuf::uint32 value);
 
   // optional uint32 effect_height = 30 [default = 40];
   inline bool has_effect_height() const;
@@ -311,6 +311,24 @@ class Settings : public ::google::protobuf::Message {
   inline ::editor::protocol::Color4* release_invalid_hover_row_color();
   inline void set_allocated_invalid_hover_row_color(::editor::protocol::Color4* invalid_hover_row_color);
 
+  // optional .editor.protocol.Color4 effect_icon_expanded_color = 200;
+  inline bool has_effect_icon_expanded_color() const;
+  inline void clear_effect_icon_expanded_color();
+  static const int kEffectIconExpandedColorFieldNumber = 200;
+  inline const ::editor::protocol::Color4& effect_icon_expanded_color() const;
+  inline ::editor::protocol::Color4* mutable_effect_icon_expanded_color();
+  inline ::editor::protocol::Color4* release_effect_icon_expanded_color();
+  inline void set_allocated_effect_icon_expanded_color(::editor::protocol::Color4* effect_icon_expanded_color);
+
+  // optional .editor.protocol.Color4 effect_icon_collapsed_color = 201;
+  inline bool has_effect_icon_collapsed_color() const;
+  inline void clear_effect_icon_collapsed_color();
+  static const int kEffectIconCollapsedColorFieldNumber = 201;
+  inline const ::editor::protocol::Color4& effect_icon_collapsed_color() const;
+  inline ::editor::protocol::Color4* mutable_effect_icon_collapsed_color();
+  inline ::editor::protocol::Color4* release_effect_icon_collapsed_color();
+  inline void set_allocated_effect_icon_collapsed_color(::editor::protocol::Color4* effect_icon_collapsed_color);
+
   // @@protoc_insertion_point(class_scope:editor.protocol.Settings)
  private:
   inline void set_has_ticker_height();
@@ -319,10 +337,10 @@ class Settings : public ::google::protobuf::Message {
   inline void clear_has_ticker_interval();
   inline void set_has_ticks_per_interval();
   inline void clear_has_ticks_per_interval();
-  inline void set_has_module_view_width();
-  inline void clear_has_module_view_width();
-  inline void set_has_module_row_height();
-  inline void clear_has_module_row_height();
+  inline void set_has_effect_view_width();
+  inline void clear_has_effect_view_width();
+  inline void set_has_effect_row_height();
+  inline void clear_has_effect_row_height();
   inline void set_has_effect_height();
   inline void clear_has_effect_height();
   inline void set_has_resize_handle();
@@ -341,14 +359,18 @@ class Settings : public ::google::protobuf::Message {
   inline void clear_has_hover_row_color();
   inline void set_has_invalid_hover_row_color();
   inline void clear_has_invalid_hover_row_color();
+  inline void set_has_effect_icon_expanded_color();
+  inline void clear_has_effect_icon_expanded_color();
+  inline void set_has_effect_icon_collapsed_color();
+  inline void clear_has_effect_icon_collapsed_color();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 ticker_height_;
   ::google::protobuf::uint32 ticker_interval_;
   ::google::protobuf::uint32 ticks_per_interval_;
-  ::google::protobuf::uint32 module_view_width_;
-  ::google::protobuf::uint32 module_row_height_;
+  ::google::protobuf::uint32 effect_view_width_;
+  ::google::protobuf::uint32 effect_row_height_;
   ::google::protobuf::uint32 effect_height_;
   ::google::protobuf::uint32 resize_handle_;
   ::google::protobuf::uint32 timeline_zoom_min_;
@@ -358,9 +380,11 @@ class Settings : public ::google::protobuf::Message {
   ::editor::protocol::Color4* selected_row_color_;
   ::editor::protocol::Color4* hover_row_color_;
   ::editor::protocol::Color4* invalid_hover_row_color_;
+  ::editor::protocol::Color4* effect_icon_expanded_color_;
+  ::editor::protocol::Color4* effect_icon_collapsed_color_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(14 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(16 + 31) / 32];
 
   friend void  protobuf_AddDesc_editor_5fsettings_2eproto();
   friend void protobuf_AssignDesc_editor_5fsettings_2eproto();
@@ -534,48 +558,48 @@ inline void Settings::set_ticks_per_interval(::google::protobuf::uint32 value) {
   ticks_per_interval_ = value;
 }
 
-// optional uint32 module_view_width = 20 [default = 200];
-inline bool Settings::has_module_view_width() const {
+// optional uint32 effect_view_width = 20 [default = 200];
+inline bool Settings::has_effect_view_width() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void Settings::set_has_module_view_width() {
+inline void Settings::set_has_effect_view_width() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void Settings::clear_has_module_view_width() {
+inline void Settings::clear_has_effect_view_width() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void Settings::clear_module_view_width() {
-  module_view_width_ = 200u;
-  clear_has_module_view_width();
+inline void Settings::clear_effect_view_width() {
+  effect_view_width_ = 200u;
+  clear_has_effect_view_width();
 }
-inline ::google::protobuf::uint32 Settings::module_view_width() const {
-  return module_view_width_;
+inline ::google::protobuf::uint32 Settings::effect_view_width() const {
+  return effect_view_width_;
 }
-inline void Settings::set_module_view_width(::google::protobuf::uint32 value) {
-  set_has_module_view_width();
-  module_view_width_ = value;
+inline void Settings::set_effect_view_width(::google::protobuf::uint32 value) {
+  set_has_effect_view_width();
+  effect_view_width_ = value;
 }
 
-// optional uint32 module_row_height = 21 [default = 50];
-inline bool Settings::has_module_row_height() const {
+// optional uint32 effect_row_height = 21 [default = 20];
+inline bool Settings::has_effect_row_height() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void Settings::set_has_module_row_height() {
+inline void Settings::set_has_effect_row_height() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void Settings::clear_has_module_row_height() {
+inline void Settings::clear_has_effect_row_height() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void Settings::clear_module_row_height() {
-  module_row_height_ = 50u;
-  clear_has_module_row_height();
+inline void Settings::clear_effect_row_height() {
+  effect_row_height_ = 20u;
+  clear_has_effect_row_height();
 }
-inline ::google::protobuf::uint32 Settings::module_row_height() const {
-  return module_row_height_;
+inline ::google::protobuf::uint32 Settings::effect_row_height() const {
+  return effect_row_height_;
 }
-inline void Settings::set_module_row_height(::google::protobuf::uint32 value) {
-  set_has_module_row_height();
-  module_row_height_ = value;
+inline void Settings::set_effect_row_height(::google::protobuf::uint32 value) {
+  set_has_effect_row_height();
+  effect_row_height_ = value;
 }
 
 // optional uint32 effect_height = 30 [default = 40];
@@ -837,6 +861,82 @@ inline void Settings::set_allocated_invalid_hover_row_color(::editor::protocol::
     set_has_invalid_hover_row_color();
   } else {
     clear_has_invalid_hover_row_color();
+  }
+}
+
+// optional .editor.protocol.Color4 effect_icon_expanded_color = 200;
+inline bool Settings::has_effect_icon_expanded_color() const {
+  return (_has_bits_[0] & 0x00004000u) != 0;
+}
+inline void Settings::set_has_effect_icon_expanded_color() {
+  _has_bits_[0] |= 0x00004000u;
+}
+inline void Settings::clear_has_effect_icon_expanded_color() {
+  _has_bits_[0] &= ~0x00004000u;
+}
+inline void Settings::clear_effect_icon_expanded_color() {
+  if (effect_icon_expanded_color_ != NULL) effect_icon_expanded_color_->::editor::protocol::Color4::Clear();
+  clear_has_effect_icon_expanded_color();
+}
+inline const ::editor::protocol::Color4& Settings::effect_icon_expanded_color() const {
+  return effect_icon_expanded_color_ != NULL ? *effect_icon_expanded_color_ : *default_instance_->effect_icon_expanded_color_;
+}
+inline ::editor::protocol::Color4* Settings::mutable_effect_icon_expanded_color() {
+  set_has_effect_icon_expanded_color();
+  if (effect_icon_expanded_color_ == NULL) effect_icon_expanded_color_ = new ::editor::protocol::Color4;
+  return effect_icon_expanded_color_;
+}
+inline ::editor::protocol::Color4* Settings::release_effect_icon_expanded_color() {
+  clear_has_effect_icon_expanded_color();
+  ::editor::protocol::Color4* temp = effect_icon_expanded_color_;
+  effect_icon_expanded_color_ = NULL;
+  return temp;
+}
+inline void Settings::set_allocated_effect_icon_expanded_color(::editor::protocol::Color4* effect_icon_expanded_color) {
+  delete effect_icon_expanded_color_;
+  effect_icon_expanded_color_ = effect_icon_expanded_color;
+  if (effect_icon_expanded_color) {
+    set_has_effect_icon_expanded_color();
+  } else {
+    clear_has_effect_icon_expanded_color();
+  }
+}
+
+// optional .editor.protocol.Color4 effect_icon_collapsed_color = 201;
+inline bool Settings::has_effect_icon_collapsed_color() const {
+  return (_has_bits_[0] & 0x00008000u) != 0;
+}
+inline void Settings::set_has_effect_icon_collapsed_color() {
+  _has_bits_[0] |= 0x00008000u;
+}
+inline void Settings::clear_has_effect_icon_collapsed_color() {
+  _has_bits_[0] &= ~0x00008000u;
+}
+inline void Settings::clear_effect_icon_collapsed_color() {
+  if (effect_icon_collapsed_color_ != NULL) effect_icon_collapsed_color_->::editor::protocol::Color4::Clear();
+  clear_has_effect_icon_collapsed_color();
+}
+inline const ::editor::protocol::Color4& Settings::effect_icon_collapsed_color() const {
+  return effect_icon_collapsed_color_ != NULL ? *effect_icon_collapsed_color_ : *default_instance_->effect_icon_collapsed_color_;
+}
+inline ::editor::protocol::Color4* Settings::mutable_effect_icon_collapsed_color() {
+  set_has_effect_icon_collapsed_color();
+  if (effect_icon_collapsed_color_ == NULL) effect_icon_collapsed_color_ = new ::editor::protocol::Color4;
+  return effect_icon_collapsed_color_;
+}
+inline ::editor::protocol::Color4* Settings::release_effect_icon_collapsed_color() {
+  clear_has_effect_icon_collapsed_color();
+  ::editor::protocol::Color4* temp = effect_icon_collapsed_color_;
+  effect_icon_collapsed_color_ = NULL;
+  return temp;
+}
+inline void Settings::set_allocated_effect_icon_collapsed_color(::editor::protocol::Color4* effect_icon_collapsed_color) {
+  delete effect_icon_collapsed_color_;
+  effect_icon_collapsed_color_ = effect_icon_collapsed_color;
+  if (effect_icon_collapsed_color) {
+    set_has_effect_icon_collapsed_color();
+  } else {
+    clear_has_effect_icon_collapsed_color();
   }
 }
 

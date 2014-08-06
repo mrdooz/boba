@@ -14,8 +14,8 @@ message Settings
   optional uint32 ticker_interval = 2 [default = 20];
   optional uint32 ticks_per_interval = 3 [default = 4];
   
-  optional uint32 module_view_width = 20 [default = 200];
-  optional uint32 module_row_height = 21 [default = 50];
+  optional uint32 effect_view_width = 20 [default = 200];
+  optional uint32 effect_row_height = 21 [default = 20];
 
   optional uint32 effect_height = 30 [default = 40];
   optional uint32 resize_handle = 31 [default = 6];
@@ -28,4 +28,7 @@ message Settings
   optional Color4 selected_row_color = 101;
   optional Color4 hover_row_color = 102;
   optional Color4 invalid_hover_row_color = 103;
+
+  optional Color4 effect_icon_expanded_color = 200;
+  optional Color4 effect_icon_collapsed_color = 201;
 }

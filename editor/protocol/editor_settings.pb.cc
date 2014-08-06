@@ -56,12 +56,12 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Color4));
   Settings_descriptor_ = file->message_type(1);
-  static const int Settings_offsets_[14] = {
+  static const int Settings_offsets_[16] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_interval_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticks_per_interval_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, module_view_width_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, module_row_height_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, effect_view_width_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, effect_row_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, effect_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, resize_handle_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, timeline_zoom_min_),
@@ -71,6 +71,8 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, selected_row_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, hover_row_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, invalid_hover_row_color_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, effect_icon_expanded_color_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, effect_icon_collapsed_color_),
   };
   Settings_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -119,11 +121,11 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\025editor_settings.proto\022\017editor.protocol"
     "\"B\n\006Color4\022\014\n\001r\030\001 \001(\r:\0010\022\014\n\001g\030\002 \001(\r:\0010\022\014"
-    "\n\001b\030\003 \001(\r:\0010\022\016\n\001a\030\004 \001(\r:\003255\"\216\004\n\010Setting"
+    "\n\001b\030\003 \001(\r:\0010\022\016\n\001a\030\004 \001(\r:\003255\"\213\005\n\010Setting"
     "s\022\031\n\rticker_height\030\001 \001(\r:\00250\022\033\n\017ticker_i"
     "nterval\030\002 \001(\r:\00220\022\035\n\022ticks_per_interval\030"
-    "\003 \001(\r:\0014\022\036\n\021module_view_width\030\024 \001(\r:\003200"
-    "\022\035\n\021module_row_height\030\025 \001(\r:\00250\022\031\n\reffec"
+    "\003 \001(\r:\0014\022\036\n\021effect_view_width\030\024 \001(\r:\003200"
+    "\022\035\n\021effect_row_height\030\025 \001(\r:\00220\022\031\n\reffec"
     "t_height\030\036 \001(\r:\00240\022\030\n\rresize_handle\030\037 \001("
     "\r:\0016\022\035\n\021timeline_zoom_min\030( \001(\r:\00216\022\037\n\021t"
     "imeline_zoom_max\030) \001(\r:\0041024\022\"\n\025timeline"
@@ -132,7 +134,11 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
     "selected_row_color\030e \001(\0132\027.editor.protoc"
     "ol.Color4\0220\n\017hover_row_color\030f \001(\0132\027.edi"
     "tor.protocol.Color4\0228\n\027invalid_hover_row"
-    "_color\030g \001(\0132\027.editor.protocol.Color4", 637);
+    "_color\030g \001(\0132\027.editor.protocol.Color4\022<\n"
+    "\032effect_icon_expanded_color\030\310\001 \001(\0132\027.edi"
+    "tor.protocol.Color4\022=\n\033effect_icon_colla"
+    "psed_color\030\311\001 \001(\0132\027.editor.protocol.Colo"
+    "r4", 762);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_settings.proto", &protobuf_RegisterTypes);
   Color4::default_instance_ = new Color4();
@@ -483,8 +489,8 @@ void Color4::Swap(Color4* other) {
 const int Settings::kTickerHeightFieldNumber;
 const int Settings::kTickerIntervalFieldNumber;
 const int Settings::kTicksPerIntervalFieldNumber;
-const int Settings::kModuleViewWidthFieldNumber;
-const int Settings::kModuleRowHeightFieldNumber;
+const int Settings::kEffectViewWidthFieldNumber;
+const int Settings::kEffectRowHeightFieldNumber;
 const int Settings::kEffectHeightFieldNumber;
 const int Settings::kResizeHandleFieldNumber;
 const int Settings::kTimelineZoomMinFieldNumber;
@@ -494,6 +500,8 @@ const int Settings::kDefaultRowColorFieldNumber;
 const int Settings::kSelectedRowColorFieldNumber;
 const int Settings::kHoverRowColorFieldNumber;
 const int Settings::kInvalidHoverRowColorFieldNumber;
+const int Settings::kEffectIconExpandedColorFieldNumber;
+const int Settings::kEffectIconCollapsedColorFieldNumber;
 #endif  // !_MSC_VER
 
 Settings::Settings()
@@ -506,6 +514,8 @@ void Settings::InitAsDefaultInstance() {
   selected_row_color_ = const_cast< ::editor::protocol::Color4*>(&::editor::protocol::Color4::default_instance());
   hover_row_color_ = const_cast< ::editor::protocol::Color4*>(&::editor::protocol::Color4::default_instance());
   invalid_hover_row_color_ = const_cast< ::editor::protocol::Color4*>(&::editor::protocol::Color4::default_instance());
+  effect_icon_expanded_color_ = const_cast< ::editor::protocol::Color4*>(&::editor::protocol::Color4::default_instance());
+  effect_icon_collapsed_color_ = const_cast< ::editor::protocol::Color4*>(&::editor::protocol::Color4::default_instance());
 }
 
 Settings::Settings(const Settings& from)
@@ -519,8 +529,8 @@ void Settings::SharedCtor() {
   ticker_height_ = 50u;
   ticker_interval_ = 20u;
   ticks_per_interval_ = 4u;
-  module_view_width_ = 200u;
-  module_row_height_ = 50u;
+  effect_view_width_ = 200u;
+  effect_row_height_ = 20u;
   effect_height_ = 40u;
   resize_handle_ = 6u;
   timeline_zoom_min_ = 16u;
@@ -530,6 +540,8 @@ void Settings::SharedCtor() {
   selected_row_color_ = NULL;
   hover_row_color_ = NULL;
   invalid_hover_row_color_ = NULL;
+  effect_icon_expanded_color_ = NULL;
+  effect_icon_collapsed_color_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -543,6 +555,8 @@ void Settings::SharedDtor() {
     delete selected_row_color_;
     delete hover_row_color_;
     delete invalid_hover_row_color_;
+    delete effect_icon_expanded_color_;
+    delete effect_icon_collapsed_color_;
   }
 }
 
@@ -572,8 +586,8 @@ void Settings::Clear() {
     ticker_height_ = 50u;
     ticker_interval_ = 20u;
     ticks_per_interval_ = 4u;
-    module_view_width_ = 200u;
-    module_row_height_ = 50u;
+    effect_view_width_ = 200u;
+    effect_row_height_ = 20u;
     effect_height_ = 40u;
     resize_handle_ = 6u;
     timeline_zoom_min_ = 16u;
@@ -592,6 +606,12 @@ void Settings::Clear() {
     }
     if (has_invalid_hover_row_color()) {
       if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::editor::protocol::Color4::Clear();
+    }
+    if (has_effect_icon_expanded_color()) {
+      if (effect_icon_expanded_color_ != NULL) effect_icon_expanded_color_->::editor::protocol::Color4::Clear();
+    }
+    if (has_effect_icon_collapsed_color()) {
+      if (effect_icon_collapsed_color_ != NULL) effect_icon_collapsed_color_->::editor::protocol::Color4::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -647,35 +667,35 @@ bool Settings::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(160)) goto parse_module_view_width;
+        if (input->ExpectTag(160)) goto parse_effect_view_width;
         break;
       }
 
-      // optional uint32 module_view_width = 20 [default = 200];
+      // optional uint32 effect_view_width = 20 [default = 200];
       case 20: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_module_view_width:
+         parse_effect_view_width:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &module_view_width_)));
-          set_has_module_view_width();
+                 input, &effect_view_width_)));
+          set_has_effect_view_width();
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(168)) goto parse_module_row_height;
+        if (input->ExpectTag(168)) goto parse_effect_row_height;
         break;
       }
 
-      // optional uint32 module_row_height = 21 [default = 50];
+      // optional uint32 effect_row_height = 21 [default = 20];
       case 21: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_module_row_height:
+         parse_effect_row_height:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &module_row_height_)));
-          set_has_module_row_height();
+                 input, &effect_row_height_)));
+          set_has_effect_row_height();
         } else {
           goto handle_uninterpreted;
         }
@@ -815,6 +835,34 @@ bool Settings::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(1602)) goto parse_effect_icon_expanded_color;
+        break;
+      }
+
+      // optional .editor.protocol.Color4 effect_icon_expanded_color = 200;
+      case 200: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_effect_icon_expanded_color:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_effect_icon_expanded_color()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(1610)) goto parse_effect_icon_collapsed_color;
+        break;
+      }
+
+      // optional .editor.protocol.Color4 effect_icon_collapsed_color = 201;
+      case 201: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_effect_icon_collapsed_color:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_effect_icon_collapsed_color()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -852,14 +900,14 @@ void Settings::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->ticks_per_interval(), output);
   }
 
-  // optional uint32 module_view_width = 20 [default = 200];
-  if (has_module_view_width()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(20, this->module_view_width(), output);
+  // optional uint32 effect_view_width = 20 [default = 200];
+  if (has_effect_view_width()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(20, this->effect_view_width(), output);
   }
 
-  // optional uint32 module_row_height = 21 [default = 50];
-  if (has_module_row_height()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(21, this->module_row_height(), output);
+  // optional uint32 effect_row_height = 21 [default = 20];
+  if (has_effect_row_height()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(21, this->effect_row_height(), output);
   }
 
   // optional uint32 effect_height = 30 [default = 40];
@@ -911,6 +959,18 @@ void Settings::SerializeWithCachedSizes(
       103, this->invalid_hover_row_color(), output);
   }
 
+  // optional .editor.protocol.Color4 effect_icon_expanded_color = 200;
+  if (has_effect_icon_expanded_color()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      200, this->effect_icon_expanded_color(), output);
+  }
+
+  // optional .editor.protocol.Color4 effect_icon_collapsed_color = 201;
+  if (has_effect_icon_collapsed_color()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      201, this->effect_icon_collapsed_color(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -934,14 +994,14 @@ void Settings::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->ticks_per_interval(), target);
   }
 
-  // optional uint32 module_view_width = 20 [default = 200];
-  if (has_module_view_width()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(20, this->module_view_width(), target);
+  // optional uint32 effect_view_width = 20 [default = 200];
+  if (has_effect_view_width()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(20, this->effect_view_width(), target);
   }
 
-  // optional uint32 module_row_height = 21 [default = 50];
-  if (has_module_row_height()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(21, this->module_row_height(), target);
+  // optional uint32 effect_row_height = 21 [default = 20];
+  if (has_effect_row_height()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(21, this->effect_row_height(), target);
   }
 
   // optional uint32 effect_height = 30 [default = 40];
@@ -997,6 +1057,20 @@ void Settings::SerializeWithCachedSizes(
         103, this->invalid_hover_row_color(), target);
   }
 
+  // optional .editor.protocol.Color4 effect_icon_expanded_color = 200;
+  if (has_effect_icon_expanded_color()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        200, this->effect_icon_expanded_color(), target);
+  }
+
+  // optional .editor.protocol.Color4 effect_icon_collapsed_color = 201;
+  if (has_effect_icon_collapsed_color()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        201, this->effect_icon_collapsed_color(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1029,18 +1103,18 @@ int Settings::ByteSize() const {
           this->ticks_per_interval());
     }
 
-    // optional uint32 module_view_width = 20 [default = 200];
-    if (has_module_view_width()) {
+    // optional uint32 effect_view_width = 20 [default = 200];
+    if (has_effect_view_width()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->module_view_width());
+          this->effect_view_width());
     }
 
-    // optional uint32 module_row_height = 21 [default = 50];
-    if (has_module_row_height()) {
+    // optional uint32 effect_row_height = 21 [default = 20];
+    if (has_effect_row_height()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->module_row_height());
+          this->effect_row_height());
     }
 
     // optional uint32 effect_height = 30 [default = 40];
@@ -1108,6 +1182,20 @@ int Settings::ByteSize() const {
           this->invalid_hover_row_color());
     }
 
+    // optional .editor.protocol.Color4 effect_icon_expanded_color = 200;
+    if (has_effect_icon_expanded_color()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->effect_icon_expanded_color());
+    }
+
+    // optional .editor.protocol.Color4 effect_icon_collapsed_color = 201;
+    if (has_effect_icon_collapsed_color()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->effect_icon_collapsed_color());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -1144,11 +1232,11 @@ void Settings::MergeFrom(const Settings& from) {
     if (from.has_ticks_per_interval()) {
       set_ticks_per_interval(from.ticks_per_interval());
     }
-    if (from.has_module_view_width()) {
-      set_module_view_width(from.module_view_width());
+    if (from.has_effect_view_width()) {
+      set_effect_view_width(from.effect_view_width());
     }
-    if (from.has_module_row_height()) {
-      set_module_row_height(from.module_row_height());
+    if (from.has_effect_row_height()) {
+      set_effect_row_height(from.effect_row_height());
     }
     if (from.has_effect_height()) {
       set_effect_height(from.effect_height());
@@ -1179,6 +1267,12 @@ void Settings::MergeFrom(const Settings& from) {
     if (from.has_invalid_hover_row_color()) {
       mutable_invalid_hover_row_color()->::editor::protocol::Color4::MergeFrom(from.invalid_hover_row_color());
     }
+    if (from.has_effect_icon_expanded_color()) {
+      mutable_effect_icon_expanded_color()->::editor::protocol::Color4::MergeFrom(from.effect_icon_expanded_color());
+    }
+    if (from.has_effect_icon_collapsed_color()) {
+      mutable_effect_icon_collapsed_color()->::editor::protocol::Color4::MergeFrom(from.effect_icon_collapsed_color());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1205,8 +1299,8 @@ void Settings::Swap(Settings* other) {
     std::swap(ticker_height_, other->ticker_height_);
     std::swap(ticker_interval_, other->ticker_interval_);
     std::swap(ticks_per_interval_, other->ticks_per_interval_);
-    std::swap(module_view_width_, other->module_view_width_);
-    std::swap(module_row_height_, other->module_row_height_);
+    std::swap(effect_view_width_, other->effect_view_width_);
+    std::swap(effect_row_height_, other->effect_row_height_);
     std::swap(effect_height_, other->effect_height_);
     std::swap(resize_handle_, other->resize_handle_);
     std::swap(timeline_zoom_min_, other->timeline_zoom_min_);
@@ -1216,6 +1310,8 @@ void Settings::Swap(Settings* other) {
     std::swap(selected_row_color_, other->selected_row_color_);
     std::swap(hover_row_color_, other->hover_row_color_);
     std::swap(invalid_hover_row_color_, other->invalid_hover_row_color_);
+    std::swap(effect_icon_expanded_color_, other->effect_icon_expanded_color_);
+    std::swap(effect_icon_collapsed_color_, other->effect_icon_collapsed_color_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
