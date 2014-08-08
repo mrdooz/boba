@@ -5,6 +5,8 @@
 
 namespace editor
 {
+  void ApplyStyle(const Style* style, RectangleShape* shape);
+
   struct StyledShape
   {
     virtual ~StyledShape() {}

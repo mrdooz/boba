@@ -2,7 +2,7 @@
 #include "editor.hpp"
 
 #include "protocol/effects_proto.hpp"
-#import "flags.hpp"
+#include "effect_row.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -40,6 +40,7 @@ TimelineWindow::TimelineWindow(
     , _lastDragPos(-1, -1)
     , _tickerRect(nullptr)
     , _movingKeyframe(nullptr)
+    , _selectedKeyframe(nullptr)
 {
   _instance = this;
 }
@@ -66,15 +67,6 @@ bool TimelineWindow::Init()
 
   const editor::protocol::Settings& settings = EDITOR.Settings();
   int width = settings.effect_view_width();
-  int height = 20;
-
-  // create render textures and sprites
-//  _effectTexture.create(settings.effect_view_width(), _size.y);
-//  _effectSprite.setTexture(_effectTexture.getTexture(), true);
-//
-//  _timelineTexture.create(_size.x - settings.effect_view_width(), _size.y);
-//  _timelineSprite.setTexture(_timelineTexture.getTexture(), true);
-//  _timelineSprite.setPosition(settings.effect_view_width(), 0);
 
   int rowHeight = settings.effect_row_height();
   int curY = settings.ticker_height();
@@ -133,23 +125,45 @@ void TimelineWindow::RecalcEffecRows()
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnKeyReleased(const Event &event)
 {
-  if (_editRow)
-  {
-    Keyboard::Key code = event.key.code;
+  Keyboard::Key code = event.key.code;
 
-    if (code == Keyboard::Return)
+  // escape aborts the pending operation
+  if (code == Keyboard::Escape)
+  {
+    if (_editRow)
     {
       _editRow->EndEditVars(false);
     }
-    else if (code == Keyboard::Escape)
+    else if (_movingKeyframe)
     {
-      _editRow->EndEditVars(true);
+      _movingKeyframe->EndKeyframeUpdate(false);
+    }
+
+    _selectedKeyframe = nullptr;
+    _movingKeyframe = nullptr;
+  }
+  else
+  {
+    if (_editRow)
+    {
+      if (code == Keyboard::Return)
+      {
+        _editRow->EndEditVars(true);
+      }
+      else
+      {
+        _editRow->UpdateEditVar(event.key.code);
+      }
     }
     else
     {
-      _editRow->UpdateEditVar(event.key.code);
+      if (code == Keyboard::U && _selectedKeyframe)
+      {
+        _selectedKeyframe->ToggleDisplayMode();
+      }
     }
   }
+
   return true;
 }
 
@@ -176,7 +190,6 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   }
   else if (x < (int)settings.effect_view_width())
   {
-
     EffectRow* rowHit = nullptr;
     for (EffectRow* row : effects)
     {
@@ -188,7 +201,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
       }
       else if (row->varEditRect.contains(mousePos))
       {
-        row->InitVarEdit(x, y);
+        row->BeginEditVars(x, y);
         rowHit = row;
         _editRow = row;
         break;
@@ -218,11 +231,17 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   }
   else
   {
+    if (_selectedKeyframe)
+    {
+      _selectedKeyframe->DeselectKeyframe();
+      _selectedKeyframe = nullptr;
+    }
+
     for (EffectRow* row : effects)
     {
-      if (row->KeyframeIntersect(mousePos))
+      if (row->KeyframeIntersect(mousePos, _size))
       {
-        _movingKeyframe = row;
+        _selectedKeyframe = row;
         break;
       }
     }
@@ -235,7 +254,6 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
   Vector2i posModule = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
-  Vector2i posTimeline(posModule.x - settings.effect_view_width(), posModule.y);
 
   time_duration curTime = PixelToTime(posModule.x);
 
@@ -257,9 +275,24 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     _lastDragPos = Vector2i(event.mouseMove.x, event.mouseMove.y);
     return true;
   }
-  else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && _movingKeyframe)
+  else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && _selectedKeyframe)
   {
-    _movingKeyframe->UpdateKeyframe(curTime);
+    if (_selectedKeyframe->CurrentDisplayMode() == EffectRow::DisplayMode::Keyframe)
+    {
+      // TODO: all this stuff should probably be moved into the effect row..
+      if (!_movingKeyframe)
+      {
+        // send the BeginKeyframeUpdate, and check if we're copying or moving
+        _selectedKeyframe->BeginKeyframeUpdate(Keyboard::isKeyPressed(Keyboard::Key::LShift));
+        _movingKeyframe = _selectedKeyframe;
+      }
+
+      _movingKeyframe->UpdateKeyframe(curTime);
+    }
+    else
+    {
+
+    }
   }
 
   return true;
@@ -270,7 +303,7 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 {
   if (_movingKeyframe)
   {
-    _movingKeyframe->EndKeyframeUpdate(false);
+    _movingKeyframe->EndKeyframeUpdate(true);
     _movingKeyframe = nullptr;
   }
   return true;
@@ -294,11 +327,8 @@ bool TimelineWindow::OnMouseWheelMoved(const Event& event)
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawTimeline()
 {
-//  _timelineTexture.clear();
-
   const editor::protocol::Settings& settings = EDITOR.Settings();
 
-  Color rowCol = FromProtocol(settings.default_row_color());
   time_duration curTime = EDITOR.CurTime();
 
   // draw the ticker
@@ -384,7 +414,7 @@ int TimelineWindow::TimeToPixel(const time_duration& t)
   // p = s * (t + a) + m
   // t = (p - m) / s - a
   double s = (double)_pixelsPerSecond / 1000.0;
-  return w + s * (t.total_milliseconds() - _panelOffset.total_milliseconds());
+  return (int)(w + s * (t.total_milliseconds() - _panelOffset.total_milliseconds()));
 }
 
 //----------------------------------------------------------------------------------
@@ -395,7 +425,6 @@ time_duration TimelineWindow::PixelToTime(int x)
   x -= EDITOR.Settings().effect_view_width();
   if (x < 0)
     return milliseconds(0);
-    //    return time_duration(boost::posix_time::not_a_date_time);
 
   return milliseconds(x / s) + _panelOffset;
 }
@@ -416,362 +445,3 @@ void TimelineWindow::Draw()
 
   _texture.display();
 }
-
-//----------------------------------------------------------------------------------
-TimelineWindow::EffectRow::EffectRow(
-    const Font& font,
-    const string& str,
-    EffectRow* parent)
-    : str(str)
-    , parent(parent)
-    , level(0)
-{
-  rect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
-  keyframeRect = STYLE_FACTORY.CreateStyledRectangle("keyframe_style");
-  keyframeRect->_shape.setSize(Vector2f(6, 6));
-
-  text.setFont(font);
-  text.setCharacterSize(16);
-  flags.Set(EffectRow::RowFlagsF::Expanded);
-
-  if (parent)
-    level = parent->level + 1;
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::EffectRow::Flatten(EffectRow* cur, vector<TimelineWindow::EffectRow*>* res)
-{
-  deque<EffectRow*> q({cur});
-  while (!q.empty())
-  {
-    EffectRow* cur = q.front();
-    q.pop_front();
-
-    res->push_back(cur);
-    for (EffectRow* c : cur->children)
-      q.push_back(c);
-  }
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::EffectRow::Reposition(EffectRow* cur, float curY, float rowHeight)
-{
-  const editor::protocol::Settings& settings = EDITOR.Settings();
-  float width = TimelineWindow::_instance->_size.x; // settings.effect_view_width();
-
-  deque<EffectRow*> q({ cur });
-  while (!q.empty())
-  {
-    EffectRow* cur = q.front();
-    q.pop_front();
-
-    cur->rect->_shape.setPosition(0, curY);
-    cur->rect->_shape.setSize(Vector2f(width, (1 + cur->NumVars()) * rowHeight));
-    curY += rowHeight;
-    if (cur->flags.IsSet(EffectRow::RowFlagsF::Expanded))
-    {
-      for (EffectRow* c : cur->children)
-        q.push_back(c);
-    }
-
-    const RectangleShape& shape = cur->rect->_shape;
-
-    cur->expandRect = FloatRect(
-        cur->level * 15 + shape.getPosition().x,
-        shape.getPosition().y,
-        15,
-        15);
-
-    u32 numVars = cur->NumVars();
-    if (numVars > 0)
-    {
-      float x = cur->level * 15 + shape.getPosition().x;
-      cur->varEditRect = FloatRect(
-          x,
-          shape.getPosition().y + 1 * rowHeight,
-          width - x,
-          numVars * rowHeight);
-    }
-  }
-}
-
-//----------------------------------------------------------------------------------
-float TimelineWindow::EffectRow::RowHeight(EffectRow* cur, float rowHeight)
-{
-  float res = 0;
-  deque<EffectRow*> q({ cur });
-  while (!q.empty())
-  {
-    EffectRow* cur = q.front();
-    q.pop_front();
-
-    if (cur->flags.IsSet(EffectRow::RowFlagsF::Expanded))
-    {
-      res += (1 + cur->NumVars()) * rowHeight;
-      for (EffectRow* c : cur->children)
-        q.push_back(c);
-    }
-    else
-    {
-      res += rowHeight;
-    }
-  }
-
-  return res;
-}
-
-//----------------------------------------------------------------------------------
-TimelineWindow::EffectRowNoise::EffectRowNoise(
-    const Font& font,
-    const string& str,
-    EffectRow* parent)
-  : EffectRow(font, str, parent)
-  , editingIdx(-1)
-  , selectedKeyframe(nullptr)
-{
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::EffectRowNoise::DrawVars(RenderTexture& texture)
-{
-  const editor::protocol::Settings& settings = EDITOR.Settings();
-  float h = settings.effect_row_height();
-
-  Vector3f v = Interpolate(effector.displacement, EDITOR.CurTime().total_milliseconds());
-
-  const Style* editingStyle = STYLE_FACTORY.GetStyle("var_text_editing");
-  const Style* normalStyle = STYLE_FACTORY.GetStyle("var_text_normal");
-
-  static const char* suffix[] = {
-      "x: ",
-      "y: ",
-      "z: "
-  };
-
-  const auto& fnStyle = [this, editingStyle, normalStyle, v](int curIdx){
-    if (curIdx == editingIdx)
-    {
-      text.setString(to_string("%s%s", suffix[curIdx], curEdit.c_str()).c_str());
-      text.setColor(editingStyle->fillColor);
-      text.setStyle(editingStyle->fontStyle);
-    }
-    else
-    {
-      text.setString(to_string("%s%.2f", suffix[curIdx], *(&v.x + curIdx)).c_str());
-      text.setColor(normalStyle->fillColor);
-      text.setStyle(normalStyle->fontStyle);
-    }
-  };
-
-  fnStyle(0);
-  text.setPosition(rect->_shape.getPosition() + Vector2f(20 + level * 15, h*1));
-  texture.draw(text);
-
-  fnStyle(1);
-  text.setPosition(rect->_shape.getPosition() + Vector2f(20 + level * 15, h*2));
-  texture.draw(text);
-
-  fnStyle(2);
-  text.setPosition(rect->_shape.getPosition() + Vector2f(20 + level * 15, h*3));
-  texture.draw(text);
-
-  // draw the keyframes
-  VertexArray curLine(sf::Lines);
-  Vector2f size = TimelineWindow::_instance->_size;
-  int w = size.x - settings.effect_view_width();
-  int x = settings.effect_view_width();
-  float shapeY = rect->_shape.getPosition().y;
-
-  for (int i = 0; i < 3; ++i)
-  {
-    int y = shapeY + h * (i+1.5f);
-    curLine.append(sf::Vertex(Vector2f(x, y), Color::White));
-    curLine.append(sf::Vertex(Vector2f(x + w, y), Color::White));
-  }
-  texture.draw(curLine);
-
-  for (u32 i = 0; i < effector.displacement.keyframes.size(); ++i)
-  {
-    const Vector3Keyframe& keyframe = effector.displacement.keyframes[i];
-    int x = TimelineWindow::_instance->TimeToPixel(milliseconds(keyframe.time));
-    if (x < size.x)
-    {
-      // draw for each var
-      for (u32 j = 0; j < 3; ++j)
-      {
-        int y = shapeY + h * (j+1.5f) - 3;
-        keyframeRect->_shape.setPosition(x - 3, y);
-        texture.draw(keyframeRect->_shape);
-      }
-    }
-  }
-
-  // Reset style
-  fnStyle(-2);
-}
-
-//----------------------------------------------------------------------------------
-float TimelineWindow::EffectRowNoise::NumVars()
-{
-  return 3;
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::EffectRowNoise::InitVarEdit(float x, float y)
-{
-  const editor::protocol::Settings& settings = EDITOR.Settings();
-  int h = settings.effect_row_height();
-  prevValue = effector.displacement.keyframes[0].value;
-
-  editingIdx = (y - rect->_shape.getPosition().y - h) / h;
-  assert(editingIdx >= 0 && editingIdx <= 2);
-
-  Vector3f v = Interpolate(effector.displacement, EDITOR.CurTime());
-  switch (editingIdx)
-  {
-    case 0: curEdit = to_string("%.2f", v.x); break;
-    case 1: curEdit = to_string("%.2f", v.y); break;
-    case 2: curEdit = to_string("%.2f", v.z); break;
-  }
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::EffectRowNoise::EndEditVars(bool cancel)
-{
-  if (!cancel)
-  {
-    // create a new keyframe at the current position (if one doesn't exist)
-    Vector3f v = prevValue;
-    switch (editingIdx)
-    {
-      case 0: v.x = (float)atof(curEdit.c_str()); break;
-      case 1: v.y = (float)atof(curEdit.c_str()); break;
-      case 2: v.z = (float)atof(curEdit.c_str()); break;
-    }
-
-    AddKeyframe(EDITOR.CurTime(), v, &effector.displacement);
-  }
-
-  editingIdx = -1;
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::EffectRowNoise::UpdateEditVar(Keyboard::Key key)
-{
-  if (key >= Keyboard::Key::Num0 && key <= Keyboard::Key::Num9)
-  {
-    curEdit += '0' + key - Keyboard::Key::Num0;
-  }
-  else if (key == Keyboard::Key::BackSpace)
-  {
-    if (curEdit.size() > 0)
-    {
-      curEdit.pop_back();
-    }
-  }
-  else if (key == Keyboard::Key::Period && curEdit.find('.') == curEdit.npos)
-  {
-    curEdit += '.';
-  }
-}
-
-//----------------------------------------------------------------------------------
-bool TimelineWindow::EffectRowNoise::KeyframeIntersect(const Vector2f& pt)
-{
-  const editor::protocol::Settings& settings = EDITOR.Settings();
-
-  Vector2f size = TimelineWindow::_instance->_size;
-  int w = size.x - settings.effect_view_width();
-  int x = settings.effect_view_width();
-  float shapeY = rect->_shape.getPosition().y;
-  float h = settings.effect_row_height();
-
-  for (u32 i = 0; i < effector.displacement.keyframes.size(); ++i)
-  {
-    Vector3Keyframe& keyframe = effector.displacement.keyframes[i];
-    int x = TimelineWindow::_instance->TimeToPixel(milliseconds(keyframe.time));
-    if (x < size.x)
-    {
-      // draw for each var
-      for (u32 j = 0; j < 3; ++j)
-      {
-        int y = shapeY + h * (j+1.5f) - 3;
-        FloatRect rect(x, y, 6, 6);
-        if (rect.contains(pt))
-        {
-          selectedKeyframe = &keyframe;
-          return true;
-        }
-      }
-    }
-  }
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::EffectRowNoise::UpdateKeyframe(const time_duration &t)
-{
-  if (!selectedKeyframe)
-    return;
-
-  selectedKeyframe->time = t.total_milliseconds();
-}
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::EffectRowNoise::EndKeyframeUpdate(bool cancel)
-{
-  selectedKeyframe = nullptr;
-}
-
-
-//----------------------------------------------------------------------------------
-void TimelineWindow::EffectRow::Draw(RenderTexture& texture)
-{
-  const editor::protocol::Settings& settings = EDITOR.Settings();
-  Color rowCol = FromProtocol(flags.IsSet(EffectRow::RowFlagsF::Selected)
-      ? settings.selected_row_color()
-      : settings.default_row_color());
-
-  // draw background
-  rect->_shape.setFillColor(rowCol);
-  texture.draw(rect->_shape);
-
-  // draw text
-  text.setString(str);
-  text.setPosition(rect->_shape.getPosition() + Vector2f(20 + level * 15, 0) );
-  texture.draw(text);
-
-  // draw expanded indicator
-  VertexArray tri(sf::Triangles);
-  float left = level * 15 + rect->_shape.getPosition().x;
-  float top = rect->_shape.getPosition().y;
-  float y = top;
-
-  if (!flags.IsSet(EffectRow::RowFlagsF::Expanded))
-  {
-    // draw expanded indicator
-
-    // y increases downwards
-    const Style* s = STYLE_FACTORY.GetStyle("effect_icon_collapsed_color");
-    tri.append(sf::Vertex(Vector2f(left+5, y+5), s->fillColor));
-    tri.append(sf::Vertex(Vector2f(left+5, y+15), s->fillColor));
-    tri.append(sf::Vertex(Vector2f(left+15, y+10), s->fillColor));
-    texture.draw(tri);
-  }
-  else
-  {
-    // y increases downwards
-    const Style* s = STYLE_FACTORY.GetStyle("effect_icon_expanded_color");
-    tri.append(sf::Vertex(Vector2f(left+5, y+5), s->fillColor));
-    tri.append(sf::Vertex(Vector2f(left+15, y+5), s->fillColor));
-    tri.append(sf::Vertex(Vector2f(left+10, y+15), s->fillColor));
-    texture.draw(tri);
-
-    DrawVars(texture);
-
-    for (EffectRow* child : children)
-    {
-      child->Draw(texture);
-    }
-  }
-}
-

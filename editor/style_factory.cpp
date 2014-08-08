@@ -2,6 +2,15 @@
 
 using namespace editor;
 
+namespace editor
+{
+  //----------------------------------------------------------------------------------
+  void ApplyStyle(const Style* style, RectangleShape* shape)
+  {
+    shape->setFillColor(style->fillColor);
+  }
+}
+
 //----------------------------------------------------------------------------------
 StyledRectangle::StyledRectangle(const Style& style)
     : _style(style)

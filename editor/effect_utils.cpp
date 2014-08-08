@@ -13,6 +13,8 @@ namespace editor
         u32* idxLower,
         u32* idxUpper)
     {
+      *idxLower = *idxUpper = 0xffffffff;
+
       if (time_ms <= keyframes.front().time)
       {
         *idxLower = 0;
@@ -30,14 +32,18 @@ namespace editor
       while (time_ms > keyframes[tmp].time)
         ++tmp;
 
-      *idxUpper = tmp;
-      *idxLower = max(0, tmp-1);
+      *idxUpper = (u32)tmp;
+      *idxLower = (u32)max(0, tmp-1);
       return true;
     }
   }
 
   //----------------------------------------------------------------------------------
-  void AddKeyframe(const time_duration& t, const Vector3f& value, Vector3Anim* anim)
+  Vector3Keyframe* AddKeyframe(
+      const time_duration& t,
+      const Vector3f& value,
+      bool forceAdd,
+      Vector3Anim* anim)
   {
     vector<Vector3Keyframe>& keyframes = anim->keyframes;
     u32 time_ms = t.total_milliseconds();
@@ -45,9 +51,8 @@ namespace editor
     if (keyframes.empty())
     {
       keyframes.push_back({time_ms, value});
-      return;
+      return &keyframes.back();
     }
-
 
     // Insert the new keyframe after the lower index
     u32 idxLower, idxUpper;
@@ -55,13 +60,16 @@ namespace editor
 
     // check if the lower key has the same time as the current one, in which
     // case we'll just replace it
-    if (keyframes[idxLower].time == time_ms)
+    if (!forceAdd && keyframes[idxLower].time == time_ms)
     {
       keyframes[idxLower].value = value;
+      return &keyframes[idxLower];
     }
     else
     {
-      keyframes.insert(keyframes.begin() + idxUpper, {time_ms, value});
+      u32 idx = idxUpper == 0xffffffff ? idxLower : idxUpper;
+      auto it = keyframes.insert(keyframes.begin() + idx, {time_ms, value});
+      return &(*it);
     }
   }
 

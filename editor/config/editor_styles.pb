@@ -93,3 +93,18 @@ styles {
 	outline_thickness : 1
 }
 
+styles {
+	id : "keyframe_style_selected"
+	fill_color {
+		r : 255
+		g : 155
+		b : 0
+	}
+	outline_color {
+		r : 20
+		g : 20
+		b : 20
+	}
+	outline_thickness : 1
+}
+
