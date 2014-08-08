@@ -1,3 +1,4 @@
+import common_pb2
 import descriptor_pb2
 from jinja2 import Environment, PackageLoader, Template
 
@@ -59,6 +60,9 @@ for file_desc in fds.file:
 
     # iterator over Descriptor (messages)
     for msg_desc in file_desc.message_type:
+        # print msg_desc.name, msg_desc.options, dir(msg_desc.options)
+        # if isinstance(msg_desc, descriptor_pb2.DescriptorProto):
+        #     print msg_desc.name, msg_desc.options.HasExtension(common_pb2.context)
 
         if msg_desc.name in EXCLUDE_MESSAGES:
             continue

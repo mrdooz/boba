@@ -38,6 +38,7 @@ message Matrix4x4
 
 message Vector3Keyframe
 {
+//  option (common.protocol.context) = "void* context";
   optional uint32 time = 1;
   optional Vector3 value = 2;
 }

@@ -1,2 +1,3 @@
-protoc --cpp_out=. --proto_path=. --include_imports --include_source_info -oeffects.desc *.proto
+protoc --python_out=. --proto_path=. --proto_path=/Users/dooz/projects/protobuf/include common.proto
+protoc --cpp_out=. --proto_path=. --proto_path=/Users/dooz/projects/protobuf/include --include_imports --include_source_info -oeffects.desc *.proto
 python codegen.py

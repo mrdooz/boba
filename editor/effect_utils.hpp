@@ -75,4 +75,6 @@ namespace editor
   };
 
   Vector3f Interpolate(const Vector3Anim& anim, u32 time_ms);
+  Vector3f Interpolate(const Vector3Anim& anim, const time_duration& t);
+  void AddKeyframe(const time_duration& t, const Vector3f& value, Vector3Anim* anim);
 }

@@ -135,6 +135,7 @@ namespace editor
     Color fillColor;
     Color outlineColor;
     float outlineThickness;
+    int32_t fontStyle;
   };
 
   inline Style FromProtocol(const editor::protocol::Style& p)
@@ -144,6 +145,7 @@ namespace editor
     res.fillColor = FromProtocol(p.fill_color());
     res.outlineColor = FromProtocol(p.outline_color());
     res.outlineThickness = p.outline_thickness();
+    res.fontStyle = p.font_style();
     return res;
   }
 

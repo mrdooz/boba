@@ -38,11 +38,12 @@ void protobuf_AssignDesc_editor_5fstyles_2eproto() {
       "editor_styles.proto");
   GOOGLE_CHECK(file != NULL);
   Style_descriptor_ = file->message_type(0);
-  static const int Style_offsets_[4] = {
+  static const int Style_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Style, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Style, fill_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Style, outline_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Style, outline_thickness_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Style, font_style_),
   };
   Style_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -106,12 +107,12 @@ void protobuf_AddDesc_editor_5fstyles_2eproto() {
   ::editor::protocol::protobuf_AddDesc_editor_5fsettings_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\023editor_styles.proto\022\017editor.protocol\032\025"
-    "editor_settings.proto\"\216\001\n\005Style\022\n\n\002id\030\001 "
+    "editor_settings.proto\"\242\001\n\005Style\022\n\n\002id\030\001 "
     "\001(\t\022+\n\nfill_color\030\002 \001(\0132\027.editor.protoco"
     "l.Color4\022.\n\routline_color\030\003 \001(\0132\027.editor"
     ".protocol.Color4\022\034\n\021outline_thickness\030\004 "
-    "\001(\002:\0010\"0\n\006Styles\022&\n\006styles\030\001 \003(\0132\026.edito"
-    "r.protocol.Style", 256);
+    "\001(\002:\0010\022\022\n\nfont_style\030\005 \001(\005\"0\n\006Styles\022&\n\006"
+    "styles\030\001 \003(\0132\026.editor.protocol.Style", 276);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_styles.proto", &protobuf_RegisterTypes);
   Style::default_instance_ = new Style();
@@ -135,6 +136,7 @@ const int Style::kIdFieldNumber;
 const int Style::kFillColorFieldNumber;
 const int Style::kOutlineColorFieldNumber;
 const int Style::kOutlineThicknessFieldNumber;
+const int Style::kFontStyleFieldNumber;
 #endif  // !_MSC_VER
 
 Style::Style()
@@ -159,6 +161,7 @@ void Style::SharedCtor() {
   fill_color_ = NULL;
   outline_color_ = NULL;
   outline_thickness_ = 0;
+  font_style_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -211,6 +214,7 @@ void Style::Clear() {
       if (outline_color_ != NULL) outline_color_->::editor::protocol::Color4::Clear();
     }
     outline_thickness_ = 0;
+    font_style_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -278,6 +282,22 @@ bool Style::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(40)) goto parse_font_style;
+        break;
+      }
+
+      // optional int32 font_style = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_font_style:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &font_style_)));
+          set_has_font_style();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -326,6 +346,11 @@ void Style::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->outline_thickness(), output);
   }
 
+  // optional int32 font_style = 5;
+  if (has_font_style()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->font_style(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -363,6 +388,11 @@ void Style::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->outline_thickness(), target);
   }
 
+  // optional int32 font_style = 5;
+  if (has_font_style()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->font_style(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -398,6 +428,13 @@ int Style::ByteSize() const {
     // optional float outline_thickness = 4 [default = 0];
     if (has_outline_thickness()) {
       total_size += 1 + 4;
+    }
+
+    // optional int32 font_style = 5;
+    if (has_font_style()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->font_style());
     }
 
   }
@@ -439,6 +476,9 @@ void Style::MergeFrom(const Style& from) {
     if (from.has_outline_thickness()) {
       set_outline_thickness(from.outline_thickness());
     }
+    if (from.has_font_style()) {
+      set_font_style(from.font_style());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -466,6 +506,7 @@ void Style::Swap(Style* other) {
     std::swap(fill_color_, other->fill_color_);
     std::swap(outline_color_, other->outline_color_);
     std::swap(outline_thickness_, other->outline_thickness_);
+    std::swap(font_style_, other->font_style_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

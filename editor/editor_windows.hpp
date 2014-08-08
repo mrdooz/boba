@@ -45,6 +45,8 @@ namespace editor
     time_duration PixelToTime(int x);
     time_duration AbsPixelToTime(int x);
 
+    static TimelineWindow* _instance;
+
   private:
 
     void DrawEffects();
@@ -63,13 +65,20 @@ namespace editor
       EffectRow(
           const Font& font,
           const string& str,
-          const IntRect& bounds,
           EffectRow* parent = nullptr);
 
       void Draw(RenderTexture& texture);
       static void Flatten(EffectRow* cur, vector<TimelineWindow::EffectRow*>* res);
       static void Reposition(EffectRow* cur, float curY, float rowHeight);
       static float RowHeight(EffectRow* cur, float rowHeight);
+      virtual void DrawVars(RenderTexture& texture) {}
+      virtual float NumVars() { return 0; }
+      virtual void InitVarEdit(float x, float y) {}
+      virtual void EndEditVars(bool cancel) {}
+      virtual void UpdateEditVar(Keyboard::Key key) {}
+      virtual bool KeyframeIntersect(const Vector2f& pt) { return false; }
+      virtual void UpdateKeyframe(const time_duration& t) {}
+      virtual void EndKeyframeUpdate(bool cancel) {}
 
       string str;
       RowFlags flags;
@@ -78,6 +87,33 @@ namespace editor
       vector<EffectRow*> children;
       Text text;
       int level;
+      FloatRect expandRect;
+      FloatRect varEditRect;
+      StyledRectangle* keyframeRect;
+    };
+
+    struct EffectRowNoise : public EffectRow
+    {
+      EffectRowNoise(
+          const Font& font,
+          const string& str,
+          EffectRow* parent = nullptr);
+
+      virtual void DrawVars(RenderTexture& texture);
+      virtual float NumVars();
+      virtual void InitVarEdit(float x, float y);
+      virtual void EndEditVars(bool cancel);
+      virtual void UpdateEditVar(Keyboard::Key key);
+      virtual bool KeyframeIntersect(const Vector2f& pt);
+      virtual void UpdateKeyframe(const time_duration& t);
+      virtual void EndKeyframeUpdate(bool cancel);
+
+      int editingIdx;
+
+      NoiseEffector effector;
+      Vector3f prevValue;
+      string curEdit;
+      Vector3Keyframe* selectedKeyframe;
     };
 
     struct TimelineFlagsF
@@ -93,6 +129,7 @@ namespace editor
     bool OnMouseMoved(const Event& event);
     bool OnMouseButtonReleased(const Event& event);
     bool OnMouseWheelMoved(const Event& event);
+    bool OnKeyReleased(const Event& event);
 
     void RecalcEffecRows();
 
@@ -102,11 +139,6 @@ namespace editor
       return sf::Vector2<T>((T)(x - _pos.x), (T)(y - _pos.y));
     }
 
-    Sprite _effectSprite;
-    Sprite _timelineSprite;
-    RenderTexture _effectTexture;
-    RenderTexture _timelineTexture;
-
     time_duration _panelOffset;
     u32 _pixelsPerSecond;
     Font _font;
@@ -115,7 +147,9 @@ namespace editor
     vector<EffectRow*> _effectRows;
 
     Vector2i _lastDragPos;
-
+    EffectRow* _editRow;
+    StyledRectangle* _tickerRect;
+    EffectRow* _movingKeyframe;
   };
 
 }
