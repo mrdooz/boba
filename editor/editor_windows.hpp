@@ -51,9 +51,15 @@ namespace editor
 
   private:
 
+    enum class DisplayMode
+    {
+      Keyframe,
+      Graph,
+      NUM_DISPLAY_MODES
+    };
+
     void DrawEffects();
     void DrawTimeline();
-
 
     struct TimelineFlagsF
     {
@@ -69,6 +75,9 @@ namespace editor
     bool OnMouseButtonReleased(const Event& event);
     bool OnMouseWheelMoved(const Event& event);
     bool OnKeyReleased(const Event& event);
+
+    bool MouseMoveGraph(const Event& event);
+    bool MouseMoveKeyframe(const Event& event, const time_duration& curTime);
 
     void RecalcEffecRows();
 
@@ -90,6 +99,7 @@ namespace editor
     StyledRectangle* _tickerRect;
     EffectRow* _movingKeyframe;
     EffectRow* _selectedKeyframe;
+    DisplayMode _displayMode;
   };
 
 }

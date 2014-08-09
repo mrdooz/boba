@@ -13,7 +13,6 @@ EffectRow::EffectRow(
     : str(str)
     , parent(parent)
     , level(0)
-    , displayMode(DisplayMode::Keyframe)
 {
   rect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
   keyframeRect = STYLE_FACTORY.CreateStyledRectangle("keyframe_style");
@@ -110,7 +109,7 @@ float EffectRow::RowHeight(EffectRow* cur, float rowHeight)
 }
 
 //----------------------------------------------------------------------------------
-void EffectRow::Draw(RenderTexture& texture)
+void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
   Color rowCol = FromProtocol(flags.IsSet(EffectRow::RowFlagsF::Selected)
@@ -152,11 +151,11 @@ void EffectRow::Draw(RenderTexture& texture)
     tri.append(sf::Vertex(Vector2f(left+10, y+15), s->fillColor));
     texture.draw(tri);
 
-    DrawVars(texture, TimelineWindow::_instance->_size);
+    DrawVars(texture, TimelineWindow::_instance->_size, drawKeyframes);
 
     for (EffectRow* child : children)
     {
-      child->Draw(texture);
+      child->Draw(texture, drawKeyframes);
     }
   }
 }
@@ -173,7 +172,7 @@ EffectRowNoise::EffectRowNoise(
 }
 
 //----------------------------------------------------------------------------------
-void EffectRowNoise::DrawVars(RenderTexture& texture, const Vector2f& size)
+void EffectRowNoise::DrawVars(RenderTexture& texture, const Vector2f& size, bool drawKeyframes)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
   float h = settings.effect_row_height();
@@ -216,10 +215,9 @@ void EffectRowNoise::DrawVars(RenderTexture& texture, const Vector2f& size)
   text.setPosition(rect->_shape.getPosition() + Vector2f(20 + level * 15, h*3));
   texture.draw(text);
 
-  switch (displayMode)
+  if (drawKeyframes)
   {
-    case DisplayMode::Keyframe: DrawKeyframes(texture, size); break;
-    case DisplayMode::Graph: DrawGraph(texture, size); break;
+    DrawKeyframes(texture, size);
   }
 
   // Reset style
@@ -270,6 +268,85 @@ void EffectRowNoise::DrawKeyframes(RenderTexture& texture, const Vector2f& size)
 //----------------------------------------------------------------------------------
 void EffectRowNoise::DrawGraph(RenderTexture& texture, const Vector2f& size)
 {
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  float topY = settings.ticker_height();
+  float ofs = settings.effect_view_width();
+  float w = size.x - ofs;
+  float h = size.y - topY;
+  float bottom = size.y - 1;
+
+  TimelineWindow* timeline = TimelineWindow::_instance;
+
+  // find min/max values for keyframes within the view
+  time_duration minTime = timeline->PixelToTime(0);
+  time_duration maxTime = timeline->PixelToTime(size.x);
+
+  Vector3f value0 = Interpolate(effector.displacement, minTime);
+  Vector3f valueLast = Interpolate(effector.displacement, maxTime);
+
+  Vector3f minValue = Min(
+      Interpolate(effector.displacement, minTime),
+      Interpolate(effector.displacement, maxTime));
+
+  Vector3f maxValue = Max(
+      Interpolate(effector.displacement, minTime),
+      Interpolate(effector.displacement, maxTime));
+
+  vector<const Vector3Keyframe*> keyframes;
+
+  for (const Vector3Keyframe& keyframe : effector.displacement.keyframes)
+  {
+    if (keyframe.time < minTime.total_milliseconds())
+      continue;
+
+    if (keyframe.time > maxTime.total_milliseconds())
+      break;
+
+    keyframes.push_back(&keyframe);
+
+    minValue = Min(minValue, keyframe.value);
+    maxValue = Max(maxValue, keyframe.value);
+  }
+
+  minValue -= 0.1f * minValue;
+  maxValue += 0.1f * maxValue;
+
+  Vector3f span = maxValue - minValue;
+
+  const auto& fnRescale = [&](const Vector3f& value){
+
+      // scale the value so min/max covers the entire height
+      Vector3f t = value - minValue;
+      switch (graphMode)
+      {
+        case 1: return bottom - h * t.x / span.x;
+        case 2: return bottom - h * t.y / span.y;
+        case 3: return bottom - h * t.z / span.z;
+        default: return 0.f;
+      }
+  };
+
+  // draw the keyframes normalized to the min/max values
+  VertexArray curLine(sf::LinesStrip);
+
+  curLine.append(sf::Vertex(Vector2f(ofs, fnRescale(value0))));
+
+  for (const Vector3Keyframe* keyframe : keyframes)
+  {
+    Vector2f p = Vector2f(
+        timeline->TimeToPixel(milliseconds(keyframe->time)),
+        fnRescale(keyframe->value));
+
+    curLine.append(sf::Vertex(p));
+
+    keyframeRect->_shape.setPosition(p.x - 3, p.y - 3);
+    texture.draw(keyframeRect->_shape);
+  }
+
+  curLine.append(sf::Vertex(Vector2f(size.x, fnRescale(valueLast))));
+
+  texture.draw(curLine);
+
 }
 
 //----------------------------------------------------------------------------------
@@ -428,21 +505,13 @@ void EffectRowNoise::DeleteKeyframe()
 }
 
 //----------------------------------------------------------------------------------
-void EffectRowNoise::ToggleDisplayMode()
+bool EffectRowNoise::ToggleDisplayMode()
 {
   // toggle between keyframe, x graph, y graph, z graph
-  graphMode++;
+  graphMode = (graphMode + 1) % 4;
 
-  if (graphMode == 3)
-  {
-    // back to keyframe mode
-    graphMode = 0;
-    displayMode = DisplayMode::Keyframe;
-  }
-  else
-  {
-    displayMode = DisplayMode::Graph;
-  }
+  // switching mode if going from graph 3 -> keyframe, or keyframe -> graph 1
+  return graphMode == 0 || graphMode == 1;
 }
 
 //----------------------------------------------------------------------------------

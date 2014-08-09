@@ -45,4 +45,25 @@ namespace editor
       const Vector3f& value,
       bool forceAdd,
       Vector3Anim* anim);
+
+  template<typename T>
+  sf::Vector3<T> Min(const sf::Vector3<T>& a, const sf::Vector3<T>& b)
+  {
+    return sf::Vector3<T>(
+        min(a.x, b.x),
+        min(a.y, b.y),
+        min(a.z, b.z)
+    );
+  }
+
+  template<typename T>
+  sf::Vector3<T> Max(const sf::Vector3<T>& a, const sf::Vector3<T>& b)
+  {
+    return sf::Vector3<T>(
+        max(a.x, b.x),
+        max(a.y, b.y),
+        max(a.z, b.z)
+    );
+  }
+
 }

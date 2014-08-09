@@ -41,6 +41,7 @@ TimelineWindow::TimelineWindow(
     , _tickerRect(nullptr)
     , _movingKeyframe(nullptr)
     , _selectedKeyframe(nullptr)
+    , _displayMode(DisplayMode::Keyframe)
 {
   _instance = this;
 }
@@ -159,7 +160,12 @@ bool TimelineWindow::OnKeyReleased(const Event &event)
     {
       if (code == Keyboard::U && _selectedKeyframe)
       {
-        _selectedKeyframe->ToggleDisplayMode();
+        if (_selectedKeyframe->ToggleDisplayMode())
+        {
+          int mode = (int)_displayMode;
+          mode = (mode + 1) % (int)DisplayMode::NUM_DISPLAY_MODES;
+          _displayMode = (DisplayMode)mode;
+        }
       }
     }
   }
@@ -277,21 +283,10 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
   }
   else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && _selectedKeyframe)
   {
-    if (_selectedKeyframe->CurrentDisplayMode() == EffectRow::DisplayMode::Keyframe)
+    switch (_displayMode)
     {
-      // TODO: all this stuff should probably be moved into the effect row..
-      if (!_movingKeyframe)
-      {
-        // send the BeginKeyframeUpdate, and check if we're copying or moving
-        _selectedKeyframe->BeginKeyframeUpdate(Keyboard::isKeyPressed(Keyboard::Key::LShift));
-        _movingKeyframe = _selectedKeyframe;
-      }
-
-      _movingKeyframe->UpdateKeyframe(curTime);
-    }
-    else
-    {
-
+      case DisplayMode::Keyframe: return MouseMoveKeyframe(event, curTime);
+      case DisplayMode::Graph: return MouseMoveGraph(event);
     }
   }
 
@@ -402,7 +397,12 @@ void TimelineWindow::DrawEffects()
 
   for (EffectRow* row : _effectRows)
   {
-    row->Draw(_texture);
+    row->Draw(_texture, _displayMode == DisplayMode::Keyframe);
+  }
+
+  if (_displayMode == DisplayMode::Graph && _selectedKeyframe)
+  {
+    _selectedKeyframe->DrawGraph(_texture, _size);
   }
 }
 
@@ -444,4 +444,26 @@ void TimelineWindow::Draw()
   DrawTimeline();
 
   _texture.display();
+}
+
+//----------------------------------------------------------------------------------
+bool TimelineWindow::MouseMoveGraph(const Event& event)
+{
+  return true;
+}
+
+//----------------------------------------------------------------------------------
+bool TimelineWindow::MouseMoveKeyframe(const Event& event, const time_duration& curTime)
+{
+  // TODO: all this stuff should probably be moved into the effect row..
+  if (!_movingKeyframe)
+  {
+    // send the BeginKeyframeUpdate, and check if we're copying or moving
+    _selectedKeyframe->BeginKeyframeUpdate(Keyboard::isKeyPressed(Keyboard::Key::LShift));
+    _movingKeyframe = _selectedKeyframe;
+  }
+
+  _movingKeyframe->UpdateKeyframe(curTime);
+
+  return true;
 }

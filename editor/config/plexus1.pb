@@ -18,11 +18,11 @@ noise_effectors
     }
     keyframes: {
       time : 3000
-      value: { x: 0; y: 20; z: 1}
+      value: { x: 5; y: 20; z: 1}
     }
     keyframes: {
       time : 5000
-      value: { x: 0; y: 0; z: 1}
+      value: { x: 2; y: 0; z: 1}
     }
   }
 }

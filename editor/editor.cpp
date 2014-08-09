@@ -82,6 +82,9 @@ bool Editor::Init()
   _appRoot = "/Users/dooz/projects/boba/editor/";
 #endif
 
+  width = 0.9f * width;
+  height = 0.9 * height;
+
   sf::ContextSettings settings;
   _renderWindow = new RenderWindow(sf::VideoMode(width, height), "...", sf::Style::Default, settings);
   _renderWindow->setVerticalSyncEnabled(true);
