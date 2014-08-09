@@ -266,7 +266,56 @@ void EffectRowNoise::DrawKeyframes(RenderTexture& texture, const Vector2f& size)
 }
 
 //----------------------------------------------------------------------------------
-void EffectRowNoise::DrawGraph(RenderTexture& texture, const Vector2f& size)
+Vector3f EffectRowNoise::PixelToValue(int y) const
+{
+  // x = bottom - h * (value - minValue) / span
+  // x - bottom = -h..
+  // ==> (bottom - x) * span / h + minValue
+
+  Vector2f size = TimelineWindow::_instance->GetSize();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  float topY = settings.ticker_height();
+  float ofs = settings.effect_view_width();
+  float w = size.x - ofs;
+  float h = size.y - topY;
+  float bottom = size.y - 1;
+
+  Vector3f span = maxValue - minValue;
+
+  return (bottom - y) * span / h + minValue;
+}
+
+//----------------------------------------------------------------------------------
+float EffectRowNoise::CalcGraphValue(const Vector3f& value) const
+{
+  Vector2f size = TimelineWindow::_instance->GetSize();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  float topY = settings.ticker_height();
+  float ofs = settings.effect_view_width();
+  float w = size.x - ofs;
+  float h = size.y - topY;
+  float bottom = size.y - 1;
+
+  Vector3f span = maxValue - minValue;
+
+  // scale the value so min/max covers the entire height
+  Vector3f t = value - minValue;
+  switch (graphMode)
+  {
+    // x = bottom - h * (value - minValue) / span
+    case 1: return bottom - h * t.x / span.x;
+    case 2: return bottom - h * t.y / span.y;
+    case 3: return bottom - h * t.z / span.z;
+    default: return 0.f;
+  }
+}
+
+
+//----------------------------------------------------------------------------------
+void EffectRowNoise::VisibleKeyframes(
+    const Vector2f& size,
+    bool addBorderPoints,
+    vector<pair<Vector2f, Vector3Keyframe*>>* keyframes)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
   float topY = settings.ticker_height();
@@ -284,69 +333,94 @@ void EffectRowNoise::DrawGraph(RenderTexture& texture, const Vector2f& size)
   Vector3f value0 = Interpolate(effector.displacement, minTime);
   Vector3f valueLast = Interpolate(effector.displacement, maxTime);
 
-  Vector3f minValue = Min(
-      Interpolate(effector.displacement, minTime),
-      Interpolate(effector.displacement, maxTime));
+  vector<Vector3Keyframe*> validKeyframes;
 
-  Vector3f maxValue = Max(
-      Interpolate(effector.displacement, minTime),
-      Interpolate(effector.displacement, maxTime));
-
-  vector<const Vector3Keyframe*> keyframes;
-
-  for (const Vector3Keyframe& keyframe : effector.displacement.keyframes)
+  if (!selectedKeyframe)
   {
-    if (keyframe.time < minTime.total_milliseconds())
-      continue;
+    minValue = Min(
+        Interpolate(effector.displacement, minTime),
+        Interpolate(effector.displacement, maxTime));
 
-    if (keyframe.time > maxTime.total_milliseconds())
-      break;
+    maxValue = Max(
+        Interpolate(effector.displacement, minTime),
+        Interpolate(effector.displacement, maxTime));
 
-    keyframes.push_back(&keyframe);
 
-    minValue = Min(minValue, keyframe.value);
-    maxValue = Max(maxValue, keyframe.value);
+    for (Vector3Keyframe& keyframe : effector.displacement.keyframes)
+    {
+      if (keyframe.time < minTime.total_milliseconds())
+        continue;
+
+      if (keyframe.time > maxTime.total_milliseconds())
+        break;
+
+      validKeyframes.push_back(&keyframe);
+
+      minValue = Min(minValue, keyframe.value);
+      maxValue = Max(maxValue, keyframe.value);
+    }
+
+    minValue -= 0.25f * minValue;
+    maxValue += 0.25f * maxValue;
+  }
+  else
+  {
+    for (Vector3Keyframe& keyframe : effector.displacement.keyframes)
+    {
+      if (keyframe.time < minTime.total_milliseconds())
+        continue;
+
+      if (keyframe.time > maxTime.total_milliseconds())
+        break;
+
+      validKeyframes.push_back(&keyframe);
+    }
   }
 
-  minValue -= 0.1f * minValue;
-  maxValue += 0.1f * maxValue;
+  if (addBorderPoints)
+  {
+    keyframes->push_back(make_pair(Vector2f(ofs, CalcGraphValue(value0)), nullptr));
+  }
 
-  Vector3f span = maxValue - minValue;
+  for (Vector3Keyframe* keyframe : validKeyframes)
+  {
+    Vector2f p = Vector2f(
+        timeline->TimeToPixel(milliseconds(keyframe->time)),
+        CalcGraphValue(keyframe->value));
 
-  const auto& fnRescale = [&](const Vector3f& value){
+    keyframes->push_back(make_pair(p, keyframe));
+  }
 
-      // scale the value so min/max covers the entire height
-      Vector3f t = value - minValue;
-      switch (graphMode)
-      {
-        case 1: return bottom - h * t.x / span.x;
-        case 2: return bottom - h * t.y / span.y;
-        case 3: return bottom - h * t.z / span.z;
-        default: return 0.f;
-      }
-  };
+  if (addBorderPoints)
+  {
+    keyframes->push_back(make_pair(Vector2f(size.x, CalcGraphValue(valueLast)), nullptr));
+  }
+
+}
+
+//----------------------------------------------------------------------------------
+void EffectRowNoise::DrawGraph(RenderTexture& texture, const Vector2f& size)
+{
+  vector<pair<Vector2f, Vector3Keyframe*>> keyframes;
+  VisibleKeyframes(size, true, &keyframes);
 
   // draw the keyframes normalized to the min/max values
   VertexArray curLine(sf::LinesStrip);
 
-  curLine.append(sf::Vertex(Vector2f(ofs, fnRescale(value0))));
-
-  for (const Vector3Keyframe* keyframe : keyframes)
+  for (const auto& pp : keyframes)
   {
-    Vector2f p = Vector2f(
-        timeline->TimeToPixel(milliseconds(keyframe->time)),
-        fnRescale(keyframe->value));
-
+    const Vector2f& p = pp.first;
     curLine.append(sf::Vertex(p));
 
-    keyframeRect->_shape.setPosition(p.x - 3, p.y - 3);
-    texture.draw(keyframeRect->_shape);
+    // if the point corresponds to a proper keyframe, draw the keyframe
+    if (pp.second)
+    {
+      keyframeRect->_shape.setPosition(p.x - 3, p.y - 3);
+      texture.draw(keyframeRect->_shape);
+    }
   }
 
-  curLine.append(sf::Vertex(Vector2f(size.x, fnRescale(valueLast))));
-
   texture.draw(curLine);
-
 }
 
 //----------------------------------------------------------------------------------
@@ -510,12 +584,87 @@ bool EffectRowNoise::ToggleDisplayMode()
   // toggle between keyframe, x graph, y graph, z graph
   graphMode = (graphMode + 1) % 4;
 
+  if (graphMode == 1)
+    selectedKeyframe = nullptr;
+
   // switching mode if going from graph 3 -> keyframe, or keyframe -> graph 1
   return graphMode == 0 || graphMode == 1;
 }
 
 //----------------------------------------------------------------------------------
-void EffectRowNoise::GraphMouseMove(const Event& event)
+bool EffectRowNoise::GraphMouseMoved(const Event& event)
 {
+  const TimelineWindow* timeline = TimelineWindow::_instance;
+
+  int x = (int)(event.mouseMove.x - timeline->GetPosition().x);
+  int y = (int)(event.mouseMove.y - timeline->GetPosition().y);
+  Vector2i mousePos(x, y);
+
+  if (selectedKeyframe)
+  {
+    selectedKeyframe->time = timeline->PixelToTime(x).total_milliseconds();
+    selectedKeyframe->value = PixelToValue(y);
+  }
+  return true;
+}
+
+//----------------------------------------------------------------------------------
+Vector3f EffectRowNoise::UpdateKeyframe(const Vector3f& newValue, const Vector3f& old) const
+{
+  Vector3f res = old;
+  switch (graphMode)
+  {
+    case 1: res.x = newValue.x; break;
+    case 2: res.y = newValue.y; break;
+    case 3: res.z = newValue.z; break;
+  }
+
+  return res;
+}
+
+
+//----------------------------------------------------------------------------------
+bool EffectRowNoise::GraphMouseButtonPressed(const Event& event)
+{
+  const TimelineWindow* timeline = TimelineWindow::_instance;
+
+  int x = (int)(event.mouseButton.x - timeline->GetPosition().x);
+  int y = (int)(event.mouseButton.y - timeline->GetPosition().y);
+  Vector2i mousePos(x, y);
+
+  selectedKeyframe = nullptr;
+
+  // check for keyframe intersection
+  vector<pair<Vector2f, Vector3Keyframe*>> keyframes;
+  VisibleKeyframes(timeline->GetSize(), false, &keyframes);
+
+  for (const auto& pp : keyframes)
+  {
+    const Vector2f& p = pp.first;
+
+    IntRect rect(p.x - 3, p.y - 3, 6, 6);
+    if (rect.contains(mousePos))
+    {
+      selectedKeyframe = pp.second;
+      break;
+    }
+  }
+
+  // check if we should add a new keyframe
+  if (!selectedKeyframe && Keyboard::isKeyPressed(Keyboard::Key::LShift))
+  {
+    time_duration t = timeline->PixelToTime(x);
+    Vector3f tmp = Interpolate(effector.displacement, t);
+    AddKeyframe(t, UpdateKeyframe(PixelToValue(y), tmp), true, &effector.displacement);
+  }
+
+  return true;
+}
+
+//----------------------------------------------------------------------------------
+bool EffectRowNoise::GraphMouseButtonReleased(const Event& event)
+{
+  selectedKeyframe = nullptr;
+  return true;
 
 }

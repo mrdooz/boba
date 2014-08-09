@@ -54,6 +54,18 @@ namespace editor
       return &keyframes.back();
     }
 
+    if (time_ms <= keyframes.front().time)
+    {
+      keyframes.insert(keyframes.begin(), {time_ms, value});
+
+      return &keyframes.front();
+    }
+    else if (time_ms >= keyframes.back().time)
+    {
+      keyframes.push_back({time_ms, value});
+      return &keyframes.back();
+    }
+
     // Insert the new keyframe after the lower index
     u32 idxLower, idxUpper;
     FindKeyframePair(keyframes, time_ms, &idxLower, &idxUpper);

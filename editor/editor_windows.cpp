@@ -237,18 +237,25 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   }
   else
   {
-    if (_selectedKeyframe)
+    if (_displayMode == DisplayMode::Graph)
     {
-      _selectedKeyframe->DeselectKeyframe();
-      _selectedKeyframe = nullptr;
+      _selectedKeyframe->GraphMouseButtonPressed(event);
     }
-
-    for (EffectRow* row : effects)
+    else
     {
-      if (row->KeyframeIntersect(mousePos, _size))
+      if (_selectedKeyframe)
       {
-        _selectedKeyframe = row;
-        break;
+        _selectedKeyframe->DeselectKeyframe();
+        _selectedKeyframe = nullptr;
+      }
+
+      for (EffectRow* row : effects)
+      {
+        if (row->KeyframeIntersect(mousePos, _size))
+        {
+          _selectedKeyframe = row;
+          break;
+        }
       }
     }
   }
@@ -258,7 +265,6 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseMoved(const Event& event)
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
   Vector2i posModule = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
 
   time_duration curTime = PixelToTime(posModule.x);
@@ -286,7 +292,7 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     switch (_displayMode)
     {
       case DisplayMode::Keyframe: return MouseMoveKeyframe(event, curTime);
-      case DisplayMode::Graph: return MouseMoveGraph(event);
+      case DisplayMode::Graph: return _selectedKeyframe->GraphMouseMoved(event);
     }
   }
 
@@ -296,12 +302,20 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 {
-  if (_movingKeyframe)
+  if (_displayMode == DisplayMode::Graph)
   {
-    _movingKeyframe->EndKeyframeUpdate(true);
-    _movingKeyframe = nullptr;
+    return _selectedKeyframe->GraphMouseButtonReleased(event);
   }
-  return true;
+  else
+  {
+    if (_movingKeyframe)
+    {
+      _movingKeyframe->EndKeyframeUpdate(true);
+      _movingKeyframe = nullptr;
+    }
+    return true;
+  }
+
 }
 
 //----------------------------------------------------------------------------------
@@ -407,7 +421,7 @@ void TimelineWindow::DrawEffects()
 }
 
 //----------------------------------------------------------------------------------
-int TimelineWindow::TimeToPixel(const time_duration& t)
+int TimelineWindow::TimeToPixel(const time_duration& t) const
 {
   int w = EDITOR.Settings().effect_view_width();
 
@@ -418,7 +432,7 @@ int TimelineWindow::TimeToPixel(const time_duration& t)
 }
 
 //----------------------------------------------------------------------------------
-time_duration TimelineWindow::PixelToTime(int x)
+time_duration TimelineWindow::PixelToTime(int x) const
 {
   double s = (double)_pixelsPerSecond / 1000.0;
 
@@ -430,7 +444,7 @@ time_duration TimelineWindow::PixelToTime(int x)
 }
 
 //----------------------------------------------------------------------------------
-time_duration TimelineWindow::AbsPixelToTime(int x)
+time_duration TimelineWindow::AbsPixelToTime(int x) const
 {
   return milliseconds(1000 * x / (int)_pixelsPerSecond);
 }
@@ -444,12 +458,6 @@ void TimelineWindow::Draw()
   DrawTimeline();
 
   _texture.display();
-}
-
-//----------------------------------------------------------------------------------
-bool TimelineWindow::MouseMoveGraph(const Event& event)
-{
-  return true;
 }
 
 //----------------------------------------------------------------------------------

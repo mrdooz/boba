@@ -40,8 +40,11 @@ namespace editor
 
     // return true if going to next mode
     virtual bool ToggleDisplayMode() { return true; }
-    virtual void GraphMouseMove(const Event& event) {}
     virtual void DrawGraph(RenderTexture& texture, const Vector2f& size) {}
+    virtual bool GraphMouseMoved(const Event& event) { return true; }
+    virtual bool GraphMouseButtonPressed(const Event& event) { return true; }
+    virtual bool GraphMouseButtonReleased(const Event& event) { return true; }
+
 
     string str;
     RowFlags flags;
@@ -76,10 +79,21 @@ namespace editor
     virtual void DeleteKeyframe();
 
     virtual bool ToggleDisplayMode();
-    virtual void GraphMouseMove(const Event& event);
+    virtual bool GraphMouseMoved(const Event& event);
+    virtual bool GraphMouseButtonPressed(const Event& event);
+    virtual bool GraphMouseButtonReleased(const Event& event);
     virtual void DrawGraph(RenderTexture& texture, const Vector2f& size);
 
     void DrawKeyframes(RenderTexture& texture, const Vector2f& size);
+
+    void VisibleKeyframes(
+        const Vector2f& size,
+        bool addBorderPoints,
+        vector<pair<Vector2f, Vector3Keyframe*>>* keyframes);
+
+    float CalcGraphValue(const Vector3f& value) const;
+    Vector3f PixelToValue(int y) const;
+    Vector3f UpdateKeyframe(const Vector3f& newValue, const Vector3f& old) const;
 
     int editingIdx;
 
@@ -91,6 +105,7 @@ namespace editor
     bool copyingKeyframe;
 
     u32 graphMode;
+    Vector3f minValue, maxValue;
   };
 
 }

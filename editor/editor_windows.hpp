@@ -43,9 +43,9 @@ namespace editor
     virtual bool Init();
     virtual void Draw();
 
-    int TimeToPixel(const time_duration& t);
-    time_duration PixelToTime(int x);
-    time_duration AbsPixelToTime(int x);
+    int TimeToPixel(const time_duration& t) const;
+    time_duration PixelToTime(int x) const;
+    time_duration AbsPixelToTime(int x) const;
 
     static TimelineWindow* _instance;
 
@@ -76,7 +76,6 @@ namespace editor
     bool OnMouseWheelMoved(const Event& event);
     bool OnKeyReleased(const Event& event);
 
-    bool MouseMoveGraph(const Event& event);
     bool MouseMoveKeyframe(const Event& event, const time_duration& curTime);
 
     void RecalcEffecRows();
