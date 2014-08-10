@@ -95,6 +95,7 @@ namespace editor
         vector<pair<Vector2f, Vector3Keyframe*>>* keyframes);
 
     float CalcGraphValue(const Vector3f& value) const;
+    float ExtractGraphValue(const Vector3f& value) const;
     Vector3f PixelToValue(int y) const;
     Vector3f UpdateKeyframe(const Vector3f& newValue, const Vector3f& old) const;
 

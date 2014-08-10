@@ -302,6 +302,18 @@ Vector3f EffectRowNoise::PixelToValue(int y) const
 }
 
 //----------------------------------------------------------------------------------
+float EffectRowNoise::ExtractGraphValue(const Vector3f& value) const
+{
+  switch (graphMode)
+  {
+    case 1: return value.x;
+    case 2: return value.y;
+    case 3: return value.z;
+    default: assert(!"oh noes!"); return 0;
+  }
+}
+
+//----------------------------------------------------------------------------------
 float EffectRowNoise::CalcGraphValue(const Vector3f& value) const
 {
   Vector2f size = TimelineWindow::_instance->GetSize();
@@ -323,7 +335,6 @@ float EffectRowNoise::CalcGraphValue(const Vector3f& value) const
     default: return 0.f;
   }
 }
-
 
 //----------------------------------------------------------------------------------
 void EffectRowNoise::VisibleKeyframes(
@@ -416,32 +427,61 @@ void EffectRowNoise::DrawGraph(RenderTexture& texture, const Vector2f& size)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
   int ofs = settings.effect_view_width();
+  Vector2f windowSize = TimelineWindow::_instance->GetSize();
 
   vector<pair<Vector2f, Vector3Keyframe*>> keyframes;
   VisibleKeyframes(size, true, &keyframes);
 
-  // draw min/max lines
-  VertexArray gridLines(sf::Lines);
-  float y = CalcGraphValue(realMinValue);
-  Color c(200, 200, 200, 255);
-  gridLines.append(sf::Vertex(Vector2f(ofs, y), c));
-  gridLines.append(sf::Vertex(Vector2f(size.x, y), c));
   Text label;
   label.setFont(font);
   label.setCharacterSize(16);
-  label.setPosition(ofs, y - 16);
-  label.setString(to_string("%.2f", realMinValue.x).c_str());
-  label.setColor(c);
-  texture.draw(label);
 
-  y = CalcGraphValue(realMaxValue);
-  gridLines.append(sf::Vertex(Vector2f(ofs, y), c));
-  gridLines.append(sf::Vertex(Vector2f(size.x, y), c));
+  // draw min/max lines
+  VertexArray gridLines(sf::Lines);
+  float base = 10;
+  float t0 = ExtractGraphValue(realMaxValue);
+  float t1 = ExtractGraphValue(realMinValue);
+  float step = pow(base, floor(log(t0) / log(base))) / 2;
+  float maxValue = pow(base, ceil(log(t0) / log(base))) + step;
+  float minValue = ExtractGraphValue(realMinValue);
+
+  Color c(200, 200, 200, 255);
+  label.setColor(c);
+
+  float curY = maxValue;
+  while (true)
+  {
+    if (curY < minValue)
+      break;
+
+    float y = CalcGraphValue(Vector3f(curY, curY, curY));
+    gridLines.append(sf::Vertex(Vector2f(ofs, y), c));
+    gridLines.append(sf::Vertex(Vector2f(size.x, y), c));
+
+    label.setPosition(ofs, y - 16);
+    label.setString(to_string("%.2f", curY).c_str());
+    texture.draw(label);
+
+    curY -= step;
+  }
+
   texture.draw(gridLines);
 
-  label.setPosition(ofs, y);
-  label.setString(to_string("%.2f", realMaxValue.x).c_str());
-  texture.draw(label);
+//  float y = CalcGraphValue(realMinValue);
+//  gridLines.append(sf::Vertex(Vector2f(ofs, y), c));
+//  gridLines.append(sf::Vertex(Vector2f(size.x, y), c));
+//  label.setPosition(ofs, y - 16);
+//  label.setString(to_string("%.2f", realMinValue.x).c_str());
+//  texture.draw(label);
+//
+//  y = CalcGraphValue(realMaxValue);
+//  gridLines.append(sf::Vertex(Vector2f(ofs, y), c));
+//  gridLines.append(sf::Vertex(Vector2f(size.x, y), c));
+//  texture.draw(gridLines);
+//
+//  label.setPosition(ofs, y);
+//  label.setString(to_string("%.2f", realMaxValue.x).c_str());
+//  texture.draw(label);
 
   // draw the keyframes normalized to the min/max values
   VertexArray curLine(sf::LinesStrip);
