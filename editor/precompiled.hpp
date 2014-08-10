@@ -15,6 +15,7 @@
 #include <sstream>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <thread>
 
@@ -80,6 +81,7 @@ namespace editor
   using std::map;
   using std::unordered_multimap;
   using std::unordered_map;
+  using std::unordered_set;
   using std::pair;
   using std::make_pair;
   using std::make_shared;

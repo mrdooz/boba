@@ -38,6 +38,7 @@ TimelineWindow::TimelineWindow(
     , _panelOffset(seconds(0))
     , _pixelsPerSecond(EDITOR.Settings().timeline_zoom_default())
     , _lastDragPos(-1, -1)
+    , _editRow(nullptr)
     , _tickerRect(nullptr)
     , _movingKeyframe(nullptr)
     , _selectedKeyframe(nullptr)
@@ -158,13 +159,16 @@ bool TimelineWindow::OnKeyReleased(const Event &event)
     }
     else
     {
-      if (code == Keyboard::U && _selectedKeyframe)
+      if (code == Keyboard::U && !_selectedRows.IsEmpty())
       {
-        if (_selectedKeyframe->ToggleDisplayMode())
+        _displayMode = _selectedRows.Next() ? DisplayMode::Graph : DisplayMode::Keyframe;
+      }
+      else if (code == Keyboard::R)
+      {
+        _displayMode = DisplayMode::Keyframe;
+        for (EffectRow* r : _selectedRows.backingSet)
         {
-          int mode = (int)_displayMode;
-          mode = (mode + 1) % (int)DisplayMode::NUM_DISPLAY_MODES;
-          _displayMode = (DisplayMode)mode;
+          r->ToggleGraphView(false);
         }
       }
     }
@@ -196,6 +200,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   }
   else if (x < (int)settings.effect_view_width())
   {
+    // Check for hits in the effect view
     EffectRow* rowHit = nullptr;
     for (EffectRow* row : effects)
     {
@@ -214,6 +219,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
       }
       else if (row->rect->_shape.getGlobalBounds().contains(mousePos))
       {
+        _selectedRows.Toggle(row);
         row->flags.Toggle(EffectRow::RowFlagsF::Selected);
         rowHit = row;
         break;
@@ -239,7 +245,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   {
     if (_displayMode == DisplayMode::Graph)
     {
-      _selectedKeyframe->GraphMouseButtonPressed(event);
+      _selectedRows.CurRow()->GraphMouseButtonPressed(event);
     }
     else
     {
@@ -269,7 +275,6 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
 
   time_duration curTime = PixelToTime(posModule.x);
 
-  // timeline scrolling has priority
   if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
   {
     if (_lastDragPos.x == -1)
@@ -287,12 +292,22 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     _lastDragPos = Vector2i(event.mouseMove.x, event.mouseMove.y);
     return true;
   }
-  else if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && _selectedKeyframe)
+  else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
   {
-    switch (_displayMode)
+    if (_displayMode == DisplayMode::Keyframe && _selectedKeyframe)
     {
-      case DisplayMode::Keyframe: return MouseMoveKeyframe(event, curTime);
-      case DisplayMode::Graph: return _selectedKeyframe->GraphMouseMoved(event);
+      if (!_movingKeyframe)
+      {
+        // send the BeginKeyframeUpdate, and check if we're copying or moving
+        _selectedKeyframe->BeginKeyframeUpdate(Keyboard::isKeyPressed(Keyboard::Key::LShift));
+        _movingKeyframe = _selectedKeyframe;
+      }
+
+      _movingKeyframe->UpdateKeyframe(curTime);
+    }
+    else if (_displayMode == DisplayMode::Graph && _selectedRows.CurRow())
+    {
+      _selectedRows.CurRow()->GraphMouseMoved(event);
     }
   }
 
@@ -304,7 +319,7 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 {
   if (_displayMode == DisplayMode::Graph)
   {
-    return _selectedKeyframe->GraphMouseButtonReleased(event);
+    return _selectedRows.CurRow()->GraphMouseButtonReleased(event);
   }
   else
   {
@@ -414,9 +429,9 @@ void TimelineWindow::DrawEffects()
     row->Draw(_texture, _displayMode == DisplayMode::Keyframe);
   }
 
-  if (_displayMode == DisplayMode::Graph && _selectedKeyframe)
+  if (_displayMode == DisplayMode::Graph && !_selectedRows.IsEmpty())
   {
-    _selectedKeyframe->DrawGraph(_texture, _size);
+    _selectedRows.CurRow()->DrawGraph(_texture, _size);
   }
 }
 
@@ -458,20 +473,4 @@ void TimelineWindow::Draw()
   DrawTimeline();
 
   _texture.display();
-}
-
-//----------------------------------------------------------------------------------
-bool TimelineWindow::MouseMoveKeyframe(const Event& event, const time_duration& curTime)
-{
-  // TODO: all this stuff should probably be moved into the effect row..
-  if (!_movingKeyframe)
-  {
-    // send the BeginKeyframeUpdate, and check if we're copying or moving
-    _selectedKeyframe->BeginKeyframeUpdate(Keyboard::isKeyPressed(Keyboard::Key::LShift));
-    _movingKeyframe = _selectedKeyframe;
-  }
-
-  _movingKeyframe->UpdateKeyframe(curTime);
-
-  return true;
 }

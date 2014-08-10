@@ -25,7 +25,7 @@ namespace editor
     static void Flatten(EffectRow* cur, vector<EffectRow*>* res);
     static void Reposition(EffectRow* cur, float curY, float rowHeight);
     static float RowHeight(EffectRow* cur, float rowHeight);
-    virtual void DrawVars(RenderTexture& texture, const Vector2f& size, bool drawKeyframes) {}
+    virtual void DrawVars(RenderTexture& texture, bool drawKeyframes) {}
     virtual u32 NumVars() { return 0; }
     virtual void BeginEditVars(float x, float y) {}
     virtual void UpdateEditVar(Keyboard::Key key) {}
@@ -38,8 +38,9 @@ namespace editor
     virtual void DeselectKeyframe() {}
     virtual void DeleteKeyframe() {}
 
-    // return true if going to next mode
-    virtual bool ToggleDisplayMode() { return true; }
+    virtual void ToggleGraphView(bool value) {}
+    // return true if cycled through all graphs
+    virtual bool NextGraph() { return true; }
     virtual void DrawGraph(RenderTexture& texture, const Vector2f& size) {}
     virtual bool GraphMouseMoved(const Event& event) { return true; }
     virtual bool GraphMouseButtonPressed(const Event& event) { return true; }
@@ -56,6 +57,7 @@ namespace editor
     FloatRect expandRect;
     FloatRect varEditRect;
     StyledRectangle* keyframeRect;
+    Font font;
   };
 
   struct EffectRowNoise : public EffectRow
@@ -65,7 +67,7 @@ namespace editor
         const string& str,
         EffectRow* parent = nullptr);
 
-    virtual void DrawVars(RenderTexture& texture, const Vector2f& size, bool drawKeyframes);
+    virtual void DrawVars(RenderTexture& texture, bool drawKeyframes);
     virtual u32 NumVars();
     virtual void BeginEditVars(float x, float y);
     virtual void EndEditVars(bool commit);
@@ -78,7 +80,8 @@ namespace editor
     virtual void DeselectKeyframe();
     virtual void DeleteKeyframe();
 
-    virtual bool ToggleDisplayMode();
+    virtual void ToggleGraphView(bool value);
+    virtual bool NextGraph();
     virtual bool GraphMouseMoved(const Event& event);
     virtual bool GraphMouseButtonPressed(const Event& event);
     virtual bool GraphMouseButtonReleased(const Event& event);
@@ -106,6 +109,7 @@ namespace editor
 
     u32 graphMode;
     Vector3f minValue, maxValue;
+    Vector3f realMinValue, realMaxValue;
   };
 
 }

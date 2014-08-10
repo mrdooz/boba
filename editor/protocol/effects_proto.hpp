@@ -135,7 +135,7 @@ namespace editor
     Color fillColor;
     Color outlineColor;
     float outlineThickness;
-    int32_t fontStyle;
+    uint32_t fontStyle;
   };
 
   inline Style FromProtocol(const editor::protocol::Style& p)

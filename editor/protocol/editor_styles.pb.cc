@@ -111,7 +111,7 @@ void protobuf_AddDesc_editor_5fstyles_2eproto() {
     "\001(\t\022+\n\nfill_color\030\002 \001(\0132\027.editor.protoco"
     "l.Color4\022.\n\routline_color\030\003 \001(\0132\027.editor"
     ".protocol.Color4\022\034\n\021outline_thickness\030\004 "
-    "\001(\002:\0010\022\022\n\nfont_style\030\005 \001(\005\"0\n\006Styles\022&\n\006"
+    "\001(\002:\0010\022\022\n\nfont_style\030\005 \001(\r\"0\n\006Styles\022&\n\006"
     "styles\030\001 \003(\0132\026.editor.protocol.Style", 276);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_styles.proto", &protobuf_RegisterTypes);
@@ -161,7 +161,7 @@ void Style::SharedCtor() {
   fill_color_ = NULL;
   outline_color_ = NULL;
   outline_thickness_ = 0;
-  font_style_ = 0;
+  font_style_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -214,7 +214,7 @@ void Style::Clear() {
       if (outline_color_ != NULL) outline_color_->::editor::protocol::Color4::Clear();
     }
     outline_thickness_ = 0;
-    font_style_ = 0;
+    font_style_ = 0u;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -286,13 +286,13 @@ bool Style::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int32 font_style = 5;
+      // optional uint32 font_style = 5;
       case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_font_style:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &font_style_)));
           set_has_font_style();
         } else {
@@ -346,9 +346,9 @@ void Style::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->outline_thickness(), output);
   }
 
-  // optional int32 font_style = 5;
+  // optional uint32 font_style = 5;
   if (has_font_style()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->font_style(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->font_style(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -388,9 +388,9 @@ void Style::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->outline_thickness(), target);
   }
 
-  // optional int32 font_style = 5;
+  // optional uint32 font_style = 5;
   if (has_font_style()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->font_style(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->font_style(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -430,10 +430,10 @@ int Style::ByteSize() const {
       total_size += 1 + 4;
     }
 
-    // optional int32 font_style = 5;
+    // optional uint32 font_style = 5;
     if (has_font_style()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->font_style());
     }
 

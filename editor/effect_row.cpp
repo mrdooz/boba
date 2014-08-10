@@ -13,6 +13,7 @@ EffectRow::EffectRow(
     : str(str)
     , parent(parent)
     , level(0)
+    , font(font)
 {
   rect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
   keyframeRect = STYLE_FACTORY.CreateStyledRectangle("keyframe_style");
@@ -45,7 +46,7 @@ void EffectRow::Flatten(EffectRow* cur, vector<EffectRow*>* res)
 void EffectRow::Reposition(EffectRow* cur, float curY, float rowHeight)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
-  float width = TimelineWindow::_instance->_size.x; // settings.effect_view_width();
+  const Vector2f windowSize = TimelineWindow::_instance->GetSize();
 
   deque<EffectRow*> q({ cur });
   while (!q.empty())
@@ -54,7 +55,7 @@ void EffectRow::Reposition(EffectRow* cur, float curY, float rowHeight)
     q.pop_front();
 
     cur->rect->_shape.setPosition(0, curY);
-    cur->rect->_shape.setSize(Vector2f(width, (1 + cur->NumVars()) * rowHeight));
+    cur->rect->_shape.setSize(Vector2f(windowSize.x, (1 + cur->NumVars()) * rowHeight));
     curY += rowHeight;
     if (cur->flags.IsSet(EffectRow::RowFlagsF::Expanded))
     {
@@ -77,7 +78,7 @@ void EffectRow::Reposition(EffectRow* cur, float curY, float rowHeight)
       cur->varEditRect = FloatRect(
           x,
           shape.getPosition().y + 1 * rowHeight,
-          width - x,
+          (settings.effect_view_width() - x) / 2,
           numVars * rowHeight);
     }
   }
@@ -118,7 +119,23 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
 
   // draw background
   rect->_shape.setFillColor(rowCol);
+  Vector2f size = rect->_shape.getSize();
+  Vector2f windowSize = TimelineWindow::_instance->GetSize();
+  rect->_shape.setSize(Vector2f(drawKeyframes ? windowSize.x : settings.effect_view_width(), size.y));
   texture.draw(rect->_shape);
+
+  // fill the background if in graph mode
+  if (!drawKeyframes)
+  {
+    RectangleShape rect;
+    rect.setPosition(settings.effect_view_width(), settings.ticker_height());
+    rect.setSize(Vector2f(
+        windowSize.x - settings.effect_view_width(),
+        windowSize.y - settings.ticker_height()));
+
+    rect.setFillColor(STYLE_FACTORY.GetStyle("default_row_color")->fillColor);
+    texture.draw(rect);
+  }
 
   // draw text
   text.setString(str);
@@ -151,7 +168,7 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
     tri.append(sf::Vertex(Vector2f(left+10, y+15), s->fillColor));
     texture.draw(tri);
 
-    DrawVars(texture, TimelineWindow::_instance->_size, drawKeyframes);
+    DrawVars(texture, drawKeyframes);
 
     for (EffectRow* child : children)
     {
@@ -172,8 +189,9 @@ EffectRowNoise::EffectRowNoise(
 }
 
 //----------------------------------------------------------------------------------
-void EffectRowNoise::DrawVars(RenderTexture& texture, const Vector2f& size, bool drawKeyframes)
+void EffectRowNoise::DrawVars(RenderTexture& texture, bool drawKeyframes)
 {
+  Vector2f size = TimelineWindow::_instance->GetSize();
   const editor::protocol::Settings& settings = EDITOR.Settings();
   float h = settings.effect_row_height();
 
@@ -275,8 +293,6 @@ Vector3f EffectRowNoise::PixelToValue(int y) const
   Vector2f size = TimelineWindow::_instance->GetSize();
   const editor::protocol::Settings& settings = EDITOR.Settings();
   float topY = settings.ticker_height();
-  float ofs = settings.effect_view_width();
-  float w = size.x - ofs;
   float h = size.y - topY;
   float bottom = size.y - 1;
 
@@ -291,8 +307,6 @@ float EffectRowNoise::CalcGraphValue(const Vector3f& value) const
   Vector2f size = TimelineWindow::_instance->GetSize();
   const editor::protocol::Settings& settings = EDITOR.Settings();
   float topY = settings.ticker_height();
-  float ofs = settings.effect_view_width();
-  float w = size.x - ofs;
   float h = size.y - topY;
   float bottom = size.y - 1;
 
@@ -318,11 +332,7 @@ void EffectRowNoise::VisibleKeyframes(
     vector<pair<Vector2f, Vector3Keyframe*>>* keyframes)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
-  float topY = settings.ticker_height();
   float ofs = settings.effect_view_width();
-  float w = size.x - ofs;
-  float h = size.y - topY;
-  float bottom = size.y - 1;
 
   TimelineWindow* timeline = TimelineWindow::_instance;
 
@@ -359,6 +369,9 @@ void EffectRowNoise::VisibleKeyframes(
       minValue = Min(minValue, keyframe.value);
       maxValue = Max(maxValue, keyframe.value);
     }
+
+    realMinValue = minValue;
+    realMaxValue = maxValue;
 
     minValue -= 0.25f * minValue;
     maxValue += 0.25f * maxValue;
@@ -401,8 +414,34 @@ void EffectRowNoise::VisibleKeyframes(
 //----------------------------------------------------------------------------------
 void EffectRowNoise::DrawGraph(RenderTexture& texture, const Vector2f& size)
 {
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  int ofs = settings.effect_view_width();
+
   vector<pair<Vector2f, Vector3Keyframe*>> keyframes;
   VisibleKeyframes(size, true, &keyframes);
+
+  // draw min/max lines
+  VertexArray gridLines(sf::Lines);
+  float y = CalcGraphValue(realMinValue);
+  Color c(200, 200, 200, 255);
+  gridLines.append(sf::Vertex(Vector2f(ofs, y), c));
+  gridLines.append(sf::Vertex(Vector2f(size.x, y), c));
+  Text label;
+  label.setFont(font);
+  label.setCharacterSize(16);
+  label.setPosition(ofs, y - 16);
+  label.setString(to_string("%.2f", realMinValue.x).c_str());
+  label.setColor(c);
+  texture.draw(label);
+
+  y = CalcGraphValue(realMaxValue);
+  gridLines.append(sf::Vertex(Vector2f(ofs, y), c));
+  gridLines.append(sf::Vertex(Vector2f(size.x, y), c));
+  texture.draw(gridLines);
+
+  label.setPosition(ofs, y);
+  label.setString(to_string("%.2f", realMaxValue.x).c_str());
+  texture.draw(label);
 
   // draw the keyframes normalized to the min/max values
   VertexArray curLine(sf::LinesStrip);
@@ -493,8 +532,6 @@ bool EffectRowNoise::KeyframeIntersect(const Vector2f& pt, const Vector2f& size)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
 
-  int w = size.x - settings.effect_view_width();
-  int x = settings.effect_view_width();
   float shapeY = rect->_shape.getPosition().y;
   float h = settings.effect_row_height();
 
@@ -564,7 +601,6 @@ void EffectRowNoise::EndKeyframeUpdate(bool commit)
   }
 }
 
-
 //----------------------------------------------------------------------------------
 void EffectRowNoise::DeselectKeyframe()
 {
@@ -579,16 +615,17 @@ void EffectRowNoise::DeleteKeyframe()
 }
 
 //----------------------------------------------------------------------------------
-bool EffectRowNoise::ToggleDisplayMode()
+bool EffectRowNoise::NextGraph()
 {
-  // toggle between keyframe, x graph, y graph, z graph
   graphMode = (graphMode + 1) % 4;
+  return graphMode == 0;
+}
 
-  if (graphMode == 1)
-    selectedKeyframe = nullptr;
-
-  // switching mode if going from graph 3 -> keyframe, or keyframe -> graph 1
-  return graphMode == 0 || graphMode == 1;
+//----------------------------------------------------------------------------------
+void EffectRowNoise::ToggleGraphView(bool value)
+{
+  // reset the first graph or to keyframe view
+  graphMode = value ? 1 : 0;
 }
 
 //----------------------------------------------------------------------------------
@@ -621,7 +658,6 @@ Vector3f EffectRowNoise::UpdateKeyframe(const Vector3f& newValue, const Vector3f
 
   return res;
 }
-
 
 //----------------------------------------------------------------------------------
 bool EffectRowNoise::GraphMouseButtonPressed(const Event& event)

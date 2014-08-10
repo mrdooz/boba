@@ -9,6 +9,68 @@ namespace editor
   struct StyleFactory;
   struct EffectRow;
 
+  template <typename T>
+  struct ToggleSet
+  {
+    ToggleSet()
+      : it(backingSet.end())
+    {
+
+    }
+
+    bool IsEmpty()
+    {
+      return backingSet.empty();
+    }
+
+    void Reset()
+    {
+      it = backingSet.begin();
+    }
+
+    bool Next()
+    {
+      if (IsEmpty())
+        return false;
+
+      // display the next graph, or step to the next row if done
+      if ((*it)->NextGraph())
+      {
+        ++it;
+        if (it == backingSet.end())
+        {
+          Reset();
+          return false;
+        }
+        (*it)->ToggleGraphView(true);
+      }
+
+      return true;
+    }
+
+    void Toggle(const T& t)
+    {
+      auto it = backingSet.find(t);
+      if (it == backingSet.end())
+      {
+        backingSet.insert(t);
+      }
+      else
+      {
+        backingSet.erase(it);
+      }
+      Reset();
+    }
+
+    T CurRow()
+    {
+      return *it;
+    }
+
+    unordered_set<T> backingSet;
+    typename unordered_set<T>::iterator it;
+  };
+
   //----------------------------------------------------------------------------------
   class PropertyWindow : public VirtualWindow
   {
@@ -76,8 +138,6 @@ namespace editor
     bool OnMouseWheelMoved(const Event& event);
     bool OnKeyReleased(const Event& event);
 
-    bool MouseMoveKeyframe(const Event& event, const time_duration& curTime);
-
     void RecalcEffecRows();
 
     template<typename T>
@@ -99,6 +159,7 @@ namespace editor
     EffectRow* _movingKeyframe;
     EffectRow* _selectedKeyframe;
     DisplayMode _displayMode;
+    ToggleSet<EffectRow*> _selectedRows;
   };
 
 }

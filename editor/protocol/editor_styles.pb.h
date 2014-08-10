@@ -131,12 +131,12 @@ class Style : public ::google::protobuf::Message {
   inline float outline_thickness() const;
   inline void set_outline_thickness(float value);
 
-  // optional int32 font_style = 5;
+  // optional uint32 font_style = 5;
   inline bool has_font_style() const;
   inline void clear_font_style();
   static const int kFontStyleFieldNumber = 5;
-  inline ::google::protobuf::int32 font_style() const;
-  inline void set_font_style(::google::protobuf::int32 value);
+  inline ::google::protobuf::uint32 font_style() const;
+  inline void set_font_style(::google::protobuf::uint32 value);
 
   // @@protoc_insertion_point(class_scope:editor.protocol.Style)
  private:
@@ -157,7 +157,7 @@ class Style : public ::google::protobuf::Message {
   ::editor::protocol::Color4* fill_color_;
   ::editor::protocol::Color4* outline_color_;
   float outline_thickness_;
-  ::google::protobuf::int32 font_style_;
+  ::google::protobuf::uint32 font_style_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
@@ -429,7 +429,7 @@ inline void Style::set_outline_thickness(float value) {
   outline_thickness_ = value;
 }
 
-// optional int32 font_style = 5;
+// optional uint32 font_style = 5;
 inline bool Style::has_font_style() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
@@ -440,13 +440,13 @@ inline void Style::clear_has_font_style() {
   _has_bits_[0] &= ~0x00000010u;
 }
 inline void Style::clear_font_style() {
-  font_style_ = 0;
+  font_style_ = 0u;
   clear_has_font_style();
 }
-inline ::google::protobuf::int32 Style::font_style() const {
+inline ::google::protobuf::uint32 Style::font_style() const {
   return font_style_;
 }
-inline void Style::set_font_style(::google::protobuf::int32 value) {
+inline void Style::set_font_style(::google::protobuf::uint32 value) {
   set_has_font_style();
   font_style_ = value;
 }
