@@ -108,3 +108,18 @@ styles {
 	outline_thickness : 1
 }
 
+styles {
+	id : "status_bar_style"
+	fill_color {
+		r : 20
+		g : 20
+		b : 80
+	}
+	outline_color {
+		r : 160
+		g : 160
+		b : 160
+	}
+	outline_thickness : 2
+}
+

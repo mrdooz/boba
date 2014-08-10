@@ -94,6 +94,7 @@ namespace editor
     uint32_t ticksPerInterval;
     uint32_t effectViewWidth;
     uint32_t effectRowHeight;
+    uint32_t statusBarHeight;
     uint32_t effectHeight;
     uint32_t resizeHandle;
     uint32_t timelineZoomMin;
@@ -115,6 +116,7 @@ namespace editor
     res.ticksPerInterval = p.ticks_per_interval();
     res.effectViewWidth = p.effect_view_width();
     res.effectRowHeight = p.effect_row_height();
+    res.statusBarHeight = p.status_bar_height();
     res.effectHeight = p.effect_height();
     res.resizeHandle = p.resize_handle();
     res.timelineZoomMin = p.timeline_zoom_min();

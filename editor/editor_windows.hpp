@@ -108,6 +108,7 @@ namespace editor
     int TimeToPixel(const time_duration& t) const;
     time_duration PixelToTime(int x) const;
     time_duration AbsPixelToTime(int x) const;
+    void UpdateStatusBar(int segment, const string& value);
 
     static TimelineWindow* _instance;
 
@@ -122,6 +123,7 @@ namespace editor
 
     void DrawEffects();
     void DrawTimeline();
+    void DrawStatusBar();
 
     struct TimelineFlagsF
     {
@@ -156,10 +158,13 @@ namespace editor
     Vector2i _lastDragPos;
     EffectRow* _editRow;
     StyledRectangle* _tickerRect;
+    StyledRectangle* _statusBar;
+    vector<string> _statusBarValues;
     EffectRow* _movingKeyframe;
     EffectRow* _selectedKeyframe;
     DisplayMode _displayMode;
     ToggleSet<EffectRow*> _selectedRows;
+
   };
 
 }

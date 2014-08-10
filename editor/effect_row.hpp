@@ -47,17 +47,17 @@ namespace editor
     virtual bool GraphMouseButtonReleased(const Event& event) { return true; }
 
 
-    string str;
-    RowFlags flags;
-    EffectRow* parent;
-    StyledRectangle* rect;
-    vector<EffectRow*> children;
-    Text text;
-    int level;
-    FloatRect expandRect;
-    FloatRect varEditRect;
-    StyledRectangle* keyframeRect;
-    Font font;
+    string _str;
+    RowFlags _flags;
+    EffectRow* _parent;
+    StyledRectangle* _rect;
+    vector<EffectRow*> _children;
+    Text _text;
+    int _level;
+    FloatRect _expandRect;
+    FloatRect _varEditRect;
+    StyledRectangle*_keyframeRect;
+    Font _font;
   };
 
   struct EffectRowNoise : public EffectRow
@@ -96,21 +96,25 @@ namespace editor
 
     float CalcGraphValue(const Vector3f& value) const;
     float ExtractGraphValue(const Vector3f& value) const;
+    float& ExtractGraphValue(Vector3f& value);
     Vector3f PixelToValue(int y) const;
     Vector3f UpdateKeyframe(const Vector3f& newValue, const Vector3f& old) const;
 
-    int editingIdx;
+    void CalcCeilAndStep(float value, float* stepValue, float* ceilValue);
+    void CalcCeilAndStep(const Vector3f& value, Vector3f* stepValue, Vector3f* ceilValue);
 
-    NoiseEffector effector;
-    Vector3f prevValue;
-    string curEdit;
-    Vector3Keyframe* selectedKeyframe;
-    Vector3Keyframe oldKeyframe;
-    bool copyingKeyframe;
+    int _editingIdx;
 
-    u32 graphMode;
-    Vector3f minValue, maxValue;
-    Vector3f realMinValue, realMaxValue;
+    NoiseEffector _effector;
+    Vector3f _prevValue;
+    string _curEdit;
+    Vector3Keyframe*_selectedKeyframe;
+    Vector3Keyframe _oldKeyframe;
+    bool _copyingKeyframe;
+
+    u32 _graphMode;
+    Vector3f _minValue, _maxValue;
+    Vector3f _realMinValue, _realMaxValue;
   };
 
 }

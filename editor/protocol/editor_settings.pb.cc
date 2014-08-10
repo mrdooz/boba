@@ -56,12 +56,13 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Color4));
   Settings_descriptor_ = file->message_type(1);
-  static const int Settings_offsets_[16] = {
+  static const int Settings_offsets_[17] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_interval_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticks_per_interval_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, effect_view_width_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, effect_row_height_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, status_bar_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, effect_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, resize_handle_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, timeline_zoom_min_),
@@ -121,24 +122,24 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\025editor_settings.proto\022\017editor.protocol"
     "\"B\n\006Color4\022\014\n\001r\030\001 \001(\r:\0010\022\014\n\001g\030\002 \001(\r:\0010\022\014"
-    "\n\001b\030\003 \001(\r:\0010\022\016\n\001a\030\004 \001(\r:\003255\"\213\005\n\010Setting"
+    "\n\001b\030\003 \001(\r:\0010\022\016\n\001a\030\004 \001(\r:\003255\"\252\005\n\010Setting"
     "s\022\031\n\rticker_height\030\001 \001(\r:\00250\022\033\n\017ticker_i"
     "nterval\030\002 \001(\r:\00220\022\035\n\022ticks_per_interval\030"
     "\003 \001(\r:\0014\022\036\n\021effect_view_width\030\024 \001(\r:\003200"
-    "\022\035\n\021effect_row_height\030\025 \001(\r:\00220\022\031\n\reffec"
-    "t_height\030\036 \001(\r:\00240\022\030\n\rresize_handle\030\037 \001("
-    "\r:\0016\022\035\n\021timeline_zoom_min\030( \001(\r:\00216\022\037\n\021t"
-    "imeline_zoom_max\030) \001(\r:\0041024\022\"\n\025timeline"
-    "_zoom_default\030* \001(\r:\003128\0222\n\021default_row_"
-    "color\030d \001(\0132\027.editor.protocol.Color4\0223\n\022"
-    "selected_row_color\030e \001(\0132\027.editor.protoc"
-    "ol.Color4\0220\n\017hover_row_color\030f \001(\0132\027.edi"
-    "tor.protocol.Color4\0228\n\027invalid_hover_row"
-    "_color\030g \001(\0132\027.editor.protocol.Color4\022<\n"
-    "\032effect_icon_expanded_color\030\310\001 \001(\0132\027.edi"
-    "tor.protocol.Color4\022=\n\033effect_icon_colla"
-    "psed_color\030\311\001 \001(\0132\027.editor.protocol.Colo"
-    "r4", 762);
+    "\022\035\n\021effect_row_height\030\025 \001(\r:\00220\022\035\n\021statu"
+    "s_bar_height\030\026 \001(\r:\00230\022\031\n\reffect_height\030"
+    "\036 \001(\r:\00240\022\030\n\rresize_handle\030\037 \001(\r:\0016\022\035\n\021t"
+    "imeline_zoom_min\030( \001(\r:\00216\022\037\n\021timeline_z"
+    "oom_max\030) \001(\r:\0041024\022\"\n\025timeline_zoom_def"
+    "ault\030* \001(\r:\003128\0222\n\021default_row_color\030d \001"
+    "(\0132\027.editor.protocol.Color4\0223\n\022selected_"
+    "row_color\030e \001(\0132\027.editor.protocol.Color4"
+    "\0220\n\017hover_row_color\030f \001(\0132\027.editor.proto"
+    "col.Color4\0228\n\027invalid_hover_row_color\030g "
+    "\001(\0132\027.editor.protocol.Color4\022<\n\032effect_i"
+    "con_expanded_color\030\310\001 \001(\0132\027.editor.proto"
+    "col.Color4\022=\n\033effect_icon_collapsed_colo"
+    "r\030\311\001 \001(\0132\027.editor.protocol.Color4", 793);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_settings.proto", &protobuf_RegisterTypes);
   Color4::default_instance_ = new Color4();
@@ -491,6 +492,7 @@ const int Settings::kTickerIntervalFieldNumber;
 const int Settings::kTicksPerIntervalFieldNumber;
 const int Settings::kEffectViewWidthFieldNumber;
 const int Settings::kEffectRowHeightFieldNumber;
+const int Settings::kStatusBarHeightFieldNumber;
 const int Settings::kEffectHeightFieldNumber;
 const int Settings::kResizeHandleFieldNumber;
 const int Settings::kTimelineZoomMinFieldNumber;
@@ -531,6 +533,7 @@ void Settings::SharedCtor() {
   ticks_per_interval_ = 4u;
   effect_view_width_ = 200u;
   effect_row_height_ = 20u;
+  status_bar_height_ = 30u;
   effect_height_ = 40u;
   resize_handle_ = 6u;
   timeline_zoom_min_ = 16u;
@@ -588,11 +591,12 @@ void Settings::Clear() {
     ticks_per_interval_ = 4u;
     effect_view_width_ = 200u;
     effect_row_height_ = 20u;
+    status_bar_height_ = 30u;
     effect_height_ = 40u;
     resize_handle_ = 6u;
-    timeline_zoom_min_ = 16u;
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    timeline_zoom_min_ = 16u;
     timeline_zoom_max_ = 1024u;
     timeline_zoom_default_ = 128u;
     if (has_default_row_color()) {
@@ -610,6 +614,8 @@ void Settings::Clear() {
     if (has_effect_icon_expanded_color()) {
       if (effect_icon_expanded_color_ != NULL) effect_icon_expanded_color_->::editor::protocol::Color4::Clear();
     }
+  }
+  if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
     if (has_effect_icon_collapsed_color()) {
       if (effect_icon_collapsed_color_ != NULL) effect_icon_collapsed_color_->::editor::protocol::Color4::Clear();
     }
@@ -696,6 +702,22 @@ bool Settings::MergePartialFromCodedStream(
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &effect_row_height_)));
           set_has_effect_row_height();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(176)) goto parse_status_bar_height;
+        break;
+      }
+
+      // optional uint32 status_bar_height = 22 [default = 30];
+      case 22: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_status_bar_height:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &status_bar_height_)));
+          set_has_status_bar_height();
         } else {
           goto handle_uninterpreted;
         }
@@ -910,6 +932,11 @@ void Settings::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(21, this->effect_row_height(), output);
   }
 
+  // optional uint32 status_bar_height = 22 [default = 30];
+  if (has_status_bar_height()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(22, this->status_bar_height(), output);
+  }
+
   // optional uint32 effect_height = 30 [default = 40];
   if (has_effect_height()) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(30, this->effect_height(), output);
@@ -1002,6 +1029,11 @@ void Settings::SerializeWithCachedSizes(
   // optional uint32 effect_row_height = 21 [default = 20];
   if (has_effect_row_height()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(21, this->effect_row_height(), target);
+  }
+
+  // optional uint32 status_bar_height = 22 [default = 30];
+  if (has_status_bar_height()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(22, this->status_bar_height(), target);
   }
 
   // optional uint32 effect_height = 30 [default = 40];
@@ -1117,6 +1149,13 @@ int Settings::ByteSize() const {
           this->effect_row_height());
     }
 
+    // optional uint32 status_bar_height = 22 [default = 30];
+    if (has_status_bar_height()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->status_bar_height());
+    }
+
     // optional uint32 effect_height = 30 [default = 40];
     if (has_effect_height()) {
       total_size += 2 +
@@ -1131,6 +1170,8 @@ int Settings::ByteSize() const {
           this->resize_handle());
     }
 
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional uint32 timeline_zoom_min = 40 [default = 16];
     if (has_timeline_zoom_min()) {
       total_size += 2 +
@@ -1138,8 +1179,6 @@ int Settings::ByteSize() const {
           this->timeline_zoom_min());
     }
 
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional uint32 timeline_zoom_max = 41 [default = 1024];
     if (has_timeline_zoom_max()) {
       total_size += 2 +
@@ -1189,6 +1228,8 @@ int Settings::ByteSize() const {
           this->effect_icon_expanded_color());
     }
 
+  }
+  if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
     // optional .editor.protocol.Color4 effect_icon_collapsed_color = 201;
     if (has_effect_icon_collapsed_color()) {
       total_size += 2 +
@@ -1238,17 +1279,20 @@ void Settings::MergeFrom(const Settings& from) {
     if (from.has_effect_row_height()) {
       set_effect_row_height(from.effect_row_height());
     }
+    if (from.has_status_bar_height()) {
+      set_status_bar_height(from.status_bar_height());
+    }
     if (from.has_effect_height()) {
       set_effect_height(from.effect_height());
     }
     if (from.has_resize_handle()) {
       set_resize_handle(from.resize_handle());
     }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_timeline_zoom_min()) {
       set_timeline_zoom_min(from.timeline_zoom_min());
     }
-  }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_timeline_zoom_max()) {
       set_timeline_zoom_max(from.timeline_zoom_max());
     }
@@ -1270,6 +1314,8 @@ void Settings::MergeFrom(const Settings& from) {
     if (from.has_effect_icon_expanded_color()) {
       mutable_effect_icon_expanded_color()->::editor::protocol::Color4::MergeFrom(from.effect_icon_expanded_color());
     }
+  }
+  if (from._has_bits_[16 / 32] & (0xffu << (16 % 32))) {
     if (from.has_effect_icon_collapsed_color()) {
       mutable_effect_icon_collapsed_color()->::editor::protocol::Color4::MergeFrom(from.effect_icon_collapsed_color());
     }
@@ -1301,6 +1347,7 @@ void Settings::Swap(Settings* other) {
     std::swap(ticks_per_interval_, other->ticks_per_interval_);
     std::swap(effect_view_width_, other->effect_view_width_);
     std::swap(effect_row_height_, other->effect_row_height_);
+    std::swap(status_bar_height_, other->status_bar_height_);
     std::swap(effect_height_, other->effect_height_);
     std::swap(resize_handle_, other->resize_handle_);
     std::swap(timeline_zoom_min_, other->timeline_zoom_min_);

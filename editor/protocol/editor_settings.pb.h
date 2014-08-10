@@ -240,6 +240,13 @@ class Settings : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 effect_row_height() const;
   inline void set_effect_row_height(::google::protobuf::uint32 value);
 
+  // optional uint32 status_bar_height = 22 [default = 30];
+  inline bool has_status_bar_height() const;
+  inline void clear_status_bar_height();
+  static const int kStatusBarHeightFieldNumber = 22;
+  inline ::google::protobuf::uint32 status_bar_height() const;
+  inline void set_status_bar_height(::google::protobuf::uint32 value);
+
   // optional uint32 effect_height = 30 [default = 40];
   inline bool has_effect_height() const;
   inline void clear_effect_height();
@@ -341,6 +348,8 @@ class Settings : public ::google::protobuf::Message {
   inline void clear_has_effect_view_width();
   inline void set_has_effect_row_height();
   inline void clear_has_effect_row_height();
+  inline void set_has_status_bar_height();
+  inline void clear_has_status_bar_height();
   inline void set_has_effect_height();
   inline void clear_has_effect_height();
   inline void set_has_resize_handle();
@@ -371,20 +380,21 @@ class Settings : public ::google::protobuf::Message {
   ::google::protobuf::uint32 ticks_per_interval_;
   ::google::protobuf::uint32 effect_view_width_;
   ::google::protobuf::uint32 effect_row_height_;
+  ::google::protobuf::uint32 status_bar_height_;
   ::google::protobuf::uint32 effect_height_;
   ::google::protobuf::uint32 resize_handle_;
   ::google::protobuf::uint32 timeline_zoom_min_;
   ::google::protobuf::uint32 timeline_zoom_max_;
-  ::google::protobuf::uint32 timeline_zoom_default_;
   ::editor::protocol::Color4* default_row_color_;
   ::editor::protocol::Color4* selected_row_color_;
   ::editor::protocol::Color4* hover_row_color_;
   ::editor::protocol::Color4* invalid_hover_row_color_;
   ::editor::protocol::Color4* effect_icon_expanded_color_;
   ::editor::protocol::Color4* effect_icon_collapsed_color_;
+  ::google::protobuf::uint32 timeline_zoom_default_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(16 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(17 + 31) / 32];
 
   friend void  protobuf_AddDesc_editor_5fsettings_2eproto();
   friend void protobuf_AssignDesc_editor_5fsettings_2eproto();
@@ -602,15 +612,37 @@ inline void Settings::set_effect_row_height(::google::protobuf::uint32 value) {
   effect_row_height_ = value;
 }
 
-// optional uint32 effect_height = 30 [default = 40];
-inline bool Settings::has_effect_height() const {
+// optional uint32 status_bar_height = 22 [default = 30];
+inline bool Settings::has_status_bar_height() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
-inline void Settings::set_has_effect_height() {
+inline void Settings::set_has_status_bar_height() {
   _has_bits_[0] |= 0x00000020u;
 }
-inline void Settings::clear_has_effect_height() {
+inline void Settings::clear_has_status_bar_height() {
   _has_bits_[0] &= ~0x00000020u;
+}
+inline void Settings::clear_status_bar_height() {
+  status_bar_height_ = 30u;
+  clear_has_status_bar_height();
+}
+inline ::google::protobuf::uint32 Settings::status_bar_height() const {
+  return status_bar_height_;
+}
+inline void Settings::set_status_bar_height(::google::protobuf::uint32 value) {
+  set_has_status_bar_height();
+  status_bar_height_ = value;
+}
+
+// optional uint32 effect_height = 30 [default = 40];
+inline bool Settings::has_effect_height() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Settings::set_has_effect_height() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Settings::clear_has_effect_height() {
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void Settings::clear_effect_height() {
   effect_height_ = 40u;
@@ -626,13 +658,13 @@ inline void Settings::set_effect_height(::google::protobuf::uint32 value) {
 
 // optional uint32 resize_handle = 31 [default = 6];
 inline bool Settings::has_resize_handle() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void Settings::set_has_resize_handle() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void Settings::clear_has_resize_handle() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void Settings::clear_resize_handle() {
   resize_handle_ = 6u;
@@ -648,13 +680,13 @@ inline void Settings::set_resize_handle(::google::protobuf::uint32 value) {
 
 // optional uint32 timeline_zoom_min = 40 [default = 16];
 inline bool Settings::has_timeline_zoom_min() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void Settings::set_has_timeline_zoom_min() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void Settings::clear_has_timeline_zoom_min() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void Settings::clear_timeline_zoom_min() {
   timeline_zoom_min_ = 16u;
@@ -670,13 +702,13 @@ inline void Settings::set_timeline_zoom_min(::google::protobuf::uint32 value) {
 
 // optional uint32 timeline_zoom_max = 41 [default = 1024];
 inline bool Settings::has_timeline_zoom_max() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void Settings::set_has_timeline_zoom_max() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void Settings::clear_has_timeline_zoom_max() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void Settings::clear_timeline_zoom_max() {
   timeline_zoom_max_ = 1024u;
@@ -692,13 +724,13 @@ inline void Settings::set_timeline_zoom_max(::google::protobuf::uint32 value) {
 
 // optional uint32 timeline_zoom_default = 42 [default = 128];
 inline bool Settings::has_timeline_zoom_default() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void Settings::set_has_timeline_zoom_default() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void Settings::clear_has_timeline_zoom_default() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void Settings::clear_timeline_zoom_default() {
   timeline_zoom_default_ = 128u;
@@ -714,13 +746,13 @@ inline void Settings::set_timeline_zoom_default(::google::protobuf::uint32 value
 
 // optional .editor.protocol.Color4 default_row_color = 100;
 inline bool Settings::has_default_row_color() const {
-  return (_has_bits_[0] & 0x00000400u) != 0;
+  return (_has_bits_[0] & 0x00000800u) != 0;
 }
 inline void Settings::set_has_default_row_color() {
-  _has_bits_[0] |= 0x00000400u;
+  _has_bits_[0] |= 0x00000800u;
 }
 inline void Settings::clear_has_default_row_color() {
-  _has_bits_[0] &= ~0x00000400u;
+  _has_bits_[0] &= ~0x00000800u;
 }
 inline void Settings::clear_default_row_color() {
   if (default_row_color_ != NULL) default_row_color_->::editor::protocol::Color4::Clear();
@@ -752,13 +784,13 @@ inline void Settings::set_allocated_default_row_color(::editor::protocol::Color4
 
 // optional .editor.protocol.Color4 selected_row_color = 101;
 inline bool Settings::has_selected_row_color() const {
-  return (_has_bits_[0] & 0x00000800u) != 0;
+  return (_has_bits_[0] & 0x00001000u) != 0;
 }
 inline void Settings::set_has_selected_row_color() {
-  _has_bits_[0] |= 0x00000800u;
+  _has_bits_[0] |= 0x00001000u;
 }
 inline void Settings::clear_has_selected_row_color() {
-  _has_bits_[0] &= ~0x00000800u;
+  _has_bits_[0] &= ~0x00001000u;
 }
 inline void Settings::clear_selected_row_color() {
   if (selected_row_color_ != NULL) selected_row_color_->::editor::protocol::Color4::Clear();
@@ -790,13 +822,13 @@ inline void Settings::set_allocated_selected_row_color(::editor::protocol::Color
 
 // optional .editor.protocol.Color4 hover_row_color = 102;
 inline bool Settings::has_hover_row_color() const {
-  return (_has_bits_[0] & 0x00001000u) != 0;
+  return (_has_bits_[0] & 0x00002000u) != 0;
 }
 inline void Settings::set_has_hover_row_color() {
-  _has_bits_[0] |= 0x00001000u;
+  _has_bits_[0] |= 0x00002000u;
 }
 inline void Settings::clear_has_hover_row_color() {
-  _has_bits_[0] &= ~0x00001000u;
+  _has_bits_[0] &= ~0x00002000u;
 }
 inline void Settings::clear_hover_row_color() {
   if (hover_row_color_ != NULL) hover_row_color_->::editor::protocol::Color4::Clear();
@@ -828,13 +860,13 @@ inline void Settings::set_allocated_hover_row_color(::editor::protocol::Color4* 
 
 // optional .editor.protocol.Color4 invalid_hover_row_color = 103;
 inline bool Settings::has_invalid_hover_row_color() const {
-  return (_has_bits_[0] & 0x00002000u) != 0;
+  return (_has_bits_[0] & 0x00004000u) != 0;
 }
 inline void Settings::set_has_invalid_hover_row_color() {
-  _has_bits_[0] |= 0x00002000u;
+  _has_bits_[0] |= 0x00004000u;
 }
 inline void Settings::clear_has_invalid_hover_row_color() {
-  _has_bits_[0] &= ~0x00002000u;
+  _has_bits_[0] &= ~0x00004000u;
 }
 inline void Settings::clear_invalid_hover_row_color() {
   if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::editor::protocol::Color4::Clear();
@@ -866,13 +898,13 @@ inline void Settings::set_allocated_invalid_hover_row_color(::editor::protocol::
 
 // optional .editor.protocol.Color4 effect_icon_expanded_color = 200;
 inline bool Settings::has_effect_icon_expanded_color() const {
-  return (_has_bits_[0] & 0x00004000u) != 0;
+  return (_has_bits_[0] & 0x00008000u) != 0;
 }
 inline void Settings::set_has_effect_icon_expanded_color() {
-  _has_bits_[0] |= 0x00004000u;
+  _has_bits_[0] |= 0x00008000u;
 }
 inline void Settings::clear_has_effect_icon_expanded_color() {
-  _has_bits_[0] &= ~0x00004000u;
+  _has_bits_[0] &= ~0x00008000u;
 }
 inline void Settings::clear_effect_icon_expanded_color() {
   if (effect_icon_expanded_color_ != NULL) effect_icon_expanded_color_->::editor::protocol::Color4::Clear();
@@ -904,13 +936,13 @@ inline void Settings::set_allocated_effect_icon_expanded_color(::editor::protoco
 
 // optional .editor.protocol.Color4 effect_icon_collapsed_color = 201;
 inline bool Settings::has_effect_icon_collapsed_color() const {
-  return (_has_bits_[0] & 0x00008000u) != 0;
+  return (_has_bits_[0] & 0x00010000u) != 0;
 }
 inline void Settings::set_has_effect_icon_collapsed_color() {
-  _has_bits_[0] |= 0x00008000u;
+  _has_bits_[0] |= 0x00010000u;
 }
 inline void Settings::clear_has_effect_icon_collapsed_color() {
-  _has_bits_[0] &= ~0x00008000u;
+  _has_bits_[0] &= ~0x00010000u;
 }
 inline void Settings::clear_effect_icon_collapsed_color() {
   if (effect_icon_collapsed_color_ != NULL) effect_icon_collapsed_color_->::editor::protocol::Color4::Clear();

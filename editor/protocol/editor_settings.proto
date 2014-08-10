@@ -16,6 +16,7 @@ message Settings
   
   optional uint32 effect_view_width = 20 [default = 200];
   optional uint32 effect_row_height = 21 [default = 20];
+  optional uint32 status_bar_height = 22 [default = 30];
 
   optional uint32 effect_height = 30 [default = 40];
   optional uint32 resize_handle = 31 [default = 6];

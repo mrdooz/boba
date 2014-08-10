@@ -40,6 +40,7 @@ TimelineWindow::TimelineWindow(
     , _lastDragPos(-1, -1)
     , _editRow(nullptr)
     , _tickerRect(nullptr)
+    , _statusBar(nullptr)
     , _movingKeyframe(nullptr)
     , _selectedKeyframe(nullptr)
     , _displayMode(DisplayMode::Keyframe)
@@ -73,9 +74,15 @@ bool TimelineWindow::Init()
   int rowHeight = settings.effect_row_height();
   int curY = settings.ticker_height();
 
+  const Vector2f& windowSize = GetSize();
+
   _tickerRect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
   _tickerRect->_shape.setPosition(width, 0);
   _tickerRect->_shape.setSize(Vector2f(_size.x - width, settings.ticker_height()));
+
+  _statusBar = STYLE_FACTORY.CreateStyledRectangle("status_bar_style");
+  _statusBar->_shape.setPosition(0, windowSize.y - settings.status_bar_height());
+  _statusBar->_shape.setSize(Vector2f(windowSize.x, settings.status_bar_height()));
 
   // create the effect rows
   const Plexus& p = EDITOR._plexus;
@@ -89,7 +96,7 @@ bool TimelineWindow::Init()
     for (const TextPath& t : p.textPaths)
     {
       string str = to_string("TextPath: %s", t.text.c_str());
-      parent->children.push_back(new EffectRow(_font, str, parent));
+      parent->_children.push_back(new EffectRow(_font, str, parent));
       curY += rowHeight;
     }
 
@@ -98,8 +105,8 @@ bool TimelineWindow::Init()
       string str = to_string("Noise (%s)",
         e.applyTo == NoiseEffector::ApplyTo::Position ? "POS" : "SCALE");
       EffectRowNoise* n = new EffectRowNoise(_font, str, parent);
-      n->effector = e;
-      parent->children.push_back(n);
+      n->_effector = e;
+      parent->_children.push_back(n);
       curY += rowHeight;
     }
   }
@@ -204,23 +211,23 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
     EffectRow* rowHit = nullptr;
     for (EffectRow* row : effects)
     {
-      if (row->expandRect.contains(mousePos))
+      if (row->_expandRect.contains(mousePos))
       {
-        row->flags.Toggle(EffectRow::RowFlagsF::Expanded);
+        row->_flags.Toggle(EffectRow::RowFlagsF::Expanded);
         rowHit = row;
         break;
       }
-      else if (row->varEditRect.contains(mousePos))
+      else if (row->_varEditRect.contains(mousePos))
       {
         row->BeginEditVars(x, y);
         rowHit = row;
         _editRow = row;
         break;
       }
-      else if (row->rect->_shape.getGlobalBounds().contains(mousePos))
+      else if (row->_rect->_shape.getGlobalBounds().contains(mousePos))
       {
         _selectedRows.Toggle(row);
-        row->flags.Toggle(EffectRow::RowFlagsF::Selected);
+        row->_flags.Toggle(EffectRow::RowFlagsF::Selected);
         rowHit = row;
         break;
       }
@@ -319,7 +326,8 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 {
   if (_displayMode == DisplayMode::Graph)
   {
-    return _selectedRows.CurRow()->GraphMouseButtonReleased(event);
+    if (_selectedRows.CurRow())
+      return _selectedRows.CurRow()->GraphMouseButtonReleased(event);
   }
   else
   {
@@ -330,7 +338,7 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
     }
     return true;
   }
-
+  return true;
 }
 
 //----------------------------------------------------------------------------------
@@ -436,6 +444,30 @@ void TimelineWindow::DrawEffects()
 }
 
 //----------------------------------------------------------------------------------
+void TimelineWindow::DrawStatusBar()
+{
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+
+  // draw the background
+  _texture.draw(_statusBar->_shape);
+
+  Text t;
+  t.setFont(_font);
+  t.setCharacterSize(16);
+
+  // draw the status texts
+  float x = 10;
+  float y = GetPosition().y - settings.status_bar_height();
+  for (const string& str : _statusBarValues)
+  {
+    t.setPosition(x, y);
+    t.setString(str);
+    _texture.draw(t);
+  }
+
+}
+
+//----------------------------------------------------------------------------------
 int TimelineWindow::TimeToPixel(const time_duration& t) const
 {
   int w = EDITOR.Settings().effect_view_width();
@@ -471,6 +503,18 @@ void TimelineWindow::Draw()
 
   DrawEffects();
   DrawTimeline();
+  DrawStatusBar();
 
   _texture.display();
 }
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::UpdateStatusBar(int segment, const string& value)
+{
+  if (segment >= _statusBarValues.size())
+    _statusBarValues.resize(segment + 1);
+
+  _statusBarValues[segment] = value;
+}
+
+

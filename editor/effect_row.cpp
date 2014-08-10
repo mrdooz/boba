@@ -10,21 +10,21 @@ EffectRow::EffectRow(
     const Font& font,
     const string& str,
     EffectRow* parent)
-    : str(str)
-    , parent(parent)
-    , level(0)
-    , font(font)
+    : _str(str)
+    , _parent(parent)
+    , _level(0)
+    , _font(font)
 {
-  rect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
-  keyframeRect = STYLE_FACTORY.CreateStyledRectangle("keyframe_style");
-  keyframeRect->_shape.setSize(Vector2f(6, 6));
+  _rect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
+  _keyframeRect = STYLE_FACTORY.CreateStyledRectangle("keyframe_style");
+  _keyframeRect->_shape.setSize(Vector2f(6, 6));
 
-  text.setFont(font);
-  text.setCharacterSize(16);
-  flags.Set(EffectRow::RowFlagsF::Expanded);
+  _text.setFont(font);
+  _text.setCharacterSize(16);
+  _flags.Set(EffectRow::RowFlagsF::Expanded);
 
   if (parent)
-    level = parent->level + 1;
+    _level = parent->_level + 1;
 }
 
 //----------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ void EffectRow::Flatten(EffectRow* cur, vector<EffectRow*>* res)
     q.pop_front();
 
     res->push_back(cur);
-    for (EffectRow* c : cur->children)
+    for (EffectRow* c : cur->_children)
       q.push_back(c);
   }
 }
@@ -54,19 +54,19 @@ void EffectRow::Reposition(EffectRow* cur, float curY, float rowHeight)
     EffectRow* cur = q.front();
     q.pop_front();
 
-    cur->rect->_shape.setPosition(0, curY);
-    cur->rect->_shape.setSize(Vector2f(windowSize.x, (1 + cur->NumVars()) * rowHeight));
+    cur->_rect->_shape.setPosition(0, curY);
+    cur->_rect->_shape.setSize(Vector2f(windowSize.x, (1 + cur->NumVars()) * rowHeight));
     curY += rowHeight;
-    if (cur->flags.IsSet(EffectRow::RowFlagsF::Expanded))
+    if (cur->_flags.IsSet(EffectRow::RowFlagsF::Expanded))
     {
-      for (EffectRow* c : cur->children)
+      for (EffectRow* c : cur->_children)
         q.push_back(c);
     }
 
-    const RectangleShape& shape = cur->rect->_shape;
+    const RectangleShape& shape = cur->_rect->_shape;
 
-    cur->expandRect = FloatRect(
-        cur->level * 15 + shape.getPosition().x,
+    cur->_expandRect = FloatRect(
+        cur->_level * 15 + shape.getPosition().x,
         shape.getPosition().y,
         15,
         15);
@@ -74,8 +74,8 @@ void EffectRow::Reposition(EffectRow* cur, float curY, float rowHeight)
     u32 numVars = cur->NumVars();
     if (numVars > 0)
     {
-      float x = cur->level * 15 + shape.getPosition().x;
-      cur->varEditRect = FloatRect(
+      float x = cur->_level * 15 + shape.getPosition().x;
+      cur->_varEditRect = FloatRect(
           x,
           shape.getPosition().y + 1 * rowHeight,
           (settings.effect_view_width() - x) / 2,
@@ -94,10 +94,10 @@ float EffectRow::RowHeight(EffectRow* cur, float rowHeight)
     EffectRow* cur = q.front();
     q.pop_front();
 
-    if (cur->flags.IsSet(EffectRow::RowFlagsF::Expanded))
+    if (cur->_flags.IsSet(EffectRow::RowFlagsF::Expanded))
     {
       res += (1 + cur->NumVars()) * rowHeight;
-      for (EffectRow* c : cur->children)
+      for (EffectRow* c : cur->_children)
         q.push_back(c);
     }
     else
@@ -113,16 +113,16 @@ float EffectRow::RowHeight(EffectRow* cur, float rowHeight)
 void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
-  Color rowCol = FromProtocol(flags.IsSet(EffectRow::RowFlagsF::Selected)
+  Color rowCol = FromProtocol(_flags.IsSet(EffectRow::RowFlagsF::Selected)
       ? settings.selected_row_color()
       : settings.default_row_color());
 
   // draw background
-  rect->_shape.setFillColor(rowCol);
-  Vector2f size = rect->_shape.getSize();
+  _rect->_shape.setFillColor(rowCol);
+  Vector2f size = _rect->_shape.getSize();
   Vector2f windowSize = TimelineWindow::_instance->GetSize();
-  rect->_shape.setSize(Vector2f(drawKeyframes ? windowSize.x : settings.effect_view_width(), size.y));
-  texture.draw(rect->_shape);
+  _rect->_shape.setSize(Vector2f(drawKeyframes ? windowSize.x : settings.effect_view_width(), size.y));
+  texture.draw(_rect->_shape);
 
   // fill the background if in graph mode
   if (!drawKeyframes)
@@ -138,17 +138,17 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
   }
 
   // draw text
-  text.setString(str);
-  text.setPosition(rect->_shape.getPosition() + Vector2f(20 + level * 15, 0) );
-  texture.draw(text);
+  _text.setString(_str);
+  _text.setPosition(_rect->_shape.getPosition() + Vector2f(20 + _level * 15, 0) );
+  texture.draw(_text);
 
   // draw expanded indicator
   VertexArray tri(sf::Triangles);
-  float left = level * 15 + rect->_shape.getPosition().x;
-  float top = rect->_shape.getPosition().y;
+  float left = _level * 15 + _rect->_shape.getPosition().x;
+  float top = _rect->_shape.getPosition().y;
   float y = top;
 
-  if (!flags.IsSet(EffectRow::RowFlagsF::Expanded))
+  if (!_flags.IsSet(EffectRow::RowFlagsF::Expanded))
   {
     // draw expanded indicator
 
@@ -170,7 +170,7 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
 
     DrawVars(texture, drawKeyframes);
 
-    for (EffectRow* child : children)
+    for (EffectRow* child : _children)
     {
       child->Draw(texture, drawKeyframes);
     }
@@ -183,8 +183,8 @@ EffectRowNoise::EffectRowNoise(
     const string& str,
     EffectRow* parent)
     : EffectRow(font, str, parent)
-    , editingIdx(-1)
-    , selectedKeyframe(nullptr)
+    , _editingIdx(-1)
+    , _selectedKeyframe(nullptr)
 {
 }
 
@@ -195,7 +195,7 @@ void EffectRowNoise::DrawVars(RenderTexture& texture, bool drawKeyframes)
   const editor::protocol::Settings& settings = EDITOR.Settings();
   float h = settings.effect_row_height();
 
-  Vector3f v = Interpolate(effector.displacement, EDITOR.CurTime().total_milliseconds());
+  Vector3f v = Interpolate(_effector.displacement, EDITOR.CurTime().total_milliseconds());
 
   const Style* editingStyle = STYLE_FACTORY.GetStyle("var_text_editing");
   const Style* normalStyle = STYLE_FACTORY.GetStyle("var_text_normal");
@@ -207,31 +207,31 @@ void EffectRowNoise::DrawVars(RenderTexture& texture, bool drawKeyframes)
   };
 
   const auto& fnStyle = [this, editingStyle, normalStyle, v](int curIdx){
-      if (curIdx == editingIdx)
+      if (curIdx == _editingIdx)
       {
-        text.setString(to_string("%s%s", suffix[curIdx], curEdit.c_str()).c_str());
-        text.setColor(editingStyle->fillColor);
-        text.setStyle(editingStyle->fontStyle);
+        _text.setString(to_string("%s%s", suffix[curIdx], _curEdit.c_str()).c_str());
+        _text.setColor(editingStyle->fillColor);
+        _text.setStyle(editingStyle->fontStyle);
       }
       else
       {
-        text.setString(to_string("%s%.2f", suffix[curIdx], *(&v.x + curIdx)).c_str());
-        text.setColor(normalStyle->fillColor);
-        text.setStyle(normalStyle->fontStyle);
+        _text.setString(to_string("%s%.2f", suffix[curIdx], *(&v.x + curIdx)).c_str());
+        _text.setColor(normalStyle->fillColor);
+        _text.setStyle(normalStyle->fontStyle);
       }
   };
 
   fnStyle(0);
-  text.setPosition(rect->_shape.getPosition() + Vector2f(20 + level * 15, h*1));
-  texture.draw(text);
+  _text.setPosition(_rect->_shape.getPosition() + Vector2f(20 + _level * 15, h*1));
+  texture.draw(_text);
 
   fnStyle(1);
-  text.setPosition(rect->_shape.getPosition() + Vector2f(20 + level * 15, h*2));
-  texture.draw(text);
+  _text.setPosition(_rect->_shape.getPosition() + Vector2f(20 + _level * 15, h*2));
+  texture.draw(_text);
 
   fnStyle(2);
-  text.setPosition(rect->_shape.getPosition() + Vector2f(20 + level * 15, h*3));
-  texture.draw(text);
+  _text.setPosition(_rect->_shape.getPosition() + Vector2f(20 + _level * 15, h*3));
+  texture.draw(_text);
 
   if (drawKeyframes)
   {
@@ -252,7 +252,7 @@ void EffectRowNoise::DrawKeyframes(RenderTexture& texture, const Vector2f& size)
   VertexArray curLine(sf::Lines);
   int w = size.x - settings.effect_view_width();
   int x = settings.effect_view_width();
-  float shapeY = rect->_shape.getPosition().y;
+  float shapeY = _rect->_shape.getPosition().y;
 
   for (int i = 0; i < 3; ++i)
   {
@@ -262,12 +262,12 @@ void EffectRowNoise::DrawKeyframes(RenderTexture& texture, const Vector2f& size)
   }
   texture.draw(curLine);
 
-  for (u32 i = 0; i < effector.displacement.keyframes.size(); ++i)
+  for (u32 i = 0; i < _effector.displacement.keyframes.size(); ++i)
   {
-    const Vector3Keyframe& keyframe = effector.displacement.keyframes[i];
+    const Vector3Keyframe& keyframe = _effector.displacement.keyframes[i];
 
-    ApplyStyle(STYLE_FACTORY.GetStyle(&keyframe == selectedKeyframe ?
-        "keyframe_style_selected" : "keyframe_style"), &keyframeRect->_shape);
+    ApplyStyle(STYLE_FACTORY.GetStyle(&keyframe == _selectedKeyframe ?
+        "keyframe_style_selected" : "keyframe_style"), &_keyframeRect->_shape);
 
     int x = TimelineWindow::_instance->TimeToPixel(milliseconds(keyframe.time));
     if (x < size.x)
@@ -276,8 +276,8 @@ void EffectRowNoise::DrawKeyframes(RenderTexture& texture, const Vector2f& size)
       for (u32 j = 0; j < 3; ++j)
       {
         int y = shapeY + h * (j+1.5f) - 3;
-        keyframeRect->_shape.setPosition(x - 3, y);
-        texture.draw(keyframeRect->_shape);
+        _keyframeRect->_shape.setPosition(x - 3, y);
+        texture.draw(_keyframeRect->_shape);
       }
     }
   }
@@ -296,21 +296,34 @@ Vector3f EffectRowNoise::PixelToValue(int y) const
   float h = size.y - topY;
   float bottom = size.y - 1;
 
-  Vector3f span = maxValue - minValue;
+  Vector3f span = _maxValue - _minValue;
 
-  return (bottom - y) * span / h + minValue;
+  return (bottom - y) * span / h + _minValue;
 }
 
 //----------------------------------------------------------------------------------
 float EffectRowNoise::ExtractGraphValue(const Vector3f& value) const
 {
-  switch (graphMode)
+  switch (_graphMode)
   {
     case 1: return value.x;
     case 2: return value.y;
     case 3: return value.z;
     default: assert(!"oh noes!"); return 0;
   }
+}
+
+//----------------------------------------------------------------------------------
+float& EffectRowNoise::ExtractGraphValue(Vector3f& value)
+{
+  switch (_graphMode)
+  {
+    case 1: return value.x;
+    case 2: return value.y;
+    case 3: return value.z;
+  }
+  assert(!"fix me!");
+  return value.x;
 }
 
 //----------------------------------------------------------------------------------
@@ -322,11 +335,11 @@ float EffectRowNoise::CalcGraphValue(const Vector3f& value) const
   float h = size.y - topY;
   float bottom = size.y - 1;
 
-  Vector3f span = maxValue - minValue;
+  Vector3f span = _maxValue - _minValue;
 
   // scale the value so min/max covers the entire height
-  Vector3f t = value - minValue;
-  switch (graphMode)
+  Vector3f t = value - _minValue;
+  switch (_graphMode)
   {
     // x = bottom - h * (value - minValue) / span
     case 1: return bottom - h * t.x / span.x;
@@ -351,23 +364,23 @@ void EffectRowNoise::VisibleKeyframes(
   time_duration minTime = timeline->PixelToTime(0);
   time_duration maxTime = timeline->PixelToTime(size.x);
 
-  Vector3f value0 = Interpolate(effector.displacement, minTime);
-  Vector3f valueLast = Interpolate(effector.displacement, maxTime);
+  Vector3f value0 = Interpolate(_effector.displacement, minTime);
+  Vector3f valueLast = Interpolate(_effector.displacement, maxTime);
 
   vector<Vector3Keyframe*> validKeyframes;
 
-  if (!selectedKeyframe)
+  if (!_selectedKeyframe)
   {
-    minValue = Min(
-        Interpolate(effector.displacement, minTime),
-        Interpolate(effector.displacement, maxTime));
+    _minValue = Min(
+        Interpolate(_effector.displacement, minTime),
+        Interpolate(_effector.displacement, maxTime));
 
-    maxValue = Max(
-        Interpolate(effector.displacement, minTime),
-        Interpolate(effector.displacement, maxTime));
+    _maxValue = Max(
+        Interpolate(_effector.displacement, minTime),
+        Interpolate(_effector.displacement, maxTime));
 
 
-    for (Vector3Keyframe& keyframe : effector.displacement.keyframes)
+    for (Vector3Keyframe& keyframe : _effector.displacement.keyframes)
     {
       if (keyframe.time < minTime.total_milliseconds())
         continue;
@@ -377,19 +390,20 @@ void EffectRowNoise::VisibleKeyframes(
 
       validKeyframes.push_back(&keyframe);
 
-      minValue = Min(minValue, keyframe.value);
-      maxValue = Max(maxValue, keyframe.value);
+      _minValue = Min(_minValue, keyframe.value);
+      _maxValue = Max(_maxValue, keyframe.value);
     }
 
-    realMinValue = minValue;
-    realMaxValue = maxValue;
+    _realMinValue = _minValue;
+    _realMaxValue = _maxValue;
 
-    minValue -= 0.25f * minValue;
-    maxValue += 0.25f * maxValue;
+    Vector3f step;
+    CalcCeilAndStep(_maxValue, &step, &_maxValue);
+    _minValue = _realMinValue - step;
   }
   else
   {
-    for (Vector3Keyframe& keyframe : effector.displacement.keyframes)
+    for (Vector3Keyframe& keyframe : _effector.displacement.keyframes)
     {
       if (keyframe.time < minTime.total_milliseconds())
         continue;
@@ -423,42 +437,73 @@ void EffectRowNoise::VisibleKeyframes(
 }
 
 //----------------------------------------------------------------------------------
+void EffectRowNoise::CalcCeilAndStep(
+    const Vector3f& value,
+    Vector3f* stepValue,
+    Vector3f* ceilValue)
+{
+  CalcCeilAndStep(value.x, &stepValue->x, &ceilValue->x);
+  CalcCeilAndStep(value.y, &stepValue->y, &ceilValue->y);
+  CalcCeilAndStep(value.z, &stepValue->z, &ceilValue->z);
+}
+
+//----------------------------------------------------------------------------------
+void EffectRowNoise::CalcCeilAndStep(
+    float value,
+    float* stepValue,
+    float* ceilValue)
+{
+  float base = 10;
+  float log10 = log(value) / log(base);
+  *stepValue = pow(base, floor(log10));
+
+  // step down from the ceil until we find the multiple of step just below
+  float tmp = pow(base, ceil(log10));
+  float step = *stepValue;
+  while (true)
+  {
+    if (tmp - step < value)
+      break;
+    tmp -= step;
+  }
+
+  *ceilValue = tmp + step;
+}
+
+//----------------------------------------------------------------------------------
 void EffectRowNoise::DrawGraph(RenderTexture& texture, const Vector2f& size)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
   int ofs = settings.effect_view_width();
-  Vector2f windowSize = TimelineWindow::_instance->GetSize();
 
   vector<pair<Vector2f, Vector3Keyframe*>> keyframes;
   VisibleKeyframes(size, true, &keyframes);
 
   Text label;
-  label.setFont(font);
+  label.setFont(_font);
   label.setCharacterSize(16);
 
   // draw min/max lines
   VertexArray gridLines(sf::Lines);
-  float base = 10;
-  float t0 = ExtractGraphValue(realMaxValue);
-  float t1 = ExtractGraphValue(realMinValue);
-  float step = pow(base, floor(log(t0) / log(base))) / 2;
-  float maxValue = pow(base, ceil(log(t0) / log(base))) + step;
-  float minValue = ExtractGraphValue(realMinValue);
+  float t0 = ExtractGraphValue(_realMaxValue);
+  float step, maxValue;
+  CalcCeilAndStep(t0, &step, &maxValue);
+  float minValue = ExtractGraphValue(_realMinValue);
 
-  Color c(200, 200, 200, 255);
+  Color c(100, 100, 100, 255);
   label.setColor(c);
 
   float curY = maxValue;
   while (true)
   {
-    if (curY < minValue)
+    if (curY < minValue - step)
       break;
 
     float y = CalcGraphValue(Vector3f(curY, curY, curY));
     gridLines.append(sf::Vertex(Vector2f(ofs, y), c));
     gridLines.append(sf::Vertex(Vector2f(size.x, y), c));
 
-    label.setPosition(ofs, y - 16);
+    label.setPosition(ofs + 10, y - 20);
     label.setString(to_string("%.2f", curY).c_str());
     texture.draw(label);
 
@@ -466,22 +511,6 @@ void EffectRowNoise::DrawGraph(RenderTexture& texture, const Vector2f& size)
   }
 
   texture.draw(gridLines);
-
-//  float y = CalcGraphValue(realMinValue);
-//  gridLines.append(sf::Vertex(Vector2f(ofs, y), c));
-//  gridLines.append(sf::Vertex(Vector2f(size.x, y), c));
-//  label.setPosition(ofs, y - 16);
-//  label.setString(to_string("%.2f", realMinValue.x).c_str());
-//  texture.draw(label);
-//
-//  y = CalcGraphValue(realMaxValue);
-//  gridLines.append(sf::Vertex(Vector2f(ofs, y), c));
-//  gridLines.append(sf::Vertex(Vector2f(size.x, y), c));
-//  texture.draw(gridLines);
-//
-//  label.setPosition(ofs, y);
-//  label.setString(to_string("%.2f", realMaxValue.x).c_str());
-//  texture.draw(label);
 
   // draw the keyframes normalized to the min/max values
   VertexArray curLine(sf::LinesStrip);
@@ -494,8 +523,8 @@ void EffectRowNoise::DrawGraph(RenderTexture& texture, const Vector2f& size)
     // if the point corresponds to a proper keyframe, draw the keyframe
     if (pp.second)
     {
-      keyframeRect->_shape.setPosition(p.x - 3, p.y - 3);
-      texture.draw(keyframeRect->_shape);
+      _keyframeRect->_shape.setPosition(p.x - 3, p.y - 3);
+      texture.draw(_keyframeRect->_shape);
     }
   }
 
@@ -513,17 +542,17 @@ void EffectRowNoise::BeginEditVars(float x, float y)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
   int h = settings.effect_row_height();
-  prevValue = effector.displacement.keyframes[0].value;
+  _prevValue = _effector.displacement.keyframes[0].value;
 
-  editingIdx = (y - rect->_shape.getPosition().y - h) / h;
-  assert(editingIdx >= 0 && editingIdx <= 2);
+  _editingIdx = (y - _rect->_shape.getPosition().y - h) / h;
+  assert(_editingIdx >= 0 && _editingIdx <= 2);
 
-  Vector3f v = Interpolate(effector.displacement, EDITOR.CurTime());
-  switch (editingIdx)
+  Vector3f v = Interpolate(_effector.displacement, EDITOR.CurTime());
+  switch (_editingIdx)
   {
-    case 0: curEdit = to_string("%.2f", v.x); break;
-    case 1: curEdit = to_string("%.2f", v.y); break;
-    case 2: curEdit = to_string("%.2f", v.z); break;
+    case 0: _curEdit = to_string("%.2f", v.x); break;
+    case 1: _curEdit = to_string("%.2f", v.y); break;
+    case 2: _curEdit = to_string("%.2f", v.z); break;
   }
 }
 
@@ -533,18 +562,18 @@ void EffectRowNoise::EndEditVars(bool commit)
   if (commit)
   {
     // create a new keyframe at the current position (if one doesn't exist)
-    Vector3f v = prevValue;
-    switch (editingIdx)
+    Vector3f v = _prevValue;
+    switch (_editingIdx)
     {
-      case 0: v.x = (float)atof(curEdit.c_str()); break;
-      case 1: v.y = (float)atof(curEdit.c_str()); break;
-      case 2: v.z = (float)atof(curEdit.c_str()); break;
+      case 0: v.x = (float)atof(_curEdit.c_str()); break;
+      case 1: v.y = (float)atof(_curEdit.c_str()); break;
+      case 2: v.z = (float)atof(_curEdit.c_str()); break;
     }
 
-    AddKeyframe(EDITOR.CurTime(), v, false, &effector.displacement);
+    AddKeyframe(EDITOR.CurTime(), v, false, &_effector.displacement);
   }
 
-  editingIdx = -1;
+  _editingIdx = -1;
 }
 
 //----------------------------------------------------------------------------------
@@ -552,18 +581,18 @@ void EffectRowNoise::UpdateEditVar(Keyboard::Key key)
 {
   if (key >= Keyboard::Key::Num0 && key <= Keyboard::Key::Num9)
   {
-    curEdit += '0' + key - Keyboard::Key::Num0;
+    _curEdit += '0' + key - Keyboard::Key::Num0;
   }
   else if (key == Keyboard::Key::BackSpace)
   {
-    if (curEdit.size() > 0)
+    if (_curEdit.size() > 0)
     {
-      curEdit.pop_back();
+      _curEdit.pop_back();
     }
   }
-  else if (key == Keyboard::Key::Period && curEdit.find('.') == curEdit.npos)
+  else if (key == Keyboard::Key::Period && _curEdit.find('.') == _curEdit.npos)
   {
-    curEdit += '.';
+    _curEdit += '.';
   }
 }
 
@@ -572,12 +601,12 @@ bool EffectRowNoise::KeyframeIntersect(const Vector2f& pt, const Vector2f& size)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
 
-  float shapeY = rect->_shape.getPosition().y;
+  float shapeY = _rect->_shape.getPosition().y;
   float h = settings.effect_row_height();
 
-  for (u32 i = 0; i < effector.displacement.keyframes.size(); ++i)
+  for (u32 i = 0; i < _effector.displacement.keyframes.size(); ++i)
   {
-    Vector3Keyframe& keyframe = effector.displacement.keyframes[i];
+    Vector3Keyframe& keyframe = _effector.displacement.keyframes[i];
     int x = TimelineWindow::_instance->TimeToPixel(milliseconds(keyframe.time));
     if (x < size.x)
     {
@@ -588,8 +617,8 @@ bool EffectRowNoise::KeyframeIntersect(const Vector2f& pt, const Vector2f& size)
         FloatRect rect(x, y, 6, 6);
         if (rect.contains(pt))
         {
-          selectedKeyframe = &keyframe;
-          oldKeyframe = keyframe;
+          _selectedKeyframe = &keyframe;
+          _oldKeyframe = keyframe;
           return true;
         }
       }
@@ -602,24 +631,24 @@ bool EffectRowNoise::KeyframeIntersect(const Vector2f& pt, const Vector2f& size)
 //----------------------------------------------------------------------------------
 void EffectRowNoise::UpdateKeyframe(const time_duration &t)
 {
-  if (!selectedKeyframe)
+  if (!_selectedKeyframe)
     return;
 
-  selectedKeyframe->time = t.total_milliseconds();
+  _selectedKeyframe->time = t.total_milliseconds();
 }
 
 //----------------------------------------------------------------------------------
 void EffectRowNoise::BeginKeyframeUpdate(bool copy)
 {
-  copyingKeyframe = copy;
-  if (copyingKeyframe)
+  _copyingKeyframe = copy;
+  if (_copyingKeyframe)
   {
     // insert a copy of the existing keyframe
-    selectedKeyframe = AddKeyframe(
-        milliseconds(selectedKeyframe->time),
-        selectedKeyframe->value,
+    _selectedKeyframe = AddKeyframe(
+        milliseconds(_selectedKeyframe->time),
+        _selectedKeyframe->value,
         true,
-        &effector.displacement);
+        &_effector.displacement);
   }
 }
 
@@ -628,15 +657,15 @@ void EffectRowNoise::EndKeyframeUpdate(bool commit)
 {
   if (!commit)
   {
-    if (copyingKeyframe)
+    if (_copyingKeyframe)
     {
       // delete the tmp keyframe
-      selectedKeyframe = nullptr;
+      _selectedKeyframe = nullptr;
     }
     else
     {
       // revert the old keyframe
-      *selectedKeyframe = oldKeyframe;
+      *_selectedKeyframe = _oldKeyframe;
     }
   }
 }
@@ -644,28 +673,28 @@ void EffectRowNoise::EndKeyframeUpdate(bool commit)
 //----------------------------------------------------------------------------------
 void EffectRowNoise::DeselectKeyframe()
 {
-  selectedKeyframe = nullptr;
+  _selectedKeyframe = nullptr;
 }
 
 //----------------------------------------------------------------------------------
 void EffectRowNoise::DeleteKeyframe()
 {
-  if (!selectedKeyframe)
+  if (!_selectedKeyframe)
     return;
 }
 
 //----------------------------------------------------------------------------------
 bool EffectRowNoise::NextGraph()
 {
-  graphMode = (graphMode + 1) % 4;
-  return graphMode == 0;
+  _graphMode = (_graphMode + 1) % 4;
+  return _graphMode == 0;
 }
 
 //----------------------------------------------------------------------------------
 void EffectRowNoise::ToggleGraphView(bool value)
 {
   // reset the first graph or to keyframe view
-  graphMode = value ? 1 : 0;
+  _graphMode = value ? 1 : 0;
 }
 
 //----------------------------------------------------------------------------------
@@ -677,10 +706,13 @@ bool EffectRowNoise::GraphMouseMoved(const Event& event)
   int y = (int)(event.mouseMove.y - timeline->GetPosition().y);
   Vector2i mousePos(x, y);
 
-  if (selectedKeyframe)
+  if (_selectedKeyframe)
   {
-    selectedKeyframe->time = timeline->PixelToTime(x).total_milliseconds();
-    selectedKeyframe->value = PixelToValue(y);
+    const Vector3f& v = PixelToValue(y);
+    _selectedKeyframe->time = timeline->PixelToTime(x).total_milliseconds();
+    _selectedKeyframe->value = UpdateKeyframe(v, _selectedKeyframe->value);
+
+    TimelineWindow::_instance->UpdateStatusBar(0, to_string("Value: %.3f", ExtractGraphValue(v)));
   }
   return true;
 }
@@ -689,7 +721,7 @@ bool EffectRowNoise::GraphMouseMoved(const Event& event)
 Vector3f EffectRowNoise::UpdateKeyframe(const Vector3f& newValue, const Vector3f& old) const
 {
   Vector3f res = old;
-  switch (graphMode)
+  switch (_graphMode)
   {
     case 1: res.x = newValue.x; break;
     case 2: res.y = newValue.y; break;
@@ -708,7 +740,7 @@ bool EffectRowNoise::GraphMouseButtonPressed(const Event& event)
   int y = (int)(event.mouseButton.y - timeline->GetPosition().y);
   Vector2i mousePos(x, y);
 
-  selectedKeyframe = nullptr;
+  _selectedKeyframe = nullptr;
 
   // check for keyframe intersection
   vector<pair<Vector2f, Vector3Keyframe*>> keyframes;
@@ -721,17 +753,17 @@ bool EffectRowNoise::GraphMouseButtonPressed(const Event& event)
     IntRect rect(p.x - 3, p.y - 3, 6, 6);
     if (rect.contains(mousePos))
     {
-      selectedKeyframe = pp.second;
+      _selectedKeyframe = pp.second;
       break;
     }
   }
 
   // check if we should add a new keyframe
-  if (!selectedKeyframe && Keyboard::isKeyPressed(Keyboard::Key::LShift))
+  if (!_selectedKeyframe && Keyboard::isKeyPressed(Keyboard::Key::LShift))
   {
     time_duration t = timeline->PixelToTime(x);
-    Vector3f tmp = Interpolate(effector.displacement, t);
-    AddKeyframe(t, UpdateKeyframe(PixelToValue(y), tmp), true, &effector.displacement);
+    Vector3f tmp = Interpolate(_effector.displacement, t);
+    AddKeyframe(t, UpdateKeyframe(PixelToValue(y), tmp), true, &_effector.displacement);
   }
 
   return true;
@@ -740,7 +772,7 @@ bool EffectRowNoise::GraphMouseButtonPressed(const Event& event)
 //----------------------------------------------------------------------------------
 bool EffectRowNoise::GraphMouseButtonReleased(const Event& event)
 {
-  selectedKeyframe = nullptr;
+  _selectedKeyframe = nullptr;
   return true;
 
 }
