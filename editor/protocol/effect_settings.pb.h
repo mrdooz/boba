@@ -20,35 +20,390 @@
 #endif
 
 #include <google/protobuf/generated_message_util.h>
+#include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
+#include <google/protobuf/generated_enum_reflection.h>
+#include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 
 namespace effect {
+namespace protocol {
 
 // Internal implementation detail -- do not call these.
 void  protobuf_AddDesc_effect_5fsettings_2eproto();
 void protobuf_AssignDesc_effect_5fsettings_2eproto();
 void protobuf_ShutdownFile_effect_5fsettings_2eproto();
 
+class EffectSetting;
+class EffectSettings;
 
+enum EffectSetting_Type {
+  EffectSetting_Type_Plexus = 1
+};
+bool EffectSetting_Type_IsValid(int value);
+const EffectSetting_Type EffectSetting_Type_Type_MIN = EffectSetting_Type_Plexus;
+const EffectSetting_Type EffectSetting_Type_Type_MAX = EffectSetting_Type_Plexus;
+const int EffectSetting_Type_Type_ARRAYSIZE = EffectSetting_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* EffectSetting_Type_descriptor();
+inline const ::std::string& EffectSetting_Type_Name(EffectSetting_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    EffectSetting_Type_descriptor(), value);
+}
+inline bool EffectSetting_Type_Parse(
+    const ::std::string& name, EffectSetting_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<EffectSetting_Type>(
+    EffectSetting_Type_descriptor(), name, value);
+}
+// ===================================================================
+
+class EffectSetting : public ::google::protobuf::Message {
+ public:
+  EffectSetting();
+  virtual ~EffectSetting();
+
+  EffectSetting(const EffectSetting& from);
+
+  inline EffectSetting& operator=(const EffectSetting& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const EffectSetting& default_instance();
+
+  void Swap(EffectSetting* other);
+
+  // implements Message ----------------------------------------------
+
+  EffectSetting* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const EffectSetting& from);
+  void MergeFrom(const EffectSetting& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef EffectSetting_Type Type;
+  static const Type Plexus = EffectSetting_Type_Plexus;
+  static inline bool Type_IsValid(int value) {
+    return EffectSetting_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    EffectSetting_Type_Type_MIN;
+  static const Type Type_MAX =
+    EffectSetting_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    EffectSetting_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return EffectSetting_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return EffectSetting_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return EffectSetting_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .effect.protocol.EffectSetting.Type type = 1;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::effect::protocol::EffectSetting_Type type() const;
+  inline void set_type(::effect::protocol::EffectSetting_Type value);
+
+  // optional bytes msg = 2;
+  inline bool has_msg() const;
+  inline void clear_msg();
+  static const int kMsgFieldNumber = 2;
+  inline const ::std::string& msg() const;
+  inline void set_msg(const ::std::string& value);
+  inline void set_msg(const char* value);
+  inline void set_msg(const void* value, size_t size);
+  inline ::std::string* mutable_msg();
+  inline ::std::string* release_msg();
+  inline void set_allocated_msg(::std::string* msg);
+
+  // @@protoc_insertion_point(class_scope:effect.protocol.EffectSetting)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_msg();
+  inline void clear_has_msg();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* msg_;
+  int type_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_effect_5fsettings_2eproto();
+  friend void protobuf_AssignDesc_effect_5fsettings_2eproto();
+  friend void protobuf_ShutdownFile_effect_5fsettings_2eproto();
+
+  void InitAsDefaultInstance();
+  static EffectSetting* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class EffectSettings : public ::google::protobuf::Message {
+ public:
+  EffectSettings();
+  virtual ~EffectSettings();
+
+  EffectSettings(const EffectSettings& from);
+
+  inline EffectSettings& operator=(const EffectSettings& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const EffectSettings& default_instance();
+
+  void Swap(EffectSettings* other);
+
+  // implements Message ----------------------------------------------
+
+  EffectSettings* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const EffectSettings& from);
+  void MergeFrom(const EffectSettings& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .effect.protocol.EffectSetting effect_settings = 1;
+  inline int effect_settings_size() const;
+  inline void clear_effect_settings();
+  static const int kEffectSettingsFieldNumber = 1;
+  inline const ::effect::protocol::EffectSetting& effect_settings(int index) const;
+  inline ::effect::protocol::EffectSetting* mutable_effect_settings(int index);
+  inline ::effect::protocol::EffectSetting* add_effect_settings();
+  inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting >&
+      effect_settings() const;
+  inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting >*
+      mutable_effect_settings();
+
+  // @@protoc_insertion_point(class_scope:effect.protocol.EffectSettings)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting > effect_settings_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_effect_5fsettings_2eproto();
+  friend void protobuf_AssignDesc_effect_5fsettings_2eproto();
+  friend void protobuf_ShutdownFile_effect_5fsettings_2eproto();
+
+  void InitAsDefaultInstance();
+  static EffectSettings* default_instance_;
+};
 // ===================================================================
 
 
 // ===================================================================
 
+// EffectSetting
 
-// ===================================================================
+// optional .effect.protocol.EffectSetting.Type type = 1;
+inline bool EffectSetting::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void EffectSetting::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void EffectSetting::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void EffectSetting::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::effect::protocol::EffectSetting_Type EffectSetting::type() const {
+  return static_cast< ::effect::protocol::EffectSetting_Type >(type_);
+}
+inline void EffectSetting::set_type(::effect::protocol::EffectSetting_Type value) {
+  assert(::effect::protocol::EffectSetting_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional bytes msg = 2;
+inline bool EffectSetting::has_msg() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void EffectSetting::set_has_msg() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void EffectSetting::clear_has_msg() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void EffectSetting::clear_msg() {
+  if (msg_ != &::google::protobuf::internal::kEmptyString) {
+    msg_->clear();
+  }
+  clear_has_msg();
+}
+inline const ::std::string& EffectSetting::msg() const {
+  return *msg_;
+}
+inline void EffectSetting::set_msg(const ::std::string& value) {
+  set_has_msg();
+  if (msg_ == &::google::protobuf::internal::kEmptyString) {
+    msg_ = new ::std::string;
+  }
+  msg_->assign(value);
+}
+inline void EffectSetting::set_msg(const char* value) {
+  set_has_msg();
+  if (msg_ == &::google::protobuf::internal::kEmptyString) {
+    msg_ = new ::std::string;
+  }
+  msg_->assign(value);
+}
+inline void EffectSetting::set_msg(const void* value, size_t size) {
+  set_has_msg();
+  if (msg_ == &::google::protobuf::internal::kEmptyString) {
+    msg_ = new ::std::string;
+  }
+  msg_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* EffectSetting::mutable_msg() {
+  set_has_msg();
+  if (msg_ == &::google::protobuf::internal::kEmptyString) {
+    msg_ = new ::std::string;
+  }
+  return msg_;
+}
+inline ::std::string* EffectSetting::release_msg() {
+  clear_has_msg();
+  if (msg_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = msg_;
+    msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void EffectSetting::set_allocated_msg(::std::string* msg) {
+  if (msg_ != &::google::protobuf::internal::kEmptyString) {
+    delete msg_;
+  }
+  if (msg) {
+    set_has_msg();
+    msg_ = msg;
+  } else {
+    clear_has_msg();
+    msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// EffectSettings
+
+// repeated .effect.protocol.EffectSetting effect_settings = 1;
+inline int EffectSettings::effect_settings_size() const {
+  return effect_settings_.size();
+}
+inline void EffectSettings::clear_effect_settings() {
+  effect_settings_.Clear();
+}
+inline const ::effect::protocol::EffectSetting& EffectSettings::effect_settings(int index) const {
+  return effect_settings_.Get(index);
+}
+inline ::effect::protocol::EffectSetting* EffectSettings::mutable_effect_settings(int index) {
+  return effect_settings_.Mutable(index);
+}
+inline ::effect::protocol::EffectSetting* EffectSettings::add_effect_settings() {
+  return effect_settings_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting >&
+EffectSettings::effect_settings() const {
+  return effect_settings_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting >*
+EffectSettings::mutable_effect_settings() {
+  return &effect_settings_;
+}
 
 
 // @@protoc_insertion_point(namespace_scope)
 
+}  // namespace protocol
 }  // namespace effect
 
 #ifndef SWIG
 namespace google {
 namespace protobuf {
 
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::effect::protocol::EffectSetting_Type>() {
+  return ::effect::protocol::EffectSetting_Type_descriptor();
+}
 
 }  // namespace google
 }  // namespace protobuf

@@ -95,10 +95,12 @@ for file_desc in fds.file:
             type_number = field_desc.type
 
             is_msg = type_number == 11
+            is_bytes = type_number == 12
+            is_enum = type_number == 14
+            is_native = type_number in NATIVE_TYPES
             is_optional = field_desc.label == 1
             is_required = field_desc.label == 2
             is_repeated = field_desc.label == 3
-            is_enum = type_number == 14
 
             proto_type = field_desc.type_name
 
@@ -118,6 +120,10 @@ for file_desc in fds.file:
                 outer = field_desc.type_name.split('.')[-2]
                 field_type = outer + '::' + field_desc.type_name.split('.')[-1]
                 base_type = field_type
+            elif is_bytes:
+                field_type = 'std::vector<uint8_t>'
+            else:
+                print '** UNHANDLED TYPE: ', type_number
 
             # if repeated, convert to 'vector<type_name>'
             if is_repeated:
@@ -132,8 +138,9 @@ for file_desc in fds.file:
                 'type' : field_type,
                 'base_type' : base_type,
                 'is_repeated' : is_repeated,
-                'is_native' : not is_msg,
+                'is_native' : is_native,
                 'is_enum' : is_enum,
+                'is_bytes' : is_bytes,
                 'proto_name' : proto_field_name, 
                 'proto_type' : proto_type,
                 }

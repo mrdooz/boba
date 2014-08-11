@@ -42,7 +42,7 @@ TimelineWindow::TimelineWindow(
     , _tickerRect(nullptr)
     , _statusBar(nullptr)
     , _movingKeyframe(nullptr)
-    , _selectedKeyframe(nullptr)
+    , _selectedRow(nullptr)
     , _displayMode(DisplayMode::Keyframe)
 {
   _instance = this;
@@ -96,7 +96,7 @@ bool TimelineWindow::Init()
     for (const TextPath& t : p.textPaths)
     {
       string str = to_string("TextPath: %s", t.text.c_str());
-      parent->_children.push_back(new EffectRow(_font, str, parent));
+      parent->_children.push_back(new EffectRowTextPath(_font, str, parent));
       curY += rowHeight;
     }
 
@@ -148,7 +148,7 @@ bool TimelineWindow::OnKeyReleased(const Event &event)
       _movingKeyframe->EndKeyframeUpdate(false);
     }
 
-    _selectedKeyframe = nullptr;
+    _selectedRow = nullptr;
     _movingKeyframe = nullptr;
   }
   else
@@ -158,6 +158,7 @@ bool TimelineWindow::OnKeyReleased(const Event &event)
       if (code == Keyboard::Return)
       {
         _editRow->EndEditVars(true);
+        _editRow = nullptr;
       }
       else
       {
@@ -252,25 +253,24 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   {
     if (_displayMode == DisplayMode::Graph)
     {
-      _selectedRows.CurRow()->GraphMouseButtonPressed(event);
+      _selectedRows.CurRow()->OnMouseButtonPressed(event);
     }
-    else
-    {
-      if (_selectedKeyframe)
-      {
-        _selectedKeyframe->DeselectKeyframe();
-        _selectedKeyframe = nullptr;
-      }
 
-      for (EffectRow* row : effects)
+    if (_selectedRow)
+    {
+      _selectedRow->DeselectKeyframe();
+      _selectedRow = nullptr;
+    }
+
+    for (EffectRow* row : effects)
+    {
+      if (row->KeyframeIntersect(mousePos, _size))
       {
-        if (row->KeyframeIntersect(mousePos, _size))
-        {
-          _selectedKeyframe = row;
-          break;
-        }
+        _selectedRow = row;
+        break;
       }
     }
+
   }
   return true;
 }
@@ -301,20 +301,20 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
   }
   else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
   {
-    if (_displayMode == DisplayMode::Keyframe && _selectedKeyframe)
+    if (_displayMode == DisplayMode::Keyframe && _selectedRow)
     {
       if (!_movingKeyframe)
       {
         // send the BeginKeyframeUpdate, and check if we're copying or moving
-        _selectedKeyframe->BeginKeyframeUpdate(Keyboard::isKeyPressed(Keyboard::Key::LShift));
-        _movingKeyframe = _selectedKeyframe;
+        _selectedRow->BeginKeyframeUpdate(Keyboard::isKeyPressed(Keyboard::Key::LShift));
+        _movingKeyframe = _selectedRow;
       }
 
       _movingKeyframe->UpdateKeyframe(curTime);
     }
     else if (_displayMode == DisplayMode::Graph && _selectedRows.CurRow())
     {
-      _selectedRows.CurRow()->GraphMouseMoved(event);
+      _selectedRows.CurRow()->OnMouseMoved(event);
     }
   }
 
@@ -327,7 +327,7 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
   if (_displayMode == DisplayMode::Graph)
   {
     if (_selectedRows.CurRow())
-      return _selectedRows.CurRow()->GraphMouseButtonReleased(event);
+      return _selectedRows.CurRow()->OnMouseButtonReleased(event);
   }
   else
   {
@@ -517,4 +517,13 @@ void TimelineWindow::UpdateStatusBar(int segment, const string& value)
   _statusBarValues[segment] = value;
 }
 
+//----------------------------------------------------------------------------------
+void TimelineWindow::KeyframesModified()
+{
+  effect::protocol::EffectSettings settings;
+  for (const EffectRow* row : _effectRows)
+  {
+    row->ToProtocol(settings.add_effect_settings());
+  }
+}
 

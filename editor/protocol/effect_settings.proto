@@ -1,1 +1,16 @@
-package effect;
+package effect.protocol;
+
+message EffectSetting
+{
+	enum Type {
+		Plexus = 1;
+	};
+
+	optional Type type = 1;
+	optional bytes msg = 2;
+}
+
+message EffectSettings
+{
+	repeated EffectSetting effect_settings = 1;
+}

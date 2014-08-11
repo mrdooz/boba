@@ -6,6 +6,7 @@ namespace editor
 {
   struct StyledRectangle;
 
+  //----------------------------------------------------------------------------------
   struct EffectRow
   {
     struct RowFlagsF
@@ -42,10 +43,11 @@ namespace editor
     // return true if cycled through all graphs
     virtual bool NextGraph() { return true; }
     virtual void DrawGraph(RenderTexture& texture, const Vector2f& size) {}
-    virtual bool GraphMouseMoved(const Event& event) { return true; }
-    virtual bool GraphMouseButtonPressed(const Event& event) { return true; }
-    virtual bool GraphMouseButtonReleased(const Event& event) { return true; }
+    virtual bool OnMouseMoved(const Event &event) { return true; }
+    virtual bool OnMouseButtonPressed(const Event &event) { return true; }
+    virtual bool OnMouseButtonReleased(const Event &event) { return true; }
 
+    virtual bool ToProtocol(effect::protocol::EffectSetting* proto) const { return true; }
 
     string _str;
     RowFlags _flags;
@@ -60,6 +62,32 @@ namespace editor
     Font _font;
   };
 
+
+  //----------------------------------------------------------------------------------
+  struct EffectRowPlexus : public EffectRow
+  {
+    EffectRowPlexus(
+        const Font& font,
+        const string& str,
+        EffectRow* parent = nullptr);
+
+    virtual bool ToProtocol(effect::protocol::EffectSetting* proto) const;
+
+  };
+
+  //----------------------------------------------------------------------------------
+  struct EffectRowTextPath : public EffectRow
+  {
+    EffectRowTextPath(
+        const Font& font,
+        const string& str,
+        EffectRow* parent = nullptr);
+
+    virtual bool ToProtocol(effect::protocol::EffectSetting* proto) const;
+
+  };
+
+  //----------------------------------------------------------------------------------
   struct EffectRowNoise : public EffectRow
   {
     EffectRowNoise(
@@ -82,10 +110,12 @@ namespace editor
 
     virtual void ToggleGraphView(bool value);
     virtual bool NextGraph();
-    virtual bool GraphMouseMoved(const Event& event);
-    virtual bool GraphMouseButtonPressed(const Event& event);
-    virtual bool GraphMouseButtonReleased(const Event& event);
     virtual void DrawGraph(RenderTexture& texture, const Vector2f& size);
+    virtual bool OnMouseMoved(const Event &event);
+    virtual bool OnMouseButtonPressed(const Event &event);
+    virtual bool OnMouseButtonReleased(const Event &event);
+
+//    virtual bool ToProtocol(effect::protocol::EffectSetting* proto) const;
 
     void DrawKeyframes(RenderTexture& texture, const Vector2f& size);
 
@@ -97,11 +127,13 @@ namespace editor
     float CalcGraphValue(const Vector3f& value) const;
     float ExtractGraphValue(const Vector3f& value) const;
     float& ExtractGraphValue(Vector3f& value);
-    Vector3f PixelToValue(int y) const;
+    Vector3f PixelToValue(int x) const;
+    int ValueToPixel(const Vector3f& v);
     Vector3f UpdateKeyframe(const Vector3f& newValue, const Vector3f& old) const;
 
     void CalcCeilAndStep(float value, float* stepValue, float* ceilValue);
     void CalcCeilAndStep(const Vector3f& value, Vector3f* stepValue, Vector3f* ceilValue);
+    float SnappedValue(float value);
 
     int _editingIdx;
 

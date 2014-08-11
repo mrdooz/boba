@@ -1,4 +1,4 @@
-package effect.plexus;
+package effect.protocol.plexus;
 import "common.proto";
 
 

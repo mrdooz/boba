@@ -74,6 +74,9 @@ namespace editor
     res.{{ member.name }} = ({{ member.type}})p.{{ member.proto_name }}();
     {% elif member.is_native %}
     res.{{ member.name }} = p.{{ member.proto_name }}();
+    {% elif member.is_bytes %}
+    res.{{ member.name }}.resize(p.{{ member.proto_name }}().size());
+    memcpy(res.{{ member.name }}.data(), p.{{ member.proto_name }}().data(), p.{{ member.proto_name }}().size());
     {% else %}
     {% if member.is_repeated %}
     res.{{ member.name }} = FromProtocolRepeated<{{ member.base_type }}>(p.{{ member.proto_name }}());

@@ -25,6 +25,8 @@ namespace editor
   struct Settings;
   struct Style;
   struct Styles;
+  struct EffectSetting;
+  struct EffectSettings;
   struct Plexus;
   struct TextPath;
   struct NoiseEffector;
@@ -34,9 +36,11 @@ namespace editor
   Settings FromProtocol(const editor::protocol::Settings& p);
   Style FromProtocol(const editor::protocol::Style& p);
   Styles FromProtocol(const editor::protocol::Styles& p);
-  Plexus FromProtocol(const effect::plexus::Plexus& p);
-  TextPath FromProtocol(const effect::plexus::TextPath& p);
-  NoiseEffector FromProtocol(const effect::plexus::NoiseEffector& p);
+  EffectSetting FromProtocol(const effect::protocol::EffectSetting& p);
+  EffectSettings FromProtocol(const effect::protocol::EffectSettings& p);
+  Plexus FromProtocol(const effect::protocol::plexus::Plexus& p);
+  TextPath FromProtocol(const effect::protocol::plexus::TextPath& p);
+  NoiseEffector FromProtocol(const effect::protocol::plexus::NoiseEffector& p);
   
   template<typename T, typename U>
   vector<T> FromProtocolRepeated(const google::protobuf::RepeatedPtrField<U>& v)
@@ -163,13 +167,45 @@ namespace editor
     return res;
   }
 
+  struct EffectSetting
+  {
+    enum class Type
+    {
+      Plexus = 1,
+    };
+
+    EffectSetting::Type type;
+    std::vector<uint8_t> msg;
+  };
+
+  inline EffectSetting FromProtocol(const effect::protocol::EffectSetting& p)
+  {
+    EffectSetting res;
+    res.type = (EffectSetting::Type)p.type();
+    res.msg.resize(p.msg().size());
+    memcpy(res.msg.data(), p.msg().data(), p.msg().size());
+    return res;
+  }
+
+  struct EffectSettings
+  {
+    vector<EffectSetting> effectSettings;
+  };
+
+  inline EffectSettings FromProtocol(const effect::protocol::EffectSettings& p)
+  {
+    EffectSettings res;
+    res.effectSettings = FromProtocolRepeated<EffectSetting>(p.effect_settings());
+    return res;
+  }
+
   struct Plexus
   {
     vector<TextPath> textPaths;
     vector<NoiseEffector> noiseEffectors;
   };
 
-  inline Plexus FromProtocol(const effect::plexus::Plexus& p)
+  inline Plexus FromProtocol(const effect::protocol::plexus::Plexus& p)
   {
     Plexus res;
     res.textPaths = FromProtocolRepeated<TextPath>(p.text_paths());
@@ -182,7 +218,7 @@ namespace editor
     string text;
   };
 
-  inline TextPath FromProtocol(const effect::plexus::TextPath& p)
+  inline TextPath FromProtocol(const effect::protocol::plexus::TextPath& p)
   {
     TextPath res;
     res.text = p.text();
@@ -201,7 +237,7 @@ namespace editor
     Vector3Anim displacement;
   };
 
-  inline NoiseEffector FromProtocol(const effect::plexus::NoiseEffector& p)
+  inline NoiseEffector FromProtocol(const effect::protocol::plexus::NoiseEffector& p)
   {
     NoiseEffector res;
     res.applyTo = (NoiseEffector::ApplyTo)p.apply_to();

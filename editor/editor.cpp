@@ -65,7 +65,7 @@ bool Editor::Init()
   });
 
 
-  effect::plexus::Plexus plexusSettings;
+  effect::protocol::plexus::Plexus plexusSettings;
   if (!LoadProto("config/plexus1.pb", &plexusSettings, true))
     return false;
 

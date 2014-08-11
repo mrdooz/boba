@@ -50,10 +50,10 @@ namespace editor
 
     void Toggle(const T& t)
     {
-      auto it = backingSet.find(t);
+      auto it = find(backingSet.begin(), backingSet.end(), t);
       if (it == backingSet.end())
       {
-        backingSet.insert(t);
+        backingSet.push_back(t);
       }
       else
       {
@@ -67,8 +67,8 @@ namespace editor
       return *it;
     }
 
-    unordered_set<T> backingSet;
-    typename unordered_set<T>::iterator it;
+    vector<T> backingSet;
+    typename vector<T>::iterator it;
   };
 
   //----------------------------------------------------------------------------------
@@ -109,6 +109,8 @@ namespace editor
     time_duration PixelToTime(int x) const;
     time_duration AbsPixelToTime(int x) const;
     void UpdateStatusBar(int segment, const string& value);
+
+    void KeyframesModified();
 
     static TimelineWindow* _instance;
 
@@ -161,7 +163,7 @@ namespace editor
     StyledRectangle* _statusBar;
     vector<string> _statusBarValues;
     EffectRow* _movingKeyframe;
-    EffectRow* _selectedKeyframe;
+    EffectRow*_selectedRow;
     DisplayMode _displayMode;
     ToggleSet<EffectRow*> _selectedRows;
 

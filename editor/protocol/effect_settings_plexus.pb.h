@@ -29,6 +29,7 @@
 // @@protoc_insertion_point(includes)
 
 namespace effect {
+namespace protocol {
 namespace plexus {
 
 // Internal implementation detail -- do not call these.
@@ -115,37 +116,37 @@ class Plexus : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .effect.plexus.TextPath text_paths = 1;
+  // repeated .effect.protocol.plexus.TextPath text_paths = 1;
   inline int text_paths_size() const;
   inline void clear_text_paths();
   static const int kTextPathsFieldNumber = 1;
-  inline const ::effect::plexus::TextPath& text_paths(int index) const;
-  inline ::effect::plexus::TextPath* mutable_text_paths(int index);
-  inline ::effect::plexus::TextPath* add_text_paths();
-  inline const ::google::protobuf::RepeatedPtrField< ::effect::plexus::TextPath >&
+  inline const ::effect::protocol::plexus::TextPath& text_paths(int index) const;
+  inline ::effect::protocol::plexus::TextPath* mutable_text_paths(int index);
+  inline ::effect::protocol::plexus::TextPath* add_text_paths();
+  inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::TextPath >&
       text_paths() const;
-  inline ::google::protobuf::RepeatedPtrField< ::effect::plexus::TextPath >*
+  inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::TextPath >*
       mutable_text_paths();
 
-  // repeated .effect.plexus.NoiseEffector noise_effectors = 2;
+  // repeated .effect.protocol.plexus.NoiseEffector noise_effectors = 2;
   inline int noise_effectors_size() const;
   inline void clear_noise_effectors();
   static const int kNoiseEffectorsFieldNumber = 2;
-  inline const ::effect::plexus::NoiseEffector& noise_effectors(int index) const;
-  inline ::effect::plexus::NoiseEffector* mutable_noise_effectors(int index);
-  inline ::effect::plexus::NoiseEffector* add_noise_effectors();
-  inline const ::google::protobuf::RepeatedPtrField< ::effect::plexus::NoiseEffector >&
+  inline const ::effect::protocol::plexus::NoiseEffector& noise_effectors(int index) const;
+  inline ::effect::protocol::plexus::NoiseEffector* mutable_noise_effectors(int index);
+  inline ::effect::protocol::plexus::NoiseEffector* add_noise_effectors();
+  inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::NoiseEffector >&
       noise_effectors() const;
-  inline ::google::protobuf::RepeatedPtrField< ::effect::plexus::NoiseEffector >*
+  inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::NoiseEffector >*
       mutable_noise_effectors();
 
-  // @@protoc_insertion_point(class_scope:effect.plexus.Plexus)
+  // @@protoc_insertion_point(class_scope:effect.protocol.plexus.Plexus)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::effect::plexus::TextPath > text_paths_;
-  ::google::protobuf::RepeatedPtrField< ::effect::plexus::NoiseEffector > noise_effectors_;
+  ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::TextPath > text_paths_;
+  ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::NoiseEffector > noise_effectors_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -225,7 +226,7 @@ class TextPath : public ::google::protobuf::Message {
   inline ::std::string* release_text();
   inline void set_allocated_text(::std::string* text);
 
-  // @@protoc_insertion_point(class_scope:effect.plexus.TextPath)
+  // @@protoc_insertion_point(class_scope:effect.protocol.plexus.TextPath)
  private:
   inline void set_has_text();
   inline void clear_has_text();
@@ -324,12 +325,12 @@ class NoiseEffector : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+  // optional .effect.protocol.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
   inline bool has_apply_to() const;
   inline void clear_apply_to();
   static const int kApplyToFieldNumber = 1;
-  inline ::effect::plexus::NoiseEffector_ApplyTo apply_to() const;
-  inline void set_apply_to(::effect::plexus::NoiseEffector_ApplyTo value);
+  inline ::effect::protocol::plexus::NoiseEffector_ApplyTo apply_to() const;
+  inline void set_apply_to(::effect::protocol::plexus::NoiseEffector_ApplyTo value);
 
   // optional .common.protocol.Vector3Anim displacement = 2;
   inline bool has_displacement() const;
@@ -340,7 +341,7 @@ class NoiseEffector : public ::google::protobuf::Message {
   inline ::common::protocol::Vector3Anim* release_displacement();
   inline void set_allocated_displacement(::common::protocol::Vector3Anim* displacement);
 
-  // @@protoc_insertion_point(class_scope:effect.plexus.NoiseEffector)
+  // @@protoc_insertion_point(class_scope:effect.protocol.plexus.NoiseEffector)
  private:
   inline void set_has_apply_to();
   inline void clear_has_apply_to();
@@ -369,52 +370,52 @@ class NoiseEffector : public ::google::protobuf::Message {
 
 // Plexus
 
-// repeated .effect.plexus.TextPath text_paths = 1;
+// repeated .effect.protocol.plexus.TextPath text_paths = 1;
 inline int Plexus::text_paths_size() const {
   return text_paths_.size();
 }
 inline void Plexus::clear_text_paths() {
   text_paths_.Clear();
 }
-inline const ::effect::plexus::TextPath& Plexus::text_paths(int index) const {
+inline const ::effect::protocol::plexus::TextPath& Plexus::text_paths(int index) const {
   return text_paths_.Get(index);
 }
-inline ::effect::plexus::TextPath* Plexus::mutable_text_paths(int index) {
+inline ::effect::protocol::plexus::TextPath* Plexus::mutable_text_paths(int index) {
   return text_paths_.Mutable(index);
 }
-inline ::effect::plexus::TextPath* Plexus::add_text_paths() {
+inline ::effect::protocol::plexus::TextPath* Plexus::add_text_paths() {
   return text_paths_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::effect::plexus::TextPath >&
+inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::TextPath >&
 Plexus::text_paths() const {
   return text_paths_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::effect::plexus::TextPath >*
+inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::TextPath >*
 Plexus::mutable_text_paths() {
   return &text_paths_;
 }
 
-// repeated .effect.plexus.NoiseEffector noise_effectors = 2;
+// repeated .effect.protocol.plexus.NoiseEffector noise_effectors = 2;
 inline int Plexus::noise_effectors_size() const {
   return noise_effectors_.size();
 }
 inline void Plexus::clear_noise_effectors() {
   noise_effectors_.Clear();
 }
-inline const ::effect::plexus::NoiseEffector& Plexus::noise_effectors(int index) const {
+inline const ::effect::protocol::plexus::NoiseEffector& Plexus::noise_effectors(int index) const {
   return noise_effectors_.Get(index);
 }
-inline ::effect::plexus::NoiseEffector* Plexus::mutable_noise_effectors(int index) {
+inline ::effect::protocol::plexus::NoiseEffector* Plexus::mutable_noise_effectors(int index) {
   return noise_effectors_.Mutable(index);
 }
-inline ::effect::plexus::NoiseEffector* Plexus::add_noise_effectors() {
+inline ::effect::protocol::plexus::NoiseEffector* Plexus::add_noise_effectors() {
   return noise_effectors_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::effect::plexus::NoiseEffector >&
+inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::NoiseEffector >&
 Plexus::noise_effectors() const {
   return noise_effectors_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::effect::plexus::NoiseEffector >*
+inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::NoiseEffector >*
 Plexus::mutable_noise_effectors() {
   return &noise_effectors_;
 }
@@ -497,7 +498,7 @@ inline void TextPath::set_allocated_text(::std::string* text) {
 
 // NoiseEffector
 
-// optional .effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+// optional .effect.protocol.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
 inline bool NoiseEffector::has_apply_to() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -511,11 +512,11 @@ inline void NoiseEffector::clear_apply_to() {
   apply_to_ = 1;
   clear_has_apply_to();
 }
-inline ::effect::plexus::NoiseEffector_ApplyTo NoiseEffector::apply_to() const {
-  return static_cast< ::effect::plexus::NoiseEffector_ApplyTo >(apply_to_);
+inline ::effect::protocol::plexus::NoiseEffector_ApplyTo NoiseEffector::apply_to() const {
+  return static_cast< ::effect::protocol::plexus::NoiseEffector_ApplyTo >(apply_to_);
 }
-inline void NoiseEffector::set_apply_to(::effect::plexus::NoiseEffector_ApplyTo value) {
-  assert(::effect::plexus::NoiseEffector_ApplyTo_IsValid(value));
+inline void NoiseEffector::set_apply_to(::effect::protocol::plexus::NoiseEffector_ApplyTo value) {
+  assert(::effect::protocol::plexus::NoiseEffector_ApplyTo_IsValid(value));
   set_has_apply_to();
   apply_to_ = value;
 }
@@ -562,6 +563,7 @@ inline void NoiseEffector::set_allocated_displacement(::common::protocol::Vector
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace plexus
+}  // namespace protocol
 }  // namespace effect
 
 #ifndef SWIG
@@ -569,8 +571,8 @@ namespace google {
 namespace protobuf {
 
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::effect::plexus::NoiseEffector_ApplyTo>() {
-  return ::effect::plexus::NoiseEffector_ApplyTo_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::effect::protocol::plexus::NoiseEffector_ApplyTo>() {
+  return ::effect::protocol::plexus::NoiseEffector_ApplyTo_descriptor();
 }
 
 }  // namespace google

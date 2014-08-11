@@ -178,6 +178,42 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
 }
 
 //----------------------------------------------------------------------------------
+EffectRowPlexus::EffectRowPlexus(
+    const Font& font,
+    const string& str,
+    EffectRow* parent)
+    : EffectRow(font, str, parent)
+{
+}
+
+//----------------------------------------------------------------------------------
+bool EffectRowPlexus::ToProtocol(effect::protocol::EffectSetting* proto) const
+{
+  // Note: this must be called on the parent row
+  if (_parent)
+    return false;
+
+  proto->set_type(effect::protocol::EffectSetting_Type_Plexus);
+
+  return true;
+}
+
+//----------------------------------------------------------------------------------
+EffectRowTextPath::EffectRowTextPath(
+    const Font& font,
+    const string& str,
+    EffectRow* parent)
+  : EffectRow(font, str, parent)
+{
+}
+
+//----------------------------------------------------------------------------------
+bool EffectRowTextPath::ToProtocol(effect::protocol::EffectSetting* proto) const
+{
+  return true;
+}
+
+//----------------------------------------------------------------------------------
 EffectRowNoise::EffectRowNoise(
     const Font& font,
     const string& str,
@@ -284,11 +320,11 @@ void EffectRowNoise::DrawKeyframes(RenderTexture& texture, const Vector2f& size)
 }
 
 //----------------------------------------------------------------------------------
-Vector3f EffectRowNoise::PixelToValue(int y) const
+Vector3f EffectRowNoise::PixelToValue(int x) const
 {
   // x = bottom - h * (value - minValue) / span
   // x - bottom = -h..
-  // ==> (bottom - x) * span / h + minValue
+  // ==> value = (bottom - x) * span / h + minValue
 
   Vector2f size = TimelineWindow::_instance->GetSize();
   const editor::protocol::Settings& settings = EDITOR.Settings();
@@ -298,7 +334,24 @@ Vector3f EffectRowNoise::PixelToValue(int y) const
 
   Vector3f span = _maxValue - _minValue;
 
-  return (bottom - y) * span / h + _minValue;
+  return (bottom - x) * span / h + _minValue;
+}
+
+//----------------------------------------------------------------------------------
+int EffectRowNoise::ValueToPixel(const Vector3f& value)
+{
+  // x = bottom - h * (value - minValue) / span
+
+  Vector2f size = TimelineWindow::_instance->GetSize();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  float topY = settings.ticker_height();
+  float h = size.y - topY;
+  float bottom = size.y - 1;
+
+  float span = ExtractGraphValue(_maxValue - _minValue);
+  float v = ExtractGraphValue(value - _minValue);
+
+  return (int)bottom - h * v / span;
 }
 
 //----------------------------------------------------------------------------------
@@ -542,7 +595,9 @@ void EffectRowNoise::BeginEditVars(float x, float y)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
   int h = settings.effect_row_height();
-  _prevValue = _effector.displacement.keyframes[0].value;
+  _prevValue = _selectedKeyframe
+      ? _selectedKeyframe->value
+      : Interpolate(_effector.displacement, EDITOR.CurTime());
 
   _editingIdx = (y - _rect->_shape.getPosition().y - h) / h;
   assert(_editingIdx >= 0 && _editingIdx <= 2);
@@ -608,9 +663,12 @@ bool EffectRowNoise::KeyframeIntersect(const Vector2f& pt, const Vector2f& size)
   {
     Vector3Keyframe& keyframe = _effector.displacement.keyframes[i];
     int x = TimelineWindow::_instance->TimeToPixel(milliseconds(keyframe.time));
-    if (x < size.x)
+    if (x >= size.x)
+      continue;
+
+    if (_graphMode == 0)
     {
-      // draw for each var
+      // keyframe mode; check each var
       for (u32 j = 0; j < 3; ++j)
       {
         int y = shapeY + h * (j+1.5f) - 3;
@@ -623,6 +681,19 @@ bool EffectRowNoise::KeyframeIntersect(const Vector2f& pt, const Vector2f& size)
         }
       }
     }
+    else
+    {
+      // graph mode; check the currect var
+      float y = ValueToPixel(keyframe.value);
+      FloatRect rect(x, y, 6, 6);
+      if (rect.contains(pt))
+      {
+        _selectedKeyframe = &keyframe;
+        _oldKeyframe = keyframe;
+        return true;
+      }
+    }
+
   }
 
   return false;
@@ -698,9 +769,15 @@ void EffectRowNoise::ToggleGraphView(bool value)
 }
 
 //----------------------------------------------------------------------------------
-bool EffectRowNoise::GraphMouseMoved(const Event& event)
+float EffectRowNoise::SnappedValue(float value)
 {
-  const TimelineWindow* timeline = TimelineWindow::_instance;
+  return value;
+}
+
+//----------------------------------------------------------------------------------
+bool EffectRowNoise::OnMouseMoved(const Event &event)
+{
+  TimelineWindow* timeline = TimelineWindow::_instance;
 
   int x = (int)(event.mouseMove.x - timeline->GetPosition().x);
   int y = (int)(event.mouseMove.y - timeline->GetPosition().y);
@@ -711,8 +788,9 @@ bool EffectRowNoise::GraphMouseMoved(const Event& event)
     const Vector3f& v = PixelToValue(y);
     _selectedKeyframe->time = timeline->PixelToTime(x).total_milliseconds();
     _selectedKeyframe->value = UpdateKeyframe(v, _selectedKeyframe->value);
+    timeline->KeyframesModified();
 
-    TimelineWindow::_instance->UpdateStatusBar(0, to_string("Value: %.3f", ExtractGraphValue(v)));
+    timeline->UpdateStatusBar(0, to_string("Value: %.3f", ExtractGraphValue(v)));
   }
   return true;
 }
@@ -732,9 +810,9 @@ Vector3f EffectRowNoise::UpdateKeyframe(const Vector3f& newValue, const Vector3f
 }
 
 //----------------------------------------------------------------------------------
-bool EffectRowNoise::GraphMouseButtonPressed(const Event& event)
+bool EffectRowNoise::OnMouseButtonPressed(const Event &event)
 {
-  const TimelineWindow* timeline = TimelineWindow::_instance;
+  TimelineWindow* timeline = TimelineWindow::_instance;
 
   int x = (int)(event.mouseButton.x - timeline->GetPosition().x);
   int y = (int)(event.mouseButton.y - timeline->GetPosition().y);
@@ -764,15 +842,17 @@ bool EffectRowNoise::GraphMouseButtonPressed(const Event& event)
     time_duration t = timeline->PixelToTime(x);
     Vector3f tmp = Interpolate(_effector.displacement, t);
     AddKeyframe(t, UpdateKeyframe(PixelToValue(y), tmp), true, &_effector.displacement);
+    timeline->KeyframesModified();
   }
 
   return true;
 }
 
 //----------------------------------------------------------------------------------
-bool EffectRowNoise::GraphMouseButtonReleased(const Event& event)
+bool EffectRowNoise::OnMouseButtonReleased(const Event &event)
 {
   _selectedKeyframe = nullptr;
   return true;
 
 }
+
