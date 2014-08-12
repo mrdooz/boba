@@ -13,9 +13,58 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='common.proto',
   package='common.protocol',
-  serialized_pb='\n\x0c\x63ommon.proto\x12\x0f\x63ommon.protocol\"\x1f\n\x07Vector2\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"*\n\x07Vector3\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"5\n\x07Vector4\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"\x86\x01\n\tMatrix3x3\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector3\"\xaf\x01\n\tMatrix4x4\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_4\x18\x04 \x01(\x0b\x32\x18.common.protocol.Vector4\"H\n\x0fVector3Keyframe\x12\x0c\n\x04time\x18\x01 \x01(\r\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\"P\n\x0bVector3Anim\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x33\n\tkeyframes\x18\x02 \x03(\x0b\x32 .common.protocol.Vector3Keyframe')
+  serialized_pb='\n\x0c\x63ommon.proto\x12\x0f\x63ommon.protocol\"B\n\x06\x43olor4\x12\x0c\n\x01r\x18\x01 \x01(\r:\x01\x30\x12\x0c\n\x01g\x18\x02 \x01(\r:\x01\x30\x12\x0c\n\x01\x62\x18\x03 \x01(\r:\x01\x30\x12\x0e\n\x01\x61\x18\x04 \x01(\r:\x03\x32\x35\x35\"\x1f\n\x07Vector2\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"*\n\x07Vector3\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"5\n\x07Vector4\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"\x86\x01\n\tMatrix3x3\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector3\"\xaf\x01\n\tMatrix4x4\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_4\x18\x04 \x01(\x0b\x32\x18.common.protocol.Vector4\"H\n\x0fVector3Keyframe\x12\x0c\n\x04time\x18\x01 \x01(\r\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\"P\n\x0bVector3Anim\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x33\n\tkeyframes\x18\x02 \x03(\x0b\x32 .common.protocol.Vector3Keyframe')
 
 
+
+
+_COLOR4 = _descriptor.Descriptor(
+  name='Color4',
+  full_name='common.protocol.Color4',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='r', full_name='common.protocol.Color4.r', index=0,
+      number=1, type=13, cpp_type=3, label=1,
+      has_default_value=True, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='g', full_name='common.protocol.Color4.g', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=True, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='b', full_name='common.protocol.Color4.b', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=True, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='a', full_name='common.protocol.Color4.a', index=3,
+      number=4, type=13, cpp_type=3, label=1,
+      has_default_value=True, default_value=255,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=33,
+  serialized_end=99,
+)
 
 
 _VECTOR2 = _descriptor.Descriptor(
@@ -48,8 +97,8 @@ _VECTOR2 = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=33,
-  serialized_end=64,
+  serialized_start=101,
+  serialized_end=132,
 )
 
 
@@ -90,8 +139,8 @@ _VECTOR3 = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=66,
-  serialized_end=108,
+  serialized_start=134,
+  serialized_end=176,
 )
 
 
@@ -139,8 +188,8 @@ _VECTOR4 = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=110,
-  serialized_end=163,
+  serialized_start=178,
+  serialized_end=231,
 )
 
 
@@ -181,8 +230,8 @@ _MATRIX3X3 = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=166,
-  serialized_end=300,
+  serialized_start=234,
+  serialized_end=368,
 )
 
 
@@ -230,8 +279,8 @@ _MATRIX4X4 = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=303,
-  serialized_end=478,
+  serialized_start=371,
+  serialized_end=546,
 )
 
 
@@ -265,8 +314,8 @@ _VECTOR3KEYFRAME = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=480,
-  serialized_end=552,
+  serialized_start=548,
+  serialized_end=620,
 )
 
 
@@ -300,8 +349,8 @@ _VECTOR3ANIM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=554,
-  serialized_end=634,
+  serialized_start=622,
+  serialized_end=702,
 )
 
 _MATRIX3X3.fields_by_name['row_1'].message_type = _VECTOR3
@@ -313,6 +362,7 @@ _MATRIX4X4.fields_by_name['row_3'].message_type = _VECTOR4
 _MATRIX4X4.fields_by_name['row_4'].message_type = _VECTOR4
 _VECTOR3KEYFRAME.fields_by_name['value'].message_type = _VECTOR3
 _VECTOR3ANIM.fields_by_name['keyframes'].message_type = _VECTOR3KEYFRAME
+DESCRIPTOR.message_types_by_name['Color4'] = _COLOR4
 DESCRIPTOR.message_types_by_name['Vector2'] = _VECTOR2
 DESCRIPTOR.message_types_by_name['Vector3'] = _VECTOR3
 DESCRIPTOR.message_types_by_name['Vector4'] = _VECTOR4
@@ -320,6 +370,12 @@ DESCRIPTOR.message_types_by_name['Matrix3x3'] = _MATRIX3X3
 DESCRIPTOR.message_types_by_name['Matrix4x4'] = _MATRIX4X4
 DESCRIPTOR.message_types_by_name['Vector3Keyframe'] = _VECTOR3KEYFRAME
 DESCRIPTOR.message_types_by_name['Vector3Anim'] = _VECTOR3ANIM
+
+class Color4(_message.Message):
+  __metaclass__ = _reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _COLOR4
+
+  # @@protoc_insertion_point(class_scope:common.protocol.Color4)
 
 class Vector2(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType

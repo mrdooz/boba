@@ -63,6 +63,8 @@ namespace editor
   };
 
 
+  struct EffectRowTextPath;
+  struct EffectRowNoise;
   //----------------------------------------------------------------------------------
   struct EffectRowPlexus : public EffectRow
   {
@@ -72,7 +74,8 @@ namespace editor
         EffectRow* parent = nullptr);
 
     virtual bool ToProtocol(effect::protocol::EffectSetting* proto) const;
-
+    vector<EffectRowTextPath*> _textPaths;
+    vector<EffectRowNoise*> _noise;
   };
 
   //----------------------------------------------------------------------------------
@@ -83,8 +86,7 @@ namespace editor
         const string& str,
         EffectRow* parent = nullptr);
 
-    virtual bool ToProtocol(effect::protocol::EffectSetting* proto) const;
-
+    bool ToProtocolInner(effect::protocol::plexus::Plexus* proto) const;
   };
 
   //----------------------------------------------------------------------------------
@@ -115,7 +117,7 @@ namespace editor
     virtual bool OnMouseButtonPressed(const Event &event);
     virtual bool OnMouseButtonReleased(const Event &event);
 
-//    virtual bool ToProtocol(effect::protocol::EffectSetting* proto) const;
+    bool ToProtocolInner(effect::protocol::plexus::Plexus* proto) const;
 
     void DrawKeyframes(RenderTexture& texture, const Vector2f& size);
 

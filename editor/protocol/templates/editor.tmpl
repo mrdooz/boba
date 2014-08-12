@@ -23,6 +23,7 @@ namespace editor
 
   {% for class in classes %}
   {{ class.name }} FromProtocol(const {{ class.proto_type }}& p);
+  void ToProtocol(const {{ class.name}}& v, {{ class.proto_type}}* p);
   {% endfor %}
   {% for fwd in forward_decls %}
   {{ fwd }}
@@ -39,16 +40,6 @@ namespace editor
     return res;
   }
   
-  inline Color FromProtocol(const editor::protocol::Color4& col)
-  {
-    return Color(col.r(), col.g(), col.b(), col.a());
-  }
-
-  inline Vector3f FromProtocol(const common::protocol::Vector3& v)
-  {
-    return Vector3f(v.x(), v.y(), v.z());
-  }
-
   {% for class in classes %}
   struct {{ class.name }}
   {
@@ -65,6 +56,34 @@ namespace editor
     {{ member.type }} {{ member.name }};
     {% endfor %}
   };
+  {% endfor %}  
+
+  inline Color FromProtocol(const common::protocol::Color4& col)
+  {
+    return Color(col.r(), col.g(), col.b(), col.a());
+  }
+
+  inline void ToProtocol(const Color& v, common::protocol::Color4* p)
+  {
+    p->set_r(v.r);
+    p->set_g(v.g);
+    p->set_b(v.b);
+    p->set_a(v.a);
+  }
+
+  inline Vector3f FromProtocol(const common::protocol::Vector3& v)
+  {
+    return Vector3f(v.x(), v.y(), v.z());
+  }
+
+  inline void ToProtocol(const Vector3f& v, common::protocol::Vector3* p)
+  {
+    p->set_x(v.x);
+    p->set_y(v.y);
+    p->set_z(v.z);
+  }
+
+  {% for class in classes %}
 
   inline {{ class.name }} FromProtocol(const {{ class.proto_type }}& p)
   {
@@ -86,6 +105,24 @@ namespace editor
     {% endif %}
     {% endfor %}
     return res;
+  }
+
+  inline void ToProtocol(const {{ class.name }}& v, {{ class.proto_type }}* p)
+  {
+    {% for member in class.members %}
+    {% if member.is_enum %}
+    {% elif member.is_native %}
+    p->set_{{ member.proto_name }}(v.{{ member.name }});
+    {% elif member.is_bytes %}
+    {% else %}
+    {% if member.is_repeated %}
+    for (const auto& x : v.{{ member.name }})
+      ToProtocol(x, p->add_{{ member.proto_name}}());
+    {% else %}
+    ToProtocol(v.{{ member.name }}, p->mutable_{{ member.proto_name }}());
+    {% endif %}
+    {% endif %}
+    {% endfor %}
   }
 
   {% endfor %}	

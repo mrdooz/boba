@@ -32,15 +32,25 @@ namespace editor
   struct NoiseEffector;
 
   Vector3Keyframe FromProtocol(const common::protocol::Vector3Keyframe& p);
+  void ToProtocol(const Vector3Keyframe& v, common::protocol::Vector3Keyframe* p);
   Vector3Anim FromProtocol(const common::protocol::Vector3Anim& p);
+  void ToProtocol(const Vector3Anim& v, common::protocol::Vector3Anim* p);
   Settings FromProtocol(const editor::protocol::Settings& p);
+  void ToProtocol(const Settings& v, editor::protocol::Settings* p);
   Style FromProtocol(const editor::protocol::Style& p);
+  void ToProtocol(const Style& v, editor::protocol::Style* p);
   Styles FromProtocol(const editor::protocol::Styles& p);
+  void ToProtocol(const Styles& v, editor::protocol::Styles* p);
   EffectSetting FromProtocol(const effect::protocol::EffectSetting& p);
+  void ToProtocol(const EffectSetting& v, effect::protocol::EffectSetting* p);
   EffectSettings FromProtocol(const effect::protocol::EffectSettings& p);
+  void ToProtocol(const EffectSettings& v, effect::protocol::EffectSettings* p);
   Plexus FromProtocol(const effect::protocol::plexus::Plexus& p);
+  void ToProtocol(const Plexus& v, effect::protocol::plexus::Plexus* p);
   TextPath FromProtocol(const effect::protocol::plexus::TextPath& p);
+  void ToProtocol(const TextPath& v, effect::protocol::plexus::TextPath* p);
   NoiseEffector FromProtocol(const effect::protocol::plexus::NoiseEffector& p);
+  void ToProtocol(const NoiseEffector& v, effect::protocol::plexus::NoiseEffector* p);
   
   template<typename T, typename U>
   vector<T> FromProtocolRepeated(const google::protobuf::RepeatedPtrField<U>& v)
@@ -53,44 +63,16 @@ namespace editor
     return res;
   }
   
-  inline Color FromProtocol(const editor::protocol::Color4& col)
-  {
-    return Color(col.r(), col.g(), col.b(), col.a());
-  }
-
-  inline Vector3f FromProtocol(const common::protocol::Vector3& v)
-  {
-    return Vector3f(v.x(), v.y(), v.z());
-  }
-
   struct Vector3Keyframe
   {
     uint32_t time;
     Vector3f value;
   };
-
-  inline Vector3Keyframe FromProtocol(const common::protocol::Vector3Keyframe& p)
-  {
-    Vector3Keyframe res;
-    res.time = p.time();
-    res.value = FromProtocol(p.value());
-    return res;
-  }
-
   struct Vector3Anim
   {
     uint32_t type;
     vector<Vector3Keyframe> keyframes;
   };
-
-  inline Vector3Anim FromProtocol(const common::protocol::Vector3Anim& p)
-  {
-    Vector3Anim res;
-    res.type = p.type();
-    res.keyframes = FromProtocolRepeated<Vector3Keyframe>(p.keyframes());
-    return res;
-  }
-
   struct Settings
   {
     uint32_t tickerHeight;
@@ -111,6 +93,110 @@ namespace editor
     Color effectIconExpandedColor;
     Color effectIconCollapsedColor;
   };
+  struct Style
+  {
+    string id;
+    Color fillColor;
+    Color outlineColor;
+    float outlineThickness;
+    uint32_t fontStyle;
+  };
+  struct Styles
+  {
+    vector<Style> styles;
+  };
+  struct EffectSetting
+  {
+    enum class Type
+    {
+      Plexus = 1,
+    };
+
+    EffectSetting::Type type;
+    std::vector<uint8_t> msg;
+  };
+  struct EffectSettings
+  {
+    vector<EffectSetting> effectSettings;
+  };
+  struct Plexus
+  {
+    vector<TextPath> textPaths;
+    vector<NoiseEffector> noiseEffectors;
+  };
+  struct TextPath
+  {
+    string text;
+  };
+  struct NoiseEffector
+  {
+    enum class ApplyTo
+    {
+      Position = 1,
+      Scale = 2,
+    };
+
+    NoiseEffector::ApplyTo applyTo;
+    Vector3Anim displacement;
+  };
+  
+
+  inline Color FromProtocol(const common::protocol::Color4& col)
+  {
+    return Color(col.r(), col.g(), col.b(), col.a());
+  }
+
+  inline void ToProtocol(const Color& v, common::protocol::Color4* p)
+  {
+    p->set_r(v.r);
+    p->set_g(v.g);
+    p->set_b(v.b);
+    p->set_a(v.a);
+  }
+
+  inline Vector3f FromProtocol(const common::protocol::Vector3& v)
+  {
+    return Vector3f(v.x(), v.y(), v.z());
+  }
+
+  inline void ToProtocol(const Vector3f& v, common::protocol::Vector3* p)
+  {
+    p->set_x(v.x);
+    p->set_y(v.y);
+    p->set_z(v.z);
+  }
+
+
+  inline Vector3Keyframe FromProtocol(const common::protocol::Vector3Keyframe& p)
+  {
+    Vector3Keyframe res;
+    res.time = p.time();
+    res.value = FromProtocol(p.value());
+    return res;
+  }
+
+  inline void ToProtocol(const Vector3Keyframe& v, common::protocol::Vector3Keyframe* p)
+  {
+    p->set_time(v.time);
+    ToProtocol(v.value, p->mutable_value());
+  }
+
+
+  inline Vector3Anim FromProtocol(const common::protocol::Vector3Anim& p)
+  {
+    Vector3Anim res;
+    res.type = p.type();
+    res.keyframes = FromProtocolRepeated<Vector3Keyframe>(p.keyframes());
+    return res;
+  }
+
+  inline void ToProtocol(const Vector3Anim& v, common::protocol::Vector3Anim* p)
+  {
+    p->set_type(v.type);
+    for (const auto& x : v.keyframes)
+      ToProtocol(x, p->add_keyframes());
+  }
+
 
   inline Settings FromProtocol(const editor::protocol::Settings& p)
   {
@@ -135,14 +221,27 @@ namespace editor
     return res;
   }
 
-  struct Style
+  inline void ToProtocol(const Settings& v, editor::protocol::Settings* p)
   {
-    string id;
-    Color fillColor;
-    Color outlineColor;
-    float outlineThickness;
-    uint32_t fontStyle;
-  };
+    p->set_ticker_height(v.tickerHeight);
+    p->set_ticker_interval(v.tickerInterval);
+    p->set_ticks_per_interval(v.ticksPerInterval);
+    p->set_effect_view_width(v.effectViewWidth);
+    p->set_effect_row_height(v.effectRowHeight);
+    p->set_status_bar_height(v.statusBarHeight);
+    p->set_effect_height(v.effectHeight);
+    p->set_resize_handle(v.resizeHandle);
+    p->set_timeline_zoom_min(v.timelineZoomMin);
+    p->set_timeline_zoom_max(v.timelineZoomMax);
+    p->set_timeline_zoom_default(v.timelineZoomDefault);
+    ToProtocol(v.defaultRowColor, p->mutable_default_row_color());
+    ToProtocol(v.selectedRowColor, p->mutable_selected_row_color());
+    ToProtocol(v.hoverRowColor, p->mutable_hover_row_color());
+    ToProtocol(v.invalidHoverRowColor, p->mutable_invalid_hover_row_color());
+    ToProtocol(v.effectIconExpandedColor, p->mutable_effect_icon_expanded_color());
+    ToProtocol(v.effectIconCollapsedColor, p->mutable_effect_icon_collapsed_color());
+  }
+
 
   inline Style FromProtocol(const editor::protocol::Style& p)
   {
@@ -155,10 +254,15 @@ namespace editor
     return res;
   }
 
-  struct Styles
+  inline void ToProtocol(const Style& v, editor::protocol::Style* p)
   {
-    vector<Style> styles;
-  };
+    p->set_id(v.id);
+    ToProtocol(v.fillColor, p->mutable_fill_color());
+    ToProtocol(v.outlineColor, p->mutable_outline_color());
+    p->set_outline_thickness(v.outlineThickness);
+    p->set_font_style(v.fontStyle);
+  }
+
 
   inline Styles FromProtocol(const editor::protocol::Styles& p)
   {
@@ -167,16 +271,12 @@ namespace editor
     return res;
   }
 
-  struct EffectSetting
+  inline void ToProtocol(const Styles& v, editor::protocol::Styles* p)
   {
-    enum class Type
-    {
-      Plexus = 1,
-    };
+    for (const auto& x : v.styles)
+      ToProtocol(x, p->add_styles());
+  }
 
-    EffectSetting::Type type;
-    std::vector<uint8_t> msg;
-  };
 
   inline EffectSetting FromProtocol(const effect::protocol::EffectSetting& p)
   {
@@ -187,10 +287,10 @@ namespace editor
     return res;
   }
 
-  struct EffectSettings
+  inline void ToProtocol(const EffectSetting& v, effect::protocol::EffectSetting* p)
   {
-    vector<EffectSetting> effectSettings;
-  };
+  }
+
 
   inline EffectSettings FromProtocol(const effect::protocol::EffectSettings& p)
   {
@@ -199,11 +299,12 @@ namespace editor
     return res;
   }
 
-  struct Plexus
+  inline void ToProtocol(const EffectSettings& v, effect::protocol::EffectSettings* p)
   {
-    vector<TextPath> textPaths;
-    vector<NoiseEffector> noiseEffectors;
-  };
+    for (const auto& x : v.effectSettings)
+      ToProtocol(x, p->add_effect_settings());
+  }
+
 
   inline Plexus FromProtocol(const effect::protocol::plexus::Plexus& p)
   {
@@ -213,10 +314,14 @@ namespace editor
     return res;
   }
 
-  struct TextPath
+  inline void ToProtocol(const Plexus& v, effect::protocol::plexus::Plexus* p)
   {
-    string text;
-  };
+    for (const auto& x : v.textPaths)
+      ToProtocol(x, p->add_text_paths());
+    for (const auto& x : v.noiseEffectors)
+      ToProtocol(x, p->add_noise_effectors());
+  }
+
 
   inline TextPath FromProtocol(const effect::protocol::plexus::TextPath& p)
   {
@@ -225,17 +330,11 @@ namespace editor
     return res;
   }
 
-  struct NoiseEffector
+  inline void ToProtocol(const TextPath& v, effect::protocol::plexus::TextPath* p)
   {
-    enum class ApplyTo
-    {
-      Position = 1,
-      Scale = 2,
-    };
+    p->set_text(v.text);
+  }
 
-    NoiseEffector::ApplyTo applyTo;
-    Vector3Anim displacement;
-  };
 
   inline NoiseEffector FromProtocol(const effect::protocol::plexus::NoiseEffector& p)
   {
@@ -243,6 +342,11 @@ namespace editor
     res.applyTo = (NoiseEffector::ApplyTo)p.apply_to();
     res.displacement = FromProtocol(p.displacement());
     return res;
+  }
+
+  inline void ToProtocol(const NoiseEffector& v, effect::protocol::plexus::NoiseEffector* p)
+  {
+    ToProtocol(v.displacement, p->mutable_displacement());
   }
 
 	

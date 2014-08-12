@@ -89,7 +89,7 @@ bool TimelineWindow::Init()
 
   for (int i = 0; i < 5; ++i)
   {
-    EffectRow* parent = new EffectRow(_font, "PLEXUS");
+    EffectRow* parent = new EffectRowPlexus(_font, "PLEXUS");
     _effectRows.push_back(parent);
     curY += rowHeight;
 

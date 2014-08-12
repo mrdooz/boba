@@ -21,6 +21,9 @@ namespace protocol {
 
 namespace {
 
+const ::google::protobuf::Descriptor* Color4_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Color4_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Vector2_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Vector2_reflection_ = NULL;
@@ -52,7 +55,25 @@ void protobuf_AssignDesc_common_2eproto() {
     ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
       "common.proto");
   GOOGLE_CHECK(file != NULL);
-  Vector2_descriptor_ = file->message_type(0);
+  Color4_descriptor_ = file->message_type(0);
+  static const int Color4_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Color4, r_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Color4, g_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Color4, b_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Color4, a_),
+  };
+  Color4_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Color4_descriptor_,
+      Color4::default_instance_,
+      Color4_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Color4, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Color4, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Color4));
+  Vector2_descriptor_ = file->message_type(1);
   static const int Vector2_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector2, x_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector2, y_),
@@ -68,7 +89,7 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector2));
-  Vector3_descriptor_ = file->message_type(1);
+  Vector3_descriptor_ = file->message_type(2);
   static const int Vector3_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3, x_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3, y_),
@@ -85,7 +106,7 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector3));
-  Vector4_descriptor_ = file->message_type(2);
+  Vector4_descriptor_ = file->message_type(3);
   static const int Vector4_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector4, x_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector4, y_),
@@ -103,7 +124,7 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector4));
-  Matrix3x3_descriptor_ = file->message_type(3);
+  Matrix3x3_descriptor_ = file->message_type(4);
   static const int Matrix3x3_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Matrix3x3, row_1_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Matrix3x3, row_2_),
@@ -120,7 +141,7 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Matrix3x3));
-  Matrix4x4_descriptor_ = file->message_type(4);
+  Matrix4x4_descriptor_ = file->message_type(5);
   static const int Matrix4x4_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Matrix4x4, row_1_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Matrix4x4, row_2_),
@@ -138,7 +159,7 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Matrix4x4));
-  Vector3Keyframe_descriptor_ = file->message_type(5);
+  Vector3Keyframe_descriptor_ = file->message_type(6);
   static const int Vector3Keyframe_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Keyframe, time_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Keyframe, value_),
@@ -154,7 +175,7 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector3Keyframe));
-  Vector3Anim_descriptor_ = file->message_type(6);
+  Vector3Anim_descriptor_ = file->message_type(7);
   static const int Vector3Anim_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Anim, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Anim, keyframes_),
@@ -183,6 +204,8 @@ inline void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Color4_descriptor_, &Color4::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Vector2_descriptor_, &Vector2::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Vector3_descriptor_, &Vector3::default_instance());
@@ -201,6 +224,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
 }  // namespace
 
 void protobuf_ShutdownFile_common_2eproto() {
+  delete Color4::default_instance_;
+  delete Color4_reflection_;
   delete Vector2::default_instance_;
   delete Vector2_reflection_;
   delete Vector3::default_instance_;
@@ -224,24 +249,27 @@ void protobuf_AddDesc_common_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\014common.proto\022\017common.protocol\"\037\n\007Vecto"
-    "r2\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\"*\n\007Vector3\022\t\n\001x"
-    "\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\"5\n\007Vector4\022"
-    "\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\022\t\n\001w\030\004 "
-    "\001(\002\"\206\001\n\tMatrix3x3\022\'\n\005row_1\030\001 \001(\0132\030.commo"
-    "n.protocol.Vector3\022\'\n\005row_2\030\002 \001(\0132\030.comm"
-    "on.protocol.Vector3\022\'\n\005row_3\030\003 \001(\0132\030.com"
-    "mon.protocol.Vector3\"\257\001\n\tMatrix4x4\022\'\n\005ro"
-    "w_1\030\001 \001(\0132\030.common.protocol.Vector4\022\'\n\005r"
-    "ow_2\030\002 \001(\0132\030.common.protocol.Vector4\022\'\n\005"
-    "row_3\030\003 \001(\0132\030.common.protocol.Vector4\022\'\n"
-    "\005row_4\030\004 \001(\0132\030.common.protocol.Vector4\"H"
-    "\n\017Vector3Keyframe\022\014\n\004time\030\001 \001(\r\022\'\n\005value"
-    "\030\002 \001(\0132\030.common.protocol.Vector3\"P\n\013Vect"
-    "or3Anim\022\014\n\004type\030\001 \001(\r\0223\n\tkeyframes\030\002 \003(\013"
-    "2 .common.protocol.Vector3Keyframe", 634);
+    "\n\014common.proto\022\017common.protocol\"B\n\006Color"
+    "4\022\014\n\001r\030\001 \001(\r:\0010\022\014\n\001g\030\002 \001(\r:\0010\022\014\n\001b\030\003 \001(\r"
+    ":\0010\022\016\n\001a\030\004 \001(\r:\003255\"\037\n\007Vector2\022\t\n\001x\030\001 \001("
+    "\002\022\t\n\001y\030\002 \001(\002\"*\n\007Vector3\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030"
+    "\002 \001(\002\022\t\n\001z\030\003 \001(\002\"5\n\007Vector4\022\t\n\001x\030\001 \001(\002\022\t"
+    "\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\022\t\n\001w\030\004 \001(\002\"\206\001\n\tMatr"
+    "ix3x3\022\'\n\005row_1\030\001 \001(\0132\030.common.protocol.V"
+    "ector3\022\'\n\005row_2\030\002 \001(\0132\030.common.protocol."
+    "Vector3\022\'\n\005row_3\030\003 \001(\0132\030.common.protocol"
+    ".Vector3\"\257\001\n\tMatrix4x4\022\'\n\005row_1\030\001 \001(\0132\030."
+    "common.protocol.Vector4\022\'\n\005row_2\030\002 \001(\0132\030"
+    ".common.protocol.Vector4\022\'\n\005row_3\030\003 \001(\0132"
+    "\030.common.protocol.Vector4\022\'\n\005row_4\030\004 \001(\013"
+    "2\030.common.protocol.Vector4\"H\n\017Vector3Key"
+    "frame\022\014\n\004time\030\001 \001(\r\022\'\n\005value\030\002 \001(\0132\030.com"
+    "mon.protocol.Vector3\"P\n\013Vector3Anim\022\014\n\004t"
+    "ype\030\001 \001(\r\0223\n\tkeyframes\030\002 \003(\0132 .common.pr"
+    "otocol.Vector3Keyframe", 702);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "common.proto", &protobuf_RegisterTypes);
+  Color4::default_instance_ = new Color4();
   Vector2::default_instance_ = new Vector2();
   Vector3::default_instance_ = new Vector3();
   Vector4::default_instance_ = new Vector4();
@@ -249,6 +277,7 @@ void protobuf_AddDesc_common_2eproto() {
   Matrix4x4::default_instance_ = new Matrix4x4();
   Vector3Keyframe::default_instance_ = new Vector3Keyframe();
   Vector3Anim::default_instance_ = new Vector3Anim();
+  Color4::default_instance_->InitAsDefaultInstance();
   Vector2::default_instance_->InitAsDefaultInstance();
   Vector3::default_instance_->InitAsDefaultInstance();
   Vector4::default_instance_->InitAsDefaultInstance();
@@ -265,6 +294,334 @@ struct StaticDescriptorInitializer_common_2eproto {
     protobuf_AddDesc_common_2eproto();
   }
 } static_descriptor_initializer_common_2eproto_;
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int Color4::kRFieldNumber;
+const int Color4::kGFieldNumber;
+const int Color4::kBFieldNumber;
+const int Color4::kAFieldNumber;
+#endif  // !_MSC_VER
+
+Color4::Color4()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void Color4::InitAsDefaultInstance() {
+}
+
+Color4::Color4(const Color4& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void Color4::SharedCtor() {
+  _cached_size_ = 0;
+  r_ = 0u;
+  g_ = 0u;
+  b_ = 0u;
+  a_ = 255u;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Color4::~Color4() {
+  SharedDtor();
+}
+
+void Color4::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Color4::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Color4::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Color4_descriptor_;
+}
+
+const Color4& Color4::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_common_2eproto();
+  return *default_instance_;
+}
+
+Color4* Color4::default_instance_ = NULL;
+
+Color4* Color4::New() const {
+  return new Color4;
+}
+
+void Color4::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    r_ = 0u;
+    g_ = 0u;
+    b_ = 0u;
+    a_ = 255u;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Color4::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional uint32 r = 1 [default = 0];
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &r_)));
+          set_has_r();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_g;
+        break;
+      }
+
+      // optional uint32 g = 2 [default = 0];
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_g:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &g_)));
+          set_has_g();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_b;
+        break;
+      }
+
+      // optional uint32 b = 3 [default = 0];
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_b:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &b_)));
+          set_has_b();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(32)) goto parse_a;
+        break;
+      }
+
+      // optional uint32 a = 4 [default = 255];
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_a:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &a_)));
+          set_has_a();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void Color4::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional uint32 r = 1 [default = 0];
+  if (has_r()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->r(), output);
+  }
+
+  // optional uint32 g = 2 [default = 0];
+  if (has_g()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->g(), output);
+  }
+
+  // optional uint32 b = 3 [default = 0];
+  if (has_b()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->b(), output);
+  }
+
+  // optional uint32 a = 4 [default = 255];
+  if (has_a()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->a(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* Color4::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional uint32 r = 1 [default = 0];
+  if (has_r()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->r(), target);
+  }
+
+  // optional uint32 g = 2 [default = 0];
+  if (has_g()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->g(), target);
+  }
+
+  // optional uint32 b = 3 [default = 0];
+  if (has_b()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->b(), target);
+  }
+
+  // optional uint32 a = 4 [default = 255];
+  if (has_a()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->a(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int Color4::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional uint32 r = 1 [default = 0];
+    if (has_r()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->r());
+    }
+
+    // optional uint32 g = 2 [default = 0];
+    if (has_g()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->g());
+    }
+
+    // optional uint32 b = 3 [default = 0];
+    if (has_b()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->b());
+    }
+
+    // optional uint32 a = 4 [default = 255];
+    if (has_a()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->a());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Color4::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Color4* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Color4*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Color4::MergeFrom(const Color4& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_r()) {
+      set_r(from.r());
+    }
+    if (from.has_g()) {
+      set_g(from.g());
+    }
+    if (from.has_b()) {
+      set_b(from.b());
+    }
+    if (from.has_a()) {
+      set_a(from.a());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Color4::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Color4::CopyFrom(const Color4& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Color4::IsInitialized() const {
+
+  return true;
+}
+
+void Color4::Swap(Color4* other) {
+  if (other != this) {
+    std::swap(r_, other->r_);
+    std::swap(g_, other->g_);
+    std::swap(b_, other->b_);
+    std::swap(a_, other->a_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Color4::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Color4_descriptor_;
+  metadata.reflection = Color4_reflection_;
+  return metadata;
+}
+
 
 // ===================================================================
 

@@ -189,11 +189,21 @@ EffectRowPlexus::EffectRowPlexus(
 //----------------------------------------------------------------------------------
 bool EffectRowPlexus::ToProtocol(effect::protocol::EffectSetting* proto) const
 {
-  // Note: this must be called on the parent row
-  if (_parent)
-    return false;
-
+  assert(!_parent);
   proto->set_type(effect::protocol::EffectSetting_Type_Plexus);
+
+  effect::protocol::plexus::Plexus plexus;
+  for (const EffectRowTextPath* row : _textPaths)
+  {
+    row->ToProtocolInner(&plexus);
+  }
+
+  for (const EffectRowNoise* row : _noise)
+  {
+    row->ToProtocolInner(&plexus);
+  }
+
+  proto->set_msg(plexus.SerializeAsString());
 
   return true;
 }
@@ -208,8 +218,9 @@ EffectRowTextPath::EffectRowTextPath(
 }
 
 //----------------------------------------------------------------------------------
-bool EffectRowTextPath::ToProtocol(effect::protocol::EffectSetting* proto) const
+bool EffectRowTextPath::ToProtocolInner(effect::protocol::plexus::Plexus* proto) const
 {
+  proto->add_text_paths()->set_text(_str);
   return true;
 }
 
@@ -856,3 +867,9 @@ bool EffectRowNoise::OnMouseButtonReleased(const Event &event)
 
 }
 
+//----------------------------------------------------------------------------------
+bool EffectRowNoise::ToProtocolInner(effect::protocol::plexus::Plexus* proto) const
+{
+  ::ToProtocol(_effector, proto->add_noise_effectors());
+  return true;
+}

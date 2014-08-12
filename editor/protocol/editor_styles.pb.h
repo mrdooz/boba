@@ -25,6 +25,7 @@
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/unknown_field_set.h>
 #include "editor_settings.pb.h"
+#include "common.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace editor {
@@ -106,23 +107,23 @@ class Style : public ::google::protobuf::Message {
   inline ::std::string* release_id();
   inline void set_allocated_id(::std::string* id);
 
-  // optional .editor.protocol.Color4 fill_color = 2;
+  // optional .common.protocol.Color4 fill_color = 2;
   inline bool has_fill_color() const;
   inline void clear_fill_color();
   static const int kFillColorFieldNumber = 2;
-  inline const ::editor::protocol::Color4& fill_color() const;
-  inline ::editor::protocol::Color4* mutable_fill_color();
-  inline ::editor::protocol::Color4* release_fill_color();
-  inline void set_allocated_fill_color(::editor::protocol::Color4* fill_color);
+  inline const ::common::protocol::Color4& fill_color() const;
+  inline ::common::protocol::Color4* mutable_fill_color();
+  inline ::common::protocol::Color4* release_fill_color();
+  inline void set_allocated_fill_color(::common::protocol::Color4* fill_color);
 
-  // optional .editor.protocol.Color4 outline_color = 3;
+  // optional .common.protocol.Color4 outline_color = 3;
   inline bool has_outline_color() const;
   inline void clear_outline_color();
   static const int kOutlineColorFieldNumber = 3;
-  inline const ::editor::protocol::Color4& outline_color() const;
-  inline ::editor::protocol::Color4* mutable_outline_color();
-  inline ::editor::protocol::Color4* release_outline_color();
-  inline void set_allocated_outline_color(::editor::protocol::Color4* outline_color);
+  inline const ::common::protocol::Color4& outline_color() const;
+  inline ::common::protocol::Color4* mutable_outline_color();
+  inline ::common::protocol::Color4* release_outline_color();
+  inline void set_allocated_outline_color(::common::protocol::Color4* outline_color);
 
   // optional float outline_thickness = 4 [default = 0];
   inline bool has_outline_thickness() const;
@@ -154,8 +155,8 @@ class Style : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* id_;
-  ::editor::protocol::Color4* fill_color_;
-  ::editor::protocol::Color4* outline_color_;
+  ::common::protocol::Color4* fill_color_;
+  ::common::protocol::Color4* outline_color_;
   float outline_thickness_;
   ::google::protobuf::uint32 font_style_;
 
@@ -331,7 +332,7 @@ inline void Style::set_allocated_id(::std::string* id) {
   }
 }
 
-// optional .editor.protocol.Color4 fill_color = 2;
+// optional .common.protocol.Color4 fill_color = 2;
 inline bool Style::has_fill_color() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -342,24 +343,24 @@ inline void Style::clear_has_fill_color() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void Style::clear_fill_color() {
-  if (fill_color_ != NULL) fill_color_->::editor::protocol::Color4::Clear();
+  if (fill_color_ != NULL) fill_color_->::common::protocol::Color4::Clear();
   clear_has_fill_color();
 }
-inline const ::editor::protocol::Color4& Style::fill_color() const {
+inline const ::common::protocol::Color4& Style::fill_color() const {
   return fill_color_ != NULL ? *fill_color_ : *default_instance_->fill_color_;
 }
-inline ::editor::protocol::Color4* Style::mutable_fill_color() {
+inline ::common::protocol::Color4* Style::mutable_fill_color() {
   set_has_fill_color();
-  if (fill_color_ == NULL) fill_color_ = new ::editor::protocol::Color4;
+  if (fill_color_ == NULL) fill_color_ = new ::common::protocol::Color4;
   return fill_color_;
 }
-inline ::editor::protocol::Color4* Style::release_fill_color() {
+inline ::common::protocol::Color4* Style::release_fill_color() {
   clear_has_fill_color();
-  ::editor::protocol::Color4* temp = fill_color_;
+  ::common::protocol::Color4* temp = fill_color_;
   fill_color_ = NULL;
   return temp;
 }
-inline void Style::set_allocated_fill_color(::editor::protocol::Color4* fill_color) {
+inline void Style::set_allocated_fill_color(::common::protocol::Color4* fill_color) {
   delete fill_color_;
   fill_color_ = fill_color;
   if (fill_color) {
@@ -369,7 +370,7 @@ inline void Style::set_allocated_fill_color(::editor::protocol::Color4* fill_col
   }
 }
 
-// optional .editor.protocol.Color4 outline_color = 3;
+// optional .common.protocol.Color4 outline_color = 3;
 inline bool Style::has_outline_color() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -380,24 +381,24 @@ inline void Style::clear_has_outline_color() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void Style::clear_outline_color() {
-  if (outline_color_ != NULL) outline_color_->::editor::protocol::Color4::Clear();
+  if (outline_color_ != NULL) outline_color_->::common::protocol::Color4::Clear();
   clear_has_outline_color();
 }
-inline const ::editor::protocol::Color4& Style::outline_color() const {
+inline const ::common::protocol::Color4& Style::outline_color() const {
   return outline_color_ != NULL ? *outline_color_ : *default_instance_->outline_color_;
 }
-inline ::editor::protocol::Color4* Style::mutable_outline_color() {
+inline ::common::protocol::Color4* Style::mutable_outline_color() {
   set_has_outline_color();
-  if (outline_color_ == NULL) outline_color_ = new ::editor::protocol::Color4;
+  if (outline_color_ == NULL) outline_color_ = new ::common::protocol::Color4;
   return outline_color_;
 }
-inline ::editor::protocol::Color4* Style::release_outline_color() {
+inline ::common::protocol::Color4* Style::release_outline_color() {
   clear_has_outline_color();
-  ::editor::protocol::Color4* temp = outline_color_;
+  ::common::protocol::Color4* temp = outline_color_;
   outline_color_ = NULL;
   return temp;
 }
-inline void Style::set_allocated_outline_color(::editor::protocol::Color4* outline_color) {
+inline void Style::set_allocated_outline_color(::common::protocol::Color4* outline_color) {
   delete outline_color_;
   outline_color_ = outline_color;
   if (outline_color) {

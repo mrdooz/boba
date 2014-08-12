@@ -34,6 +34,7 @@ void  protobuf_AddDesc_common_2eproto();
 void protobuf_AssignDesc_common_2eproto();
 void protobuf_ShutdownFile_common_2eproto();
 
+class Color4;
 class Vector2;
 class Vector3;
 class Vector4;
@@ -43,6 +44,118 @@ class Vector3Keyframe;
 class Vector3Anim;
 
 // ===================================================================
+
+class Color4 : public ::google::protobuf::Message {
+ public:
+  Color4();
+  virtual ~Color4();
+
+  Color4(const Color4& from);
+
+  inline Color4& operator=(const Color4& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Color4& default_instance();
+
+  void Swap(Color4* other);
+
+  // implements Message ----------------------------------------------
+
+  Color4* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Color4& from);
+  void MergeFrom(const Color4& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint32 r = 1 [default = 0];
+  inline bool has_r() const;
+  inline void clear_r();
+  static const int kRFieldNumber = 1;
+  inline ::google::protobuf::uint32 r() const;
+  inline void set_r(::google::protobuf::uint32 value);
+
+  // optional uint32 g = 2 [default = 0];
+  inline bool has_g() const;
+  inline void clear_g();
+  static const int kGFieldNumber = 2;
+  inline ::google::protobuf::uint32 g() const;
+  inline void set_g(::google::protobuf::uint32 value);
+
+  // optional uint32 b = 3 [default = 0];
+  inline bool has_b() const;
+  inline void clear_b();
+  static const int kBFieldNumber = 3;
+  inline ::google::protobuf::uint32 b() const;
+  inline void set_b(::google::protobuf::uint32 value);
+
+  // optional uint32 a = 4 [default = 255];
+  inline bool has_a() const;
+  inline void clear_a();
+  static const int kAFieldNumber = 4;
+  inline ::google::protobuf::uint32 a() const;
+  inline void set_a(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:common.protocol.Color4)
+ private:
+  inline void set_has_r();
+  inline void clear_has_r();
+  inline void set_has_g();
+  inline void clear_has_g();
+  inline void set_has_b();
+  inline void clear_has_b();
+  inline void set_has_a();
+  inline void clear_has_a();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 r_;
+  ::google::protobuf::uint32 g_;
+  ::google::protobuf::uint32 b_;
+  ::google::protobuf::uint32 a_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_common_2eproto();
+  friend void protobuf_AssignDesc_common_2eproto();
+  friend void protobuf_ShutdownFile_common_2eproto();
+
+  void InitAsDefaultInstance();
+  static Color4* default_instance_;
+};
+// -------------------------------------------------------------------
 
 class Vector2 : public ::google::protobuf::Message {
  public:
@@ -769,6 +882,98 @@ class Vector3Anim : public ::google::protobuf::Message {
 
 
 // ===================================================================
+
+// Color4
+
+// optional uint32 r = 1 [default = 0];
+inline bool Color4::has_r() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Color4::set_has_r() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Color4::clear_has_r() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Color4::clear_r() {
+  r_ = 0u;
+  clear_has_r();
+}
+inline ::google::protobuf::uint32 Color4::r() const {
+  return r_;
+}
+inline void Color4::set_r(::google::protobuf::uint32 value) {
+  set_has_r();
+  r_ = value;
+}
+
+// optional uint32 g = 2 [default = 0];
+inline bool Color4::has_g() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Color4::set_has_g() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Color4::clear_has_g() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Color4::clear_g() {
+  g_ = 0u;
+  clear_has_g();
+}
+inline ::google::protobuf::uint32 Color4::g() const {
+  return g_;
+}
+inline void Color4::set_g(::google::protobuf::uint32 value) {
+  set_has_g();
+  g_ = value;
+}
+
+// optional uint32 b = 3 [default = 0];
+inline bool Color4::has_b() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Color4::set_has_b() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Color4::clear_has_b() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Color4::clear_b() {
+  b_ = 0u;
+  clear_has_b();
+}
+inline ::google::protobuf::uint32 Color4::b() const {
+  return b_;
+}
+inline void Color4::set_b(::google::protobuf::uint32 value) {
+  set_has_b();
+  b_ = value;
+}
+
+// optional uint32 a = 4 [default = 255];
+inline bool Color4::has_a() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Color4::set_has_a() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Color4::clear_has_a() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Color4::clear_a() {
+  a_ = 255u;
+  clear_has_a();
+}
+inline ::google::protobuf::uint32 Color4::a() const {
+  return a_;
+}
+inline void Color4::set_a(::google::protobuf::uint32 value) {
+  set_has_a();
+  a_ = value;
+}
+
+// -------------------------------------------------------------------
 
 // Vector2
 

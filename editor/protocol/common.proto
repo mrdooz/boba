@@ -1,5 +1,13 @@
 package common.protocol;
 
+message Color4
+{
+  optional uint32 r = 1 [default = 0];
+  optional uint32 g = 2 [default = 0];
+  optional uint32 b = 3 [default = 0];
+  optional uint32 a = 4 [default = 255];
+}
+
 message Vector2
 {
   optional float x = 1;

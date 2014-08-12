@@ -105,14 +105,16 @@ void protobuf_AddDesc_editor_5fstyles_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::editor::protocol::protobuf_AddDesc_editor_5fsettings_2eproto();
+  ::common::protocol::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\023editor_styles.proto\022\017editor.protocol\032\025"
-    "editor_settings.proto\"\242\001\n\005Style\022\n\n\002id\030\001 "
-    "\001(\t\022+\n\nfill_color\030\002 \001(\0132\027.editor.protoco"
-    "l.Color4\022.\n\routline_color\030\003 \001(\0132\027.editor"
-    ".protocol.Color4\022\034\n\021outline_thickness\030\004 "
-    "\001(\002:\0010\022\022\n\nfont_style\030\005 \001(\r\"0\n\006Styles\022&\n\006"
-    "styles\030\001 \003(\0132\026.editor.protocol.Style", 276);
+    "editor_settings.proto\032\014common.proto\"\242\001\n\005"
+    "Style\022\n\n\002id\030\001 \001(\t\022+\n\nfill_color\030\002 \001(\0132\027."
+    "common.protocol.Color4\022.\n\routline_color\030"
+    "\003 \001(\0132\027.common.protocol.Color4\022\034\n\021outlin"
+    "e_thickness\030\004 \001(\002:\0010\022\022\n\nfont_style\030\005 \001(\r"
+    "\"0\n\006Styles\022&\n\006styles\030\001 \003(\0132\026.editor.prot"
+    "ocol.Style", 290);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_styles.proto", &protobuf_RegisterTypes);
   Style::default_instance_ = new Style();
@@ -145,8 +147,8 @@ Style::Style()
 }
 
 void Style::InitAsDefaultInstance() {
-  fill_color_ = const_cast< ::editor::protocol::Color4*>(&::editor::protocol::Color4::default_instance());
-  outline_color_ = const_cast< ::editor::protocol::Color4*>(&::editor::protocol::Color4::default_instance());
+  fill_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
+  outline_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
 }
 
 Style::Style(const Style& from)
@@ -208,10 +210,10 @@ void Style::Clear() {
       }
     }
     if (has_fill_color()) {
-      if (fill_color_ != NULL) fill_color_->::editor::protocol::Color4::Clear();
+      if (fill_color_ != NULL) fill_color_->::common::protocol::Color4::Clear();
     }
     if (has_outline_color()) {
-      if (outline_color_ != NULL) outline_color_->::editor::protocol::Color4::Clear();
+      if (outline_color_ != NULL) outline_color_->::common::protocol::Color4::Clear();
     }
     outline_thickness_ = 0;
     font_style_ = 0u;
@@ -242,7 +244,7 @@ bool Style::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .editor.protocol.Color4 fill_color = 2;
+      // optional .common.protocol.Color4 fill_color = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -256,7 +258,7 @@ bool Style::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .editor.protocol.Color4 outline_color = 3;
+      // optional .common.protocol.Color4 outline_color = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -329,13 +331,13 @@ void Style::SerializeWithCachedSizes(
       1, this->id(), output);
   }
 
-  // optional .editor.protocol.Color4 fill_color = 2;
+  // optional .common.protocol.Color4 fill_color = 2;
   if (has_fill_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->fill_color(), output);
   }
 
-  // optional .editor.protocol.Color4 outline_color = 3;
+  // optional .common.protocol.Color4 outline_color = 3;
   if (has_outline_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->outline_color(), output);
@@ -369,14 +371,14 @@ void Style::SerializeWithCachedSizes(
         1, this->id(), target);
   }
 
-  // optional .editor.protocol.Color4 fill_color = 2;
+  // optional .common.protocol.Color4 fill_color = 2;
   if (has_fill_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         2, this->fill_color(), target);
   }
 
-  // optional .editor.protocol.Color4 outline_color = 3;
+  // optional .common.protocol.Color4 outline_color = 3;
   if (has_outline_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -411,14 +413,14 @@ int Style::ByteSize() const {
           this->id());
     }
 
-    // optional .editor.protocol.Color4 fill_color = 2;
+    // optional .common.protocol.Color4 fill_color = 2;
     if (has_fill_color()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->fill_color());
     }
 
-    // optional .editor.protocol.Color4 outline_color = 3;
+    // optional .common.protocol.Color4 outline_color = 3;
     if (has_outline_color()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -468,10 +470,10 @@ void Style::MergeFrom(const Style& from) {
       set_id(from.id());
     }
     if (from.has_fill_color()) {
-      mutable_fill_color()->::editor::protocol::Color4::MergeFrom(from.fill_color());
+      mutable_fill_color()->::common::protocol::Color4::MergeFrom(from.fill_color());
     }
     if (from.has_outline_color()) {
-      mutable_outline_color()->::editor::protocol::Color4::MergeFrom(from.outline_color());
+      mutable_outline_color()->::common::protocol::Color4::MergeFrom(from.outline_color());
     }
     if (from.has_outline_thickness()) {
       set_outline_thickness(from.outline_thickness());

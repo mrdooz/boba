@@ -24,6 +24,7 @@
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/unknown_field_set.h>
+#include "common.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace editor {
@@ -34,122 +35,9 @@ void  protobuf_AddDesc_editor_5fsettings_2eproto();
 void protobuf_AssignDesc_editor_5fsettings_2eproto();
 void protobuf_ShutdownFile_editor_5fsettings_2eproto();
 
-class Color4;
 class Settings;
 
 // ===================================================================
-
-class Color4 : public ::google::protobuf::Message {
- public:
-  Color4();
-  virtual ~Color4();
-
-  Color4(const Color4& from);
-
-  inline Color4& operator=(const Color4& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Color4& default_instance();
-
-  void Swap(Color4* other);
-
-  // implements Message ----------------------------------------------
-
-  Color4* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Color4& from);
-  void MergeFrom(const Color4& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // optional uint32 r = 1 [default = 0];
-  inline bool has_r() const;
-  inline void clear_r();
-  static const int kRFieldNumber = 1;
-  inline ::google::protobuf::uint32 r() const;
-  inline void set_r(::google::protobuf::uint32 value);
-
-  // optional uint32 g = 2 [default = 0];
-  inline bool has_g() const;
-  inline void clear_g();
-  static const int kGFieldNumber = 2;
-  inline ::google::protobuf::uint32 g() const;
-  inline void set_g(::google::protobuf::uint32 value);
-
-  // optional uint32 b = 3 [default = 0];
-  inline bool has_b() const;
-  inline void clear_b();
-  static const int kBFieldNumber = 3;
-  inline ::google::protobuf::uint32 b() const;
-  inline void set_b(::google::protobuf::uint32 value);
-
-  // optional uint32 a = 4 [default = 255];
-  inline bool has_a() const;
-  inline void clear_a();
-  static const int kAFieldNumber = 4;
-  inline ::google::protobuf::uint32 a() const;
-  inline void set_a(::google::protobuf::uint32 value);
-
-  // @@protoc_insertion_point(class_scope:editor.protocol.Color4)
- private:
-  inline void set_has_r();
-  inline void clear_has_r();
-  inline void set_has_g();
-  inline void clear_has_g();
-  inline void set_has_b();
-  inline void clear_has_b();
-  inline void set_has_a();
-  inline void clear_has_a();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::uint32 r_;
-  ::google::protobuf::uint32 g_;
-  ::google::protobuf::uint32 b_;
-  ::google::protobuf::uint32 a_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
-
-  friend void  protobuf_AddDesc_editor_5fsettings_2eproto();
-  friend void protobuf_AssignDesc_editor_5fsettings_2eproto();
-  friend void protobuf_ShutdownFile_editor_5fsettings_2eproto();
-
-  void InitAsDefaultInstance();
-  static Color4* default_instance_;
-};
-// -------------------------------------------------------------------
 
 class Settings : public ::google::protobuf::Message {
  public:
@@ -282,59 +170,59 @@ class Settings : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 timeline_zoom_default() const;
   inline void set_timeline_zoom_default(::google::protobuf::uint32 value);
 
-  // optional .editor.protocol.Color4 default_row_color = 100;
+  // optional .common.protocol.Color4 default_row_color = 100;
   inline bool has_default_row_color() const;
   inline void clear_default_row_color();
   static const int kDefaultRowColorFieldNumber = 100;
-  inline const ::editor::protocol::Color4& default_row_color() const;
-  inline ::editor::protocol::Color4* mutable_default_row_color();
-  inline ::editor::protocol::Color4* release_default_row_color();
-  inline void set_allocated_default_row_color(::editor::protocol::Color4* default_row_color);
+  inline const ::common::protocol::Color4& default_row_color() const;
+  inline ::common::protocol::Color4* mutable_default_row_color();
+  inline ::common::protocol::Color4* release_default_row_color();
+  inline void set_allocated_default_row_color(::common::protocol::Color4* default_row_color);
 
-  // optional .editor.protocol.Color4 selected_row_color = 101;
+  // optional .common.protocol.Color4 selected_row_color = 101;
   inline bool has_selected_row_color() const;
   inline void clear_selected_row_color();
   static const int kSelectedRowColorFieldNumber = 101;
-  inline const ::editor::protocol::Color4& selected_row_color() const;
-  inline ::editor::protocol::Color4* mutable_selected_row_color();
-  inline ::editor::protocol::Color4* release_selected_row_color();
-  inline void set_allocated_selected_row_color(::editor::protocol::Color4* selected_row_color);
+  inline const ::common::protocol::Color4& selected_row_color() const;
+  inline ::common::protocol::Color4* mutable_selected_row_color();
+  inline ::common::protocol::Color4* release_selected_row_color();
+  inline void set_allocated_selected_row_color(::common::protocol::Color4* selected_row_color);
 
-  // optional .editor.protocol.Color4 hover_row_color = 102;
+  // optional .common.protocol.Color4 hover_row_color = 102;
   inline bool has_hover_row_color() const;
   inline void clear_hover_row_color();
   static const int kHoverRowColorFieldNumber = 102;
-  inline const ::editor::protocol::Color4& hover_row_color() const;
-  inline ::editor::protocol::Color4* mutable_hover_row_color();
-  inline ::editor::protocol::Color4* release_hover_row_color();
-  inline void set_allocated_hover_row_color(::editor::protocol::Color4* hover_row_color);
+  inline const ::common::protocol::Color4& hover_row_color() const;
+  inline ::common::protocol::Color4* mutable_hover_row_color();
+  inline ::common::protocol::Color4* release_hover_row_color();
+  inline void set_allocated_hover_row_color(::common::protocol::Color4* hover_row_color);
 
-  // optional .editor.protocol.Color4 invalid_hover_row_color = 103;
+  // optional .common.protocol.Color4 invalid_hover_row_color = 103;
   inline bool has_invalid_hover_row_color() const;
   inline void clear_invalid_hover_row_color();
   static const int kInvalidHoverRowColorFieldNumber = 103;
-  inline const ::editor::protocol::Color4& invalid_hover_row_color() const;
-  inline ::editor::protocol::Color4* mutable_invalid_hover_row_color();
-  inline ::editor::protocol::Color4* release_invalid_hover_row_color();
-  inline void set_allocated_invalid_hover_row_color(::editor::protocol::Color4* invalid_hover_row_color);
+  inline const ::common::protocol::Color4& invalid_hover_row_color() const;
+  inline ::common::protocol::Color4* mutable_invalid_hover_row_color();
+  inline ::common::protocol::Color4* release_invalid_hover_row_color();
+  inline void set_allocated_invalid_hover_row_color(::common::protocol::Color4* invalid_hover_row_color);
 
-  // optional .editor.protocol.Color4 effect_icon_expanded_color = 200;
+  // optional .common.protocol.Color4 effect_icon_expanded_color = 200;
   inline bool has_effect_icon_expanded_color() const;
   inline void clear_effect_icon_expanded_color();
   static const int kEffectIconExpandedColorFieldNumber = 200;
-  inline const ::editor::protocol::Color4& effect_icon_expanded_color() const;
-  inline ::editor::protocol::Color4* mutable_effect_icon_expanded_color();
-  inline ::editor::protocol::Color4* release_effect_icon_expanded_color();
-  inline void set_allocated_effect_icon_expanded_color(::editor::protocol::Color4* effect_icon_expanded_color);
+  inline const ::common::protocol::Color4& effect_icon_expanded_color() const;
+  inline ::common::protocol::Color4* mutable_effect_icon_expanded_color();
+  inline ::common::protocol::Color4* release_effect_icon_expanded_color();
+  inline void set_allocated_effect_icon_expanded_color(::common::protocol::Color4* effect_icon_expanded_color);
 
-  // optional .editor.protocol.Color4 effect_icon_collapsed_color = 201;
+  // optional .common.protocol.Color4 effect_icon_collapsed_color = 201;
   inline bool has_effect_icon_collapsed_color() const;
   inline void clear_effect_icon_collapsed_color();
   static const int kEffectIconCollapsedColorFieldNumber = 201;
-  inline const ::editor::protocol::Color4& effect_icon_collapsed_color() const;
-  inline ::editor::protocol::Color4* mutable_effect_icon_collapsed_color();
-  inline ::editor::protocol::Color4* release_effect_icon_collapsed_color();
-  inline void set_allocated_effect_icon_collapsed_color(::editor::protocol::Color4* effect_icon_collapsed_color);
+  inline const ::common::protocol::Color4& effect_icon_collapsed_color() const;
+  inline ::common::protocol::Color4* mutable_effect_icon_collapsed_color();
+  inline ::common::protocol::Color4* release_effect_icon_collapsed_color();
+  inline void set_allocated_effect_icon_collapsed_color(::common::protocol::Color4* effect_icon_collapsed_color);
 
   // @@protoc_insertion_point(class_scope:editor.protocol.Settings)
  private:
@@ -385,12 +273,12 @@ class Settings : public ::google::protobuf::Message {
   ::google::protobuf::uint32 resize_handle_;
   ::google::protobuf::uint32 timeline_zoom_min_;
   ::google::protobuf::uint32 timeline_zoom_max_;
-  ::editor::protocol::Color4* default_row_color_;
-  ::editor::protocol::Color4* selected_row_color_;
-  ::editor::protocol::Color4* hover_row_color_;
-  ::editor::protocol::Color4* invalid_hover_row_color_;
-  ::editor::protocol::Color4* effect_icon_expanded_color_;
-  ::editor::protocol::Color4* effect_icon_collapsed_color_;
+  ::common::protocol::Color4* default_row_color_;
+  ::common::protocol::Color4* selected_row_color_;
+  ::common::protocol::Color4* hover_row_color_;
+  ::common::protocol::Color4* invalid_hover_row_color_;
+  ::common::protocol::Color4* effect_icon_expanded_color_;
+  ::common::protocol::Color4* effect_icon_collapsed_color_;
   ::google::protobuf::uint32 timeline_zoom_default_;
 
   mutable int _cached_size_;
@@ -407,98 +295,6 @@ class Settings : public ::google::protobuf::Message {
 
 
 // ===================================================================
-
-// Color4
-
-// optional uint32 r = 1 [default = 0];
-inline bool Color4::has_r() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void Color4::set_has_r() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void Color4::clear_has_r() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void Color4::clear_r() {
-  r_ = 0u;
-  clear_has_r();
-}
-inline ::google::protobuf::uint32 Color4::r() const {
-  return r_;
-}
-inline void Color4::set_r(::google::protobuf::uint32 value) {
-  set_has_r();
-  r_ = value;
-}
-
-// optional uint32 g = 2 [default = 0];
-inline bool Color4::has_g() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void Color4::set_has_g() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void Color4::clear_has_g() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void Color4::clear_g() {
-  g_ = 0u;
-  clear_has_g();
-}
-inline ::google::protobuf::uint32 Color4::g() const {
-  return g_;
-}
-inline void Color4::set_g(::google::protobuf::uint32 value) {
-  set_has_g();
-  g_ = value;
-}
-
-// optional uint32 b = 3 [default = 0];
-inline bool Color4::has_b() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void Color4::set_has_b() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void Color4::clear_has_b() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void Color4::clear_b() {
-  b_ = 0u;
-  clear_has_b();
-}
-inline ::google::protobuf::uint32 Color4::b() const {
-  return b_;
-}
-inline void Color4::set_b(::google::protobuf::uint32 value) {
-  set_has_b();
-  b_ = value;
-}
-
-// optional uint32 a = 4 [default = 255];
-inline bool Color4::has_a() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void Color4::set_has_a() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void Color4::clear_has_a() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void Color4::clear_a() {
-  a_ = 255u;
-  clear_has_a();
-}
-inline ::google::protobuf::uint32 Color4::a() const {
-  return a_;
-}
-inline void Color4::set_a(::google::protobuf::uint32 value) {
-  set_has_a();
-  a_ = value;
-}
-
-// -------------------------------------------------------------------
 
 // Settings
 
@@ -744,7 +540,7 @@ inline void Settings::set_timeline_zoom_default(::google::protobuf::uint32 value
   timeline_zoom_default_ = value;
 }
 
-// optional .editor.protocol.Color4 default_row_color = 100;
+// optional .common.protocol.Color4 default_row_color = 100;
 inline bool Settings::has_default_row_color() const {
   return (_has_bits_[0] & 0x00000800u) != 0;
 }
@@ -755,24 +551,24 @@ inline void Settings::clear_has_default_row_color() {
   _has_bits_[0] &= ~0x00000800u;
 }
 inline void Settings::clear_default_row_color() {
-  if (default_row_color_ != NULL) default_row_color_->::editor::protocol::Color4::Clear();
+  if (default_row_color_ != NULL) default_row_color_->::common::protocol::Color4::Clear();
   clear_has_default_row_color();
 }
-inline const ::editor::protocol::Color4& Settings::default_row_color() const {
+inline const ::common::protocol::Color4& Settings::default_row_color() const {
   return default_row_color_ != NULL ? *default_row_color_ : *default_instance_->default_row_color_;
 }
-inline ::editor::protocol::Color4* Settings::mutable_default_row_color() {
+inline ::common::protocol::Color4* Settings::mutable_default_row_color() {
   set_has_default_row_color();
-  if (default_row_color_ == NULL) default_row_color_ = new ::editor::protocol::Color4;
+  if (default_row_color_ == NULL) default_row_color_ = new ::common::protocol::Color4;
   return default_row_color_;
 }
-inline ::editor::protocol::Color4* Settings::release_default_row_color() {
+inline ::common::protocol::Color4* Settings::release_default_row_color() {
   clear_has_default_row_color();
-  ::editor::protocol::Color4* temp = default_row_color_;
+  ::common::protocol::Color4* temp = default_row_color_;
   default_row_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_default_row_color(::editor::protocol::Color4* default_row_color) {
+inline void Settings::set_allocated_default_row_color(::common::protocol::Color4* default_row_color) {
   delete default_row_color_;
   default_row_color_ = default_row_color;
   if (default_row_color) {
@@ -782,7 +578,7 @@ inline void Settings::set_allocated_default_row_color(::editor::protocol::Color4
   }
 }
 
-// optional .editor.protocol.Color4 selected_row_color = 101;
+// optional .common.protocol.Color4 selected_row_color = 101;
 inline bool Settings::has_selected_row_color() const {
   return (_has_bits_[0] & 0x00001000u) != 0;
 }
@@ -793,24 +589,24 @@ inline void Settings::clear_has_selected_row_color() {
   _has_bits_[0] &= ~0x00001000u;
 }
 inline void Settings::clear_selected_row_color() {
-  if (selected_row_color_ != NULL) selected_row_color_->::editor::protocol::Color4::Clear();
+  if (selected_row_color_ != NULL) selected_row_color_->::common::protocol::Color4::Clear();
   clear_has_selected_row_color();
 }
-inline const ::editor::protocol::Color4& Settings::selected_row_color() const {
+inline const ::common::protocol::Color4& Settings::selected_row_color() const {
   return selected_row_color_ != NULL ? *selected_row_color_ : *default_instance_->selected_row_color_;
 }
-inline ::editor::protocol::Color4* Settings::mutable_selected_row_color() {
+inline ::common::protocol::Color4* Settings::mutable_selected_row_color() {
   set_has_selected_row_color();
-  if (selected_row_color_ == NULL) selected_row_color_ = new ::editor::protocol::Color4;
+  if (selected_row_color_ == NULL) selected_row_color_ = new ::common::protocol::Color4;
   return selected_row_color_;
 }
-inline ::editor::protocol::Color4* Settings::release_selected_row_color() {
+inline ::common::protocol::Color4* Settings::release_selected_row_color() {
   clear_has_selected_row_color();
-  ::editor::protocol::Color4* temp = selected_row_color_;
+  ::common::protocol::Color4* temp = selected_row_color_;
   selected_row_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_selected_row_color(::editor::protocol::Color4* selected_row_color) {
+inline void Settings::set_allocated_selected_row_color(::common::protocol::Color4* selected_row_color) {
   delete selected_row_color_;
   selected_row_color_ = selected_row_color;
   if (selected_row_color) {
@@ -820,7 +616,7 @@ inline void Settings::set_allocated_selected_row_color(::editor::protocol::Color
   }
 }
 
-// optional .editor.protocol.Color4 hover_row_color = 102;
+// optional .common.protocol.Color4 hover_row_color = 102;
 inline bool Settings::has_hover_row_color() const {
   return (_has_bits_[0] & 0x00002000u) != 0;
 }
@@ -831,24 +627,24 @@ inline void Settings::clear_has_hover_row_color() {
   _has_bits_[0] &= ~0x00002000u;
 }
 inline void Settings::clear_hover_row_color() {
-  if (hover_row_color_ != NULL) hover_row_color_->::editor::protocol::Color4::Clear();
+  if (hover_row_color_ != NULL) hover_row_color_->::common::protocol::Color4::Clear();
   clear_has_hover_row_color();
 }
-inline const ::editor::protocol::Color4& Settings::hover_row_color() const {
+inline const ::common::protocol::Color4& Settings::hover_row_color() const {
   return hover_row_color_ != NULL ? *hover_row_color_ : *default_instance_->hover_row_color_;
 }
-inline ::editor::protocol::Color4* Settings::mutable_hover_row_color() {
+inline ::common::protocol::Color4* Settings::mutable_hover_row_color() {
   set_has_hover_row_color();
-  if (hover_row_color_ == NULL) hover_row_color_ = new ::editor::protocol::Color4;
+  if (hover_row_color_ == NULL) hover_row_color_ = new ::common::protocol::Color4;
   return hover_row_color_;
 }
-inline ::editor::protocol::Color4* Settings::release_hover_row_color() {
+inline ::common::protocol::Color4* Settings::release_hover_row_color() {
   clear_has_hover_row_color();
-  ::editor::protocol::Color4* temp = hover_row_color_;
+  ::common::protocol::Color4* temp = hover_row_color_;
   hover_row_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_hover_row_color(::editor::protocol::Color4* hover_row_color) {
+inline void Settings::set_allocated_hover_row_color(::common::protocol::Color4* hover_row_color) {
   delete hover_row_color_;
   hover_row_color_ = hover_row_color;
   if (hover_row_color) {
@@ -858,7 +654,7 @@ inline void Settings::set_allocated_hover_row_color(::editor::protocol::Color4* 
   }
 }
 
-// optional .editor.protocol.Color4 invalid_hover_row_color = 103;
+// optional .common.protocol.Color4 invalid_hover_row_color = 103;
 inline bool Settings::has_invalid_hover_row_color() const {
   return (_has_bits_[0] & 0x00004000u) != 0;
 }
@@ -869,24 +665,24 @@ inline void Settings::clear_has_invalid_hover_row_color() {
   _has_bits_[0] &= ~0x00004000u;
 }
 inline void Settings::clear_invalid_hover_row_color() {
-  if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::editor::protocol::Color4::Clear();
+  if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::common::protocol::Color4::Clear();
   clear_has_invalid_hover_row_color();
 }
-inline const ::editor::protocol::Color4& Settings::invalid_hover_row_color() const {
+inline const ::common::protocol::Color4& Settings::invalid_hover_row_color() const {
   return invalid_hover_row_color_ != NULL ? *invalid_hover_row_color_ : *default_instance_->invalid_hover_row_color_;
 }
-inline ::editor::protocol::Color4* Settings::mutable_invalid_hover_row_color() {
+inline ::common::protocol::Color4* Settings::mutable_invalid_hover_row_color() {
   set_has_invalid_hover_row_color();
-  if (invalid_hover_row_color_ == NULL) invalid_hover_row_color_ = new ::editor::protocol::Color4;
+  if (invalid_hover_row_color_ == NULL) invalid_hover_row_color_ = new ::common::protocol::Color4;
   return invalid_hover_row_color_;
 }
-inline ::editor::protocol::Color4* Settings::release_invalid_hover_row_color() {
+inline ::common::protocol::Color4* Settings::release_invalid_hover_row_color() {
   clear_has_invalid_hover_row_color();
-  ::editor::protocol::Color4* temp = invalid_hover_row_color_;
+  ::common::protocol::Color4* temp = invalid_hover_row_color_;
   invalid_hover_row_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_invalid_hover_row_color(::editor::protocol::Color4* invalid_hover_row_color) {
+inline void Settings::set_allocated_invalid_hover_row_color(::common::protocol::Color4* invalid_hover_row_color) {
   delete invalid_hover_row_color_;
   invalid_hover_row_color_ = invalid_hover_row_color;
   if (invalid_hover_row_color) {
@@ -896,7 +692,7 @@ inline void Settings::set_allocated_invalid_hover_row_color(::editor::protocol::
   }
 }
 
-// optional .editor.protocol.Color4 effect_icon_expanded_color = 200;
+// optional .common.protocol.Color4 effect_icon_expanded_color = 200;
 inline bool Settings::has_effect_icon_expanded_color() const {
   return (_has_bits_[0] & 0x00008000u) != 0;
 }
@@ -907,24 +703,24 @@ inline void Settings::clear_has_effect_icon_expanded_color() {
   _has_bits_[0] &= ~0x00008000u;
 }
 inline void Settings::clear_effect_icon_expanded_color() {
-  if (effect_icon_expanded_color_ != NULL) effect_icon_expanded_color_->::editor::protocol::Color4::Clear();
+  if (effect_icon_expanded_color_ != NULL) effect_icon_expanded_color_->::common::protocol::Color4::Clear();
   clear_has_effect_icon_expanded_color();
 }
-inline const ::editor::protocol::Color4& Settings::effect_icon_expanded_color() const {
+inline const ::common::protocol::Color4& Settings::effect_icon_expanded_color() const {
   return effect_icon_expanded_color_ != NULL ? *effect_icon_expanded_color_ : *default_instance_->effect_icon_expanded_color_;
 }
-inline ::editor::protocol::Color4* Settings::mutable_effect_icon_expanded_color() {
+inline ::common::protocol::Color4* Settings::mutable_effect_icon_expanded_color() {
   set_has_effect_icon_expanded_color();
-  if (effect_icon_expanded_color_ == NULL) effect_icon_expanded_color_ = new ::editor::protocol::Color4;
+  if (effect_icon_expanded_color_ == NULL) effect_icon_expanded_color_ = new ::common::protocol::Color4;
   return effect_icon_expanded_color_;
 }
-inline ::editor::protocol::Color4* Settings::release_effect_icon_expanded_color() {
+inline ::common::protocol::Color4* Settings::release_effect_icon_expanded_color() {
   clear_has_effect_icon_expanded_color();
-  ::editor::protocol::Color4* temp = effect_icon_expanded_color_;
+  ::common::protocol::Color4* temp = effect_icon_expanded_color_;
   effect_icon_expanded_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_effect_icon_expanded_color(::editor::protocol::Color4* effect_icon_expanded_color) {
+inline void Settings::set_allocated_effect_icon_expanded_color(::common::protocol::Color4* effect_icon_expanded_color) {
   delete effect_icon_expanded_color_;
   effect_icon_expanded_color_ = effect_icon_expanded_color;
   if (effect_icon_expanded_color) {
@@ -934,7 +730,7 @@ inline void Settings::set_allocated_effect_icon_expanded_color(::editor::protoco
   }
 }
 
-// optional .editor.protocol.Color4 effect_icon_collapsed_color = 201;
+// optional .common.protocol.Color4 effect_icon_collapsed_color = 201;
 inline bool Settings::has_effect_icon_collapsed_color() const {
   return (_has_bits_[0] & 0x00010000u) != 0;
 }
@@ -945,24 +741,24 @@ inline void Settings::clear_has_effect_icon_collapsed_color() {
   _has_bits_[0] &= ~0x00010000u;
 }
 inline void Settings::clear_effect_icon_collapsed_color() {
-  if (effect_icon_collapsed_color_ != NULL) effect_icon_collapsed_color_->::editor::protocol::Color4::Clear();
+  if (effect_icon_collapsed_color_ != NULL) effect_icon_collapsed_color_->::common::protocol::Color4::Clear();
   clear_has_effect_icon_collapsed_color();
 }
-inline const ::editor::protocol::Color4& Settings::effect_icon_collapsed_color() const {
+inline const ::common::protocol::Color4& Settings::effect_icon_collapsed_color() const {
   return effect_icon_collapsed_color_ != NULL ? *effect_icon_collapsed_color_ : *default_instance_->effect_icon_collapsed_color_;
 }
-inline ::editor::protocol::Color4* Settings::mutable_effect_icon_collapsed_color() {
+inline ::common::protocol::Color4* Settings::mutable_effect_icon_collapsed_color() {
   set_has_effect_icon_collapsed_color();
-  if (effect_icon_collapsed_color_ == NULL) effect_icon_collapsed_color_ = new ::editor::protocol::Color4;
+  if (effect_icon_collapsed_color_ == NULL) effect_icon_collapsed_color_ = new ::common::protocol::Color4;
   return effect_icon_collapsed_color_;
 }
-inline ::editor::protocol::Color4* Settings::release_effect_icon_collapsed_color() {
+inline ::common::protocol::Color4* Settings::release_effect_icon_collapsed_color() {
   clear_has_effect_icon_collapsed_color();
-  ::editor::protocol::Color4* temp = effect_icon_collapsed_color_;
+  ::common::protocol::Color4* temp = effect_icon_collapsed_color_;
   effect_icon_collapsed_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_effect_icon_collapsed_color(::editor::protocol::Color4* effect_icon_collapsed_color) {
+inline void Settings::set_allocated_effect_icon_collapsed_color(::common::protocol::Color4* effect_icon_collapsed_color) {
   delete effect_icon_collapsed_color_;
   effect_icon_collapsed_color_ = effect_icon_collapsed_color;
   if (effect_icon_collapsed_color) {
