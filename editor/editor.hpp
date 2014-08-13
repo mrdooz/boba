@@ -10,6 +10,10 @@
 #include "effect_utils.hpp"
 #include "style_factory.hpp"
 
+struct WebbyServer;
+struct WebbyConnection;
+struct WebbyWsFrame;
+
 namespace bristol
 {
   class WindowEventManager;
@@ -57,6 +61,15 @@ namespace editor
 
     bool OnMouseButtonReleased(const Event& event);
 
+    bool InitWebby();
+
+    static int WebbyOnWsConnect(WebbyConnection* connection);
+    static void WebbyOnWsConnected(WebbyConnection* connection);
+    static void WebbyOnWsClosed(WebbyConnection* connection);
+    static int WebbyOnWsFrame(WebbyConnection* connection, const WebbyWsFrame* frame);
+    static int WebbyDispatch(WebbyConnection* connection);
+    static void WebbyLog(const char* text);
+
     RenderWindow* _renderWindow;
     WindowEventManager* _eventManager;
     VirtualWindowManager* _virtualWindowManager;
@@ -72,6 +85,9 @@ namespace editor
 
     FileWatcher _fileWatcher;
     StyleFactory _styleFactory;
+
+    WebbyServer* _server;
+    vector<u8> _serverMemory;
   };
 
   #define EDITOR Editor::Instance()

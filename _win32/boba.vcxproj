@@ -511,6 +511,7 @@
     <ClCompile Include="..\resource_manager.cpp" />
     <ClCompile Include="..\scene.cpp" />
     <ClCompile Include="..\scene_test.cpp" />
+    <ClCompile Include="..\websocket_client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\app.hpp" />
@@ -564,6 +565,7 @@
     <ClInclude Include="..\resource_manager.hpp" />
     <ClInclude Include="..\scene.hpp" />
     <ClInclude Include="..\scene_test.hpp" />
+    <ClInclude Include="..\websocket_client.hpp" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

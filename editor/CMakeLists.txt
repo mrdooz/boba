@@ -19,7 +19,7 @@ include_directories(${SFML_INCLUDE_DIR})
 include_directories(${PROTOBUF_INCLUDE_DIR})
 include_directories(${BRISTOL_INCLUDE_DIR})
 
-file(GLOB SRC "*.cpp" "*.hpp" "protocol/*.pb.cc" "protocol/*.h" "protocol/*.hpp")
+file(GLOB SRC "*.cpp" "*.hpp" "protocol/*.pb.cc" "protocol/*.h" "protocol/*.hpp" "webby/webby.*")
 
 add_executable(${PROJECT_NAME} ${SRC})
 
@@ -70,6 +70,7 @@ else()
       debug ${BRISTOL_MAIN_LIBRARY_DEBUG} optimized ${BRISTOL_MAIN_LIBRARY_RELEASE}
       debug ${BRISTOL_SFML_LIBRARY_DEBUG} optimized ${BRISTOL_SFML_LIBRARY_RELEASE}
       ${Boost_DATETIME_LIBRARY}
-      debug ${PROTOBUF_LIBRARY_DEBUG} optimized ${PROTOBUF_LIBRARY})
+      debug ${PROTOBUF_LIBRARY_DEBUG} optimized ${PROTOBUF_LIBRARY}
+      "ws2_32.lib")
   endif(MSVC)
 endif()

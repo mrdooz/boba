@@ -1,5 +1,6 @@
 #include "editor.hpp"
 #include "editor_windows.hpp"
+#include "webby/webby.h"
 
 using namespace editor;
 using namespace google::protobuf;
@@ -82,8 +83,8 @@ bool Editor::Init()
   _appRoot = "/Users/dooz/projects/boba/editor/";
 #endif
 
-  width = 0.9f * width;
-  height = 0.9 * height;
+  width = (u32)(0.9f * width);
+  height = (u32)(0.9 * height);
 
   sf::ContextSettings settings;
   _renderWindow = new RenderWindow(sf::VideoMode(width, height), "...", sf::Style::Default, settings);
@@ -109,7 +110,100 @@ bool Editor::Init()
     _virtualWindowManager->AddWindow(new TimelineWindow("TIMELINE", Vector2f(0, h), Vector2f((float)width, h)));
   }
 
+  if (!InitWebby())
+    return false;
+
   return true;
+}
+
+//----------------------------------------------------------------------------------
+void Editor::WebbyLog(const char* text)
+{
+  printf("[debug] %s\n", text);
+}
+
+//----------------------------------------------------------------------------------
+int Editor::WebbyDispatch(WebbyConnection* connection)
+{
+  if (0 == strcmp("/foo", connection->request.uri))
+  {
+    WebbyBeginResponse(connection, 200, 14, NULL, 0);
+    WebbyWrite(connection, "Hello, world!\n", 14);
+    WebbyEndResponse(connection);
+    return 0;
+  }
+  else if (0 == strcmp("/bar", connection->request.uri))
+  {
+    WebbyBeginResponse(connection, 200, -1, NULL, 0);
+    WebbyWrite(connection, "Hello, world!\n", 14);
+    WebbyWrite(connection, "Hello, world?\n", 14);
+    WebbyEndResponse(connection);
+    return 0;
+  }
+  else if (0 == strcmp(connection->request.uri, "/quit"))
+  {
+    WebbyBeginResponse(connection, 200, -1, NULL, 0);
+    WebbyPrintf(connection, "Goodbye, cruel world\n");
+    WebbyEndResponse(connection);
+    return 0;
+  }
+  else
+    return 1;
+}
+
+//----------------------------------------------------------------------------------
+int Editor::WebbyOnWsConnect(WebbyConnection* connection)
+{
+  return 0;
+}
+
+//----------------------------------------------------------------------------------
+void Editor::WebbyOnWsConnected(WebbyConnection* connection)
+{
+
+}
+
+//----------------------------------------------------------------------------------
+void Editor::WebbyOnWsClosed(WebbyConnection* connection)
+{
+
+}
+//----------------------------------------------------------------------------------
+
+int Editor::WebbyOnWsFrame(WebbyConnection* connection, const WebbyWsFrame* frame)
+{
+  return 0;
+}
+
+//----------------------------------------------------------------------------------
+bool Editor::InitWebby()
+{
+  WORD wsa_version = MAKEWORD(2, 2);
+  WSADATA wsa_data;
+  if (0 != WSAStartup(wsa_version, &wsa_data))
+  {
+    fprintf(stderr, "WSAStartup failed\n");
+    return false;
+  }
+
+  WebbyServerConfig config;
+  memset(&config, 0, sizeof config);
+  config.bind_address = "127.0.0.1";
+  config.listening_port = 13337;
+  config.flags = WEBBY_SERVER_WEBSOCKETS | WEBBY_SERVER_LOG_DEBUG;
+  config.connection_max = 4;
+  config.request_buffer_size = 2048;
+  config.io_buffer_size = 8192;
+  config.dispatch = &WebbyDispatch;
+  config.log = &WebbyLog;
+  config.ws_connect = &WebbyOnWsConnect;
+  config.ws_connected = &WebbyOnWsConnected;
+  config.ws_closed = &WebbyOnWsClosed;
+  config.ws_frame = &WebbyOnWsFrame;
+
+  _serverMemory.resize(WebbyServerMemoryNeeded(&config));
+  _server = WebbyServerInit(&config, _serverMemory.data(), _serverMemory.size());
+  return !!_server;
 }
 
 //----------------------------------------------------------------------------------
@@ -156,6 +250,8 @@ bool Editor::OnMouseButtonReleased(const Event& event)
 void Editor::Update()
 {
   ptime now = microsec_clock::local_time();
+
+  WebbyServerUpdate(_server);
 
   if (_lastUpdate.is_not_a_date_time())
     _lastUpdate = now;
@@ -208,6 +304,7 @@ bool Editor::Run()
 //----------------------------------------------------------------------------------
 bool Editor::Close()
 {
+  WebbyServerShutdown(_server);
   return true;
 }
 

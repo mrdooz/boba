@@ -6,6 +6,7 @@
 #include "generator_test.hpp"
 #include "resource_manager.hpp"
 #include "graphics.hpp"
+#include "websocket_client.hpp"
 
 static const int WM_LOG_NEW_MSG = WM_APP + 1;
 static const int WM_APP_CLOSE = WM_APP + 2;
@@ -106,6 +107,9 @@ App& App::Instance()
 //------------------------------------------------------------------------------
 bool App::Init(HINSTANCE hinstance)
 {
+  WebsocketClient client;
+  client.Connect("127.0.0.1", "13337");
+
   if (_appRootFilename.empty())
   {
     MessageBoxA(0, "Unable to find app root", "Error", MB_ICONEXCLAMATION);

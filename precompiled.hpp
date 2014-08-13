@@ -54,6 +54,12 @@
 #endif
 
 
+#include <sys/types.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <errno.h>
+#include <fcntl.h>
+
 #include <stdint.h>
 #include <assert.h>
 #include <time.h>
