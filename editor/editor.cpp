@@ -160,14 +160,21 @@ int Editor::WebbyOnWsConnect(WebbyConnection* connection)
 //----------------------------------------------------------------------------------
 void Editor::WebbyOnWsConnected(WebbyConnection* connection)
 {
+  EDITOR._connections.push_back(connection);
 
 }
 
 //----------------------------------------------------------------------------------
 void Editor::WebbyOnWsClosed(WebbyConnection* connection)
 {
-
+  auto& connections = EDITOR._connections;
+  auto it = find(connections.begin(), connections.end(), connection);
+  if (it != connections.end())
+  {
+    connections.erase(it);
+  }
 }
+
 //----------------------------------------------------------------------------------
 
 int Editor::WebbyOnWsFrame(WebbyConnection* connection, const WebbyWsFrame* frame)
@@ -178,6 +185,7 @@ int Editor::WebbyOnWsFrame(WebbyConnection* connection, const WebbyWsFrame* fram
 //----------------------------------------------------------------------------------
 bool Editor::InitWebby()
 {
+#if _WIN32
   WORD wsa_version = MAKEWORD(2, 2);
   WSADATA wsa_data;
   if (0 != WSAStartup(wsa_version, &wsa_data))
@@ -185,6 +193,7 @@ bool Editor::InitWebby()
     fprintf(stderr, "WSAStartup failed\n");
     return false;
   }
+#endif
 
   WebbyServerConfig config;
   memset(&config, 0, sizeof config);
@@ -306,6 +315,18 @@ bool Editor::Close()
 {
   WebbyServerShutdown(_server);
   return true;
+}
+
+//----------------------------------------------------------------------------------
+void Editor::SettingsUpdated(const effect::protocol::EffectSettings& settings)
+{
+  for (WebbyConnection* conn : _connections)
+  {
+    WebbyBeginSocketFrame(conn,WEBBY_WS_OP_BINARY_FRAME);
+    string str = settings.SerializeAsString();
+    WebbyWrite(conn, str.data(), str.size());
+    WebbyEndSocketFrame(conn);
+  }
 }
 
 

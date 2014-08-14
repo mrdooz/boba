@@ -108,8 +108,41 @@ namespace editor
     const Vector3Keyframe& lower = keyframes[idxLower];
     const Vector3Keyframe& upper = keyframes[idxUpper];
 
-
     float t = (time_ms - lower.time) / (float)(upper.time - lower.time);
-    return lower.value + t * (upper.value - lower.value);
+
+    if (anim.type == 0 || keyframes.size() == 2)
+    {
+      // linear interpolation
+      return lower.value + t * (upper.value - lower.value);
+    }
+    else
+    {
+      // hermite splines
+      Vector3f m0, m1;
+
+      const Vector3f& p0 = lower.value;
+      const Vector3f& p1 = upper.value;
+      const Vector3f& p2 = keyframes[idxUpper+1].value;
+
+      u32 t0 = lower.time;
+      u32 t1 = upper.time;
+      u32 t2 = keyframes[idxUpper+1].time;
+
+      if (idxLower == 0)
+      {
+        m0 = Vector3f(0,0,0);
+      }
+      else
+      {
+        m0 = (p2 - p1) / (2.0f * (t2 - t1)) + (p1 - p0) / (2.0f * (t1 - t0));
+      }
+
+      if (idxUpper == keyframes.size() - 1)
+      {
+        m1 = Vector3f(0,0,0);
+      }
+    }
+
+    return Vector3f(0,0,0);
   }
 }

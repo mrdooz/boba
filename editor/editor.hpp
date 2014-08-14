@@ -63,6 +63,8 @@ namespace editor
 
     bool InitWebby();
 
+    void SettingsUpdated(const effect::protocol::EffectSettings& settings);
+
     static int WebbyOnWsConnect(WebbyConnection* connection);
     static void WebbyOnWsConnected(WebbyConnection* connection);
     static void WebbyOnWsClosed(WebbyConnection* connection);
@@ -88,6 +90,7 @@ namespace editor
 
     WebbyServer* _server;
     vector<u8> _serverMemory;
+    vector<WebbyConnection* > _connections;
   };
 
   #define EDITOR Editor::Instance()

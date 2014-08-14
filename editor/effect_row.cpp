@@ -517,6 +517,13 @@ void EffectRowNoise::CalcCeilAndStep(
     float* stepValue,
     float* ceilValue)
 {
+  if (value == 0)
+  {
+    *stepValue = 0.1;
+    *ceilValue = 0;
+    return;
+  }
+
   float base = 10;
   float log10 = log(value) / log(base);
   *stepValue = pow(base, floor(log10));

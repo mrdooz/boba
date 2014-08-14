@@ -525,5 +525,7 @@ void TimelineWindow::KeyframesModified()
   {
     row->ToProtocol(settings.add_effect_settings());
   }
+
+  EDITOR.SettingsUpdated(settings);
 }
 
