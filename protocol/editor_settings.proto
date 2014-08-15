@@ -1,0 +1,29 @@
+package editor.protocol;
+
+import "common.proto";
+
+message Settings
+{
+  optional uint32 ticker_height = 1 [default = 50];
+  optional uint32 ticker_interval = 2 [default = 20];
+  optional uint32 ticks_per_interval = 3 [default = 4];
+  
+  optional uint32 effect_view_width = 20 [default = 200];
+  optional uint32 effect_row_height = 21 [default = 20];
+  optional uint32 status_bar_height = 22 [default = 30];
+
+  optional uint32 effect_height = 30 [default = 40];
+  optional uint32 resize_handle = 31 [default = 6];
+  
+  optional uint32 timeline_zoom_min = 40 [default = 16];
+  optional uint32 timeline_zoom_max = 41 [default = 1024];
+  optional uint32 timeline_zoom_default = 42 [default = 128];
+  
+  optional common.protocol.Color4 default_row_color = 100;
+  optional common.protocol.Color4 selected_row_color = 101;
+  optional common.protocol.Color4 hover_row_color = 102;
+  optional common.protocol.Color4 invalid_hover_row_color = 103;
+
+  optional common.protocol.Color4 effect_icon_expanded_color = 200;
+  optional common.protocol.Color4 effect_icon_collapsed_color = 201;
+}

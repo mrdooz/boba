@@ -8,6 +8,11 @@
 #include "graphics.hpp"
 #include "websocket_client.hpp"
 
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
+#include "protocol/effect_settings.pb.h"
+#pragma warning(pop)
+
 static const int WM_LOG_NEW_MSG = WM_APP + 1;
 static const int WM_APP_CLOSE = WM_APP + 2;
 
@@ -56,6 +61,7 @@ App::App()
   , _sound(nullptr)
   , _system(nullptr)
   , _channel(nullptr)
+  , _client(nullptr)
 #endif
 {
   g_logSinkConsole = new LogSinkConsole();
@@ -66,6 +72,7 @@ App::App()
 //------------------------------------------------------------------------------
 App::~App()
 {
+  SAFE_DELETE(_client);
   SAFE_DELETE(g_logSinkConsole);
   SAFE_DELETE(g_logSinkApp);
 }
@@ -107,8 +114,10 @@ App& App::Instance()
 //------------------------------------------------------------------------------
 bool App::Init(HINSTANCE hinstance)
 {
-  WebsocketClient client;
-  client.Connect("127.0.0.1", "13337");
+  _client = new WebsocketClient();
+  _client->SetCallback(bind(&App::ProcessPayload, this, _1, _2));
+
+  _client->Connect("127.0.0.1", "13337");
 
   if (_appRootFilename.empty())
   {
@@ -201,6 +210,7 @@ bool App::Run()
     }
     else
     {
+      _client->Process();
 
       DEMO_ENGINE.Tick();
 
@@ -227,6 +237,17 @@ bool App::Run()
 #endif
 
   return true;
+}
+
+//------------------------------------------------------------------------------
+void App::ProcessPayload(const void* payload, u32 size)
+{
+  effect::protocol::EffectSetting setting;
+  if (setting.ParseFromArray(payload, size))
+  {
+    int a = 10;
+  }
+
 }
 
 //------------------------------------------------------------------------------

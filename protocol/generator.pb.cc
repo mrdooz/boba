@@ -121,31 +121,32 @@ void protobuf_AddDesc_generator_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::anttweak::protobuf_AddDesc_anttweak_2eproto();
-  ::common::protobuf_AddDesc_common_2eproto();
+  ::common::protocol::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\017generator.proto\022\tgenerator\032\016anttweak.p"
-    "roto\032\014common.proto\"\203\002\n\005Spiky\022\016\n\006radius\030\001"
+    "roto\032\014common.proto\"\247\002\n\005Spiky\022\016\n\006radius\030\001"
     " \001(\002\022\016\n\006height\030\002 \001(\002\022\027\n\017radial_segments\030"
-    "\003 \001(\r\022\027\n\017height_segments\030\004 \001(\r\022)\n\ncamera"
-    "_pos\030\005 \001(\0132\017.common.Vector3B\004\230\265\030\001\022)\n\ncam"
-    "era_dir\030\006 \001(\0132\017.common.Vector3B\004\230\265\030\001\022$\n\005"
-    "obj_t\030\007 \001(\0132\017.common.Vector3B\004\230\265\030\001\022&\n\005ob"
-    "j_r\030\010 \001(\0132\021.common.Matrix4x4B\004\230\265\030\001:\004\360\266\030\001"
-    "\"\260\004\n\005Plane\022\r\n\005width\030\001 \001(\002\022\016\n\006height\030\002 \001("
-    "\002\022\026\n\016width_segments\030\003 \001(\r\022\027\n\017height_segm"
-    "ents\030\004 \001(\r\022)\n\ncamera_pos\030\005 \001(\0132\017.common."
-    "Vector3B\004\230\265\030\001\022)\n\ncamera_dir\030\006 \001(\0132\017.comm"
-    "on.Vector3B\004\230\265\030\001\022$\n\005obj_t\030\007 \001(\0132\017.common"
-    ".Vector3B\004\230\265\030\001\022&\n\005obj_r\030\010 \001(\0132\021.common.M"
-    "atrix4x4B\004\230\265\030\001\022\'\n\003tau\030\t \001(\002:\0030.5B\025\245\265\030\n\327#"
-    "<\255\265\030\000\000\000@\265\265\030\n\327#<\022(\n\003key\030\n \001(\002:\0040.18B\025\245\265\030\n"
-    "\327#<\255\265\030\000\000\200\?\265\265\030\n\327#<\022(\n\003ofs\030\013 \001(\002:\0040.18B\025\245\265"
-    "\030\n\327#<\255\265\030\000\000\200\?\265\265\030\n\327#<\022.\n\013blur_radius\030\014 \001(\002"
-    ":\00210B\025\245\265\030\000\000\000\000\255\265\030\000\000HC\265\265\030\000\000\200\?\0223\n\017bloom_thr"
-    "eshold\030\r \001(\002:\0030.8B\025\245\265\030\000\000\000\000\255\265\030\000\000\200\?\265\265\030\n\327#<"
-    "\0222\n\020bloom_multiplier\030\016 \001(\002:\0011B\025\245\265\030\000\000\000\000\255\265"
-    "\030\000\000\240@\265\265\030\315\314\314=\022\027\n\ttranspose\030\017 \001(\010:\004true:\004\360"
-    "\266\030\001", 883);
+    "\003 \001(\r\022\027\n\017height_segments\030\004 \001(\r\0222\n\ncamera"
+    "_pos\030\005 \001(\0132\030.common.protocol.Vector3B\004\230\265"
+    "\030\001\0222\n\ncamera_dir\030\006 \001(\0132\030.common.protocol"
+    ".Vector3B\004\230\265\030\001\022-\n\005obj_t\030\007 \001(\0132\030.common.p"
+    "rotocol.Vector3B\004\230\265\030\001\022/\n\005obj_r\030\010 \001(\0132\032.c"
+    "ommon.protocol.Matrix4x4B\004\230\265\030\001:\004\360\266\030\001\"\324\004\n"
+    "\005Plane\022\r\n\005width\030\001 \001(\002\022\016\n\006height\030\002 \001(\002\022\026\n"
+    "\016width_segments\030\003 \001(\r\022\027\n\017height_segments"
+    "\030\004 \001(\r\0222\n\ncamera_pos\030\005 \001(\0132\030.common.prot"
+    "ocol.Vector3B\004\230\265\030\001\0222\n\ncamera_dir\030\006 \001(\0132\030"
+    ".common.protocol.Vector3B\004\230\265\030\001\022-\n\005obj_t\030"
+    "\007 \001(\0132\030.common.protocol.Vector3B\004\230\265\030\001\022/\n"
+    "\005obj_r\030\010 \001(\0132\032.common.protocol.Matrix4x4"
+    "B\004\230\265\030\001\022\'\n\003tau\030\t \001(\002:\0030.5B\025\245\265\030\n\327#<\255\265\030\000\000\000@"
+    "\265\265\030\n\327#<\022(\n\003key\030\n \001(\002:\0040.18B\025\245\265\030\n\327#<\255\265\030\000\000"
+    "\200\?\265\265\030\n\327#<\022(\n\003ofs\030\013 \001(\002:\0040.18B\025\245\265\030\n\327#<\255\265\030"
+    "\000\000\200\?\265\265\030\n\327#<\022.\n\013blur_radius\030\014 \001(\002:\00210B\025\245\265"
+    "\030\000\000\000\000\255\265\030\000\000HC\265\265\030\000\000\200\?\0223\n\017bloom_threshold\030\r"
+    " \001(\002:\0030.8B\025\245\265\030\000\000\000\000\255\265\030\000\000\200\?\265\265\030\n\327#<\0222\n\020bloo"
+    "m_multiplier\030\016 \001(\002:\0011B\025\245\265\030\000\000\000\000\255\265\030\000\000\240@\265\265\030"
+    "\315\314\314=\022\027\n\ttranspose\030\017 \001(\010:\004true:\004\360\266\030\001", 955);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "generator.proto", &protobuf_RegisterTypes);
   Spiky::default_instance_ = new Spiky();
@@ -181,10 +182,10 @@ Spiky::Spiky()
 }
 
 void Spiky::InitAsDefaultInstance() {
-  camera_pos_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
-  camera_dir_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
-  obj_t_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
-  obj_r_ = const_cast< ::common::Matrix4x4*>(&::common::Matrix4x4::default_instance());
+  camera_pos_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
+  camera_dir_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
+  obj_t_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
+  obj_r_ = const_cast< ::common::protocol::Matrix4x4*>(&::common::protocol::Matrix4x4::default_instance());
 }
 
 Spiky::Spiky(const Spiky& from)
@@ -247,16 +248,16 @@ void Spiky::Clear() {
     radial_segments_ = 0u;
     height_segments_ = 0u;
     if (has_camera_pos()) {
-      if (camera_pos_ != NULL) camera_pos_->::common::Vector3::Clear();
+      if (camera_pos_ != NULL) camera_pos_->::common::protocol::Vector3::Clear();
     }
     if (has_camera_dir()) {
-      if (camera_dir_ != NULL) camera_dir_->::common::Vector3::Clear();
+      if (camera_dir_ != NULL) camera_dir_->::common::protocol::Vector3::Clear();
     }
     if (has_obj_t()) {
-      if (obj_t_ != NULL) obj_t_->::common::Vector3::Clear();
+      if (obj_t_ != NULL) obj_t_->::common::protocol::Vector3::Clear();
     }
     if (has_obj_r()) {
-      if (obj_r_ != NULL) obj_r_->::common::Matrix4x4::Clear();
+      if (obj_r_ != NULL) obj_r_->::common::protocol::Matrix4x4::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -332,7 +333,7 @@ bool Spiky::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Vector3 camera_pos = 5;
+      // optional .common.protocol.Vector3 camera_pos = 5;
       case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -346,7 +347,7 @@ bool Spiky::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Vector3 camera_dir = 6;
+      // optional .common.protocol.Vector3 camera_dir = 6;
       case 6: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -360,7 +361,7 @@ bool Spiky::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Vector3 obj_t = 7;
+      // optional .common.protocol.Vector3 obj_t = 7;
       case 7: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -374,7 +375,7 @@ bool Spiky::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Matrix4x4 obj_r = 8;
+      // optional .common.protocol.Matrix4x4 obj_r = 8;
       case 8: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -426,25 +427,25 @@ void Spiky::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->height_segments(), output);
   }
 
-  // optional .common.Vector3 camera_pos = 5;
+  // optional .common.protocol.Vector3 camera_pos = 5;
   if (has_camera_pos()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       5, this->camera_pos(), output);
   }
 
-  // optional .common.Vector3 camera_dir = 6;
+  // optional .common.protocol.Vector3 camera_dir = 6;
   if (has_camera_dir()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       6, this->camera_dir(), output);
   }
 
-  // optional .common.Vector3 obj_t = 7;
+  // optional .common.protocol.Vector3 obj_t = 7;
   if (has_obj_t()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       7, this->obj_t(), output);
   }
 
-  // optional .common.Matrix4x4 obj_r = 8;
+  // optional .common.protocol.Matrix4x4 obj_r = 8;
   if (has_obj_r()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       8, this->obj_r(), output);
@@ -478,28 +479,28 @@ void Spiky::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->height_segments(), target);
   }
 
-  // optional .common.Vector3 camera_pos = 5;
+  // optional .common.protocol.Vector3 camera_pos = 5;
   if (has_camera_pos()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         5, this->camera_pos(), target);
   }
 
-  // optional .common.Vector3 camera_dir = 6;
+  // optional .common.protocol.Vector3 camera_dir = 6;
   if (has_camera_dir()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         6, this->camera_dir(), target);
   }
 
-  // optional .common.Vector3 obj_t = 7;
+  // optional .common.protocol.Vector3 obj_t = 7;
   if (has_obj_t()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         7, this->obj_t(), target);
   }
 
-  // optional .common.Matrix4x4 obj_r = 8;
+  // optional .common.protocol.Matrix4x4 obj_r = 8;
   if (has_obj_r()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -541,28 +542,28 @@ int Spiky::ByteSize() const {
           this->height_segments());
     }
 
-    // optional .common.Vector3 camera_pos = 5;
+    // optional .common.protocol.Vector3 camera_pos = 5;
     if (has_camera_pos()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->camera_pos());
     }
 
-    // optional .common.Vector3 camera_dir = 6;
+    // optional .common.protocol.Vector3 camera_dir = 6;
     if (has_camera_dir()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->camera_dir());
     }
 
-    // optional .common.Vector3 obj_t = 7;
+    // optional .common.protocol.Vector3 obj_t = 7;
     if (has_obj_t()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->obj_t());
     }
 
-    // optional .common.Matrix4x4 obj_r = 8;
+    // optional .common.protocol.Matrix4x4 obj_r = 8;
     if (has_obj_r()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -609,16 +610,16 @@ void Spiky::MergeFrom(const Spiky& from) {
       set_height_segments(from.height_segments());
     }
     if (from.has_camera_pos()) {
-      mutable_camera_pos()->::common::Vector3::MergeFrom(from.camera_pos());
+      mutable_camera_pos()->::common::protocol::Vector3::MergeFrom(from.camera_pos());
     }
     if (from.has_camera_dir()) {
-      mutable_camera_dir()->::common::Vector3::MergeFrom(from.camera_dir());
+      mutable_camera_dir()->::common::protocol::Vector3::MergeFrom(from.camera_dir());
     }
     if (from.has_obj_t()) {
-      mutable_obj_t()->::common::Vector3::MergeFrom(from.obj_t());
+      mutable_obj_t()->::common::protocol::Vector3::MergeFrom(from.obj_t());
     }
     if (from.has_obj_r()) {
-      mutable_obj_r()->::common::Matrix4x4::MergeFrom(from.obj_r());
+      mutable_obj_r()->::common::protocol::Matrix4x4::MergeFrom(from.obj_r());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -692,10 +693,10 @@ Plane::Plane()
 }
 
 void Plane::InitAsDefaultInstance() {
-  camera_pos_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
-  camera_dir_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
-  obj_t_ = const_cast< ::common::Vector3*>(&::common::Vector3::default_instance());
-  obj_r_ = const_cast< ::common::Matrix4x4*>(&::common::Matrix4x4::default_instance());
+  camera_pos_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
+  camera_dir_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
+  obj_t_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
+  obj_r_ = const_cast< ::common::protocol::Matrix4x4*>(&::common::protocol::Matrix4x4::default_instance());
 }
 
 Plane::Plane(const Plane& from)
@@ -765,16 +766,16 @@ void Plane::Clear() {
     width_segments_ = 0u;
     height_segments_ = 0u;
     if (has_camera_pos()) {
-      if (camera_pos_ != NULL) camera_pos_->::common::Vector3::Clear();
+      if (camera_pos_ != NULL) camera_pos_->::common::protocol::Vector3::Clear();
     }
     if (has_camera_dir()) {
-      if (camera_dir_ != NULL) camera_dir_->::common::Vector3::Clear();
+      if (camera_dir_ != NULL) camera_dir_->::common::protocol::Vector3::Clear();
     }
     if (has_obj_t()) {
-      if (obj_t_ != NULL) obj_t_->::common::Vector3::Clear();
+      if (obj_t_ != NULL) obj_t_->::common::protocol::Vector3::Clear();
     }
     if (has_obj_r()) {
-      if (obj_r_ != NULL) obj_r_->::common::Matrix4x4::Clear();
+      if (obj_r_ != NULL) obj_r_->::common::protocol::Matrix4x4::Clear();
     }
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
@@ -859,7 +860,7 @@ bool Plane::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Vector3 camera_pos = 5;
+      // optional .common.protocol.Vector3 camera_pos = 5;
       case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -873,7 +874,7 @@ bool Plane::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Vector3 camera_dir = 6;
+      // optional .common.protocol.Vector3 camera_dir = 6;
       case 6: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -887,7 +888,7 @@ bool Plane::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Vector3 obj_t = 7;
+      // optional .common.protocol.Vector3 obj_t = 7;
       case 7: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -901,7 +902,7 @@ bool Plane::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.Matrix4x4 obj_r = 8;
+      // optional .common.protocol.Matrix4x4 obj_r = 8;
       case 8: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1065,25 +1066,25 @@ void Plane::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->height_segments(), output);
   }
 
-  // optional .common.Vector3 camera_pos = 5;
+  // optional .common.protocol.Vector3 camera_pos = 5;
   if (has_camera_pos()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       5, this->camera_pos(), output);
   }
 
-  // optional .common.Vector3 camera_dir = 6;
+  // optional .common.protocol.Vector3 camera_dir = 6;
   if (has_camera_dir()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       6, this->camera_dir(), output);
   }
 
-  // optional .common.Vector3 obj_t = 7;
+  // optional .common.protocol.Vector3 obj_t = 7;
   if (has_obj_t()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       7, this->obj_t(), output);
   }
 
-  // optional .common.Matrix4x4 obj_r = 8;
+  // optional .common.protocol.Matrix4x4 obj_r = 8;
   if (has_obj_r()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       8, this->obj_r(), output);
@@ -1152,28 +1153,28 @@ void Plane::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->height_segments(), target);
   }
 
-  // optional .common.Vector3 camera_pos = 5;
+  // optional .common.protocol.Vector3 camera_pos = 5;
   if (has_camera_pos()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         5, this->camera_pos(), target);
   }
 
-  // optional .common.Vector3 camera_dir = 6;
+  // optional .common.protocol.Vector3 camera_dir = 6;
   if (has_camera_dir()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         6, this->camera_dir(), target);
   }
 
-  // optional .common.Vector3 obj_t = 7;
+  // optional .common.protocol.Vector3 obj_t = 7;
   if (has_obj_t()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         7, this->obj_t(), target);
   }
 
-  // optional .common.Matrix4x4 obj_r = 8;
+  // optional .common.protocol.Matrix4x4 obj_r = 8;
   if (has_obj_r()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1250,28 +1251,28 @@ int Plane::ByteSize() const {
           this->height_segments());
     }
 
-    // optional .common.Vector3 camera_pos = 5;
+    // optional .common.protocol.Vector3 camera_pos = 5;
     if (has_camera_pos()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->camera_pos());
     }
 
-    // optional .common.Vector3 camera_dir = 6;
+    // optional .common.protocol.Vector3 camera_dir = 6;
     if (has_camera_dir()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->camera_dir());
     }
 
-    // optional .common.Vector3 obj_t = 7;
+    // optional .common.protocol.Vector3 obj_t = 7;
     if (has_obj_t()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->obj_t());
     }
 
-    // optional .common.Matrix4x4 obj_r = 8;
+    // optional .common.protocol.Matrix4x4 obj_r = 8;
     if (has_obj_r()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1355,16 +1356,16 @@ void Plane::MergeFrom(const Plane& from) {
       set_height_segments(from.height_segments());
     }
     if (from.has_camera_pos()) {
-      mutable_camera_pos()->::common::Vector3::MergeFrom(from.camera_pos());
+      mutable_camera_pos()->::common::protocol::Vector3::MergeFrom(from.camera_pos());
     }
     if (from.has_camera_dir()) {
-      mutable_camera_dir()->::common::Vector3::MergeFrom(from.camera_dir());
+      mutable_camera_dir()->::common::protocol::Vector3::MergeFrom(from.camera_dir());
     }
     if (from.has_obj_t()) {
-      mutable_obj_t()->::common::Vector3::MergeFrom(from.obj_t());
+      mutable_obj_t()->::common::protocol::Vector3::MergeFrom(from.obj_t());
     }
     if (from.has_obj_r()) {
-      mutable_obj_r()->::common::Matrix4x4::MergeFrom(from.obj_r());
+      mutable_obj_r()->::common::protocol::Matrix4x4::MergeFrom(from.obj_r());
     }
   }
   if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {

@@ -1,4 +1,4 @@
-package effect.plexus;
+package effect.protocol.plexus;
 import "common.proto";
 
 
@@ -20,5 +20,5 @@ message NoiseEffector
     Scale = 2;
   };
   optional ApplyTo apply_to = 1 [default = Position];
-  optional common.Vector3Anim displacement = 2;
+  optional common.protocol.Vector3Anim displacement = 2;
 }

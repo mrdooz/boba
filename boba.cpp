@@ -5,6 +5,15 @@ static char g_ModuleName[MAX_PATH];
 static bool GlobalInit()
 {
   GetModuleFileNameA(NULL, g_ModuleName, MAX_PATH);
+
+  WORD wsa_version = MAKEWORD(2, 2);
+  WSADATA wsa_data;
+  if (0 != WSAStartup(wsa_version, &wsa_data))
+  {
+    fprintf(stderr, "WSAStartup failed\n");
+    return false;
+  }
+
   return true;
 }
 

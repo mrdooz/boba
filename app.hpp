@@ -21,6 +21,7 @@ namespace boba
     Error,
   };
 
+  struct WebsocketClient;
   class App
   {
   public:
@@ -51,6 +52,8 @@ namespace boba
 
   protected:
 
+    void ProcessPayload(const void* payload, u32 size);
+
     static App* _instance;
     HINSTANCE _hinstance;
 
@@ -71,6 +74,8 @@ namespace boba
     };
 
     vector<Message> _messages;
+
+    WebsocketClient* _client;
   };
 
 #define APP boba::App::Instance()

@@ -232,6 +232,7 @@ EffectRowNoise::EffectRowNoise(
     : EffectRow(font, str, parent)
     , _editingIdx(-1)
     , _selectedKeyframe(nullptr)
+    , _graphMode(0)
 {
 }
 

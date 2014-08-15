@@ -3,6 +3,7 @@
 #pragma comment(lib,"ws2_32.lib")
 
 using namespace boba;
+using namespace bristol;
 
 enum
 {
@@ -20,23 +21,8 @@ enum
   WEBBY_WSF_MASKED            = 1 << 1
 };
 
-struct WebbyWsFrame
-{
-  unsigned char flags;
-  unsigned char opcode;
-  unsigned char header_size;
-  unsigned char padding_;
-  unsigned char mask_key[4];
-  int           payload_length;
-};
 
-struct WebbyBuffer
-{
-  int used;
-  int max;
-  unsigned char* data;
-};
-
+//------------------------------------------------------------------------------
 static size_t make_websocket_header(unsigned char buffer[10], unsigned char opcode, int payload_len, int fin)
 {
   buffer[0] = (fin ? 0x80 : 0x00) | opcode;
@@ -66,20 +52,20 @@ static size_t make_websocket_header(unsigned char buffer[10], unsigned char opco
   }
 }
 
-
+//------------------------------------------------------------------------------
 static int scan_websocket_frame(const struct WebbyBuffer *buf, struct WebbyWsFrame *frame)
 {
   unsigned char flags = 0;
   unsigned int len = 0;
   unsigned int opcode = 0;
-  unsigned char* data = buf->data;
-  unsigned char* data_max = data + buf->used;
+  unsigned char* data = (u8*)buf->data.data() + buf->readOfs;
+  unsigned char* data_max = data + buf->writeOfs;
   int i;
   int len_bytes = 0;
   int mask_bytes = 0;
   unsigned char header0, header1;
 
-  if (buf->used < 2)
+  if (data_max - data < 2)
     return -1;
 
   header0 = *data++;
@@ -124,11 +110,17 @@ static int scan_websocket_frame(const struct WebbyBuffer *buf, struct WebbyWsFra
     frame->mask_key[i] = *data++;
   }
 
-  frame->header_size = (unsigned char) (data - buf->data);
+  frame->header_size = (unsigned char) (data - buf->data.data());
   frame->flags = flags;
   frame->opcode = (unsigned char) opcode;
   frame->payload_length = (int) len;
   return 0;
+}
+
+//------------------------------------------------------------------------------
+WebsocketClient::WebsocketClient()
+  : _readState(ReadState::ReadHeader)
+{
 }
 
 //------------------------------------------------------------------------------
@@ -139,19 +131,24 @@ bool WebsocketClient::Connect(const char* host, const char* serviceName)
   hints.ai_family = AF_UNSPEC;
   hints.ai_socktype = SOCK_STREAM;
 
-  struct addrinfo* res;
-  if (getaddrinfo(host, serviceName, &hints, &res) < 0) {
-    printf("getaddrinfo err: %d", errno);
+  // Connect to host
+  struct addrinfo* res = nullptr;
+  int r1 = getaddrinfo(host, serviceName, &hints, &res);
+  if (r1 != 0 )
+  {
+    LOG_WARN(to_string("getaddrinfo err: %d", r1).c_str());
+    return false;
   }
 
-  int sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+  _sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
 
-  if (connect(sockfd, res->ai_addr, res->ai_addrlen) < 0) {
-    printf("connect err: %d, %d", errno, EWOULDBLOCK);
+  if (connect(_sockfd, res->ai_addr, (int)res->ai_addrlen) < 0)
+  {
+    LOG_WARN(to_string("connect err: %d, %d", errno, EWOULDBLOCK).c_str());
+    return false;
   }
 
-  //fcntl(sockfd, F_SETFL, O_NONBLOCK);
-
+  // Send websocket upgrade request
   char get[1024];
   sprintf(get, "GET /%s HTTP/1.1\r\n" \
     "Upgrade: websocket\r\n"\
@@ -159,19 +156,27 @@ bool WebsocketClient::Connect(const char* host, const char* serviceName)
     "Sec-WebSocket-Key: V0hZLUhBTE8tVEhBUg==\r\n"\
     "Sec-WebSocket-Version: 13\r\n"
     "Host: %s\r\n\r\n", "wstest", host);
-  send(sockfd, get, sizeof(get), 0);
+  send(_sockfd, get, sizeof(get), 0);
 
   char buf[1024];
-  int r = recv(sockfd, buf, sizeof(buf), 0);
-  if (r < 0) {
+  int r = recv(_sockfd, buf, sizeof(buf), 0);
+  if (r < 0)
+  {
     printf("recv: %d, %d", errno, EWOULDBLOCK);
+    return false;
   }
+
   printf("%s\n", buf);
 
-  if (!strstr(buf, "Sec-WebSocket-Accept")) {
+  if (!strstr(buf, "Sec-WebSocket-Accept"))
+  {
     printf("Unable to upgrade");
-    return 2;
+    return false;
   }
+
+  // Set non-blocking io
+  u_long v = 1;
+  ioctlsocket(_sockfd, FIONBIO, &v);
 
   return true;
 }
@@ -179,7 +184,79 @@ bool WebsocketClient::Connect(const char* host, const char* serviceName)
 //------------------------------------------------------------------------------
 void WebsocketClient::Process()
 {
+  int res = recv(_sockfd, (char*)&_readBuffer.data[_readBuffer.writeOfs], (int)_readBuffer.data.size() - _readBuffer.writeOfs, 0);
+  if (res != -1)
+  {
+    _readBuffer.writeOfs += res;
 
+    // process all the complete frames
+    while (true)
+    {
+      switch (_readState)
+      {
+        case ReadState::ReadHeader:
+        {
+          // check if we've read a full ws header
+          if (scan_websocket_frame(&_readBuffer, &_curFrame) < 0)
+          {
+            if (_readBuffer.BufferFull())
+            {
+              // if at end of buffer, discard current frame, and reset the buffer
+              LOG_INFO("Discarding frame due to full read buffer");
+              _readBuffer.Reset();
+            }
+            goto DONE;
+          }
+
+          _readBuffer.readOfs += _curFrame.header_size;
+          _payloadStart = _readBuffer.readOfs;
+
+          // state processing the payload
+          _readState = ReadState::ReadPayload;
+        }
+
+        case ReadState::ReadPayload:
+        {
+          int bytesInBuffer = _readBuffer.writeOfs - _readBuffer.readOfs;
+          if (bytesInBuffer < _curFrame.payload_length)
+          {
+            if (_readBuffer.BufferFull())
+            {
+              // if at end of buffer, discard current frame, and reset the buffer
+              LOG_INFO("Discarding frame due to full read buffer");
+              _readBuffer.Reset();
+            }
+            goto DONE;
+          }
+
+          // got a full payload, so dispatch it
+          if (_cb)
+          {
+            _cb(_readBuffer.data.data() + _payloadStart, _curFrame.payload_length);
+          }
+  
+          // prepare for next frame
+          _readBuffer.readOfs += _curFrame.payload_length;
+          _readState = ReadState::ReadHeader;
+
+          // if we've processed all the bytes in the buffer, reset the buffer pointers
+          if (_readBuffer.readOfs == _readBuffer.writeOfs)
+          {
+            _readBuffer.readOfs = 0;
+            _readBuffer.writeOfs = 0;
+          }
+
+        }
+      }
+    }
+    DONE:
+    // check if we've read a full ws header
+    WebbyWsFrame frame;
+    if (scan_websocket_frame(&_readBuffer, &frame) == 0)
+    {
+
+    }
+  }
 }
 
 //------------------------------------------------------------------------------

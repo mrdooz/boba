@@ -104,12 +104,13 @@ void protobuf_AddDesc_demo_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+  ::common::protocol::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\ndemo.proto\022\004demo\"V\n\004Part\022\014\n\004name\030\001 \001(\t"
-    "\022\024\n\014effect_class\030\002 \001(\t\022\016\n\006config\030\003 \001(\t\022\r"
-    "\n\005start\030\004 \001(\r\022\013\n\003end\030\005 \001(\r\"6\n\006Config\022\030\n\004"
-    "part\030\001 \003(\0132\n.demo.Part\022\022\n\nsoundtrack\030\002 \001"
-    "(\t", 162);
+    "\n\ndemo.proto\022\004demo\032\014common.proto\"V\n\004Part"
+    "\022\014\n\004name\030\001 \001(\t\022\024\n\014effect_class\030\002 \001(\t\022\016\n\006"
+    "config\030\003 \001(\t\022\r\n\005start\030\004 \001(\r\022\013\n\003end\030\005 \001(\r"
+    "\"6\n\006Config\022\030\n\004part\030\001 \003(\0132\n.demo.Part\022\022\n\n"
+    "soundtrack\030\002 \001(\t", 176);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "demo.proto", &protobuf_RegisterTypes);
   Part::default_instance_ = new Part();
