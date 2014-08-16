@@ -8,11 +8,6 @@
 #include "graphics.hpp"
 #include "websocket_client.hpp"
 
-#pragma warning(push)
-#pragma warning(disable: 4244 4267)
-#include "protocol/effect_settings.pb.h"
-#pragma warning(pop)
-
 static const int WM_LOG_NEW_MSG = WM_APP + 1;
 static const int WM_APP_CLOSE = WM_APP + 2;
 
@@ -115,8 +110,6 @@ App& App::Instance()
 bool App::Init(HINSTANCE hinstance)
 {
   _client = new WebsocketClient();
-  _client->SetCallback(bind(&App::ProcessPayload, this, _1, _2));
-
   _client->Connect("127.0.0.1", "13337");
 
   if (_appRootFilename.empty())
@@ -143,6 +136,8 @@ bool App::Init(HINSTANCE hinstance)
   DEMO_ENGINE.RegisterFactory(ParticleTest::Name(), ParticleTest::Create);
   DEMO_ENGINE.RegisterFactory(SceneTest::Name(), SceneTest::Create);
   DEMO_ENGINE.RegisterFactory(GeneratorTest::Name(), GeneratorTest::Create);
+
+  _client->SetCallback(bind(&DemoEngine::ProcessPayload, &DEMO_ENGINE, _1, _2));
 
 #if WITH_ANT_TWEAK_BAR
   TwInit(TW_DIRECT3D11, GRAPHICS.Device());
@@ -237,17 +232,6 @@ bool App::Run()
 #endif
 
   return true;
-}
-
-//------------------------------------------------------------------------------
-void App::ProcessPayload(const void* payload, u32 size)
-{
-  effect::protocol::EffectSetting setting;
-  if (setting.ParseFromArray(payload, size))
-  {
-    int a = 10;
-  }
-
 }
 
 //------------------------------------------------------------------------------

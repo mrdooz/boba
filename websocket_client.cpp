@@ -120,12 +120,16 @@ static int scan_websocket_frame(const struct WebbyBuffer *buf, struct WebbyWsFra
 //------------------------------------------------------------------------------
 WebsocketClient::WebsocketClient()
   : _readState(ReadState::ReadHeader)
+  , _sockfd(0)
 {
 }
 
 //------------------------------------------------------------------------------
 bool WebsocketClient::Connect(const char* host, const char* serviceName)
 {
+  _host = host;
+  _serviceName = serviceName;
+
   addrinfo hints;
   memset(&hints, 0, sizeof hints);
   hints.ai_family = AF_UNSPEC;
@@ -144,7 +148,7 @@ bool WebsocketClient::Connect(const char* host, const char* serviceName)
 
   if (connect(_sockfd, res->ai_addr, (int)res->ai_addrlen) < 0)
   {
-    LOG_WARN(to_string("connect err: %d, %d", errno, EWOULDBLOCK).c_str());
+    LOG_INFO(to_string("connect err: %d", errno).c_str());
     return false;
   }
 
@@ -184,6 +188,13 @@ bool WebsocketClient::Connect(const char* host, const char* serviceName)
 //------------------------------------------------------------------------------
 void WebsocketClient::Process()
 {
+  // try to reconnect
+  if (!_sockfd)
+  {
+    Connect(_host.c_str(), _serviceName.c_str());
+    return;
+  }
+
   int res = recv(_sockfd, (char*)&_readBuffer.data[_readBuffer.writeOfs], (int)_readBuffer.data.size() - _readBuffer.writeOfs, 0);
   if (res != -1)
   {
@@ -249,13 +260,7 @@ void WebsocketClient::Process()
         }
       }
     }
-    DONE:
-    // check if we've read a full ws header
-    WebbyWsFrame frame;
-    if (scan_websocket_frame(&_readBuffer, &frame) == 0)
-    {
-
-    }
+    DONE:;
   }
 }
 

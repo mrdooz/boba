@@ -21,7 +21,7 @@ namespace boba
       bool paused;
     };
 
-    Effect(const string& name);
+    Effect(const string& name, u32 id);
     virtual ~Effect();
     virtual bool Show();
     virtual bool Hide();
@@ -45,6 +45,7 @@ namespace boba
   protected:
 
     string _name;
+    u32 _id;
 
     int _mouse_horiz;
     int _mouse_vert;
@@ -58,5 +59,6 @@ namespace boba
 
     DeferredContext *_ctx;
     bool _first_tick;
+
   };
 }

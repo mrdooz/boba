@@ -4,6 +4,11 @@
 #include "proto_helpers.hpp"
 #include "resource_manager.hpp"
 
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
+#include "protocol/effect_settings.pb.h"
+#pragma warning(pop)
+
 using namespace boba;
 using namespace bristol;
 
@@ -96,6 +101,7 @@ DemoEngine& DemoEngine::Instance()
 DemoEngine::DemoEngine() 
   : _cur_effect(0)
   , _duration(TimeDuration::Seconds(180))
+  , _nextEffectId(1)
 {
 }
 
@@ -287,26 +293,26 @@ bool DemoEngine::Init(const char* config, HINSTANCE instance)
     return false;
 
 
-  for (const demo::Part& part : _config.part())
+  for (const effect::protocol::EffectSetting& effect : _config.effect_setting())
   {
     // Look up the factory
-    auto factoryIt = _effectFactories.find(part.effect_class());
+    auto factoryIt = _effectFactories.find(effect.effect_class());
     if (factoryIt != _effectFactories.end())
     {
-      const char* name = part.name().c_str();
+      const char* name = effect.name().c_str();
 
       EffectFactory factory = factoryIt->second;
-      Effect* effect = factory(name);
-      effect->SetDuration(TimeDuration::Milliseconds(part.start()), TimeDuration::Milliseconds(part.end()));
-      if (!effect->Init(part.config().c_str()))
+      Effect* newEffect = factory(name, _nextEffectId++);
+      newEffect->SetDuration(TimeDuration::Milliseconds(effect.start_time()), TimeDuration::Milliseconds(effect.end_time()));
+      if (!newEffect->Init(effect.config_file().c_str()))
       {
         return false;
       }
-      _effects.push_back(effect);
+      _effects.push_back(newEffect);
     }
     else
     {
-      //LOG_WARNING_LN("Unknown effect class");
+      LOG_WARN("Unknown effect class");
       return false;
     }
   }
@@ -334,4 +340,16 @@ void DemoEngine::SaveSettings()
   {
     effect->SaveSettings();
   }
+}
+
+//------------------------------------------------------------------------------
+void DemoEngine::ProcessPayload(const void* payload, u32 size)
+{
+  effect::protocol::EffectSetting setting;
+  if (setting.ParseFromArray(payload, size))
+  {
+    // find effect with the given id
+    int a = 10;
+  }
+
 }

@@ -4,8 +4,9 @@
 using namespace boba;
 
 //------------------------------------------------------------------------------
-Effect::Effect(const string& name)
+Effect::Effect(const string& name, u32 id)
   : _name(name)
+  , _id(id)
   , _running(false)
   , _mouse_horiz(0)
   , _mouse_vert(0)

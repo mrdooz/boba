@@ -142,32 +142,107 @@ class EffectSetting : public ::google::protobuf::Message {
   inline ::effect::protocol::EffectSetting_Type type() const;
   inline void set_type(::effect::protocol::EffectSetting_Type value);
 
-  // optional bytes msg = 2;
-  inline bool has_msg() const;
-  inline void clear_msg();
-  static const int kMsgFieldNumber = 2;
-  inline const ::std::string& msg() const;
-  inline void set_msg(const ::std::string& value);
-  inline void set_msg(const char* value);
-  inline void set_msg(const void* value, size_t size);
-  inline ::std::string* mutable_msg();
-  inline ::std::string* release_msg();
-  inline void set_allocated_msg(::std::string* msg);
+  // optional string effect_class = 2;
+  inline bool has_effect_class() const;
+  inline void clear_effect_class();
+  static const int kEffectClassFieldNumber = 2;
+  inline const ::std::string& effect_class() const;
+  inline void set_effect_class(const ::std::string& value);
+  inline void set_effect_class(const char* value);
+  inline void set_effect_class(const char* value, size_t size);
+  inline ::std::string* mutable_effect_class();
+  inline ::std::string* release_effect_class();
+  inline void set_allocated_effect_class(::std::string* effect_class);
+
+  // optional uint32 id = 3;
+  inline bool has_id() const;
+  inline void clear_id();
+  static const int kIdFieldNumber = 3;
+  inline ::google::protobuf::uint32 id() const;
+  inline void set_id(::google::protobuf::uint32 value);
+
+  // optional string name = 4;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 4;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // optional uint32 start_time = 5;
+  inline bool has_start_time() const;
+  inline void clear_start_time();
+  static const int kStartTimeFieldNumber = 5;
+  inline ::google::protobuf::uint32 start_time() const;
+  inline void set_start_time(::google::protobuf::uint32 value);
+
+  // optional uint32 end_time = 6;
+  inline bool has_end_time() const;
+  inline void clear_end_time();
+  static const int kEndTimeFieldNumber = 6;
+  inline ::google::protobuf::uint32 end_time() const;
+  inline void set_end_time(::google::protobuf::uint32 value);
+
+  // optional bytes config_msg = 7;
+  inline bool has_config_msg() const;
+  inline void clear_config_msg();
+  static const int kConfigMsgFieldNumber = 7;
+  inline const ::std::string& config_msg() const;
+  inline void set_config_msg(const ::std::string& value);
+  inline void set_config_msg(const char* value);
+  inline void set_config_msg(const void* value, size_t size);
+  inline ::std::string* mutable_config_msg();
+  inline ::std::string* release_config_msg();
+  inline void set_allocated_config_msg(::std::string* config_msg);
+
+  // optional string config_file = 8;
+  inline bool has_config_file() const;
+  inline void clear_config_file();
+  static const int kConfigFileFieldNumber = 8;
+  inline const ::std::string& config_file() const;
+  inline void set_config_file(const ::std::string& value);
+  inline void set_config_file(const char* value);
+  inline void set_config_file(const char* value, size_t size);
+  inline ::std::string* mutable_config_file();
+  inline ::std::string* release_config_file();
+  inline void set_allocated_config_file(::std::string* config_file);
 
   // @@protoc_insertion_point(class_scope:effect.protocol.EffectSetting)
  private:
   inline void set_has_type();
   inline void clear_has_type();
-  inline void set_has_msg();
-  inline void clear_has_msg();
+  inline void set_has_effect_class();
+  inline void clear_has_effect_class();
+  inline void set_has_id();
+  inline void clear_has_id();
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_start_time();
+  inline void clear_has_start_time();
+  inline void set_has_end_time();
+  inline void clear_has_end_time();
+  inline void set_has_config_msg();
+  inline void clear_has_config_msg();
+  inline void set_has_config_file();
+  inline void clear_has_config_file();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* msg_;
+  ::std::string* effect_class_;
   int type_;
+  ::google::protobuf::uint32 id_;
+  ::std::string* name_;
+  ::google::protobuf::uint32 start_time_;
+  ::google::protobuf::uint32 end_time_;
+  ::std::string* config_msg_;
+  ::std::string* config_file_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
 
   friend void  protobuf_AddDesc_effect_5fsettings_2eproto();
   friend void protobuf_AssignDesc_effect_5fsettings_2eproto();
@@ -232,27 +307,42 @@ class EffectSettings : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .effect.protocol.EffectSetting effect_settings = 1;
-  inline int effect_settings_size() const;
-  inline void clear_effect_settings();
-  static const int kEffectSettingsFieldNumber = 1;
-  inline const ::effect::protocol::EffectSetting& effect_settings(int index) const;
-  inline ::effect::protocol::EffectSetting* mutable_effect_settings(int index);
-  inline ::effect::protocol::EffectSetting* add_effect_settings();
+  // repeated .effect.protocol.EffectSetting effect_setting = 1;
+  inline int effect_setting_size() const;
+  inline void clear_effect_setting();
+  static const int kEffectSettingFieldNumber = 1;
+  inline const ::effect::protocol::EffectSetting& effect_setting(int index) const;
+  inline ::effect::protocol::EffectSetting* mutable_effect_setting(int index);
+  inline ::effect::protocol::EffectSetting* add_effect_setting();
   inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting >&
-      effect_settings() const;
+      effect_setting() const;
   inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting >*
-      mutable_effect_settings();
+      mutable_effect_setting();
+
+  // optional string soundtrack = 2;
+  inline bool has_soundtrack() const;
+  inline void clear_soundtrack();
+  static const int kSoundtrackFieldNumber = 2;
+  inline const ::std::string& soundtrack() const;
+  inline void set_soundtrack(const ::std::string& value);
+  inline void set_soundtrack(const char* value);
+  inline void set_soundtrack(const char* value, size_t size);
+  inline ::std::string* mutable_soundtrack();
+  inline ::std::string* release_soundtrack();
+  inline void set_allocated_soundtrack(::std::string* soundtrack);
 
   // @@protoc_insertion_point(class_scope:effect.protocol.EffectSettings)
  private:
+  inline void set_has_soundtrack();
+  inline void clear_has_soundtrack();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting > effect_settings_;
+  ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting > effect_setting_;
+  ::std::string* soundtrack_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_effect_5fsettings_2eproto();
   friend void protobuf_AssignDesc_effect_5fsettings_2eproto();
@@ -291,73 +381,349 @@ inline void EffectSetting::set_type(::effect::protocol::EffectSetting_Type value
   type_ = value;
 }
 
-// optional bytes msg = 2;
-inline bool EffectSetting::has_msg() const {
+// optional string effect_class = 2;
+inline bool EffectSetting::has_effect_class() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void EffectSetting::set_has_msg() {
+inline void EffectSetting::set_has_effect_class() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void EffectSetting::clear_has_msg() {
+inline void EffectSetting::clear_has_effect_class() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void EffectSetting::clear_msg() {
-  if (msg_ != &::google::protobuf::internal::kEmptyString) {
-    msg_->clear();
+inline void EffectSetting::clear_effect_class() {
+  if (effect_class_ != &::google::protobuf::internal::kEmptyString) {
+    effect_class_->clear();
   }
-  clear_has_msg();
+  clear_has_effect_class();
 }
-inline const ::std::string& EffectSetting::msg() const {
-  return *msg_;
+inline const ::std::string& EffectSetting::effect_class() const {
+  return *effect_class_;
 }
-inline void EffectSetting::set_msg(const ::std::string& value) {
-  set_has_msg();
-  if (msg_ == &::google::protobuf::internal::kEmptyString) {
-    msg_ = new ::std::string;
+inline void EffectSetting::set_effect_class(const ::std::string& value) {
+  set_has_effect_class();
+  if (effect_class_ == &::google::protobuf::internal::kEmptyString) {
+    effect_class_ = new ::std::string;
   }
-  msg_->assign(value);
+  effect_class_->assign(value);
 }
-inline void EffectSetting::set_msg(const char* value) {
-  set_has_msg();
-  if (msg_ == &::google::protobuf::internal::kEmptyString) {
-    msg_ = new ::std::string;
+inline void EffectSetting::set_effect_class(const char* value) {
+  set_has_effect_class();
+  if (effect_class_ == &::google::protobuf::internal::kEmptyString) {
+    effect_class_ = new ::std::string;
   }
-  msg_->assign(value);
+  effect_class_->assign(value);
 }
-inline void EffectSetting::set_msg(const void* value, size_t size) {
-  set_has_msg();
-  if (msg_ == &::google::protobuf::internal::kEmptyString) {
-    msg_ = new ::std::string;
+inline void EffectSetting::set_effect_class(const char* value, size_t size) {
+  set_has_effect_class();
+  if (effect_class_ == &::google::protobuf::internal::kEmptyString) {
+    effect_class_ = new ::std::string;
   }
-  msg_->assign(reinterpret_cast<const char*>(value), size);
+  effect_class_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* EffectSetting::mutable_msg() {
-  set_has_msg();
-  if (msg_ == &::google::protobuf::internal::kEmptyString) {
-    msg_ = new ::std::string;
+inline ::std::string* EffectSetting::mutable_effect_class() {
+  set_has_effect_class();
+  if (effect_class_ == &::google::protobuf::internal::kEmptyString) {
+    effect_class_ = new ::std::string;
   }
-  return msg_;
+  return effect_class_;
 }
-inline ::std::string* EffectSetting::release_msg() {
-  clear_has_msg();
-  if (msg_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* EffectSetting::release_effect_class() {
+  clear_has_effect_class();
+  if (effect_class_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = msg_;
-    msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = effect_class_;
+    effect_class_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void EffectSetting::set_allocated_msg(::std::string* msg) {
-  if (msg_ != &::google::protobuf::internal::kEmptyString) {
-    delete msg_;
+inline void EffectSetting::set_allocated_effect_class(::std::string* effect_class) {
+  if (effect_class_ != &::google::protobuf::internal::kEmptyString) {
+    delete effect_class_;
   }
-  if (msg) {
-    set_has_msg();
-    msg_ = msg;
+  if (effect_class) {
+    set_has_effect_class();
+    effect_class_ = effect_class;
   } else {
-    clear_has_msg();
-    msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_effect_class();
+    effect_class_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional uint32 id = 3;
+inline bool EffectSetting::has_id() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void EffectSetting::set_has_id() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void EffectSetting::clear_has_id() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void EffectSetting::clear_id() {
+  id_ = 0u;
+  clear_has_id();
+}
+inline ::google::protobuf::uint32 EffectSetting::id() const {
+  return id_;
+}
+inline void EffectSetting::set_id(::google::protobuf::uint32 value) {
+  set_has_id();
+  id_ = value;
+}
+
+// optional string name = 4;
+inline bool EffectSetting::has_name() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void EffectSetting::set_has_name() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void EffectSetting::clear_has_name() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void EffectSetting::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& EffectSetting::name() const {
+  return *name_;
+}
+inline void EffectSetting::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void EffectSetting::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void EffectSetting::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* EffectSetting::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* EffectSetting::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void EffectSetting::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional uint32 start_time = 5;
+inline bool EffectSetting::has_start_time() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void EffectSetting::set_has_start_time() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void EffectSetting::clear_has_start_time() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void EffectSetting::clear_start_time() {
+  start_time_ = 0u;
+  clear_has_start_time();
+}
+inline ::google::protobuf::uint32 EffectSetting::start_time() const {
+  return start_time_;
+}
+inline void EffectSetting::set_start_time(::google::protobuf::uint32 value) {
+  set_has_start_time();
+  start_time_ = value;
+}
+
+// optional uint32 end_time = 6;
+inline bool EffectSetting::has_end_time() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void EffectSetting::set_has_end_time() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void EffectSetting::clear_has_end_time() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void EffectSetting::clear_end_time() {
+  end_time_ = 0u;
+  clear_has_end_time();
+}
+inline ::google::protobuf::uint32 EffectSetting::end_time() const {
+  return end_time_;
+}
+inline void EffectSetting::set_end_time(::google::protobuf::uint32 value) {
+  set_has_end_time();
+  end_time_ = value;
+}
+
+// optional bytes config_msg = 7;
+inline bool EffectSetting::has_config_msg() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void EffectSetting::set_has_config_msg() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void EffectSetting::clear_has_config_msg() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void EffectSetting::clear_config_msg() {
+  if (config_msg_ != &::google::protobuf::internal::kEmptyString) {
+    config_msg_->clear();
+  }
+  clear_has_config_msg();
+}
+inline const ::std::string& EffectSetting::config_msg() const {
+  return *config_msg_;
+}
+inline void EffectSetting::set_config_msg(const ::std::string& value) {
+  set_has_config_msg();
+  if (config_msg_ == &::google::protobuf::internal::kEmptyString) {
+    config_msg_ = new ::std::string;
+  }
+  config_msg_->assign(value);
+}
+inline void EffectSetting::set_config_msg(const char* value) {
+  set_has_config_msg();
+  if (config_msg_ == &::google::protobuf::internal::kEmptyString) {
+    config_msg_ = new ::std::string;
+  }
+  config_msg_->assign(value);
+}
+inline void EffectSetting::set_config_msg(const void* value, size_t size) {
+  set_has_config_msg();
+  if (config_msg_ == &::google::protobuf::internal::kEmptyString) {
+    config_msg_ = new ::std::string;
+  }
+  config_msg_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* EffectSetting::mutable_config_msg() {
+  set_has_config_msg();
+  if (config_msg_ == &::google::protobuf::internal::kEmptyString) {
+    config_msg_ = new ::std::string;
+  }
+  return config_msg_;
+}
+inline ::std::string* EffectSetting::release_config_msg() {
+  clear_has_config_msg();
+  if (config_msg_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = config_msg_;
+    config_msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void EffectSetting::set_allocated_config_msg(::std::string* config_msg) {
+  if (config_msg_ != &::google::protobuf::internal::kEmptyString) {
+    delete config_msg_;
+  }
+  if (config_msg) {
+    set_has_config_msg();
+    config_msg_ = config_msg;
+  } else {
+    clear_has_config_msg();
+    config_msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string config_file = 8;
+inline bool EffectSetting::has_config_file() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void EffectSetting::set_has_config_file() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void EffectSetting::clear_has_config_file() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void EffectSetting::clear_config_file() {
+  if (config_file_ != &::google::protobuf::internal::kEmptyString) {
+    config_file_->clear();
+  }
+  clear_has_config_file();
+}
+inline const ::std::string& EffectSetting::config_file() const {
+  return *config_file_;
+}
+inline void EffectSetting::set_config_file(const ::std::string& value) {
+  set_has_config_file();
+  if (config_file_ == &::google::protobuf::internal::kEmptyString) {
+    config_file_ = new ::std::string;
+  }
+  config_file_->assign(value);
+}
+inline void EffectSetting::set_config_file(const char* value) {
+  set_has_config_file();
+  if (config_file_ == &::google::protobuf::internal::kEmptyString) {
+    config_file_ = new ::std::string;
+  }
+  config_file_->assign(value);
+}
+inline void EffectSetting::set_config_file(const char* value, size_t size) {
+  set_has_config_file();
+  if (config_file_ == &::google::protobuf::internal::kEmptyString) {
+    config_file_ = new ::std::string;
+  }
+  config_file_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* EffectSetting::mutable_config_file() {
+  set_has_config_file();
+  if (config_file_ == &::google::protobuf::internal::kEmptyString) {
+    config_file_ = new ::std::string;
+  }
+  return config_file_;
+}
+inline ::std::string* EffectSetting::release_config_file() {
+  clear_has_config_file();
+  if (config_file_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = config_file_;
+    config_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void EffectSetting::set_allocated_config_file(::std::string* config_file) {
+  if (config_file_ != &::google::protobuf::internal::kEmptyString) {
+    delete config_file_;
+  }
+  if (config_file) {
+    set_has_config_file();
+    config_file_ = config_file;
+  } else {
+    clear_has_config_file();
+    config_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
@@ -365,29 +731,99 @@ inline void EffectSetting::set_allocated_msg(::std::string* msg) {
 
 // EffectSettings
 
-// repeated .effect.protocol.EffectSetting effect_settings = 1;
-inline int EffectSettings::effect_settings_size() const {
-  return effect_settings_.size();
+// repeated .effect.protocol.EffectSetting effect_setting = 1;
+inline int EffectSettings::effect_setting_size() const {
+  return effect_setting_.size();
 }
-inline void EffectSettings::clear_effect_settings() {
-  effect_settings_.Clear();
+inline void EffectSettings::clear_effect_setting() {
+  effect_setting_.Clear();
 }
-inline const ::effect::protocol::EffectSetting& EffectSettings::effect_settings(int index) const {
-  return effect_settings_.Get(index);
+inline const ::effect::protocol::EffectSetting& EffectSettings::effect_setting(int index) const {
+  return effect_setting_.Get(index);
 }
-inline ::effect::protocol::EffectSetting* EffectSettings::mutable_effect_settings(int index) {
-  return effect_settings_.Mutable(index);
+inline ::effect::protocol::EffectSetting* EffectSettings::mutable_effect_setting(int index) {
+  return effect_setting_.Mutable(index);
 }
-inline ::effect::protocol::EffectSetting* EffectSettings::add_effect_settings() {
-  return effect_settings_.Add();
+inline ::effect::protocol::EffectSetting* EffectSettings::add_effect_setting() {
+  return effect_setting_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting >&
-EffectSettings::effect_settings() const {
-  return effect_settings_;
+EffectSettings::effect_setting() const {
+  return effect_setting_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting >*
-EffectSettings::mutable_effect_settings() {
-  return &effect_settings_;
+EffectSettings::mutable_effect_setting() {
+  return &effect_setting_;
+}
+
+// optional string soundtrack = 2;
+inline bool EffectSettings::has_soundtrack() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void EffectSettings::set_has_soundtrack() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void EffectSettings::clear_has_soundtrack() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void EffectSettings::clear_soundtrack() {
+  if (soundtrack_ != &::google::protobuf::internal::kEmptyString) {
+    soundtrack_->clear();
+  }
+  clear_has_soundtrack();
+}
+inline const ::std::string& EffectSettings::soundtrack() const {
+  return *soundtrack_;
+}
+inline void EffectSettings::set_soundtrack(const ::std::string& value) {
+  set_has_soundtrack();
+  if (soundtrack_ == &::google::protobuf::internal::kEmptyString) {
+    soundtrack_ = new ::std::string;
+  }
+  soundtrack_->assign(value);
+}
+inline void EffectSettings::set_soundtrack(const char* value) {
+  set_has_soundtrack();
+  if (soundtrack_ == &::google::protobuf::internal::kEmptyString) {
+    soundtrack_ = new ::std::string;
+  }
+  soundtrack_->assign(value);
+}
+inline void EffectSettings::set_soundtrack(const char* value, size_t size) {
+  set_has_soundtrack();
+  if (soundtrack_ == &::google::protobuf::internal::kEmptyString) {
+    soundtrack_ = new ::std::string;
+  }
+  soundtrack_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* EffectSettings::mutable_soundtrack() {
+  set_has_soundtrack();
+  if (soundtrack_ == &::google::protobuf::internal::kEmptyString) {
+    soundtrack_ = new ::std::string;
+  }
+  return soundtrack_;
+}
+inline ::std::string* EffectSettings::release_soundtrack() {
+  clear_has_soundtrack();
+  if (soundtrack_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = soundtrack_;
+    soundtrack_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void EffectSettings::set_allocated_soundtrack(::std::string* soundtrack) {
+  if (soundtrack_ != &::google::protobuf::internal::kEmptyString) {
+    delete soundtrack_;
+  }
+  if (soundtrack) {
+    set_has_soundtrack();
+    soundtrack_ = soundtrack;
+  } else {
+    clear_has_soundtrack();
+    soundtrack_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 

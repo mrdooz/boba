@@ -203,7 +203,7 @@ bool EffectRowPlexus::ToProtocol(effect::protocol::EffectSetting* proto) const
     row->ToProtocolInner(&plexus);
   }
 
-  proto->set_msg(plexus.SerializeAsString());
+  proto->set_config_msg(plexus.SerializeAsString());
 
   return true;
 }

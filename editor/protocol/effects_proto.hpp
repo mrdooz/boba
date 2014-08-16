@@ -113,11 +113,18 @@ namespace editor
     };
 
     EffectSetting::Type type;
-    std::vector<uint8_t> msg;
+    string effectClass;
+    uint32_t id;
+    string name;
+    uint32_t startTime;
+    uint32_t endTime;
+    std::vector<uint8_t> configMsg;
+    string configFile;
   };
   struct EffectSettings
   {
-    vector<EffectSetting> effectSettings;
+    vector<EffectSetting> effectSetting;
+    string soundtrack;
   };
   struct Plexus
   {
@@ -282,27 +289,41 @@ namespace editor
   {
     EffectSetting res;
     res.type = (EffectSetting::Type)p.type();
-    res.msg.resize(p.msg().size());
-    memcpy(res.msg.data(), p.msg().data(), p.msg().size());
+    res.effectClass = p.effect_class();
+    res.id = p.id();
+    res.name = p.name();
+    res.startTime = p.start_time();
+    res.endTime = p.end_time();
+    res.configMsg.resize(p.config_msg().size());
+    memcpy(res.configMsg.data(), p.config_msg().data(), p.config_msg().size());
+    res.configFile = p.config_file();
     return res;
   }
 
   inline void ToProtocol(const EffectSetting& v, effect::protocol::EffectSetting* p)
   {
+    p->set_effect_class(v.effectClass);
+    p->set_id(v.id);
+    p->set_name(v.name);
+    p->set_start_time(v.startTime);
+    p->set_end_time(v.endTime);
+    p->set_config_file(v.configFile);
   }
 
 
   inline EffectSettings FromProtocol(const effect::protocol::EffectSettings& p)
   {
     EffectSettings res;
-    res.effectSettings = FromProtocolRepeated<EffectSetting>(p.effect_settings());
+    res.effectSetting = FromProtocolRepeated<EffectSetting>(p.effect_setting());
+    res.soundtrack = p.soundtrack();
     return res;
   }
 
   inline void ToProtocol(const EffectSettings& v, effect::protocol::EffectSettings* p)
   {
-    for (const auto& x : v.effectSettings)
-      ToProtocol(x, p->add_effect_settings());
+    for (const auto& x : v.effectSetting)
+      ToProtocol(x, p->add_effect_setting());
+    p->set_soundtrack(v.soundtrack);
   }
 
 

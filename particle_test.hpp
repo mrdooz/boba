@@ -15,7 +15,7 @@ namespace boba
   {
   public:
 
-    ParticleTest(const string &name);
+    ParticleTest(const string &name, u32 id);
     ~ParticleTest();
     virtual bool Show();
     virtual bool Hide();
@@ -27,7 +27,7 @@ namespace boba
     virtual bool SaveSettings() override;
 
     static const char* Name();
-    static Effect* Create(const char* name);
+    static Effect* Create(const char* name, u32 id);
 
   private:
     string _configName;

@@ -46,5 +46,7 @@ namespace boba
     SOCKET _sockfd;
     WebbyWsFrame _curFrame;
     u32 _payloadStart;
+    string _host;
+    string _serviceName;
   };
 }

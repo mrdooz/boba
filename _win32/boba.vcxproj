@@ -502,7 +502,6 @@
     </ClCompile>
     <ClCompile Include="..\protocol\anttweak.pb.cc" />
     <ClCompile Include="..\protocol\common.pb.cc" />
-    <ClCompile Include="..\protocol\demo.pb.cc" />
     <ClCompile Include="..\protocol\effect_settings.pb.cc" />
     <ClCompile Include="..\protocol\effect_settings_plexus.pb.cc" />
     <ClCompile Include="..\protocol\generator.pb.cc" />
@@ -558,7 +557,6 @@
     <ClInclude Include="..\precompiled.hpp" />
     <ClInclude Include="..\protocol\anttweak.pb.h" />
     <ClInclude Include="..\protocol\common.pb.h" />
-    <ClInclude Include="..\protocol\demo.pb.h" />
     <ClInclude Include="..\protocol\effect_settings.pb.h" />
     <ClInclude Include="..\protocol\effect_settings_plexus.pb.h" />
     <ClInclude Include="..\protocol\generator.pb.h" />
@@ -578,7 +576,6 @@
   <ItemGroup>
     <None Include="..\protocol\anttweak.proto" />
     <None Include="..\protocol\common.proto" />
-    <None Include="..\protocol\demo.proto" />
     <None Include="..\protocol\generator.proto" />
     <None Include="..\protocol\particle.proto" />
   </ItemGroup>

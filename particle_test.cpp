@@ -21,8 +21,8 @@ namespace
   };
 }
 //------------------------------------------------------------------------------
-ParticleTest::ParticleTest(const string &name)
-  : Effect(name)
+ParticleTest::ParticleTest(const string &name, u32 id)
+  : Effect(name, id)
 {
 }
 
@@ -121,9 +121,9 @@ bool ParticleTest::SaveSettings()
 }
 
 //------------------------------------------------------------------------------
-Effect* ParticleTest::Create(const char* name)
+Effect* ParticleTest::Create(const char* name, u32 id)
 {
-  return new ParticleTest(name);
+  return new ParticleTest(name, id);
 }
 
 //------------------------------------------------------------------------------

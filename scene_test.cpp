@@ -25,8 +25,8 @@ namespace
 Mesh mesh;
 
 //------------------------------------------------------------------------------
-SceneTest::SceneTest(const string &name)
-    : Effect(name)
+SceneTest::SceneTest(const string& name, u32 id)
+    : Effect(name, id)
     , _rotatingObject(false)
     , _oldWorldMatrix(Matrix::Identity())
 {
@@ -125,9 +125,9 @@ bool SceneTest::SaveSettings()
 }
 
 //------------------------------------------------------------------------------
-Effect* SceneTest::Create(const char* name)
+Effect* SceneTest::Create(const char* name, u32 id)
 {
-  return new SceneTest(name);
+  return new SceneTest(name, id);
 }
 
 //------------------------------------------------------------------------------

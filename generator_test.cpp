@@ -171,8 +171,8 @@ struct TextWriter
 TextWriter g_textWriter;
 
 //------------------------------------------------------------------------------
-GeneratorTest::GeneratorTest(const string &name)
-    : Effect(name)
+GeneratorTest::GeneratorTest(const string& name, u32 id)
+    : Effect(name, id)
     , _rotatingObject(false)
     , _dirtyFlag(true)
     , _lua(nullptr)
@@ -752,9 +752,9 @@ bool GeneratorTest::SaveSettings()
 }
 
 //------------------------------------------------------------------------------
-Effect* GeneratorTest::Create(const char* name)
+Effect* GeneratorTest::Create(const char* name, u32 id)
 {
-  return new GeneratorTest(name);
+  return new GeneratorTest(name, id);
 }
 
 //------------------------------------------------------------------------------

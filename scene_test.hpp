@@ -16,7 +16,7 @@ namespace boba
   {
   public:
 
-    SceneTest(const string &name);
+    SceneTest(const string& name, u32 id);
     ~SceneTest();
     virtual bool Init(const char* config) override;
     virtual bool Update(const UpdateState& state) override;
@@ -26,7 +26,7 @@ namespace boba
     virtual bool SaveSettings() override;
 
     static const char* Name();
-    static Effect* Create(const char* name);
+    static Effect* Create(const char* name, u32 id);
 
   private:
 

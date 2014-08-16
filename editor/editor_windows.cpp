@@ -523,7 +523,7 @@ void TimelineWindow::KeyframesModified()
   effect::protocol::EffectSettings settings;
   for (const EffectRow* row : _effectRows)
   {
-    row->ToProtocol(settings.add_effect_settings());
+    row->ToProtocol(settings.add_effect_setting());
   }
 
   EDITOR.SettingsUpdated(settings);

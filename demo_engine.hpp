@@ -3,14 +3,14 @@
 #include "graphics.hpp"
 #pragma warning(push)
 #pragma warning(disable: 4244 4267)
-#include "protocol/demo.pb.h"
+#include "protocol/effect_settings.pb.h"
 #pragma warning(pop)
 
 namespace boba
 {
   class Effect;
 
-  typedef function<Effect*(const char*)> EffectFactory;
+  typedef function<Effect*(const char*, u32)> EffectFactory;
 
   class Timer
   {
@@ -56,29 +56,33 @@ namespace boba
 
     static bool IsInitialized() { return _instance != nullptr; }
 
+    void ProcessPayload(const void* payload, u32 size);
+
   private:
     DemoEngine();
     ~DemoEngine();
-    static DemoEngine *_instance;
+    static DemoEngine* _instance;
 
     void ReclassifyEffects();
     void KillEffects();
 
-    Effect *FindEffectByName(const string &name);
+    Effect* FindEffectByName(const string &name);
 
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-    deque<Effect *> _activeEffects;
-    deque<Effect *> _inactiveEffects;
-    deque<Effect *> _expiredEffects;
-    vector<Effect *> _effects;
+    deque<Effect*> _activeEffects;
+    deque<Effect*> _inactiveEffects;
+    deque<Effect*> _expiredEffects;
+    vector<Effect*> _effects;
     int _cur_effect;
     TimeDuration _duration;
 
     Timer _timer;
 
-    demo::Config _config;
+
+    effect::protocol::EffectSettings _config;
     unordered_map<string, EffectFactory> _effectFactories;
+    u32 _nextEffectId;
   };
 
 #define DEMO_ENGINE DemoEngine::Instance()

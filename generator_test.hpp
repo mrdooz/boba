@@ -21,7 +21,7 @@ namespace boba
   {
   public:
 
-    GeneratorTest(const string &name);
+    GeneratorTest(const string& name, u32 id);
     ~GeneratorTest();
     virtual bool Init(const char* config) override;
     virtual bool Update(const UpdateState& state) override;
@@ -31,7 +31,7 @@ namespace boba
     virtual bool SaveSettings() override;
 
     static const char* Name();
-    static Effect* Create(const char* name);
+    static Effect* Create(const char* name, u32 id);
 
   private:
 

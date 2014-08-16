@@ -39,9 +39,15 @@ void protobuf_AssignDesc_effect_5fsettings_2eproto() {
       "effect_settings.proto");
   GOOGLE_CHECK(file != NULL);
   EffectSetting_descriptor_ = file->message_type(0);
-  static const int EffectSetting_offsets_[2] = {
+  static const int EffectSetting_offsets_[8] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EffectSetting, type_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EffectSetting, msg_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EffectSetting, effect_class_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EffectSetting, id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EffectSetting, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EffectSetting, start_time_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EffectSetting, end_time_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EffectSetting, config_msg_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EffectSetting, config_file_),
   };
   EffectSetting_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -56,8 +62,9 @@ void protobuf_AssignDesc_effect_5fsettings_2eproto() {
       sizeof(EffectSetting));
   EffectSetting_Type_descriptor_ = EffectSetting_descriptor_->enum_type(0);
   EffectSettings_descriptor_ = file->message_type(1);
-  static const int EffectSettings_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EffectSettings, effect_settings_),
+  static const int EffectSettings_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EffectSettings, effect_setting_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EffectSettings, soundtrack_),
   };
   EffectSettings_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -105,11 +112,14 @@ void protobuf_AddDesc_effect_5fsettings_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\025effect_settings.proto\022\017effect.protocol"
-    "\"c\n\rEffectSetting\0221\n\004type\030\001 \001(\0162#.effect"
-    ".protocol.EffectSetting.Type\022\013\n\003msg\030\002 \001("
-    "\014\"\022\n\004Type\022\n\n\006Plexus\020\001\"I\n\016EffectSettings\022"
-    "7\n\017effect_settings\030\001 \003(\0132\036.effect.protoc"
-    "ol.EffectSetting", 216);
+    "\"\325\001\n\rEffectSetting\0221\n\004type\030\001 \001(\0162#.effec"
+    "t.protocol.EffectSetting.Type\022\024\n\014effect_"
+    "class\030\002 \001(\t\022\n\n\002id\030\003 \001(\r\022\014\n\004name\030\004 \001(\t\022\022\n"
+    "\nstart_time\030\005 \001(\r\022\020\n\010end_time\030\006 \001(\r\022\022\n\nc"
+    "onfig_msg\030\007 \001(\014\022\023\n\013config_file\030\010 \001(\t\"\022\n\004"
+    "Type\022\n\n\006Plexus\020\001\"\\\n\016EffectSettings\0226\n\016ef"
+    "fect_setting\030\001 \003(\0132\036.effect.protocol.Eff"
+    "ectSetting\022\022\n\nsoundtrack\030\002 \001(\t", 350);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "effect_settings.proto", &protobuf_RegisterTypes);
   EffectSetting::default_instance_ = new EffectSetting();
@@ -149,7 +159,13 @@ const int EffectSetting::Type_ARRAYSIZE;
 #endif  // _MSC_VER
 #ifndef _MSC_VER
 const int EffectSetting::kTypeFieldNumber;
-const int EffectSetting::kMsgFieldNumber;
+const int EffectSetting::kEffectClassFieldNumber;
+const int EffectSetting::kIdFieldNumber;
+const int EffectSetting::kNameFieldNumber;
+const int EffectSetting::kStartTimeFieldNumber;
+const int EffectSetting::kEndTimeFieldNumber;
+const int EffectSetting::kConfigMsgFieldNumber;
+const int EffectSetting::kConfigFileFieldNumber;
 #endif  // !_MSC_VER
 
 EffectSetting::EffectSetting()
@@ -169,7 +185,13 @@ EffectSetting::EffectSetting(const EffectSetting& from)
 void EffectSetting::SharedCtor() {
   _cached_size_ = 0;
   type_ = 1;
-  msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  effect_class_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  id_ = 0u;
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  start_time_ = 0u;
+  end_time_ = 0u;
+  config_msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  config_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -178,8 +200,17 @@ EffectSetting::~EffectSetting() {
 }
 
 void EffectSetting::SharedDtor() {
-  if (msg_ != &::google::protobuf::internal::kEmptyString) {
-    delete msg_;
+  if (effect_class_ != &::google::protobuf::internal::kEmptyString) {
+    delete effect_class_;
+  }
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (config_msg_ != &::google::protobuf::internal::kEmptyString) {
+    delete config_msg_;
+  }
+  if (config_file_ != &::google::protobuf::internal::kEmptyString) {
+    delete config_file_;
   }
   if (this != default_instance_) {
   }
@@ -209,9 +240,27 @@ EffectSetting* EffectSetting::New() const {
 void EffectSetting::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     type_ = 1;
-    if (has_msg()) {
-      if (msg_ != &::google::protobuf::internal::kEmptyString) {
-        msg_->clear();
+    if (has_effect_class()) {
+      if (effect_class_ != &::google::protobuf::internal::kEmptyString) {
+        effect_class_->clear();
+      }
+    }
+    id_ = 0u;
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
+        name_->clear();
+      }
+    }
+    start_time_ = 0u;
+    end_time_ = 0u;
+    if (has_config_msg()) {
+      if (config_msg_ != &::google::protobuf::internal::kEmptyString) {
+        config_msg_->clear();
+      }
+    }
+    if (has_config_file()) {
+      if (config_file_ != &::google::protobuf::internal::kEmptyString) {
+        config_file_->clear();
       }
     }
   }
@@ -241,17 +290,116 @@ bool EffectSetting::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_msg;
+        if (input->ExpectTag(18)) goto parse_effect_class;
         break;
       }
 
-      // optional bytes msg = 2;
+      // optional string effect_class = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_msg:
+         parse_effect_class:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_effect_class()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->effect_class().data(), this->effect_class().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_id;
+        break;
+      }
+
+      // optional uint32 id = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_id:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &id_)));
+          set_has_id();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(34)) goto parse_name;
+        break;
+      }
+
+      // optional string name = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_name:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(40)) goto parse_start_time;
+        break;
+      }
+
+      // optional uint32 start_time = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_start_time:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &start_time_)));
+          set_has_start_time();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(48)) goto parse_end_time;
+        break;
+      }
+
+      // optional uint32 end_time = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_end_time:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &end_time_)));
+          set_has_end_time();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(58)) goto parse_config_msg;
+        break;
+      }
+
+      // optional bytes config_msg = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_config_msg:
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_msg()));
+                input, this->mutable_config_msg()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(66)) goto parse_config_file;
+        break;
+      }
+
+      // optional string config_file = 8;
+      case 8: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_config_file:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_config_file()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->config_file().data(), this->config_file().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -283,10 +431,52 @@ void EffectSetting::SerializeWithCachedSizes(
       1, this->type(), output);
   }
 
-  // optional bytes msg = 2;
-  if (has_msg()) {
+  // optional string effect_class = 2;
+  if (has_effect_class()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->effect_class().data(), this->effect_class().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->effect_class(), output);
+  }
+
+  // optional uint32 id = 3;
+  if (has_id()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->id(), output);
+  }
+
+  // optional string name = 4;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->name(), output);
+  }
+
+  // optional uint32 start_time = 5;
+  if (has_start_time()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->start_time(), output);
+  }
+
+  // optional uint32 end_time = 6;
+  if (has_end_time()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(6, this->end_time(), output);
+  }
+
+  // optional bytes config_msg = 7;
+  if (has_config_msg()) {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
-      2, this->msg(), output);
+      7, this->config_msg(), output);
+  }
+
+  // optional string config_file = 8;
+  if (has_config_file()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->config_file().data(), this->config_file().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      8, this->config_file(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -303,11 +493,56 @@ void EffectSetting::SerializeWithCachedSizes(
       1, this->type(), target);
   }
 
-  // optional bytes msg = 2;
-  if (has_msg()) {
+  // optional string effect_class = 2;
+  if (has_effect_class()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->effect_class().data(), this->effect_class().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->effect_class(), target);
+  }
+
+  // optional uint32 id = 3;
+  if (has_id()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->id(), target);
+  }
+
+  // optional string name = 4;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->name(), target);
+  }
+
+  // optional uint32 start_time = 5;
+  if (has_start_time()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->start_time(), target);
+  }
+
+  // optional uint32 end_time = 6;
+  if (has_end_time()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(6, this->end_time(), target);
+  }
+
+  // optional bytes config_msg = 7;
+  if (has_config_msg()) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        2, this->msg(), target);
+        7, this->config_msg(), target);
+  }
+
+  // optional string config_file = 8;
+  if (has_config_file()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->config_file().data(), this->config_file().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        8, this->config_file(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -327,11 +562,53 @@ int EffectSetting::ByteSize() const {
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
     }
 
-    // optional bytes msg = 2;
-    if (has_msg()) {
+    // optional string effect_class = 2;
+    if (has_effect_class()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->effect_class());
+    }
+
+    // optional uint32 id = 3;
+    if (has_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->id());
+    }
+
+    // optional string name = 4;
+    if (has_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->name());
+    }
+
+    // optional uint32 start_time = 5;
+    if (has_start_time()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->start_time());
+    }
+
+    // optional uint32 end_time = 6;
+    if (has_end_time()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->end_time());
+    }
+
+    // optional bytes config_msg = 7;
+    if (has_config_msg()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->msg());
+          this->config_msg());
+    }
+
+    // optional string config_file = 8;
+    if (has_config_file()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->config_file());
     }
 
   }
@@ -364,8 +641,26 @@ void EffectSetting::MergeFrom(const EffectSetting& from) {
     if (from.has_type()) {
       set_type(from.type());
     }
-    if (from.has_msg()) {
-      set_msg(from.msg());
+    if (from.has_effect_class()) {
+      set_effect_class(from.effect_class());
+    }
+    if (from.has_id()) {
+      set_id(from.id());
+    }
+    if (from.has_name()) {
+      set_name(from.name());
+    }
+    if (from.has_start_time()) {
+      set_start_time(from.start_time());
+    }
+    if (from.has_end_time()) {
+      set_end_time(from.end_time());
+    }
+    if (from.has_config_msg()) {
+      set_config_msg(from.config_msg());
+    }
+    if (from.has_config_file()) {
+      set_config_file(from.config_file());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -391,7 +686,13 @@ bool EffectSetting::IsInitialized() const {
 void EffectSetting::Swap(EffectSetting* other) {
   if (other != this) {
     std::swap(type_, other->type_);
-    std::swap(msg_, other->msg_);
+    std::swap(effect_class_, other->effect_class_);
+    std::swap(id_, other->id_);
+    std::swap(name_, other->name_);
+    std::swap(start_time_, other->start_time_);
+    std::swap(end_time_, other->end_time_);
+    std::swap(config_msg_, other->config_msg_);
+    std::swap(config_file_, other->config_file_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -410,7 +711,8 @@ void EffectSetting::Swap(EffectSetting* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int EffectSettings::kEffectSettingsFieldNumber;
+const int EffectSettings::kEffectSettingFieldNumber;
+const int EffectSettings::kSoundtrackFieldNumber;
 #endif  // !_MSC_VER
 
 EffectSettings::EffectSettings()
@@ -429,6 +731,7 @@ EffectSettings::EffectSettings(const EffectSettings& from)
 
 void EffectSettings::SharedCtor() {
   _cached_size_ = 0;
+  soundtrack_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -437,6 +740,9 @@ EffectSettings::~EffectSettings() {
 }
 
 void EffectSettings::SharedDtor() {
+  if (soundtrack_ != &::google::protobuf::internal::kEmptyString) {
+    delete soundtrack_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -463,7 +769,14 @@ EffectSettings* EffectSettings::New() const {
 }
 
 void EffectSettings::Clear() {
-  effect_settings_.Clear();
+  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    if (has_soundtrack()) {
+      if (soundtrack_ != &::google::protobuf::internal::kEmptyString) {
+        soundtrack_->clear();
+      }
+    }
+  }
+  effect_setting_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -474,17 +787,34 @@ bool EffectSettings::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .effect.protocol.EffectSetting effect_settings = 1;
+      // repeated .effect.protocol.EffectSetting effect_setting = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_effect_settings:
+         parse_effect_setting:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_effect_settings()));
+                input, add_effect_setting()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(10)) goto parse_effect_settings;
+        if (input->ExpectTag(10)) goto parse_effect_setting;
+        if (input->ExpectTag(18)) goto parse_soundtrack;
+        break;
+      }
+
+      // optional string soundtrack = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_soundtrack:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_soundtrack()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->soundtrack().data(), this->soundtrack().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -507,10 +837,19 @@ bool EffectSettings::MergePartialFromCodedStream(
 
 void EffectSettings::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .effect.protocol.EffectSetting effect_settings = 1;
-  for (int i = 0; i < this->effect_settings_size(); i++) {
+  // repeated .effect.protocol.EffectSetting effect_setting = 1;
+  for (int i = 0; i < this->effect_setting_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->effect_settings(i), output);
+      1, this->effect_setting(i), output);
+  }
+
+  // optional string soundtrack = 2;
+  if (has_soundtrack()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->soundtrack().data(), this->soundtrack().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->soundtrack(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -521,11 +860,21 @@ void EffectSettings::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* EffectSettings::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .effect.protocol.EffectSetting effect_settings = 1;
-  for (int i = 0; i < this->effect_settings_size(); i++) {
+  // repeated .effect.protocol.EffectSetting effect_setting = 1;
+  for (int i = 0; i < this->effect_setting_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, this->effect_settings(i), target);
+        1, this->effect_setting(i), target);
+  }
+
+  // optional string soundtrack = 2;
+  if (has_soundtrack()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->soundtrack().data(), this->soundtrack().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->soundtrack(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -538,12 +887,21 @@ void EffectSettings::SerializeWithCachedSizes(
 int EffectSettings::ByteSize() const {
   int total_size = 0;
 
-  // repeated .effect.protocol.EffectSetting effect_settings = 1;
-  total_size += 1 * this->effect_settings_size();
-  for (int i = 0; i < this->effect_settings_size(); i++) {
+  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    // optional string soundtrack = 2;
+    if (has_soundtrack()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->soundtrack());
+    }
+
+  }
+  // repeated .effect.protocol.EffectSetting effect_setting = 1;
+  total_size += 1 * this->effect_setting_size();
+  for (int i = 0; i < this->effect_setting_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->effect_settings(i));
+        this->effect_setting(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -571,7 +929,12 @@ void EffectSettings::MergeFrom(const ::google::protobuf::Message& from) {
 
 void EffectSettings::MergeFrom(const EffectSettings& from) {
   GOOGLE_CHECK_NE(&from, this);
-  effect_settings_.MergeFrom(from.effect_settings_);
+  effect_setting_.MergeFrom(from.effect_setting_);
+  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    if (from.has_soundtrack()) {
+      set_soundtrack(from.soundtrack());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -594,7 +957,8 @@ bool EffectSettings::IsInitialized() const {
 
 void EffectSettings::Swap(EffectSettings* other) {
   if (other != this) {
-    effect_settings_.Swap(&other->effect_settings_);
+    effect_setting_.Swap(&other->effect_setting_);
+    std::swap(soundtrack_, other->soundtrack_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
