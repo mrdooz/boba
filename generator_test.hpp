@@ -29,6 +29,8 @@ namespace boba
     virtual bool Close() override;
 
     virtual bool SaveSettings() override;
+    virtual void ToProtocol(effect::protocol::EffectSetting* settings) const;
+    virtual void FromProtocol(const std::string& str);
 
     static const char* Name();
     static Effect* Create(const char* name, u32 id);

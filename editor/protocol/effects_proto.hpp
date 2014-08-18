@@ -109,6 +109,7 @@ namespace editor
   {
     enum class Type
     {
+      Unknown = 0,
       Plexus = 1,
     };
 

@@ -71,9 +71,6 @@ bool TimelineWindow::Init()
   const editor::protocol::Settings& settings = EDITOR.Settings();
   int width = settings.effect_view_width();
 
-  int rowHeight = settings.effect_row_height();
-  int curY = settings.ticker_height();
-
   const Vector2f& windowSize = GetSize();
 
   _tickerRect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
@@ -84,6 +81,7 @@ bool TimelineWindow::Init()
   _statusBar->_shape.setPosition(0, windowSize.y - settings.status_bar_height());
   _statusBar->_shape.setSize(Vector2f(windowSize.x, settings.status_bar_height()));
 
+#if 0
   // create the effect rows
   const Plexus& p = EDITOR._plexus;
 
@@ -112,7 +110,7 @@ bool TimelineWindow::Init()
   }
 
   RecalcEffecRows();
-
+#endif
   return true;
 }
 
@@ -523,9 +521,38 @@ void TimelineWindow::KeyframesModified()
   effect::protocol::EffectSettings settings;
   for (const EffectRow* row : _effectRows)
   {
-    row->ToProtocol(settings.add_effect_setting());
+    effect::protocol::EffectSetting* setting = settings.add_effect_setting();
+    setting->set_id(row->_id);
+    row->ToProtocol(setting);
   }
 
   EDITOR.SettingsUpdated(settings);
 }
 
+//----------------------------------------------------------------------------------
+void TimelineWindow::Reset(const effect::protocol::EffectSettings& settings)
+{
+  for (EffectRow* e : _effectRows)
+    delete e;
+  _effectRows.clear();
+
+  for (const effect::protocol::EffectSetting& setting : settings.effect_setting())
+  {
+    switch (setting.type())
+    {
+      case 1:
+        effect::protocol::plexus::Plexus p;
+        const string& str = setting.config_msg();
+        p.ParseFromArray(str.data(), (int)str.size());
+
+        EffectRow* parent = new EffectRowPlexus(_font, "PLEXUS");
+        parent->_id = setting.id();
+        _effectRows.push_back(parent);
+        parent->FromProtocol(p);
+
+        break;
+    }
+  }
+
+  RecalcEffecRows();
+}

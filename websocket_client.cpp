@@ -166,21 +166,22 @@ bool WebsocketClient::Connect(const char* host, const char* serviceName)
   int r = recv(_sockfd, buf, sizeof(buf), 0);
   if (r < 0)
   {
-    printf("recv: %d, %d", errno, EWOULDBLOCK);
+    LOG_INFO(to_string("recv: %d", errno).c_str());
     return false;
   }
 
-  printf("%s\n", buf);
-
   if (!strstr(buf, "Sec-WebSocket-Accept"))
   {
-    printf("Unable to upgrade");
+    LOG_WARN("Unable to upgrade");
     return false;
   }
 
   // Set non-blocking io
   u_long v = 1;
   ioctlsocket(_sockfd, FIONBIO, &v);
+
+  if (_cbConnected)
+    _cbConnected();
 
   return true;
 }
@@ -241,9 +242,9 @@ void WebsocketClient::Process()
           }
 
           // got a full payload, so dispatch it
-          if (_cb)
+          if (_cbProcessPayload)
           {
-            _cb(_readBuffer.data.data() + _payloadStart, _curFrame.payload_length);
+            _cbProcessPayload(_readBuffer.data.data() + _payloadStart, _curFrame.payload_length);
           }
   
           // prepare for next frame
@@ -268,4 +269,25 @@ void WebsocketClient::Process()
 void WebsocketClient::Disconnect()
 {
 
+}
+
+//------------------------------------------------------------------------------
+void WebsocketClient::SendWebsocketFrame(const u8* buf, int len)
+{
+  if (!_sockfd)
+    return;
+
+  u8 header[10];
+  size_t headerLen = make_websocket_header(header, WEBBY_WS_OP_BINARY_FRAME, len, 1);
+  send(_sockfd, (const char*)header, (int)headerLen, 0);
+  send(_sockfd, (const char*)buf, len, 0);
+}
+
+//------------------------------------------------------------------------------
+void WebsocketClient::SetCallbacks(
+    const fnProcessPayload& cbPayload,
+    const fnConnectedCallback& cbConnected)
+{
+  _cbProcessPayload = cbPayload;
+  _cbConnected = cbConnected;
 }

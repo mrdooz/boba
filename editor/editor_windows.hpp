@@ -104,6 +104,7 @@ namespace editor
 
     virtual bool Init();
     virtual void Draw();
+    void Reset(const effect::protocol::EffectSettings& settings);
 
     int TimeToPixel(const time_duration& t) const;
     time_duration PixelToTime(int x) const;

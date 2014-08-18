@@ -39,10 +39,11 @@ class EffectSetting;
 class EffectSettings;
 
 enum EffectSetting_Type {
+  EffectSetting_Type_Unknown = 0,
   EffectSetting_Type_Plexus = 1
 };
 bool EffectSetting_Type_IsValid(int value);
-const EffectSetting_Type EffectSetting_Type_Type_MIN = EffectSetting_Type_Plexus;
+const EffectSetting_Type EffectSetting_Type_Type_MIN = EffectSetting_Type_Unknown;
 const EffectSetting_Type EffectSetting_Type_Type_MAX = EffectSetting_Type_Plexus;
 const int EffectSetting_Type_Type_ARRAYSIZE = EffectSetting_Type_Type_MAX + 1;
 
@@ -111,6 +112,7 @@ class EffectSetting : public ::google::protobuf::Message {
   // nested types ----------------------------------------------------
 
   typedef EffectSetting_Type Type;
+  static const Type Unknown = EffectSetting_Type_Unknown;
   static const Type Plexus = EffectSetting_Type_Plexus;
   static inline bool Type_IsValid(int value) {
     return EffectSetting_Type_IsValid(value);
@@ -369,7 +371,7 @@ inline void EffectSetting::clear_has_type() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void EffectSetting::clear_type() {
-  type_ = 1;
+  type_ = 0;
   clear_has_type();
 }
 inline ::effect::protocol::EffectSetting_Type EffectSetting::type() const {

@@ -40,6 +40,8 @@ Editor::Editor()
     , _lastUpdate(boost::posix_time::not_a_date_time)
     , _curTime(seconds(0))
     , _fileWatchAcc(seconds(0))
+    , _readBuffer(256 * 1024)
+    , _timeline(nullptr)
 {
   _stateFlags.Set(StateFlagsF::Paused);
 }
@@ -70,7 +72,7 @@ bool Editor::Init()
   if (!LoadProto("config/plexus1.pb", &plexusSettings, true))
     return false;
 
-  _plexus = FromProtocol(plexusSettings);
+  //_plexus = FromProtocol(plexusSettings);
 
   u32 width, height;
 #ifdef _WIN32
@@ -107,7 +109,8 @@ bool Editor::Init()
 
     _virtualWindowManager->AddWindow(new PropertyWindow("PROPERTIES", Vector2f(0, 0), Vector2f(w, h)));
     _virtualWindowManager->AddWindow(new PreviewWindow("PREVIEW", Vector2f(w, 0), Vector2f(rw, h)));
-    _virtualWindowManager->AddWindow(new TimelineWindow("TIMELINE", Vector2f(0, h), Vector2f((float)width, h)));
+    _timeline = new TimelineWindow("TIMELINE", Vector2f(0, h), Vector2f((float)width, h));
+    _virtualWindowManager->AddWindow(_timeline);
   }
 
   if (!InitWebby())
@@ -179,6 +182,18 @@ void Editor::WebbyOnWsClosed(WebbyConnection* connection)
 
 int Editor::WebbyOnWsFrame(WebbyConnection* connection, const WebbyWsFrame* frame)
 {
+  // We should only be getting a single frame when the engine starts up, telling us
+  // the current effects
+  if (frame->payload_length == 0)
+    return 0;
+
+  vector<u8>& buf = EDITOR._readBuffer;
+  WebbyRead(connection, buf.data(), frame->payload_length);
+
+  effect::protocol::EffectSettings settings;
+  settings.ParseFromArray(buf.data(), frame->payload_length);
+
+  EDITOR._timeline->Reset(settings);
   return 0;
 }
 

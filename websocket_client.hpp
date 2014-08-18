@@ -32,15 +32,23 @@ namespace boba
 
   struct WebsocketClient
   {
-    typedef function<void(const void* payload, u32 size)> fnProcessPayload;
+    typedef function<void(const u8* payload, u32 size)> fnProcessPayload;
+    typedef function<void()> fnConnectedCallback;
+
     WebsocketClient();
 
-    void SetCallback(const fnProcessPayload& cb) { _cb = cb; }
+    void SetCallbacks(
+      const fnProcessPayload& cbPayload,
+      const fnConnectedCallback& cbConnected);
     bool Connect(const char* host, const char* serviceName);
     void Process();
     void Disconnect();
 
-    fnProcessPayload _cb;
+    void SendWebsocketFrame(const u8* buf, int len);
+
+    fnProcessPayload _cbProcessPayload;
+    fnConnectedCallback _cbConnected;
+
     ReadState _readState;
     WebbyBuffer _readBuffer;
     SOCKET _sockfd;

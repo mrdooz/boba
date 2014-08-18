@@ -3,6 +3,7 @@ package effect.protocol;
 message EffectSetting
 {
 	enum Type {
+		Unknown = 0;
 		Plexus = 1;
 	};
 

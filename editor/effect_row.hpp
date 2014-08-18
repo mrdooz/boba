@@ -21,6 +21,7 @@ namespace editor
         const Font& font,
         const string& str,
         EffectRow* parent = nullptr);
+    virtual ~EffectRow();
 
     void Draw(RenderTexture& texture, bool drawKeyframes);
     static void Flatten(EffectRow* cur, vector<EffectRow*>* res);
@@ -47,7 +48,8 @@ namespace editor
     virtual bool OnMouseButtonPressed(const Event &event) { return true; }
     virtual bool OnMouseButtonReleased(const Event &event) { return true; }
 
-    virtual bool ToProtocol(effect::protocol::EffectSetting* proto) const { return true; }
+    virtual bool ToProtocol(google::protobuf::Message* msg) const { return true; }
+    virtual bool FromProtocol(const google::protobuf::Message& msg) { return true; }
 
     string _str;
     RowFlags _flags;
@@ -60,6 +62,7 @@ namespace editor
     FloatRect _varEditRect;
     StyledRectangle*_keyframeRect;
     Font _font;
+    u32 _id;
   };
 
 
@@ -73,9 +76,10 @@ namespace editor
         const string& str,
         EffectRow* parent = nullptr);
 
-    virtual bool ToProtocol(effect::protocol::EffectSetting* proto) const;
-    vector<EffectRowTextPath*> _textPaths;
-    vector<EffectRowNoise*> _noise;
+    virtual bool ToProtocol(google::protobuf::Message* msg) const;
+    virtual bool FromProtocol(const google::protobuf::Message& msg);
+    //vector<EffectRowTextPath*> _textPaths;
+    //vector<EffectRowNoise*> _noise;
   };
 
   //----------------------------------------------------------------------------------
@@ -86,7 +90,10 @@ namespace editor
         const string& str,
         EffectRow* parent = nullptr);
 
-    bool ToProtocolInner(effect::protocol::plexus::Plexus* proto) const;
+    virtual bool ToProtocol(google::protobuf::Message* msg) const;
+    virtual bool FromProtocol(const google::protobuf::Message& msg);
+
+    TextPath _textPath;
   };
 
   //----------------------------------------------------------------------------------
@@ -117,7 +124,8 @@ namespace editor
     virtual bool OnMouseButtonPressed(const Event &event);
     virtual bool OnMouseButtonReleased(const Event &event);
 
-    bool ToProtocolInner(effect::protocol::plexus::Plexus* proto) const;
+    virtual bool FromProtocol(const google::protobuf::Message& msg);
+    virtual bool ToProtocol(google::protobuf::Message* msg) const;
 
     void DrawKeyframes(RenderTexture& texture, const Vector2f& size);
 

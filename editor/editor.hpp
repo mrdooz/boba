@@ -22,6 +22,8 @@ namespace bristol
 
 namespace editor
 {
+  class TimelineWindow;
+
   class Editor
   {
   public:
@@ -78,7 +80,7 @@ namespace editor
 
     static Editor* _instance;
     editor::protocol::Settings _settings;
-    Plexus _plexus;
+    //Plexus _plexus;
     string _appRoot;
     ptime _lastUpdate;
     time_duration _curTime;
@@ -90,7 +92,9 @@ namespace editor
 
     WebbyServer* _server;
     vector<u8> _serverMemory;
+    vector<u8> _readBuffer;
     vector<WebbyConnection* > _connections;
+    TimelineWindow* _timeline;
   };
 
   #define EDITOR Editor::Instance()

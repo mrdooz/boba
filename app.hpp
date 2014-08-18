@@ -35,6 +35,7 @@ namespace boba
     static bool Destroy();
 
     void AddMessage(MessageType type, const string& str);
+    void SendWebsocketFrame(const u8* buf, int len);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(App);
@@ -49,6 +50,7 @@ namespace boba
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
     void UpdateMessages();
+
 
   protected:
 

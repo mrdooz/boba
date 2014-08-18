@@ -12,6 +12,12 @@
 #include "scene.hpp"
 #include "dynamic_mesh.hpp"
 
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
+#include "protocol/effect_settings_plexus.pb.h"
+#pragma warning(pop)
+
+
 using namespace boba;
 using namespace bristol;
 
@@ -199,10 +205,10 @@ bool GeneratorTest::Init(const char* config)
     return false;
   }
 
-  if (_planeConfig.has_camera_pos()) _cameraPos = FromProtocol(_planeConfig.camera_pos());
-  if (_planeConfig.has_camera_dir()) _cameraDir = FromProtocol(_planeConfig.camera_dir());
-  if (_planeConfig.has_obj_t()) g_mesh.translation = FromProtocol(_planeConfig.obj_t());
-  if (_planeConfig.has_obj_r()) g_mesh.rotation = FromProtocol(_planeConfig.obj_r());
+  if (_planeConfig.has_camera_pos()) _cameraPos = ::FromProtocol(_planeConfig.camera_pos());
+  if (_planeConfig.has_camera_dir()) _cameraDir = ::FromProtocol(_planeConfig.camera_dir());
+  if (_planeConfig.has_obj_t()) g_mesh.translation = ::FromProtocol(_planeConfig.obj_t());
+  if (_planeConfig.has_obj_r()) g_mesh.rotation = ::FromProtocol(_planeConfig.obj_r());
   _prevRot = g_mesh.rotation;
 
   //BindSpiky(&_spikyConfig, &_dirtyFlag);
@@ -739,11 +745,11 @@ bool GeneratorTest::SaveSettings()
 {
   if (FILE* f = fopen(_configName.c_str() ,"wt"))
   {
-    ToProtocol(_cameraPos, _planeConfig.mutable_camera_pos());
-    ToProtocol(_cameraDir, _planeConfig.mutable_camera_dir());
+    ::ToProtocol(_cameraPos, _planeConfig.mutable_camera_pos());
+    ::ToProtocol(_cameraDir, _planeConfig.mutable_camera_dir());
 
-    ToProtocol(g_mesh.translation, _planeConfig.mutable_obj_t());
-    ToProtocol(g_mesh.rotation, _planeConfig.mutable_obj_r());
+    ::ToProtocol(g_mesh.translation, _planeConfig.mutable_obj_t());
+    ::ToProtocol(g_mesh.rotation, _planeConfig.mutable_obj_r());
 
     fprintf(f, "%s", _planeConfig.DebugString().c_str());
     fclose(f);
@@ -761,6 +767,29 @@ Effect* GeneratorTest::Create(const char* name, u32 id)
 const char* GeneratorTest::Name()
 {
   return "generator_test";
+}
+
+//------------------------------------------------------------------------------
+void GeneratorTest::ToProtocol(effect::protocol::EffectSetting* settings) const
+{
+  settings->set_type(effect::protocol::EffectSetting_Type_Plexus);
+
+  effect::protocol::plexus::Plexus plexus;
+  effect::protocol::plexus::TextPath* textPath = plexus.add_text_paths();
+  textPath->set_text("neurotica");
+
+  effect::protocol::plexus::NoiseEffector* effector = plexus.add_noise_effectors();
+  effector->set_apply_to(effect::protocol::plexus::NoiseEffector_ApplyTo_Position);
+
+  settings->set_config_msg(plexus.SerializeAsString());
+}
+
+//------------------------------------------------------------------------------
+void GeneratorTest::FromProtocol(const std::string& str)
+{
+  effect::protocol::plexus::Plexus p;
+  p.ParseFromString(str);
+  int a = 10;
 }
 
 //------------------------------------------------------------------------------
@@ -876,3 +905,4 @@ void GeneratorTest::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
     
   }
 }
+

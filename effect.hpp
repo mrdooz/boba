@@ -2,6 +2,14 @@
 
 #include "graphics_object_handle.hpp"
 
+namespace effect
+{
+  namespace protocol
+  {
+    class EffectSetting;
+  }
+}
+
 namespace boba
 {
   class DeferredContext;
@@ -31,6 +39,8 @@ namespace boba
     virtual bool Render();
     virtual bool Close();
     virtual bool Reset();
+    virtual void ToProtocol(effect::protocol::EffectSetting* settings) const {}
+    virtual void FromProtocol(const string& str) {}
 
     virtual void WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -41,6 +51,8 @@ namespace boba
     void SetRunning(bool b);
     void SetDuration(TimeDuration startTime, TimeDuration endTime);
     void SetStartTime(TimeDuration startTime);
+
+    u32 GetId() const { return _id; }
 
   protected:
 
@@ -59,6 +71,5 @@ namespace boba
 
     DeferredContext *_ctx;
     bool _first_tick;
-
   };
 }

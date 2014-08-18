@@ -3,6 +3,7 @@
 #include "graphics.hpp"
 #include "proto_helpers.hpp"
 #include "resource_manager.hpp"
+#include "app.hpp"
 
 #pragma warning(push)
 #pragma warning(disable: 4244 4267)
@@ -292,7 +293,6 @@ bool DemoEngine::Init(const char* config, HINSTANCE instance)
   if (!LoadProto(config, &_config))
     return false;
 
-
   for (const effect::protocol::EffectSetting& effect : _config.effect_setting())
   {
     // Look up the factory
@@ -343,13 +343,47 @@ void DemoEngine::SaveSettings()
 }
 
 //------------------------------------------------------------------------------
+void DemoEngine::Connected()
+{
+  // send current config to the editor
+  effect::protocol::EffectSettings settings;
+
+  for (const Effect* effect : _effects)
+  {
+    effect::protocol::EffectSetting* setting = settings.add_effect_setting();
+    setting->set_id(effect->GetId());
+    effect->ToProtocol(setting);
+  }
+
+  string str = settings.SerializeAsString();
+  APP.SendWebsocketFrame((const u8*)str.data(), str.size());
+}
+
+//------------------------------------------------------------------------------
 void DemoEngine::ProcessPayload(const void* payload, u32 size)
 {
-  effect::protocol::EffectSetting setting;
-  if (setting.ParseFromArray(payload, size))
+  effect::protocol::EffectSettings settings;
+  if (settings.ParseFromArray(payload, size))
   {
-    // find effect with the given id
-    int a = 10;
+    for (const effect::protocol::EffectSetting& setting : settings.effect_setting())
+    {
+      u32 id = setting.id();
+
+      if (setting.id() == 0)
+      {
+        // if the effect has id 0, it's a new effect
+      }
+      else
+      {
+        // find effect with the given id
+        auto it = find_if(_effects.begin(), _effects.end(), [=](const Effect* e) { return e->GetId() == id; });
+        if (it != _effects.end())
+        {
+          (*it)->FromProtocol(setting.config_msg());
+        }
+      }
+    }
+
   }
 
 }

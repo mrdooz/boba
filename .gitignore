@@ -1,7 +1,8 @@
 editor/cmake_install.cmake
-Debug/
-Release/
-Distribution/
+**/Debug/
+**/Release/
+**/Distribution/
+**/RelWithDebInfo/
 _win32/_ReSharper.*/*
 data/
 ipch/

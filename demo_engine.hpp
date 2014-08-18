@@ -57,6 +57,7 @@ namespace boba
     static bool IsInitialized() { return _instance != nullptr; }
 
     void ProcessPayload(const void* payload, u32 size);
+    void Connected();
 
   private:
     DemoEngine();

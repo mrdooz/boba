@@ -5,6 +5,8 @@
 using namespace editor;
 using namespace bristol;
 
+#pragma warning(disable: 4244)
+
 //----------------------------------------------------------------------------------
 EffectRow::EffectRow(
     const Font& font,
@@ -14,6 +16,7 @@ EffectRow::EffectRow(
     , _parent(parent)
     , _level(0)
     , _font(font)
+    , _id(0)
 {
   _rect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
   _keyframeRect = STYLE_FACTORY.CreateStyledRectangle("keyframe_style");
@@ -25,6 +28,15 @@ EffectRow::EffectRow(
 
   if (parent)
     _level = parent->_level + 1;
+}
+
+//----------------------------------------------------------------------------------
+EffectRow::~EffectRow()
+{
+  for (EffectRow* e : _children)
+    delete e;
+
+  _children.clear();
 }
 
 //----------------------------------------------------------------------------------
@@ -113,7 +125,7 @@ float EffectRow::RowHeight(EffectRow* cur, float rowHeight)
 void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
-  Color rowCol = FromProtocol(_flags.IsSet(EffectRow::RowFlagsF::Selected)
+  Color rowCol = ::FromProtocol(_flags.IsSet(EffectRow::RowFlagsF::Selected)
       ? settings.selected_row_color()
       : settings.default_row_color());
 
@@ -187,23 +199,44 @@ EffectRowPlexus::EffectRowPlexus(
 }
 
 //----------------------------------------------------------------------------------
-bool EffectRowPlexus::ToProtocol(effect::protocol::EffectSetting* proto) const
+bool EffectRowPlexus::ToProtocol(google::protobuf::Message* msg) const
 {
+  effect::protocol::EffectSetting* proto = static_cast<effect::protocol::EffectSetting*>(msg);
   assert(!_parent);
   proto->set_type(effect::protocol::EffectSetting_Type_Plexus);
 
   effect::protocol::plexus::Plexus plexus;
-  for (const EffectRowTextPath* row : _textPaths)
+  for (const EffectRow* row : _children)
   {
-    row->ToProtocolInner(&plexus);
-  }
-
-  for (const EffectRowNoise* row : _noise)
-  {
-    row->ToProtocolInner(&plexus);
+    row->ToProtocol(&plexus);
   }
 
   proto->set_config_msg(plexus.SerializeAsString());
+
+  return true;
+}
+
+//----------------------------------------------------------------------------------
+bool EffectRowPlexus::FromProtocol(const google::protobuf::Message& proto)
+{
+  const effect::protocol::plexus::Plexus& p = static_cast<const effect::protocol::plexus::Plexus&>(proto);
+
+  for (const effect::protocol::plexus::TextPath& textPath : p.text_paths())
+  {
+    string str = to_string("TextPath: %s", textPath.text().c_str());
+
+    _children.push_back(new EffectRowTextPath(_font, str, this));
+    _children.back()->FromProtocol(textPath);
+  }
+
+  for (const effect::protocol::plexus::NoiseEffector& effector : p.noise_effectors())
+  {
+    string str = to_string("Noise (%s)",
+      effector.apply_to() == effect::protocol::plexus::NoiseEffector_ApplyTo_Position ? "POS" : "SCALE");
+
+    _children.push_back(new EffectRowNoise(_font, str, this));
+    _children.back()->FromProtocol(effector);
+  }
 
   return true;
 }
@@ -218,9 +251,18 @@ EffectRowTextPath::EffectRowTextPath(
 }
 
 //----------------------------------------------------------------------------------
-bool EffectRowTextPath::ToProtocolInner(effect::protocol::plexus::Plexus* proto) const
+bool EffectRowTextPath::ToProtocol(google::protobuf::Message* msg) const
 {
+  effect::protocol::plexus::Plexus* proto = static_cast<effect::protocol::plexus::Plexus*>(msg);
   proto->add_text_paths()->set_text(_str);
+  return true;
+}
+
+//----------------------------------------------------------------------------------
+bool EffectRowTextPath::FromProtocol(const google::protobuf::Message& proto)
+{
+  const effect::protocol::plexus::TextPath& p = static_cast<const effect::protocol::plexus::TextPath&>(proto);
+  _textPath = ::FromProtocol(p);
   return true;
 }
 
@@ -520,7 +562,7 @@ void EffectRowNoise::CalcCeilAndStep(
 {
   if (value == 0)
   {
-    *stepValue = 0.1;
+    *stepValue = 0.1f;
     *ceilValue = 0;
     return;
   }
@@ -872,12 +914,21 @@ bool EffectRowNoise::OnMouseButtonReleased(const Event &event)
 {
   _selectedKeyframe = nullptr;
   return true;
-
 }
 
 //----------------------------------------------------------------------------------
-bool EffectRowNoise::ToProtocolInner(effect::protocol::plexus::Plexus* proto) const
+bool EffectRowNoise::FromProtocol(const google::protobuf::Message& proto)
 {
+  const effect::protocol::plexus::NoiseEffector& p = static_cast<const effect::protocol::plexus::NoiseEffector&>(proto);
+  _effector = ::FromProtocol(p);
+  return true;
+}
+
+//----------------------------------------------------------------------------------
+bool EffectRowNoise::ToProtocol(google::protobuf::Message* msg) const
+{
+  effect::protocol::plexus::Plexus* proto = static_cast<effect::protocol::plexus::Plexus*>(msg);
+
   ::ToProtocol(_effector, proto->add_noise_effectors());
   return true;
 }

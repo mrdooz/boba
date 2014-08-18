@@ -88,7 +88,7 @@ bool ParticleTest::Render()
   _ctx->BeginFrame();
 
   CBufferPerFrame cb;
-  FromProtocol(_config.bb_col4f(), &cb.col);
+  ::FromProtocol(_config.bb_col4f(), &cb.col);
   _ctx->SetCBuffer(_cbuffer, &cb, sizeof(cb), ShaderType::PixelShader, 0);
 
   _ctx->SetVS(_vs);

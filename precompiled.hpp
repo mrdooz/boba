@@ -161,6 +161,7 @@ namespace boba
   using std::make_pair;
 
   using std::function;
+  using std::bind;
 
   using std::unique_ptr;
   using std::make_unique;

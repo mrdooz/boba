@@ -112,14 +112,15 @@ void protobuf_AddDesc_effect_5fsettings_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\025effect_settings.proto\022\017effect.protocol"
-    "\"\325\001\n\rEffectSetting\0221\n\004type\030\001 \001(\0162#.effec"
+    "\"\342\001\n\rEffectSetting\0221\n\004type\030\001 \001(\0162#.effec"
     "t.protocol.EffectSetting.Type\022\024\n\014effect_"
     "class\030\002 \001(\t\022\n\n\002id\030\003 \001(\r\022\014\n\004name\030\004 \001(\t\022\022\n"
     "\nstart_time\030\005 \001(\r\022\020\n\010end_time\030\006 \001(\r\022\022\n\nc"
-    "onfig_msg\030\007 \001(\014\022\023\n\013config_file\030\010 \001(\t\"\022\n\004"
-    "Type\022\n\n\006Plexus\020\001\"\\\n\016EffectSettings\0226\n\016ef"
-    "fect_setting\030\001 \003(\0132\036.effect.protocol.Eff"
-    "ectSetting\022\022\n\nsoundtrack\030\002 \001(\t", 350);
+    "onfig_msg\030\007 \001(\014\022\023\n\013config_file\030\010 \001(\t\"\037\n\004"
+    "Type\022\013\n\007Unknown\020\000\022\n\n\006Plexus\020\001\"\\\n\016EffectS"
+    "ettings\0226\n\016effect_setting\030\001 \003(\0132\036.effect"
+    ".protocol.EffectSetting\022\022\n\nsoundtrack\030\002 "
+    "\001(\t", 363);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "effect_settings.proto", &protobuf_RegisterTypes);
   EffectSetting::default_instance_ = new EffectSetting();
@@ -144,6 +145,7 @@ const ::google::protobuf::EnumDescriptor* EffectSetting_Type_descriptor() {
 }
 bool EffectSetting_Type_IsValid(int value) {
   switch(value) {
+    case 0:
     case 1:
       return true;
     default:
@@ -152,6 +154,7 @@ bool EffectSetting_Type_IsValid(int value) {
 }
 
 #ifndef _MSC_VER
+const EffectSetting_Type EffectSetting::Unknown;
 const EffectSetting_Type EffectSetting::Plexus;
 const EffectSetting_Type EffectSetting::Type_MIN;
 const EffectSetting_Type EffectSetting::Type_MAX;
@@ -184,7 +187,7 @@ EffectSetting::EffectSetting(const EffectSetting& from)
 
 void EffectSetting::SharedCtor() {
   _cached_size_ = 0;
-  type_ = 1;
+  type_ = 0;
   effect_class_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   id_ = 0u;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
@@ -239,7 +242,7 @@ EffectSetting* EffectSetting::New() const {
 
 void EffectSetting::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    type_ = 1;
+    type_ = 0;
     if (has_effect_class()) {
       if (effect_class_ != &::google::protobuf::internal::kEmptyString) {
         effect_class_->clear();

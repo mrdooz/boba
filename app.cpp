@@ -110,7 +110,6 @@ App& App::Instance()
 bool App::Init(HINSTANCE hinstance)
 {
   _client = new WebsocketClient();
-  _client->Connect("127.0.0.1", "13337");
 
   if (_appRootFilename.empty())
   {
@@ -136,8 +135,6 @@ bool App::Init(HINSTANCE hinstance)
   DEMO_ENGINE.RegisterFactory(ParticleTest::Name(), ParticleTest::Create);
   DEMO_ENGINE.RegisterFactory(SceneTest::Name(), SceneTest::Create);
   DEMO_ENGINE.RegisterFactory(GeneratorTest::Name(), GeneratorTest::Create);
-
-  _client->SetCallback(bind(&DemoEngine::ProcessPayload, &DEMO_ENGINE, _1, _2));
 
 #if WITH_ANT_TWEAK_BAR
   TwInit(TW_DIRECT3D11, GRAPHICS.Device());
@@ -181,6 +178,11 @@ bool App::Init(HINSTANCE hinstance)
   FMOD_CHECKED(_system->init(1, FMOD_INIT_NORMAL, 0));
   FMOD_CHECKED(_system->createStream("All Night (Luke Carpenter Bootleg).mp3", FMOD_HARDWARE | FMOD_LOOP_NORMAL | FMOD_2D, 0, &_sound));
 #endif
+
+  _client->SetCallbacks(
+    bind(&DemoEngine::ProcessPayload, &DEMO_ENGINE, _1, _2),
+    bind(&DemoEngine::Connected, &DEMO_ENGINE));
+  _client->Connect("127.0.0.1", "13337");
 
   return true;
 }
@@ -473,4 +475,11 @@ void App::UpdateMessages()
       it = _messages.erase(it);
     }
   }
+}
+
+//------------------------------------------------------------------------------
+void App::SendWebsocketFrame(const u8* buf, int len)
+{
+  if (_client)
+    _client->SendWebsocketFrame(buf, len);
 }
