@@ -21,7 +21,6 @@ enum
   WEBBY_WSF_MASKED            = 1 << 1
 };
 
-
 //------------------------------------------------------------------------------
 static size_t make_websocket_header(unsigned char buffer[10], unsigned char opcode, int payload_len, int fin)
 {
@@ -121,6 +120,8 @@ static int scan_websocket_frame(const struct WebbyBuffer *buf, struct WebbyWsFra
 WebsocketClient::WebsocketClient()
   : _readState(ReadState::ReadHeader)
   , _sockfd(0)
+  , _lastReconnect(TimeStamp::Now())
+  , _connected(false)
 {
 }
 
@@ -130,27 +131,35 @@ bool WebsocketClient::Connect(const char* host, const char* serviceName)
   _host = host;
   _serviceName = serviceName;
 
+  if (_sockfd != 0)
+    closesocket(_sockfd);
+
   addrinfo hints;
   memset(&hints, 0, sizeof hints);
   hints.ai_family = AF_UNSPEC;
   hints.ai_socktype = SOCK_STREAM;
 
   // Connect to host
-  struct addrinfo* res = nullptr;
-  int r1 = getaddrinfo(host, serviceName, &hints, &res);
-  if (r1 != 0 )
+  _addrinfo = nullptr;
+  int r1 = getaddrinfo(host, serviceName, &hints, &_addrinfo);
+  if (r1 != 0)
   {
     LOG_WARN(to_string("getaddrinfo err: %d", r1).c_str());
     return false;
   }
 
-  _sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+  _sockfd = socket(_addrinfo->ai_family, _addrinfo->ai_socktype, _addrinfo->ai_protocol);
 
-  if (connect(_sockfd, res->ai_addr, (int)res->ai_addrlen) < 0)
+  if (connect(_sockfd, _addrinfo->ai_addr, (int)_addrinfo->ai_addrlen) < 0)
   {
     LOG_INFO(to_string("connect err: %d", errno).c_str());
+    _connected = false;
     return false;
   }
+
+  _connected = true;
+
+  SetBlockingIo(true);
 
   // Send websocket upgrade request
   char get[1024];
@@ -176,12 +185,12 @@ bool WebsocketClient::Connect(const char* host, const char* serviceName)
     return false;
   }
 
-  // Set non-blocking io
-  u_long v = 1;
-  ioctlsocket(_sockfd, FIONBIO, &v);
+  SetBlockingIo(false);
 
-  if (_cbConnected)
+    if (_cbConnected)
     _cbConnected();
+
+  _lastPing = TimeStamp::Now();
 
   return true;
 }
@@ -189,98 +198,137 @@ bool WebsocketClient::Connect(const char* host, const char* serviceName)
 //------------------------------------------------------------------------------
 void WebsocketClient::Process()
 {
+  TimeStamp now = TimeStamp::Now();
+
   // try to reconnect
-  if (!_sockfd)
+  if (!_connected)
   {
-    Connect(_host.c_str(), _serviceName.c_str());
+    if (now - _lastReconnect > TimeDuration::Seconds(5))
+    {
+      Connect(_host.c_str(), _serviceName.c_str());
+      _lastReconnect = now;
+    }
+
     return;
   }
 
   int res = recv(_sockfd, (char*)&_readBuffer.data[_readBuffer.writeOfs], (int)_readBuffer.data.size() - _readBuffer.writeOfs, 0);
-  if (res != -1)
+  if (res == -1)
   {
-    _readBuffer.writeOfs += res;
-
-    // process all the complete frames
-    while (true)
+    // Check if we should send a ping
+    if (now - _lastPing > TimeDuration::Seconds(5))
     {
-      switch (_readState)
+      u8 header[10];
+      SetBlockingIo(true);
+      size_t headerLen = make_websocket_header(header, WEBBY_WS_OP_PING, 0, 1);
+      int res = send(_sockfd, (const char*)header, (int)headerLen, 0);
+      SetBlockingIo(false);
+      if (res < 0)
+        Disconnect();
+
+      _lastPing = now;
+    }
+
+    return;
+  }
+  else if (res == 0)
+  {
+    Disconnect();
+    return;
+  }
+
+  _lastPing = now;
+
+  _readBuffer.writeOfs += res;
+
+  // process all the complete frames
+  while (true)
+  {
+    switch (_readState)
+    {
+      case ReadState::ReadHeader:
       {
-        case ReadState::ReadHeader:
+        // check if we've read a full ws header
+        if (scan_websocket_frame(&_readBuffer, &_curFrame) < 0)
         {
-          // check if we've read a full ws header
-          if (scan_websocket_frame(&_readBuffer, &_curFrame) < 0)
+          if (_readBuffer.BufferFull())
           {
-            if (_readBuffer.BufferFull())
-            {
-              // if at end of buffer, discard current frame, and reset the buffer
-              LOG_INFO("Discarding frame due to full read buffer");
-              _readBuffer.Reset();
-            }
-            goto DONE;
+            // if at end of buffer, discard current frame, and reset the buffer
+            LOG_INFO("Discarding frame due to full read buffer");
+            _readBuffer.Reset();
           }
-
-          _readBuffer.readOfs += _curFrame.header_size;
-          _payloadStart = _readBuffer.readOfs;
-
-          // state processing the payload
-          _readState = ReadState::ReadPayload;
+          goto DONE;
         }
 
-        case ReadState::ReadPayload:
+        _readBuffer.readOfs += _curFrame.header_size;
+        _payloadStart = _readBuffer.readOfs;
+
+        // state processing the payload
+        _readState = ReadState::ReadPayload;
+      }
+
+      case ReadState::ReadPayload:
+      {
+        int bytesInBuffer = _readBuffer.writeOfs - _readBuffer.readOfs;
+        if (bytesInBuffer < _curFrame.payload_length)
         {
-          int bytesInBuffer = _readBuffer.writeOfs - _readBuffer.readOfs;
-          if (bytesInBuffer < _curFrame.payload_length)
+          if (_readBuffer.BufferFull())
           {
-            if (_readBuffer.BufferFull())
-            {
-              // if at end of buffer, discard current frame, and reset the buffer
-              LOG_INFO("Discarding frame due to full read buffer");
-              _readBuffer.Reset();
-            }
-            goto DONE;
+            // if at end of buffer, discard current frame, and reset the buffer
+            LOG_INFO("Discarding frame due to full read buffer");
+            _readBuffer.Reset();
           }
-
-          // got a full payload, so dispatch it
-          if (_cbProcessPayload)
-          {
-            _cbProcessPayload(_readBuffer.data.data() + _payloadStart, _curFrame.payload_length);
-          }
-  
-          // prepare for next frame
-          _readBuffer.readOfs += _curFrame.payload_length;
-          _readState = ReadState::ReadHeader;
-
-          // if we've processed all the bytes in the buffer, reset the buffer pointers
-          if (_readBuffer.readOfs == _readBuffer.writeOfs)
-          {
-            _readBuffer.readOfs = 0;
-            _readBuffer.writeOfs = 0;
-          }
-
+          goto DONE;
         }
+
+        // got a full payload, so dispatch it
+        if (_cbProcessPayload)
+        {
+          _cbProcessPayload(_readBuffer.data.data() + _payloadStart, _curFrame.payload_length);
+        }
+
+        // prepare for next frame
+        _readBuffer.readOfs += _curFrame.payload_length;
+        _readState = ReadState::ReadHeader;
+
+        // if we've processed all the bytes in the buffer, reset the buffer pointers
+        if (_readBuffer.readOfs == _readBuffer.writeOfs)
+        {
+          _readBuffer.readOfs = 0;
+          _readBuffer.writeOfs = 0;
+        }
+
       }
     }
-    DONE:;
   }
+DONE:;
 }
 
 //------------------------------------------------------------------------------
 void WebsocketClient::Disconnect()
 {
-
+  _connected = false;
 }
 
 //------------------------------------------------------------------------------
-void WebsocketClient::SendWebsocketFrame(const u8* buf, int len)
+int WebsocketClient::SendWebsocketFrame(const u8* buf, int len)
 {
-  if (!_sockfd)
-    return;
-
   u8 header[10];
   size_t headerLen = make_websocket_header(header, WEBBY_WS_OP_BINARY_FRAME, len, 1);
-  send(_sockfd, (const char*)header, (int)headerLen, 0);
-  send(_sockfd, (const char*)buf, len, 0);
+  SetBlockingIo(true);
+
+  int res = send(_sockfd, (const char*)header, (int)headerLen, 0);
+  if (res > 0)
+  {
+    res = send(_sockfd, (const char*)buf, len, 0);
+  }
+
+  SetBlockingIo(false);
+
+  if (res == SOCKET_ERROR)
+    Disconnect();
+
+  return res;
 }
 
 //------------------------------------------------------------------------------
@@ -290,4 +338,11 @@ void WebsocketClient::SetCallbacks(
 {
   _cbProcessPayload = cbPayload;
   _cbConnected = cbConnected;
+}
+
+//------------------------------------------------------------------------------
+void WebsocketClient::SetBlockingIo(bool blocking)
+{
+  u_long v = !blocking;
+  ioctlsocket(_sockfd, FIONBIO, &v);
 }

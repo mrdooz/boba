@@ -253,6 +253,10 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
     {
       _selectedRows.CurRow()->OnMouseButtonPressed(event);
     }
+    else
+    {
+      int a = 10;
+    }
 
     if (_selectedRow)
     {

@@ -44,7 +44,8 @@ namespace boba
     void Process();
     void Disconnect();
 
-    void SendWebsocketFrame(const u8* buf, int len);
+    int SendWebsocketFrame(const u8* buf, int len);
+    void SetBlockingIo(bool blocking);
 
     fnProcessPayload _cbProcessPayload;
     fnConnectedCallback _cbConnected;
@@ -56,5 +57,9 @@ namespace boba
     u32 _payloadStart;
     string _host;
     string _serviceName;
+    TimeStamp _lastPing;
+    TimeStamp _lastReconnect;
+    bool _connected;
+    struct addrinfo* _addrinfo;
   };
 }
