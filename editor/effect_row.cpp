@@ -162,10 +162,8 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
 
   if (!_flags.IsSet(EffectRow::RowFlagsF::Expanded))
   {
-    // draw expanded indicator
-
-    // y increases downwards
     const Style* s = STYLE_FACTORY.GetStyle("effect_icon_collapsed_color");
+    // y increases downwards
     tri.append(sf::Vertex(Vector2f(left+5, y+5), s->fillColor));
     tri.append(sf::Vertex(Vector2f(left+5, y+15), s->fillColor));
     tri.append(sf::Vertex(Vector2f(left+15, y+10), s->fillColor));
@@ -173,7 +171,7 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
   }
   else
   {
-    // y increases downwards
+    // Row is expanded, so draw the Vars and children
     const Style* s = STYLE_FACTORY.GetStyle("effect_icon_expanded_color");
     tri.append(sf::Vertex(Vector2f(left+5, y+5), s->fillColor));
     tri.append(sf::Vertex(Vector2f(left+15, y+5), s->fillColor));
@@ -296,7 +294,7 @@ void EffectRowNoise::DrawVars(RenderTexture& texture, bool drawKeyframes)
       "z: "
   };
 
-  const auto& fnStyle = [this, editingStyle, normalStyle, v](int curIdx){
+  const auto& fnStyle = [this, editingStyle, normalStyle, &v](int curIdx){
       if (curIdx == _editingIdx)
       {
         _text.setString(to_string("%s%s", suffix[curIdx], _curEdit.c_str()).c_str());
@@ -311,17 +309,13 @@ void EffectRowNoise::DrawVars(RenderTexture& texture, bool drawKeyframes)
       }
   };
 
-  fnStyle(0);
-  _text.setPosition(_rect->_shape.getPosition() + Vector2f(20 + _level * 15, h*1));
-  texture.draw(_text);
-
-  fnStyle(1);
-  _text.setPosition(_rect->_shape.getPosition() + Vector2f(20 + _level * 15, h*2));
-  texture.draw(_text);
-
-  fnStyle(2);
-  _text.setPosition(_rect->_shape.getPosition() + Vector2f(20 + _level * 15, h*3));
-  texture.draw(_text);
+  // draw the vars
+  for (u32 i = 0; i < 3; ++i)
+  {
+    fnStyle(i);
+    _text.setPosition(_rect->_shape.getPosition() + Vector2f(20 + _level * 15, h*(i+1)));
+    texture.draw(_text);
+  }
 
   if (drawKeyframes)
   {

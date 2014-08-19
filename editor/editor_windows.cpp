@@ -81,36 +81,30 @@ bool TimelineWindow::Init()
   _statusBar->_shape.setPosition(0, windowSize.y - settings.status_bar_height());
   _statusBar->_shape.setSize(Vector2f(windowSize.x, settings.status_bar_height()));
 
-#if 0
+  // add temporary effect rows until we get the websocket update
   // create the effect rows
-  const Plexus& p = EDITOR._plexus;
 
+  string str;
   for (int i = 0; i < 5; ++i)
   {
     EffectRow* parent = new EffectRowPlexus(_font, "PLEXUS");
     _effectRows.push_back(parent);
-    curY += rowHeight;
 
-    for (const TextPath& t : p.textPaths)
-    {
-      string str = to_string("TextPath: %s", t.text.c_str());
-      parent->_children.push_back(new EffectRowTextPath(_font, str, parent));
-      curY += rowHeight;
-    }
+    str = to_string("TextPath: %s", "test");
+    parent->_children.push_back(new EffectRowTextPath(_font, str, parent));
 
-    for (const NoiseEffector& e : p.noiseEffectors)
-    {
-      string str = to_string("Noise (%s)",
-        e.applyTo == NoiseEffector::ApplyTo::Position ? "POS" : "SCALE");
-      EffectRowNoise* n = new EffectRowNoise(_font, str, parent);
-      n->_effector = e;
-      parent->_children.push_back(n);
-      curY += rowHeight;
-    }
+    NoiseEffector e;
+    e.applyTo = NoiseEffector::ApplyTo::Position;
+
+    str = to_string("Noise (%s)", e.applyTo == NoiseEffector::ApplyTo::Position ? "POS" : "SCALE");
+    EffectRowNoise* n = new EffectRowNoise(_font, str, parent);
+    n->_effector = e;
+    parent->_children.push_back(n);
+
   }
 
   RecalcEffecRows();
-#endif
+
   return true;
 }
 
