@@ -96,6 +96,19 @@ bool TimelineWindow::Init()
 
     str = to_string("Noise (%s)", e.applyTo == NoiseEffector::ApplyTo::Position ? "POS" : "SCALE");
     EffectRowNoise* n = new EffectRowNoise(_font, str, parent);
+    e.displacement.x.type = 1;
+    e.displacement.y.type = 1;
+    e.displacement.z.type = 1;
+    u32 t = 0;
+    for (u32 j = 0; j < 10; ++j)
+    {
+      e.displacement.x.keyframe.push_back({ t, -10.0f + 10.0f * rand() / RAND_MAX });
+      t += 250;
+      e.displacement.y.keyframe.push_back({ t, -10.0f + 10.0f * rand() / RAND_MAX });
+      t += 250;
+      e.displacement.z.keyframe.push_back({ t, -10.0f + 10.0f * rand() / RAND_MAX });
+      t += 250;
+    }
     n->_effector = e;
     parent->_children.push_back(n);
   }

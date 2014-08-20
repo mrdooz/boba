@@ -76,7 +76,7 @@ namespace editor
 
     if (time_ms >= keyframes.back().time)
     {
-      *idxLower = keyframes.size() - 1;
+      *idxLower = (u32)keyframes.size() - 1;
       return false;
     }
 

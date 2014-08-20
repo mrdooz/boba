@@ -1,7 +1,6 @@
 #include "effect_row.hpp"
 #include "editor_windows.hpp"
 #include "editor.hpp"
-#import "flags.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -19,6 +18,9 @@ RowVar::RowVar(
 {
   _text.setFont(font);
   _text.setCharacterSize(16);
+
+  _keyframeRect = STYLE_FACTORY.CreateStyledRectangle("keyframe_style");
+  _keyframeRect->_shape.setSize(Vector2f(5, 5));
 }
 
 //----------------------------------------------------------------------------------
@@ -32,11 +34,24 @@ void RowVar::DrawKeyframes(RenderTexture& texture)
   VertexArray curLine(sf::Lines);
   int x = settings.effect_view_width();
   int w = windowSize.x - x;
-  int y = _bounds.top + h / 0.5f;
+  int y = _bounds.top + h / 2;
 
   curLine.append(sf::Vertex(Vector2f(x, y), Color::White));
   curLine.append(sf::Vertex(Vector2f(x + w, y), Color::White));
   texture.draw(curLine);
+
+  for (const FloatKeyframe& keyframe : _anim->keyframe)
+  {
+    ApplyStyle(STYLE_FACTORY.GetStyle("keyframe_style"), &_keyframeRect->_shape);
+
+    int x = TimelineWindow::_instance->TimeToPixel(milliseconds(keyframe.time));
+    if (x < windowSize.x)
+    {
+      _keyframeRect->_shape.setPosition(x - 2.5f, y - 2.5f);
+      texture.draw(_keyframeRect->_shape);
+    }
+  }
+
 }
 
 //----------------------------------------------------------------------------------

@@ -29,6 +29,7 @@ namespace editor
     string _name;
     FloatAnim* _anim;
     VarFlags _flags;
+    StyledRectangle*_keyframeRect;
   };
 
   //----------------------------------------------------------------------------------
@@ -75,7 +76,7 @@ namespace editor
 
     virtual bool ToProtocol(google::protobuf::Message* msg) const { return true; }
     virtual bool FromProtocol(const google::protobuf::Message& msg) { return true; }
-    u32 NumVars() const { return _vars.size(); }
+    u32 NumVars() const { return (u32)_vars.size(); }
 
     string _str;
     RowFlags _flags;
