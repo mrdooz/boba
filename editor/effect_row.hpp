@@ -7,12 +7,37 @@ namespace editor
   struct StyledRectangle;
 
   //----------------------------------------------------------------------------------
+  struct RowVar
+  {
+    RowVar(const Font& font, const string& name, FloatAnim* anim);
+
+    struct VarFlagsF
+    {
+      enum Enum : u8 { Selected = 1 << 0, Editing = 1 << 1, Animating = 1 << 2 };
+      struct Bits { u8 selected : 1; u8 editing : 1; u8 animating : 1; };
+    };
+
+    typedef Flags<VarFlagsF> VarFlags;
+
+    void Draw(RenderTexture& texture, const Vector2f& pos);
+    void DrawKeyframes(RenderTexture& texture);
+
+    Text _text;
+    Font _font;
+    FloatRect _bounds;
+
+    string _name;
+    FloatAnim* _anim;
+    VarFlags _flags;
+  };
+
+  //----------------------------------------------------------------------------------
   struct EffectRow
   {
     struct RowFlagsF
     {
       enum Enum { Expanded = 1 << 0, Selected = 1 << 1 };
-      struct Bits { u32 expanded : 1; u32 selected; };
+      struct Bits { u32 expanded : 1; u32 selected : 1; };
     };
 
     typedef Flags<RowFlagsF> RowFlags;
@@ -24,11 +49,11 @@ namespace editor
     virtual ~EffectRow();
 
     void Draw(RenderTexture& texture, bool drawKeyframes);
-    static void Flatten(EffectRow* cur, vector<EffectRow*>* res);
-    static void Reposition(EffectRow* cur, float curY, float rowHeight);
-    static float RowHeight(EffectRow* cur, float rowHeight);
+    void Flatten(vector<EffectRow*>* res);
+    void Reposition(float curY, float rowHeight);
+    float RowHeight(float rowHeight);
     virtual void DrawVars(RenderTexture& texture, bool drawKeyframes) {}
-    virtual u32 NumVars() { return 0; }
+
     virtual void BeginEditVars(float x, float y) {}
     virtual void UpdateEditVar(Keyboard::Key key) {}
     virtual void EndEditVars(bool commit) {}
@@ -50,6 +75,7 @@ namespace editor
 
     virtual bool ToProtocol(google::protobuf::Message* msg) const { return true; }
     virtual bool FromProtocol(const google::protobuf::Message& msg) { return true; }
+    u32 NumVars() const { return _vars.size(); }
 
     string _str;
     RowFlags _flags;
@@ -57,12 +83,13 @@ namespace editor
     StyledRectangle* _rect;
     vector<EffectRow*> _children;
     Text _text;
+    Font _font;
     int _level;
     FloatRect _expandRect;
     FloatRect _varEditRect;
     StyledRectangle*_keyframeRect;
-    Font _font;
     u32 _id;
+    vector<RowVar> _vars;
   };
 
 
@@ -105,7 +132,6 @@ namespace editor
         EffectRow* parent = nullptr);
 
     virtual void DrawVars(RenderTexture& texture, bool drawKeyframes);
-    virtual u32 NumVars();
     virtual void BeginEditVars(float x, float y);
     virtual void EndEditVars(bool commit);
     virtual void UpdateEditVar(Keyboard::Key key);

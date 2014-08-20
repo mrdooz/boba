@@ -20,6 +20,8 @@ namespace editor
   struct Vector2;
   struct Vector3;
   struct Vector4;
+  struct FloatKeyframe;
+  struct FloatAnim;
   struct Vector3Keyframe;
   struct Vector3Anim;
   struct Settings;
@@ -29,8 +31,13 @@ namespace editor
   struct EffectSettings;
   struct Plexus;
   struct TextPath;
+  struct Displacement;
   struct NoiseEffector;
 
+  FloatKeyframe FromProtocol(const common::protocol::FloatKeyframe& p);
+  void ToProtocol(const FloatKeyframe& v, common::protocol::FloatKeyframe* p);
+  FloatAnim FromProtocol(const common::protocol::FloatAnim& p);
+  void ToProtocol(const FloatAnim& v, common::protocol::FloatAnim* p);
   Vector3Keyframe FromProtocol(const common::protocol::Vector3Keyframe& p);
   void ToProtocol(const Vector3Keyframe& v, common::protocol::Vector3Keyframe* p);
   Vector3Anim FromProtocol(const common::protocol::Vector3Anim& p);
@@ -49,6 +56,8 @@ namespace editor
   void ToProtocol(const Plexus& v, effect::protocol::plexus::Plexus* p);
   TextPath FromProtocol(const effect::protocol::plexus::TextPath& p);
   void ToProtocol(const TextPath& v, effect::protocol::plexus::TextPath* p);
+  Displacement FromProtocol(const effect::protocol::plexus::Displacement& p);
+  void ToProtocol(const Displacement& v, effect::protocol::plexus::Displacement* p);
   NoiseEffector FromProtocol(const effect::protocol::plexus::NoiseEffector& p);
   void ToProtocol(const NoiseEffector& v, effect::protocol::plexus::NoiseEffector* p);
   
@@ -63,6 +72,16 @@ namespace editor
     return res;
   }
   
+  struct FloatKeyframe
+  {
+    uint32_t time;
+    float value;
+  };
+  struct FloatAnim
+  {
+    uint32_t type;
+    vector<FloatKeyframe> keyframe;
+  };
   struct Vector3Keyframe
   {
     uint32_t time;
@@ -71,7 +90,7 @@ namespace editor
   struct Vector3Anim
   {
     uint32_t type;
-    vector<Vector3Keyframe> keyframes;
+    vector<Vector3Keyframe> keyframe;
   };
   struct Settings
   {
@@ -136,6 +155,12 @@ namespace editor
   {
     string text;
   };
+  struct Displacement
+  {
+    FloatAnim x;
+    FloatAnim y;
+    FloatAnim z;
+  };
   struct NoiseEffector
   {
     enum class ApplyTo
@@ -145,7 +170,7 @@ namespace editor
     };
 
     NoiseEffector::ApplyTo applyTo;
-    Vector3Anim displacement;
+    Displacement displacement;
   };
   
 
@@ -175,6 +200,37 @@ namespace editor
   }
 
 
+  inline FloatKeyframe FromProtocol(const common::protocol::FloatKeyframe& p)
+  {
+    FloatKeyframe res;
+    res.time = p.time();
+    res.value = p.value();
+    return res;
+  }
+
+  inline void ToProtocol(const FloatKeyframe& v, common::protocol::FloatKeyframe* p)
+  {
+    p->set_time(v.time);
+    p->set_value(v.value);
+  }
+
+
+  inline FloatAnim FromProtocol(const common::protocol::FloatAnim& p)
+  {
+    FloatAnim res;
+    res.type = p.type();
+    res.keyframe = FromProtocolRepeated<FloatKeyframe>(p.keyframe());
+    return res;
+  }
+
+  inline void ToProtocol(const FloatAnim& v, common::protocol::FloatAnim* p)
+  {
+    p->set_type(v.type);
+    for (const auto& x : v.keyframe)
+      ToProtocol(x, p->add_keyframe());
+  }
+
+
   inline Vector3Keyframe FromProtocol(const common::protocol::Vector3Keyframe& p)
   {
     Vector3Keyframe res;
@@ -194,15 +250,15 @@ namespace editor
   {
     Vector3Anim res;
     res.type = p.type();
-    res.keyframes = FromProtocolRepeated<Vector3Keyframe>(p.keyframes());
+    res.keyframe = FromProtocolRepeated<Vector3Keyframe>(p.keyframe());
     return res;
   }
 
   inline void ToProtocol(const Vector3Anim& v, common::protocol::Vector3Anim* p)
   {
     p->set_type(v.type);
-    for (const auto& x : v.keyframes)
-      ToProtocol(x, p->add_keyframes());
+    for (const auto& x : v.keyframe)
+      ToProtocol(x, p->add_keyframe());
   }
 
 
@@ -355,6 +411,23 @@ namespace editor
   inline void ToProtocol(const TextPath& v, effect::protocol::plexus::TextPath* p)
   {
     p->set_text(v.text);
+  }
+
+
+  inline Displacement FromProtocol(const effect::protocol::plexus::Displacement& p)
+  {
+    Displacement res;
+    res.x = FromProtocol(p.x());
+    res.y = FromProtocol(p.y());
+    res.z = FromProtocol(p.z());
+    return res;
+  }
+
+  inline void ToProtocol(const Displacement& v, effect::protocol::plexus::Displacement* p)
+  {
+    ToProtocol(v.x, p->mutable_x());
+    ToProtocol(v.y, p->mutable_y());
+    ToProtocol(v.z, p->mutable_z());
   }
 
 

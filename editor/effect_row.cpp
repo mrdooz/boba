@@ -1,11 +1,63 @@
 #include "effect_row.hpp"
 #include "editor_windows.hpp"
 #include "editor.hpp"
+#import "flags.hpp"
 
 using namespace editor;
 using namespace bristol;
 
 #pragma warning(disable: 4244)
+
+//----------------------------------------------------------------------------------
+RowVar::RowVar(
+    const Font& font,
+    const string& name,
+    FloatAnim* anim)
+    : _font(font)
+    , _name(name)
+    , _anim(anim)
+{
+  _text.setFont(font);
+  _text.setCharacterSize(16);
+}
+
+//----------------------------------------------------------------------------------
+void RowVar::DrawKeyframes(RenderTexture& texture)
+{
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const Vector2f& windowSize = TimelineWindow::_instance->GetSize();
+  float h = settings.effect_row_height();
+
+  // draw the keyframes
+  VertexArray curLine(sf::Lines);
+  int x = settings.effect_view_width();
+  int w = windowSize.x - x;
+  int y = _bounds.top + h / 0.5f;
+
+  curLine.append(sf::Vertex(Vector2f(x, y), Color::White));
+  curLine.append(sf::Vertex(Vector2f(x + w, y), Color::White));
+  texture.draw(curLine);
+}
+
+//----------------------------------------------------------------------------------
+void RowVar::Draw(RenderTexture& texture, const Vector2f& pos)
+{
+  // TODO: draw animated icon
+
+  u32 now = EDITOR.CurTime().total_milliseconds();
+  float v = Interpolate<float>(*_anim, now);
+
+  const Style* style = _flags.IsSet(VarFlagsF::Editing)
+      ? STYLE_FACTORY.GetStyle("var_text_editing")
+      : STYLE_FACTORY.GetStyle("var_text_normal");
+
+  _text.setString(to_string("%s: %.2f", _name.c_str(), v).c_str());
+  _text.setColor(style->fillColor);
+  _text.setStyle(style->fontStyle);
+
+  _text.setPosition(pos);
+  texture.draw(_text);
+}
 
 //----------------------------------------------------------------------------------
 EffectRow::EffectRow(
@@ -14,8 +66,8 @@ EffectRow::EffectRow(
     EffectRow* parent)
     : _str(str)
     , _parent(parent)
-    , _level(0)
     , _font(font)
+    , _level(0)
     , _id(0)
 {
   _rect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
@@ -40,9 +92,9 @@ EffectRow::~EffectRow()
 }
 
 //----------------------------------------------------------------------------------
-void EffectRow::Flatten(EffectRow* cur, vector<EffectRow*>* res)
+void EffectRow::Flatten(vector<EffectRow*>* res)
 {
-  deque<EffectRow*> q({cur});
+  deque<EffectRow*> q({this});
   while (!q.empty())
   {
     EffectRow* cur = q.front();
@@ -55,12 +107,15 @@ void EffectRow::Flatten(EffectRow* cur, vector<EffectRow*>* res)
 }
 
 //----------------------------------------------------------------------------------
-void EffectRow::Reposition(EffectRow* cur, float curY, float rowHeight)
+void EffectRow::Reposition(float curY, float rowHeight)
 {
+  // Set position and size of current and child rows and vars
+  // This will depend on scroll position and row's expanded state
+
   const editor::protocol::Settings& settings = EDITOR.Settings();
   const Vector2f windowSize = TimelineWindow::_instance->GetSize();
 
-  deque<EffectRow*> q({ cur });
+  deque<EffectRow*> q({this});
   while (!q.empty())
   {
     EffectRow* cur = q.front();
@@ -83,24 +138,26 @@ void EffectRow::Reposition(EffectRow* cur, float curY, float rowHeight)
         15,
         15);
 
-    u32 numVars = cur->NumVars();
-    if (numVars > 0)
+    // Set bounds for the vars
+    for (u32 i = 0; i < cur->_vars.size(); ++i)
     {
+      RowVar& var = cur->_vars[i];
       float x = cur->_level * 15 + shape.getPosition().x;
-      cur->_varEditRect = FloatRect(
+      var._bounds = FloatRect(
           x,
-          shape.getPosition().y + 1 * rowHeight,
+          shape.getPosition().y + (i + 1) * rowHeight,
           (settings.effect_view_width() - x) / 2,
-          numVars * rowHeight);
+          rowHeight);
     }
   }
 }
 
 //----------------------------------------------------------------------------------
-float EffectRow::RowHeight(EffectRow* cur, float rowHeight)
+float EffectRow::RowHeight(float rowHeight)
 {
   float res = 0;
-  deque<EffectRow*> q({ cur });
+
+  deque<EffectRow*> q({this});
   while (!q.empty())
   {
     EffectRow* cur = q.front();
@@ -274,6 +331,9 @@ EffectRowNoise::EffectRowNoise(
     , _selectedKeyframe(nullptr)
     , _graphMode(0)
 {
+  _vars.push_back(RowVar(_font, "x", &_effector.displacement.x));
+  _vars.push_back(RowVar(_font, "y", &_effector.displacement.y));
+  _vars.push_back(RowVar(_font, "z", &_effector.displacement.z));
 }
 
 //----------------------------------------------------------------------------------
@@ -283,47 +343,67 @@ void EffectRowNoise::DrawVars(RenderTexture& texture, bool drawKeyframes)
   const editor::protocol::Settings& settings = EDITOR.Settings();
   float h = settings.effect_row_height();
 
-  Vector3f v = Interpolate(_effector.displacement, EDITOR.CurTime().total_milliseconds());
-
-  const Style* editingStyle = STYLE_FACTORY.GetStyle("var_text_editing");
-  const Style* normalStyle = STYLE_FACTORY.GetStyle("var_text_normal");
-
-  static const char* suffix[] = {
-      "x: ",
-      "y: ",
-      "z: "
-  };
-
-  const auto& fnStyle = [this, editingStyle, normalStyle, &v](int curIdx){
-      if (curIdx == _editingIdx)
-      {
-        _text.setString(to_string("%s%s", suffix[curIdx], _curEdit.c_str()).c_str());
-        _text.setColor(editingStyle->fillColor);
-        _text.setStyle(editingStyle->fontStyle);
-      }
-      else
-      {
-        _text.setString(to_string("%s%.2f", suffix[curIdx], *(&v.x + curIdx)).c_str());
-        _text.setColor(normalStyle->fillColor);
-        _text.setStyle(normalStyle->fontStyle);
-      }
-  };
-
-  // draw the vars
-  for (u32 i = 0; i < 3; ++i)
+  for (u32 i = 0; i < _vars.size(); ++i)
   {
-    fnStyle(i);
-    _text.setPosition(_rect->_shape.getPosition() + Vector2f(20 + _level * 15, h*(i+1)));
-    texture.draw(_text);
+    RowVar& var = _vars[i];
+    var.Draw(texture, _rect->_shape.getPosition() + Vector2f(20 + _level * 15, h*(i+1)));
   }
 
   if (drawKeyframes)
   {
-    DrawKeyframes(texture, size);
+    for (u32 i = 0; i < _vars.size(); ++i)
+    {
+      RowVar& var = _vars[i];
+      var.DrawKeyframes(texture);
+    }
   }
 
-  // Reset style
-  fnStyle(-2);
+
+//  u32 now = EDITOR.CurTime().total_milliseconds();
+//  float vx = Interpolate<float>(_effector.displacement.x, now);
+//  float vy = Interpolate<float>(_effector.displacement.y, now);
+//  float vz = Interpolate<float>(_effector.displacement.z, now);
+////  Vector3f v = Interpolate<Vector3f>(_effector.displacement, EDITOR.CurTime().total_milliseconds());
+//
+//  const Style* editingStyle = STYLE_FACTORY.GetStyle("var_text_editing");
+//  const Style* normalStyle = STYLE_FACTORY.GetStyle("var_text_normal");
+//
+//  static const char* suffix[] = {
+//      "x: ",
+//      "y: ",
+//      "z: "
+//  };
+//
+//  const auto& fnStyle = [this, editingStyle, normalStyle](float v, const char* prefix){
+//      if (curIdx == _editingIdx)
+//      {
+//        _text.setString(to_string("%s%s", prefix, _curEdit.c_str()).c_str());
+//        _text.setColor(editingStyle->fillColor);
+//        _text.setStyle(editingStyle->fontStyle);
+//      }
+//      else
+//      {
+//        _text.setString(to_string("%s%.2f", prefix,  v).c_str());
+//        _text.setColor(normalStyle->fillColor);
+//        _text.setStyle(normalStyle->fontStyle);
+//      }
+//  };
+//
+//  // draw the vars
+//  for (u32 i = 0; i < 3; ++i)
+//  {
+//    fnStyle(i);
+//    _text.setPosition(_rect->_shape.getPosition() + Vector2f(20 + _level * 15, h*(i+1)));
+//    texture.draw(_text);
+//  }
+//
+//  if (drawKeyframes)
+//  {
+//    DrawKeyframes(texture, size);
+//  }
+//
+//  // Reset style
+//  fnStyle(-2);
 }
 
 //----------------------------------------------------------------------------------
@@ -346,25 +426,25 @@ void EffectRowNoise::DrawKeyframes(RenderTexture& texture, const Vector2f& size)
   }
   texture.draw(curLine);
 
-  for (u32 i = 0; i < _effector.displacement.keyframes.size(); ++i)
-  {
-    const Vector3Keyframe& keyframe = _effector.displacement.keyframes[i];
-
-    ApplyStyle(STYLE_FACTORY.GetStyle(&keyframe == _selectedKeyframe ?
-        "keyframe_style_selected" : "keyframe_style"), &_keyframeRect->_shape);
-
-    int x = TimelineWindow::_instance->TimeToPixel(milliseconds(keyframe.time));
-    if (x < size.x)
-    {
-      // draw for each var
-      for (u32 j = 0; j < 3; ++j)
-      {
-        int y = shapeY + h * (j+1.5f) - 3;
-        _keyframeRect->_shape.setPosition(x - 3, y);
-        texture.draw(_keyframeRect->_shape);
-      }
-    }
-  }
+//  for (u32 i = 0; i < _effector.displacement.keyframe.size(); ++i)
+//  {
+//    const Vector3Keyframe& keyframe = _effector.displacement.keyframe[i];
+//
+//    ApplyStyle(STYLE_FACTORY.GetStyle(&keyframe == _selectedKeyframe ?
+//        "keyframe_style_selected" : "keyframe_style"), &_keyframeRect->_shape);
+//
+//    int x = TimelineWindow::_instance->TimeToPixel(milliseconds(keyframe.time));
+//    if (x < size.x)
+//    {
+//      // draw for each var
+//      for (u32 j = 0; j < 3; ++j)
+//      {
+//        int y = shapeY + h * (j+1.5f) - 3;
+//        _keyframeRect->_shape.setPosition(x - 3, y);
+//        texture.draw(_keyframeRect->_shape);
+//      }
+//    }
+//  }
 }
 
 //----------------------------------------------------------------------------------
@@ -456,6 +536,7 @@ void EffectRowNoise::VisibleKeyframes(
     bool addBorderPoints,
     vector<pair<Vector2f, Vector3Keyframe*>>* keyframes)
 {
+  #if 0
   const editor::protocol::Settings& settings = EDITOR.Settings();
   float ofs = settings.effect_view_width();
 
@@ -465,23 +546,23 @@ void EffectRowNoise::VisibleKeyframes(
   time_duration minTime = timeline->PixelToTime(0);
   time_duration maxTime = timeline->PixelToTime(size.x);
 
-  Vector3f value0 = Interpolate(_effector.displacement, minTime);
-  Vector3f valueLast = Interpolate(_effector.displacement, maxTime);
+  Vector3f value0 = Interpolate<Vector3f>(_effector.displacement, minTime);
+  Vector3f valueLast = Interpolate<Vector3f>(_effector.displacement, maxTime);
 
   vector<Vector3Keyframe*> validKeyframes;
 
   if (!_selectedKeyframe)
   {
     _minValue = Min(
-        Interpolate(_effector.displacement, minTime),
-        Interpolate(_effector.displacement, maxTime));
+        Interpolate<Vector3f>(_effector.displacement, minTime),
+        Interpolate<Vector3f>(_effector.displacement, maxTime));
 
     _maxValue = Max(
-        Interpolate(_effector.displacement, minTime),
-        Interpolate(_effector.displacement, maxTime));
+        Interpolate<Vector3f>(_effector.displacement, minTime),
+        Interpolate<Vector3f>(_effector.displacement, maxTime));
 
 
-    for (Vector3Keyframe& keyframe : _effector.displacement.keyframes)
+    for (Vector3Keyframe& keyframe : _effector.displacement.keyframe)
     {
       if (keyframe.time < minTime.total_milliseconds())
         continue;
@@ -504,7 +585,7 @@ void EffectRowNoise::VisibleKeyframes(
   }
   else
   {
-    for (Vector3Keyframe& keyframe : _effector.displacement.keyframes)
+    for (Vector3Keyframe& keyframe : _effector.displacement.keyframe)
     {
       if (keyframe.time < minTime.total_milliseconds())
         continue;
@@ -534,7 +615,7 @@ void EffectRowNoise::VisibleKeyframes(
   {
     keyframes->push_back(make_pair(Vector2f(size.x, CalcGraphValue(valueLast)), nullptr));
   }
-
+#endif
 }
 
 //----------------------------------------------------------------------------------
@@ -640,35 +721,32 @@ void EffectRowNoise::DrawGraph(RenderTexture& texture, const Vector2f& size)
 }
 
 //----------------------------------------------------------------------------------
-u32 EffectRowNoise::NumVars()
-{
-  return 3;
-}
-
-//----------------------------------------------------------------------------------
 void EffectRowNoise::BeginEditVars(float x, float y)
 {
+#if 0
   const editor::protocol::Settings& settings = EDITOR.Settings();
   int h = settings.effect_row_height();
   _prevValue = _selectedKeyframe
       ? _selectedKeyframe->value
-      : Interpolate(_effector.displacement, EDITOR.CurTime());
+      : Interpolate<Vector3f>(_effector.displacement, EDITOR.CurTime());
 
   _editingIdx = (y - _rect->_shape.getPosition().y - h) / h;
   assert(_editingIdx >= 0 && _editingIdx <= 2);
 
-  Vector3f v = Interpolate(_effector.displacement, EDITOR.CurTime());
+  Vector3f v = Interpolate<Vector3f>(_effector.displacement, EDITOR.CurTime());
   switch (_editingIdx)
   {
     case 0: _curEdit = to_string("%.2f", v.x); break;
     case 1: _curEdit = to_string("%.2f", v.y); break;
     case 2: _curEdit = to_string("%.2f", v.z); break;
   }
+  #endif
 }
 
 //----------------------------------------------------------------------------------
 void EffectRowNoise::EndEditVars(bool commit)
 {
+#if 0
   if (commit)
   {
     // create a new keyframe at the current position (if one doesn't exist)
@@ -684,6 +762,7 @@ void EffectRowNoise::EndEditVars(bool commit)
   }
 
   _editingIdx = -1;
+ #endif
 }
 
 //----------------------------------------------------------------------------------
@@ -709,14 +788,15 @@ void EffectRowNoise::UpdateEditVar(Keyboard::Key key)
 //----------------------------------------------------------------------------------
 bool EffectRowNoise::KeyframeIntersect(const Vector2f& pt, const Vector2f& size)
 {
+#if 0
   const editor::protocol::Settings& settings = EDITOR.Settings();
 
   float shapeY = _rect->_shape.getPosition().y;
   float h = settings.effect_row_height();
 
-  for (u32 i = 0; i < _effector.displacement.keyframes.size(); ++i)
+  for (u32 i = 0; i < _effector.displacement.keyframe.size(); ++i)
   {
-    Vector3Keyframe& keyframe = _effector.displacement.keyframes[i];
+    Vector3Keyframe& keyframe = _effector.displacement.keyframe[i];
     int x = TimelineWindow::_instance->TimeToPixel(milliseconds(keyframe.time));
     if (x >= size.x)
       continue;
@@ -750,7 +830,7 @@ bool EffectRowNoise::KeyframeIntersect(const Vector2f& pt, const Vector2f& size)
     }
 
   }
-
+#endif
   return false;
 }
 
@@ -766,6 +846,7 @@ void EffectRowNoise::UpdateKeyframe(const time_duration &t)
 //----------------------------------------------------------------------------------
 void EffectRowNoise::BeginKeyframeUpdate(bool copy)
 {
+#if 0
   _copyingKeyframe = copy;
   if (_copyingKeyframe)
   {
@@ -776,6 +857,7 @@ void EffectRowNoise::BeginKeyframeUpdate(bool copy)
         true,
         &_effector.displacement);
   }
+#endif
 }
 
 //----------------------------------------------------------------------------------
@@ -867,6 +949,7 @@ Vector3f EffectRowNoise::UpdateKeyframe(const Vector3f& newValue, const Vector3f
 //----------------------------------------------------------------------------------
 bool EffectRowNoise::OnMouseButtonPressed(const Event &event)
 {
+#if 0
   TimelineWindow* timeline = TimelineWindow::_instance;
 
   int x = (int)(event.mouseButton.x - timeline->GetPosition().x);
@@ -895,11 +978,11 @@ bool EffectRowNoise::OnMouseButtonPressed(const Event &event)
   if (!_selectedKeyframe && Keyboard::isKeyPressed(Keyboard::Key::LShift))
   {
     time_duration t = timeline->PixelToTime(x);
-    Vector3f tmp = Interpolate(_effector.displacement, t);
+    Vector3f tmp = Interpolate<Vector3f>(_effector.displacement, t);
     AddKeyframe(t, UpdateKeyframe(PixelToValue(y), tmp), true, &_effector.displacement);
     timeline->KeyframesModified();
   }
-
+#endif
   return true;
 }
 

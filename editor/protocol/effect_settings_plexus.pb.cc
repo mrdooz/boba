@@ -28,6 +28,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* TextPath_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   TextPath_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Displacement_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Displacement_reflection_ = NULL;
 const ::google::protobuf::Descriptor* NoiseEffector_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   NoiseEffector_reflection_ = NULL;
@@ -73,7 +76,24 @@ void protobuf_AssignDesc_effect_5fsettings_5fplexus_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(TextPath));
-  NoiseEffector_descriptor_ = file->message_type(2);
+  Displacement_descriptor_ = file->message_type(2);
+  static const int Displacement_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Displacement, x_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Displacement, y_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Displacement, z_),
+  };
+  Displacement_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Displacement_descriptor_,
+      Displacement::default_instance_,
+      Displacement_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Displacement, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Displacement, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Displacement));
+  NoiseEffector_descriptor_ = file->message_type(3);
   static const int NoiseEffector_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NoiseEffector, apply_to_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NoiseEffector, displacement_),
@@ -107,6 +127,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     TextPath_descriptor_, &TextPath::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Displacement_descriptor_, &Displacement::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     NoiseEffector_descriptor_, &NoiseEffector::default_instance());
 }
 
@@ -117,6 +139,8 @@ void protobuf_ShutdownFile_effect_5fsettings_5fplexus_2eproto() {
   delete Plexus_reflection_;
   delete TextPath::default_instance_;
   delete TextPath_reflection_;
+  delete Displacement::default_instance_;
+  delete Displacement_reflection_;
   delete NoiseEffector::default_instance_;
   delete NoiseEffector_reflection_;
 }
@@ -134,19 +158,24 @@ void protobuf_AddDesc_effect_5fsettings_5fplexus_2eproto() {
     "\n\ntext_paths\030\001 \003(\0132 .effect.protocol.ple"
     "xus.TextPath\022>\n\017noise_effectors\030\002 \003(\0132%."
     "effect.protocol.plexus.NoiseEffector\"\030\n\010"
-    "TextPath\022\014\n\004text\030\001 \001(\t\"\262\001\n\rNoiseEffector"
-    "\022I\n\010apply_to\030\001 \001(\0162-.effect.protocol.ple"
-    "xus.NoiseEffector.ApplyTo:\010Position\0222\n\014d"
-    "isplacement\030\002 \001(\0132\034.common.protocol.Vect"
-    "or3Anim\"\"\n\007ApplyTo\022\014\n\010Position\020\001\022\t\n\005Scal"
-    "e\020\002", 403);
+    "TextPath\022\014\n\004text\030\001 \001(\t\"\203\001\n\014Displacement\022"
+    "%\n\001x\030\001 \001(\0132\032.common.protocol.FloatAnim\022%"
+    "\n\001y\030\002 \001(\0132\032.common.protocol.FloatAnim\022%\n"
+    "\001z\030\003 \001(\0132\032.common.protocol.FloatAnim\"\272\001\n"
+    "\rNoiseEffector\022I\n\010apply_to\030\001 \001(\0162-.effec"
+    "t.protocol.plexus.NoiseEffector.ApplyTo:"
+    "\010Position\022:\n\014displacement\030\002 \001(\0132$.effect"
+    ".protocol.plexus.Displacement\"\"\n\007ApplyTo"
+    "\022\014\n\010Position\020\001\022\t\n\005Scale\020\002", 545);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "effect_settings_plexus.proto", &protobuf_RegisterTypes);
   Plexus::default_instance_ = new Plexus();
   TextPath::default_instance_ = new TextPath();
+  Displacement::default_instance_ = new Displacement();
   NoiseEffector::default_instance_ = new NoiseEffector();
   Plexus::default_instance_->InitAsDefaultInstance();
   TextPath::default_instance_->InitAsDefaultInstance();
+  Displacement::default_instance_->InitAsDefaultInstance();
   NoiseEffector::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_effect_5fsettings_5fplexus_2eproto);
 }
@@ -628,6 +657,309 @@ void TextPath::Swap(TextPath* other) {
 
 // ===================================================================
 
+#ifndef _MSC_VER
+const int Displacement::kXFieldNumber;
+const int Displacement::kYFieldNumber;
+const int Displacement::kZFieldNumber;
+#endif  // !_MSC_VER
+
+Displacement::Displacement()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void Displacement::InitAsDefaultInstance() {
+  x_ = const_cast< ::common::protocol::FloatAnim*>(&::common::protocol::FloatAnim::default_instance());
+  y_ = const_cast< ::common::protocol::FloatAnim*>(&::common::protocol::FloatAnim::default_instance());
+  z_ = const_cast< ::common::protocol::FloatAnim*>(&::common::protocol::FloatAnim::default_instance());
+}
+
+Displacement::Displacement(const Displacement& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void Displacement::SharedCtor() {
+  _cached_size_ = 0;
+  x_ = NULL;
+  y_ = NULL;
+  z_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Displacement::~Displacement() {
+  SharedDtor();
+}
+
+void Displacement::SharedDtor() {
+  if (this != default_instance_) {
+    delete x_;
+    delete y_;
+    delete z_;
+  }
+}
+
+void Displacement::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Displacement::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Displacement_descriptor_;
+}
+
+const Displacement& Displacement::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_effect_5fsettings_5fplexus_2eproto();
+  return *default_instance_;
+}
+
+Displacement* Displacement::default_instance_ = NULL;
+
+Displacement* Displacement::New() const {
+  return new Displacement;
+}
+
+void Displacement::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_x()) {
+      if (x_ != NULL) x_->::common::protocol::FloatAnim::Clear();
+    }
+    if (has_y()) {
+      if (y_ != NULL) y_->::common::protocol::FloatAnim::Clear();
+    }
+    if (has_z()) {
+      if (z_ != NULL) z_->::common::protocol::FloatAnim::Clear();
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Displacement::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional .common.protocol.FloatAnim x = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_x()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_y;
+        break;
+      }
+
+      // optional .common.protocol.FloatAnim y = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_y:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_y()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(26)) goto parse_z;
+        break;
+      }
+
+      // optional .common.protocol.FloatAnim z = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_z:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_z()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void Displacement::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional .common.protocol.FloatAnim x = 1;
+  if (has_x()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->x(), output);
+  }
+
+  // optional .common.protocol.FloatAnim y = 2;
+  if (has_y()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->y(), output);
+  }
+
+  // optional .common.protocol.FloatAnim z = 3;
+  if (has_z()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, this->z(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* Displacement::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional .common.protocol.FloatAnim x = 1;
+  if (has_x()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->x(), target);
+  }
+
+  // optional .common.protocol.FloatAnim y = 2;
+  if (has_y()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->y(), target);
+  }
+
+  // optional .common.protocol.FloatAnim z = 3;
+  if (has_z()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        3, this->z(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int Displacement::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional .common.protocol.FloatAnim x = 1;
+    if (has_x()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->x());
+    }
+
+    // optional .common.protocol.FloatAnim y = 2;
+    if (has_y()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->y());
+    }
+
+    // optional .common.protocol.FloatAnim z = 3;
+    if (has_z()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->z());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Displacement::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Displacement* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Displacement*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Displacement::MergeFrom(const Displacement& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_x()) {
+      mutable_x()->::common::protocol::FloatAnim::MergeFrom(from.x());
+    }
+    if (from.has_y()) {
+      mutable_y()->::common::protocol::FloatAnim::MergeFrom(from.y());
+    }
+    if (from.has_z()) {
+      mutable_z()->::common::protocol::FloatAnim::MergeFrom(from.z());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Displacement::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Displacement::CopyFrom(const Displacement& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Displacement::IsInitialized() const {
+
+  return true;
+}
+
+void Displacement::Swap(Displacement* other) {
+  if (other != this) {
+    std::swap(x_, other->x_);
+    std::swap(y_, other->y_);
+    std::swap(z_, other->z_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Displacement::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Displacement_descriptor_;
+  metadata.reflection = Displacement_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
 const ::google::protobuf::EnumDescriptor* NoiseEffector_ApplyTo_descriptor() {
   protobuf_AssignDescriptorsOnce();
   return NoiseEffector_ApplyTo_descriptor_;
@@ -660,7 +992,7 @@ NoiseEffector::NoiseEffector()
 }
 
 void NoiseEffector::InitAsDefaultInstance() {
-  displacement_ = const_cast< ::common::protocol::Vector3Anim*>(&::common::protocol::Vector3Anim::default_instance());
+  displacement_ = const_cast< ::effect::protocol::plexus::Displacement*>(&::effect::protocol::plexus::Displacement::default_instance());
 }
 
 NoiseEffector::NoiseEffector(const NoiseEffector& from)
@@ -711,7 +1043,7 @@ void NoiseEffector::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     apply_to_ = 1;
     if (has_displacement()) {
-      if (displacement_ != NULL) displacement_->::common::protocol::Vector3Anim::Clear();
+      if (displacement_ != NULL) displacement_->::effect::protocol::plexus::Displacement::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -744,7 +1076,7 @@ bool NoiseEffector::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Vector3Anim displacement = 2;
+      // optional .effect.protocol.plexus.Displacement displacement = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -782,7 +1114,7 @@ void NoiseEffector::SerializeWithCachedSizes(
       1, this->apply_to(), output);
   }
 
-  // optional .common.protocol.Vector3Anim displacement = 2;
+  // optional .effect.protocol.plexus.Displacement displacement = 2;
   if (has_displacement()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->displacement(), output);
@@ -802,7 +1134,7 @@ void NoiseEffector::SerializeWithCachedSizes(
       1, this->apply_to(), target);
   }
 
-  // optional .common.protocol.Vector3Anim displacement = 2;
+  // optional .effect.protocol.plexus.Displacement displacement = 2;
   if (has_displacement()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -826,7 +1158,7 @@ int NoiseEffector::ByteSize() const {
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->apply_to());
     }
 
-    // optional .common.protocol.Vector3Anim displacement = 2;
+    // optional .effect.protocol.plexus.Displacement displacement = 2;
     if (has_displacement()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -864,7 +1196,7 @@ void NoiseEffector::MergeFrom(const NoiseEffector& from) {
       set_apply_to(from.apply_to());
     }
     if (from.has_displacement()) {
-      mutable_displacement()->::common::protocol::Vector3Anim::MergeFrom(from.displacement());
+      mutable_displacement()->::effect::protocol::plexus::Displacement::MergeFrom(from.displacement());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());

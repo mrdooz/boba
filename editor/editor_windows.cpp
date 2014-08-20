@@ -82,8 +82,6 @@ bool TimelineWindow::Init()
   _statusBar->_shape.setSize(Vector2f(windowSize.x, settings.status_bar_height()));
 
   // add temporary effect rows until we get the websocket update
-  // create the effect rows
-
   string str;
   for (int i = 0; i < 5; ++i)
   {
@@ -100,7 +98,6 @@ bool TimelineWindow::Init()
     EffectRowNoise* n = new EffectRowNoise(_font, str, parent);
     n->_effector = e;
     parent->_children.push_back(n);
-
   }
 
   RecalcEffecRows();
@@ -118,8 +115,8 @@ void TimelineWindow::RecalcEffecRows()
 
   for (EffectRow* row : _effectRows)
   {
-    EffectRow::Reposition(row, curY, rowHeight);
-    curY += EffectRow::RowHeight(row, rowHeight);
+    row->Reposition(curY, rowHeight);
+    curY += row->RowHeight(rowHeight);
   }
 }
 
@@ -188,7 +185,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 
   vector<EffectRow*> effects;
   for (EffectRow* row : _effectRows)
-    EffectRow::Flatten(row, &effects);
+    row->Flatten(&effects);
 
   if (y < (int)settings.ticker_height())
   {
@@ -249,7 +246,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
     }
     else
     {
-      int a = 10;
+//      int a = 10;
     }
 
     if (_selectedRow)
@@ -538,6 +535,9 @@ void TimelineWindow::Reset(const effect::protocol::EffectSettings& settings)
   {
     switch (setting.type())
     {
+      case 0:
+        break;
+
       case 1:
         effect::protocol::plexus::Plexus p;
         const string& str = setting.config_msg();

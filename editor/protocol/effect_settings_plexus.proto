@@ -13,6 +13,13 @@ message TextPath
   optional string text = 1;
 }
 
+message Displacement
+{
+	optional common.protocol.FloatAnim x = 1;
+	optional common.protocol.FloatAnim y = 2;
+	optional common.protocol.FloatAnim z = 3;
+}
+
 message NoiseEffector
 {
   enum ApplyTo {
@@ -20,5 +27,5 @@ message NoiseEffector
     Scale = 2;
   };
   optional ApplyTo apply_to = 1 [default = Position];
-  optional common.protocol.Vector3Anim displacement = 2;
+  optional Displacement displacement = 2;
 }
