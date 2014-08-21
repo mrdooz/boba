@@ -5,6 +5,8 @@
 
 namespace editor
 {
+  struct Style;
+
   void ApplyStyle(const Style* style, RectangleShape* shape);
   void ApplyStyle(const StyleSetting* style, RectangleShape* shape);
 

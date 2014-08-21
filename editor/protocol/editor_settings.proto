@@ -14,15 +14,29 @@ message Settings
 
   optional uint32 effect_height = 30 [default = 40];
   optional uint32 resize_handle = 31 [default = 6];
-  
+
   optional uint32 timeline_zoom_min = 40 [default = 16];
   optional uint32 timeline_zoom_max = 41 [default = 1024];
   optional uint32 timeline_zoom_default = 42 [default = 128];
+
+  optional uint32 keyframe_size = 50 [default = 5];
   
   optional common.protocol.Color4 default_row_color = 100;
   optional common.protocol.Color4 selected_row_color = 101;
   optional common.protocol.Color4 hover_row_color = 102;
   optional common.protocol.Color4 invalid_hover_row_color = 103;
+  optional common.protocol.Color4 default_line_color = 104;
+
+  optional common.protocol.Color4 effect_view_background_color = 130;
+  optional common.protocol.Color4 effect_view_background_color_selected = 131;
+  optional common.protocol.Color4 timeline_view_background_color = 132;
+  optional common.protocol.Color4 effect_line_color = 133;
+
+  optional common.protocol.Color4 keyframe_default_color = 150;
+  optional common.protocol.Color4 keyframe_selected_color = 151;
+
+  optional common.protocol.Color4 var_text_color = 160;
+  optional common.protocol.Color4 var_value_color = 161;
 
   optional common.protocol.Color4 effect_icon_expanded_color = 200;
   optional common.protocol.Color4 effect_icon_collapsed_color = 201;

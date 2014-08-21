@@ -102,15 +102,15 @@ bool TimelineWindow::Init()
     e.displacement.x.type = 1;
     e.displacement.y.type = 1;
     e.displacement.z.type = 1;
-    u32 t = 0;
-    for (u32 j = 0; j < 10; ++j)
+    u32 t = randf(0.f, 500.f);
+    for (u32 j = 0; j < 50; ++j)
     {
-      e.displacement.x.keyframe.push_back({ t, -10.0f + 10.0f * rand() / RAND_MAX });
-      t += 250;
-      e.displacement.y.keyframe.push_back({ t, -10.0f + 10.0f * rand() / RAND_MAX });
-      t += 250;
-      e.displacement.z.keyframe.push_back({ t, -10.0f + 10.0f * rand() / RAND_MAX });
-      t += 250;
+      e.displacement.x.keyframe.push_back({ t, randf(-10.f, 20.f) });
+      t += randf(150.f, 1000.f);
+      e.displacement.y.keyframe.push_back({ t, randf(-10.f, 20.f) });
+      t += randf(150.f, 1000.f);
+      e.displacement.z.keyframe.push_back({ t, randf(-10.f, 20.f) });
+      t += randf(150.f, 1000.f);
     }
     n->_effector = e;
     parent->_children.push_back(n);
@@ -239,6 +239,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   {
     if (row->OnMouseButtonPressed(event))
     {
+      RecalcEffecRows();
       return true;
     }
   }
@@ -546,10 +547,29 @@ time_duration TimelineWindow::AbsPixelToTime(int x) const
 }
 
 //----------------------------------------------------------------------------------
+void TimelineWindow::DrawBackground()
+{
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  float w = settings.effect_view_width();
+
+  RectangleShape s;
+  s.setPosition(0, 0);
+  s.setSize(Vector2f(w, _size.y));
+  s.setFillColor(::FromProtocol(settings.effect_view_background_color()));
+  _texture.draw(s);
+
+  s.setPosition(w, 0);
+  s.setSize(Vector2f(_size.x - w, _size.y));
+  s.setFillColor(::FromProtocol(settings.timeline_view_background_color()));
+  _texture.draw(s);
+}
+
+//----------------------------------------------------------------------------------
 void TimelineWindow::Draw()
 {
   _texture.clear();
 
+  DrawBackground();
   DrawEffects();
   DrawTimeline();
   DrawStatusBar();

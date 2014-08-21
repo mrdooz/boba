@@ -20,7 +20,7 @@ namespace editor
 
     typedef Flags<VarFlagsF> VarFlags;
 
-    void Draw(RenderTexture& texture, const Vector2f& pos);
+    void Draw(RenderTexture& texture);
     void DrawKeyframes(RenderTexture& texture);
 
     bool OnMouseButtonPressed(const Event &event);
@@ -35,6 +35,7 @@ namespace editor
     FloatAnim* _anim;
     VarFlags _flags;
     StyledRect _keyframeRect;
+    u32 _selectedKeyframe;
   };
 
   //----------------------------------------------------------------------------------
@@ -58,7 +59,7 @@ namespace editor
     void Flatten(vector<EffectRow*>* res);
     void Reposition(float curY, float rowHeight);
     float RowHeight(float rowHeight);
-    virtual void DrawVars(RenderTexture& texture, bool drawKeyframes) {}
+    void DrawVars(RenderTexture& texture, bool drawKeyframes);
 
     virtual void BeginEditVars(float x, float y) {}
     virtual void UpdateEditVar(Keyboard::Key key) {}
@@ -138,7 +139,6 @@ namespace editor
         const string& str,
         EffectRow* parent = nullptr);
 
-    virtual void DrawVars(RenderTexture& texture, bool drawKeyframes);
     virtual void BeginEditVars(float x, float y);
     virtual void EndEditVars(bool commit);
     virtual void UpdateEditVar(Keyboard::Key key);
@@ -153,14 +153,11 @@ namespace editor
     virtual void ToggleGraphView(bool value);
     virtual bool NextGraph();
     virtual void DrawGraph(RenderTexture& texture, const Vector2f& size);
-    virtual bool OnMouseMoved(const Event &event);
-    virtual bool OnMouseButtonPressed(const Event &event);
-    virtual bool OnMouseButtonReleased(const Event &event);
 
     virtual bool FromProtocol(const google::protobuf::Message& msg);
     virtual bool ToProtocol(google::protobuf::Message* msg) const;
 
-    void DrawKeyframes(RenderTexture& texture, const Vector2f& size);
+    //void DrawKeyframes(RenderTexture& texture, const Vector2f& size);
 
     void VisibleKeyframes(
         const Vector2f& size,

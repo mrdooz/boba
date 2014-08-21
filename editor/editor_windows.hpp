@@ -142,6 +142,7 @@ namespace editor
     void DrawEffects();
     void DrawTimeline();
     void DrawStatusBar();
+    void DrawBackground();
 
     struct TimelineFlagsF
     {

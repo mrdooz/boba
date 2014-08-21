@@ -81,9 +81,9 @@ style_setting {
 style_setting {
 	id : "keyframe_style"
 	fill_color {
-		r : 255
-		g : 255
-		b : 0
+		r : 174
+		g : 174
+		b : 174
 	}
 	outline_color {
 		r : 20
@@ -96,9 +96,9 @@ style_setting {
 style_setting {
 	id : "keyframe_style_selected"
 	fill_color {
-		r : 255
-		g : 155
-		b : 0
+		r : 217
+		g : 176
+		b : 21
 	}
 	outline_color {
 		r : 20

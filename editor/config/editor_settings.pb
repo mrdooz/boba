@@ -10,6 +10,8 @@ timeline_zoom_min : 2
 timeline_zoom_max : 1024
 timeline_zoom_default : 128
 
+keyframe_size : 7
+
 default_row_color  :
 {
 	r : 40
@@ -41,9 +43,65 @@ effect_icon_expanded_color  :
 	b : 40
 }
 
-effect_icon_collapsed_color  :
+effect_icon_collapsed_color :
 {
 	r : 120
 	g : 120
 	b : 40
+}
+
+effect_view_background_color :
+{
+	r : 64
+	g : 64
+	b : 64
+}
+
+effect_view_background_color_selected :
+{
+	r : 102
+	g : 102
+	b : 102
+}
+  
+timeline_view_background_color :
+{
+	r : 78
+	g : 78
+	b : 78
+}
+
+effect_line_color :
+{
+	r : 54
+	g : 54
+	b : 54
+}
+
+keyframe_default_color :
+{
+	r : 174
+	g : 174
+	b : 174
+}
+
+keyframe_selected_color :
+{
+	r : 217
+	g : 176
+	b : 21
+}
+
+var_text_color :
+{
+	r : 179
+	g : 179
+	b : 179
+}
+
+var_value_color :
+{
+	r : 198
+	g : 145
+	b : 0
 }
