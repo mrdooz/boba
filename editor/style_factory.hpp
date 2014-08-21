@@ -6,31 +6,34 @@
 namespace editor
 {
   void ApplyStyle(const Style* style, RectangleShape* shape);
+  void ApplyStyle(const StyleSetting* style, RectangleShape* shape);
 
-  struct StyledShape
+  struct Style
   {
-    virtual ~StyledShape() {}
-    virtual void UpdateStyle(const Style& style) = 0;
-  };
+    Style(const StyleSetting& s) : _style(s) {}
+    void UpdateStyle(const StyleSetting& style);
 
-  struct StyledRectangle : public StyledShape
-  {
-    StyledRectangle(const Style& style);
-    virtual void UpdateStyle(const Style& style) override;
-
-    RectangleShape _shape;
-    Style _style;
+    StyleSetting _style;
   };
 
   struct StyleFactory
   {
     ~StyleFactory();
     bool Init(const char* config);
-    StyledRectangle* CreateStyledRectangle(const string& id);
-    const Style* GetStyle(const string& id) const;
+    Style* CreateStyle(const string& id);
+    const StyleSetting* GetStyle(const string& id) const;
 
-    unordered_map<string, editor::Style> _styles;
-    unordered_map<string, vector<unique_ptr<StyledShape>>> _ownedShapes;
+    unordered_map<string, editor::StyleSetting> _styles;
+    unordered_map<string, vector<unique_ptr<Style>>> _ownedStyles;
+  };
+
+  struct StyledRect
+  {
+    StyledRect() {}
+    StyledRect(Style* style) : _style(style) {}
+//    void Apply() { ApplyStyle(_style, &_rect); }
+    Style* _style;
+    RectangleShape _rect;
   };
 
 }

@@ -76,13 +76,13 @@ bool TimelineWindow::Init()
 
   const Vector2f& windowSize = GetSize();
 
-  _tickerRect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
-  _tickerRect->_shape.setPosition(width, 0);
-  _tickerRect->_shape.setSize(Vector2f(_size.x - width, settings.ticker_height()));
+  _tickerRect._style = STYLE_FACTORY.CreateStyle("default_row_color");
+  _tickerRect._rect.setPosition(width, 0);
+  _tickerRect._rect.setSize(Vector2f(_size.x - width, settings.ticker_height()));
 
-  _statusBar = STYLE_FACTORY.CreateStyledRectangle("status_bar_style");
-  _statusBar->_shape.setPosition(0, windowSize.y - settings.status_bar_height());
-  _statusBar->_shape.setSize(Vector2f(windowSize.x, settings.status_bar_height()));
+  _statusBar = STYLE_FACTORY.CreateStyle("status_bar_style");
+  _statusBar._rect.setPosition(0, windowSize.y - settings.status_bar_height());
+  _statusBar._rect.setSize(Vector2f(windowSize.x, settings.status_bar_height()));
 
   // add temporary effect rows until we get the websocket update
   string str;
@@ -319,8 +319,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseMoved(const Event& event)
 {
-  Vector2i posModule = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
-  time_duration curTime = PixelToTime(posModule.x);
+//  Vector2i posModule = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
 
   // Check if the timeline is being dragged
   if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
@@ -414,7 +413,7 @@ void TimelineWindow::DrawTimeline()
   time_duration curTime = EDITOR.CurTime();
 
   // draw the ticker
-  _texture.draw(_tickerRect->_shape);
+  _texture.draw(_tickerRect._rect);
 
   VertexArray lines(sf::Lines);
   int x = settings.effect_view_width();
@@ -499,7 +498,7 @@ void TimelineWindow::DrawStatusBar()
   const editor::protocol::Settings& settings = EDITOR.Settings();
 
   // draw the background
-  _texture.draw(_statusBar->_shape);
+  _texture.draw(_statusBar._rect);
 
   Text t;
   t.setFont(_font);

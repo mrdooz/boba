@@ -19,8 +19,8 @@ RowVar::RowVar(
   _text.setFont(font);
   _text.setCharacterSize(16);
 
-  _keyframeRect = STYLE_FACTORY.CreateStyledRectangle("keyframe_style");
-  _keyframeRect->_shape.setSize(Vector2f(5, 5));
+  _keyframeRect._style = STYLE_FACTORY.CreateStyle("keyframe_style");
+  _keyframeRect._rect.setSize(Vector2f(5, 5));
 }
 
 //----------------------------------------------------------------------------------
@@ -40,15 +40,15 @@ void RowVar::DrawKeyframes(RenderTexture& texture)
   curLine.append(sf::Vertex(Vector2f(x + w, y), Color::White));
   texture.draw(curLine);
 
-  ApplyStyle(STYLE_FACTORY.GetStyle("keyframe_style"), &_keyframeRect->_shape);
+  ApplyStyle(STYLE_FACTORY.GetStyle("keyframe_style"), &_keyframeRect._rect);
 
   for (const FloatKeyframe& keyframe : _anim->keyframe)
   {
     int x = TimelineWindow::_instance->TimeToPixel(milliseconds(keyframe.time));
     if (x < windowSize.x)
     {
-      _keyframeRect->_shape.setPosition(x - 2.5f, y - 2.5f);
-      texture.draw(_keyframeRect->_shape);
+      _keyframeRect._rect.setPosition(x - 2.5f, y - 2.5f);
+      texture.draw(_keyframeRect._rect);
     }
   }
 
@@ -62,7 +62,7 @@ void RowVar::Draw(RenderTexture& texture, const Vector2f& pos)
   u32 now = EDITOR.CurTime().total_milliseconds();
   float v = Interpolate<float>(*_anim, now);
 
-  const Style* style = _flags.IsSet(VarFlagsF::Editing)
+  const StyleSetting* style = _flags.IsSet(VarFlagsF::Editing)
       ? STYLE_FACTORY.GetStyle("var_text_editing")
       : STYLE_FACTORY.GetStyle("var_text_normal");
 
@@ -103,9 +103,9 @@ EffectRow::EffectRow(
     , _level(0)
     , _id(0)
 {
-  _rect = STYLE_FACTORY.CreateStyledRectangle("default_row_color");
-  _keyframeRect = STYLE_FACTORY.CreateStyledRectangle("keyframe_style");
-  _keyframeRect->_shape.setSize(Vector2f(6, 6));
+  _rect._style = STYLE_FACTORY.CreateStyle("default_row_color");
+  _keyframeRect._style = STYLE_FACTORY.CreateStyle("keyframe_style");
+  _keyframeRect._rect.setSize(Vector2f(6, 6));
 
   _text.setFont(font);
   _text.setCharacterSize(16);
@@ -154,8 +154,8 @@ void EffectRow::Reposition(float curY, float rowHeight)
     EffectRow* cur = q.front();
     q.pop_front();
 
-    cur->_rect->_shape.setPosition(0, curY);
-    cur->_rect->_shape.setSize(Vector2f(windowSize.x, (1 + cur->NumVars()) * rowHeight));
+    cur->_rect._rect.setPosition(0, curY);
+    cur->_rect._rect.setSize(Vector2f(windowSize.x, (1 + cur->NumVars()) * rowHeight));
     curY += rowHeight;
 
     // If row is expanded, add children
@@ -165,7 +165,7 @@ void EffectRow::Reposition(float curY, float rowHeight)
         q.push_back(c);
     }
 
-    const RectangleShape& shape = cur->_rect->_shape;
+    const RectangleShape& shape = cur->_rect._rect;
 
     cur->_expandRect = FloatRect(
         cur->_level * 15 + shape.getPosition().x,
@@ -240,7 +240,7 @@ bool EffectRow::OnMouseButtonPressed(const Event &event)
     return true;
   }
 
-  if (_rect->_shape.getGlobalBounds().contains(mousePos))
+  if (_rect._rect.getGlobalBounds().contains(mousePos))
   {
     _flags.Toggle(EffectRow::RowFlagsF::Selected);
     return true;
@@ -334,11 +334,11 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
       : settings.default_row_color());
 
   // draw background
-  _rect->_shape.setFillColor(rowCol);
-  Vector2f size = _rect->_shape.getSize();
+  _rect._rect.setFillColor(rowCol);
+  Vector2f size = _rect._rect.getSize();
   Vector2f windowSize = TimelineWindow::_instance->GetSize();
-  _rect->_shape.setSize(Vector2f(drawKeyframes ? windowSize.x : settings.effect_view_width(), size.y));
-  texture.draw(_rect->_shape);
+  _rect._rect.setSize(Vector2f(drawKeyframes ? windowSize.x : settings.effect_view_width(), size.y));
+  texture.draw(_rect._rect);
 
   // fill the background if in graph mode
   if (!drawKeyframes)
@@ -355,18 +355,18 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
 
   // draw text
   _text.setString(_str);
-  _text.setPosition(_rect->_shape.getPosition() + Vector2f(20 + _level * 15, 0) );
+  _text.setPosition(_rect._rect.getPosition() + Vector2f(20 + _level * 15, 0) );
   texture.draw(_text);
 
   // draw expanded indicator
   VertexArray tri(sf::Triangles);
-  float left = _level * 15 + _rect->_shape.getPosition().x;
-  float top = _rect->_shape.getPosition().y;
+  float left = _level * 15 + _rect._rect.getPosition().x;
+  float top = _rect._rect.getPosition().y;
   float y = top;
 
   if (!_flags.IsSet(EffectRow::RowFlagsF::Expanded))
   {
-    const Style* s = STYLE_FACTORY.GetStyle("effect_icon_collapsed_color");
+    const StyleSetting* s = STYLE_FACTORY.GetStyle("effect_icon_collapsed_color");
     // y increases downwards
     tri.append(sf::Vertex(Vector2f(left+5, y+5), s->fillColor));
     tri.append(sf::Vertex(Vector2f(left+5, y+15), s->fillColor));
@@ -376,7 +376,7 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
   else
   {
     // Row is expanded, so draw the Vars and children
-    const Style* s = STYLE_FACTORY.GetStyle("effect_icon_expanded_color");
+    const StyleSetting* s = STYLE_FACTORY.GetStyle("effect_icon_expanded_color");
     tri.append(sf::Vertex(Vector2f(left+5, y+5), s->fillColor));
     tri.append(sf::Vertex(Vector2f(left+15, y+5), s->fillColor));
     tri.append(sf::Vertex(Vector2f(left+10, y+15), s->fillColor));
@@ -488,14 +488,14 @@ EffectRowNoise::EffectRowNoise(
 //----------------------------------------------------------------------------------
 void EffectRowNoise::DrawVars(RenderTexture& texture, bool drawKeyframes)
 {
-  Vector2f size = TimelineWindow::_instance->GetSize();
+//  Vector2f size = TimelineWindow::_instance->GetSize();
   const editor::protocol::Settings& settings = EDITOR.Settings();
   float h = settings.effect_row_height();
 
   for (u32 i = 0; i < _vars.size(); ++i)
   {
     RowVar& var = _vars[i];
-    var.Draw(texture, _rect->_shape.getPosition() + Vector2f(20 + _level * 15, h*(i+1)));
+    var.Draw(texture, _rect._rect.getPosition() + Vector2f(20 + _level * 15, h*(i+1)));
   }
 
   if (drawKeyframes)
@@ -565,7 +565,7 @@ void EffectRowNoise::DrawKeyframes(RenderTexture& texture, const Vector2f& size)
   VertexArray curLine(sf::Lines);
   int w = size.x - settings.effect_view_width();
   int x = settings.effect_view_width();
-  float shapeY = _rect->_shape.getPosition().y;
+  float shapeY = _rect._rect.getPosition().y;
 
   for (int i = 0; i < 3; ++i)
   {
@@ -861,8 +861,8 @@ void EffectRowNoise::DrawGraph(RenderTexture& texture, const Vector2f& size)
     // if the point corresponds to a proper keyframe, draw the keyframe
     if (pp.second)
     {
-      _keyframeRect->_shape.setPosition(p.x - 3, p.y - 3);
-      texture.draw(_keyframeRect->_shape);
+      _keyframeRect._rect.setPosition(p.x - 3, p.y - 3);
+      texture.draw(_keyframeRect._rect);
     }
   }
 

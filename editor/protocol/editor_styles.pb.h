@@ -36,19 +36,19 @@ void  protobuf_AddDesc_editor_5fstyles_2eproto();
 void protobuf_AssignDesc_editor_5fstyles_2eproto();
 void protobuf_ShutdownFile_editor_5fstyles_2eproto();
 
-class Style;
-class Styles;
+class StyleSetting;
+class StyleSettings;
 
 // ===================================================================
 
-class Style : public ::google::protobuf::Message {
+class StyleSetting : public ::google::protobuf::Message {
  public:
-  Style();
-  virtual ~Style();
+  StyleSetting();
+  virtual ~StyleSetting();
 
-  Style(const Style& from);
+  StyleSetting(const StyleSetting& from);
 
-  inline Style& operator=(const Style& from) {
+  inline StyleSetting& operator=(const StyleSetting& from) {
     CopyFrom(from);
     return *this;
   }
@@ -62,17 +62,17 @@ class Style : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Style& default_instance();
+  static const StyleSetting& default_instance();
 
-  void Swap(Style* other);
+  void Swap(StyleSetting* other);
 
   // implements Message ----------------------------------------------
 
-  Style* New() const;
+  StyleSetting* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Style& from);
-  void MergeFrom(const Style& from);
+  void CopyFrom(const StyleSetting& from);
+  void MergeFrom(const StyleSetting& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -139,7 +139,7 @@ class Style : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 font_style() const;
   inline void set_font_style(::google::protobuf::uint32 value);
 
-  // @@protoc_insertion_point(class_scope:editor.protocol.Style)
+  // @@protoc_insertion_point(class_scope:editor.protocol.StyleSetting)
  private:
   inline void set_has_id();
   inline void clear_has_id();
@@ -168,18 +168,18 @@ class Style : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_editor_5fstyles_2eproto();
 
   void InitAsDefaultInstance();
-  static Style* default_instance_;
+  static StyleSetting* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class Styles : public ::google::protobuf::Message {
+class StyleSettings : public ::google::protobuf::Message {
  public:
-  Styles();
-  virtual ~Styles();
+  StyleSettings();
+  virtual ~StyleSettings();
 
-  Styles(const Styles& from);
+  StyleSettings(const StyleSettings& from);
 
-  inline Styles& operator=(const Styles& from) {
+  inline StyleSettings& operator=(const StyleSettings& from) {
     CopyFrom(from);
     return *this;
   }
@@ -193,17 +193,17 @@ class Styles : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Styles& default_instance();
+  static const StyleSettings& default_instance();
 
-  void Swap(Styles* other);
+  void Swap(StyleSettings* other);
 
   // implements Message ----------------------------------------------
 
-  Styles* New() const;
+  StyleSettings* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Styles& from);
-  void MergeFrom(const Styles& from);
+  void CopyFrom(const StyleSettings& from);
+  void MergeFrom(const StyleSettings& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -226,24 +226,24 @@ class Styles : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .editor.protocol.Style styles = 1;
-  inline int styles_size() const;
-  inline void clear_styles();
-  static const int kStylesFieldNumber = 1;
-  inline const ::editor::protocol::Style& styles(int index) const;
-  inline ::editor::protocol::Style* mutable_styles(int index);
-  inline ::editor::protocol::Style* add_styles();
-  inline const ::google::protobuf::RepeatedPtrField< ::editor::protocol::Style >&
-      styles() const;
-  inline ::google::protobuf::RepeatedPtrField< ::editor::protocol::Style >*
-      mutable_styles();
+  // repeated .editor.protocol.StyleSetting style_setting = 1;
+  inline int style_setting_size() const;
+  inline void clear_style_setting();
+  static const int kStyleSettingFieldNumber = 1;
+  inline const ::editor::protocol::StyleSetting& style_setting(int index) const;
+  inline ::editor::protocol::StyleSetting* mutable_style_setting(int index);
+  inline ::editor::protocol::StyleSetting* add_style_setting();
+  inline const ::google::protobuf::RepeatedPtrField< ::editor::protocol::StyleSetting >&
+      style_setting() const;
+  inline ::google::protobuf::RepeatedPtrField< ::editor::protocol::StyleSetting >*
+      mutable_style_setting();
 
-  // @@protoc_insertion_point(class_scope:editor.protocol.Styles)
+  // @@protoc_insertion_point(class_scope:editor.protocol.StyleSettings)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::editor::protocol::Style > styles_;
+  ::google::protobuf::RepeatedPtrField< ::editor::protocol::StyleSetting > style_setting_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -253,63 +253,63 @@ class Styles : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_editor_5fstyles_2eproto();
 
   void InitAsDefaultInstance();
-  static Styles* default_instance_;
+  static StyleSettings* default_instance_;
 };
 // ===================================================================
 
 
 // ===================================================================
 
-// Style
+// StyleSetting
 
 // optional string id = 1;
-inline bool Style::has_id() const {
+inline bool StyleSetting::has_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Style::set_has_id() {
+inline void StyleSetting::set_has_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Style::clear_has_id() {
+inline void StyleSetting::clear_has_id() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Style::clear_id() {
+inline void StyleSetting::clear_id() {
   if (id_ != &::google::protobuf::internal::kEmptyString) {
     id_->clear();
   }
   clear_has_id();
 }
-inline const ::std::string& Style::id() const {
+inline const ::std::string& StyleSetting::id() const {
   return *id_;
 }
-inline void Style::set_id(const ::std::string& value) {
+inline void StyleSetting::set_id(const ::std::string& value) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   id_->assign(value);
 }
-inline void Style::set_id(const char* value) {
+inline void StyleSetting::set_id(const char* value) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   id_->assign(value);
 }
-inline void Style::set_id(const char* value, size_t size) {
+inline void StyleSetting::set_id(const char* value, size_t size) {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   id_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* Style::mutable_id() {
+inline ::std::string* StyleSetting::mutable_id() {
   set_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     id_ = new ::std::string;
   }
   return id_;
 }
-inline ::std::string* Style::release_id() {
+inline ::std::string* StyleSetting::release_id() {
   clear_has_id();
   if (id_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -319,7 +319,7 @@ inline ::std::string* Style::release_id() {
     return temp;
   }
 }
-inline void Style::set_allocated_id(::std::string* id) {
+inline void StyleSetting::set_allocated_id(::std::string* id) {
   if (id_ != &::google::protobuf::internal::kEmptyString) {
     delete id_;
   }
@@ -333,34 +333,34 @@ inline void Style::set_allocated_id(::std::string* id) {
 }
 
 // optional .common.protocol.Color4 fill_color = 2;
-inline bool Style::has_fill_color() const {
+inline bool StyleSetting::has_fill_color() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Style::set_has_fill_color() {
+inline void StyleSetting::set_has_fill_color() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Style::clear_has_fill_color() {
+inline void StyleSetting::clear_has_fill_color() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void Style::clear_fill_color() {
+inline void StyleSetting::clear_fill_color() {
   if (fill_color_ != NULL) fill_color_->::common::protocol::Color4::Clear();
   clear_has_fill_color();
 }
-inline const ::common::protocol::Color4& Style::fill_color() const {
+inline const ::common::protocol::Color4& StyleSetting::fill_color() const {
   return fill_color_ != NULL ? *fill_color_ : *default_instance_->fill_color_;
 }
-inline ::common::protocol::Color4* Style::mutable_fill_color() {
+inline ::common::protocol::Color4* StyleSetting::mutable_fill_color() {
   set_has_fill_color();
   if (fill_color_ == NULL) fill_color_ = new ::common::protocol::Color4;
   return fill_color_;
 }
-inline ::common::protocol::Color4* Style::release_fill_color() {
+inline ::common::protocol::Color4* StyleSetting::release_fill_color() {
   clear_has_fill_color();
   ::common::protocol::Color4* temp = fill_color_;
   fill_color_ = NULL;
   return temp;
 }
-inline void Style::set_allocated_fill_color(::common::protocol::Color4* fill_color) {
+inline void StyleSetting::set_allocated_fill_color(::common::protocol::Color4* fill_color) {
   delete fill_color_;
   fill_color_ = fill_color;
   if (fill_color) {
@@ -371,34 +371,34 @@ inline void Style::set_allocated_fill_color(::common::protocol::Color4* fill_col
 }
 
 // optional .common.protocol.Color4 outline_color = 3;
-inline bool Style::has_outline_color() const {
+inline bool StyleSetting::has_outline_color() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void Style::set_has_outline_color() {
+inline void StyleSetting::set_has_outline_color() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void Style::clear_has_outline_color() {
+inline void StyleSetting::clear_has_outline_color() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void Style::clear_outline_color() {
+inline void StyleSetting::clear_outline_color() {
   if (outline_color_ != NULL) outline_color_->::common::protocol::Color4::Clear();
   clear_has_outline_color();
 }
-inline const ::common::protocol::Color4& Style::outline_color() const {
+inline const ::common::protocol::Color4& StyleSetting::outline_color() const {
   return outline_color_ != NULL ? *outline_color_ : *default_instance_->outline_color_;
 }
-inline ::common::protocol::Color4* Style::mutable_outline_color() {
+inline ::common::protocol::Color4* StyleSetting::mutable_outline_color() {
   set_has_outline_color();
   if (outline_color_ == NULL) outline_color_ = new ::common::protocol::Color4;
   return outline_color_;
 }
-inline ::common::protocol::Color4* Style::release_outline_color() {
+inline ::common::protocol::Color4* StyleSetting::release_outline_color() {
   clear_has_outline_color();
   ::common::protocol::Color4* temp = outline_color_;
   outline_color_ = NULL;
   return temp;
 }
-inline void Style::set_allocated_outline_color(::common::protocol::Color4* outline_color) {
+inline void StyleSetting::set_allocated_outline_color(::common::protocol::Color4* outline_color) {
   delete outline_color_;
   outline_color_ = outline_color;
   if (outline_color) {
@@ -409,76 +409,76 @@ inline void Style::set_allocated_outline_color(::common::protocol::Color4* outli
 }
 
 // optional float outline_thickness = 4 [default = 0];
-inline bool Style::has_outline_thickness() const {
+inline bool StyleSetting::has_outline_thickness() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void Style::set_has_outline_thickness() {
+inline void StyleSetting::set_has_outline_thickness() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void Style::clear_has_outline_thickness() {
+inline void StyleSetting::clear_has_outline_thickness() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void Style::clear_outline_thickness() {
+inline void StyleSetting::clear_outline_thickness() {
   outline_thickness_ = 0;
   clear_has_outline_thickness();
 }
-inline float Style::outline_thickness() const {
+inline float StyleSetting::outline_thickness() const {
   return outline_thickness_;
 }
-inline void Style::set_outline_thickness(float value) {
+inline void StyleSetting::set_outline_thickness(float value) {
   set_has_outline_thickness();
   outline_thickness_ = value;
 }
 
 // optional uint32 font_style = 5;
-inline bool Style::has_font_style() const {
+inline bool StyleSetting::has_font_style() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void Style::set_has_font_style() {
+inline void StyleSetting::set_has_font_style() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void Style::clear_has_font_style() {
+inline void StyleSetting::clear_has_font_style() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void Style::clear_font_style() {
+inline void StyleSetting::clear_font_style() {
   font_style_ = 0u;
   clear_has_font_style();
 }
-inline ::google::protobuf::uint32 Style::font_style() const {
+inline ::google::protobuf::uint32 StyleSetting::font_style() const {
   return font_style_;
 }
-inline void Style::set_font_style(::google::protobuf::uint32 value) {
+inline void StyleSetting::set_font_style(::google::protobuf::uint32 value) {
   set_has_font_style();
   font_style_ = value;
 }
 
 // -------------------------------------------------------------------
 
-// Styles
+// StyleSettings
 
-// repeated .editor.protocol.Style styles = 1;
-inline int Styles::styles_size() const {
-  return styles_.size();
+// repeated .editor.protocol.StyleSetting style_setting = 1;
+inline int StyleSettings::style_setting_size() const {
+  return style_setting_.size();
 }
-inline void Styles::clear_styles() {
-  styles_.Clear();
+inline void StyleSettings::clear_style_setting() {
+  style_setting_.Clear();
 }
-inline const ::editor::protocol::Style& Styles::styles(int index) const {
-  return styles_.Get(index);
+inline const ::editor::protocol::StyleSetting& StyleSettings::style_setting(int index) const {
+  return style_setting_.Get(index);
 }
-inline ::editor::protocol::Style* Styles::mutable_styles(int index) {
-  return styles_.Mutable(index);
+inline ::editor::protocol::StyleSetting* StyleSettings::mutable_style_setting(int index) {
+  return style_setting_.Mutable(index);
 }
-inline ::editor::protocol::Style* Styles::add_styles() {
-  return styles_.Add();
+inline ::editor::protocol::StyleSetting* StyleSettings::add_style_setting() {
+  return style_setting_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::editor::protocol::Style >&
-Styles::styles() const {
-  return styles_;
+inline const ::google::protobuf::RepeatedPtrField< ::editor::protocol::StyleSetting >&
+StyleSettings::style_setting() const {
+  return style_setting_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::editor::protocol::Style >*
-Styles::mutable_styles() {
-  return &styles_;
+inline ::google::protobuf::RepeatedPtrField< ::editor::protocol::StyleSetting >*
+StyleSettings::mutable_style_setting() {
+  return &style_setting_;
 }
 
 

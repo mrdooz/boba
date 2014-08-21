@@ -21,12 +21,12 @@ namespace protocol {
 
 namespace {
 
-const ::google::protobuf::Descriptor* Style_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* StyleSetting_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  Style_reflection_ = NULL;
-const ::google::protobuf::Descriptor* Styles_descriptor_ = NULL;
+  StyleSetting_reflection_ = NULL;
+const ::google::protobuf::Descriptor* StyleSettings_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  Styles_reflection_ = NULL;
+  StyleSettings_reflection_ = NULL;
 
 }  // namespace
 
@@ -37,40 +37,40 @@ void protobuf_AssignDesc_editor_5fstyles_2eproto() {
     ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
       "editor_styles.proto");
   GOOGLE_CHECK(file != NULL);
-  Style_descriptor_ = file->message_type(0);
-  static const int Style_offsets_[5] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Style, id_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Style, fill_color_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Style, outline_color_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Style, outline_thickness_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Style, font_style_),
+  StyleSetting_descriptor_ = file->message_type(0);
+  static const int StyleSetting_offsets_[5] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StyleSetting, id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StyleSetting, fill_color_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StyleSetting, outline_color_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StyleSetting, outline_thickness_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StyleSetting, font_style_),
   };
-  Style_reflection_ =
+  StyleSetting_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      Style_descriptor_,
-      Style::default_instance_,
-      Style_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Style, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Style, _unknown_fields_),
+      StyleSetting_descriptor_,
+      StyleSetting::default_instance_,
+      StyleSetting_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StyleSetting, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StyleSetting, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(Style));
-  Styles_descriptor_ = file->message_type(1);
-  static const int Styles_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Styles, styles_),
+      sizeof(StyleSetting));
+  StyleSettings_descriptor_ = file->message_type(1);
+  static const int StyleSettings_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StyleSettings, style_setting_),
   };
-  Styles_reflection_ =
+  StyleSettings_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      Styles_descriptor_,
-      Styles::default_instance_,
-      Styles_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Styles, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Styles, _unknown_fields_),
+      StyleSettings_descriptor_,
+      StyleSettings::default_instance_,
+      StyleSettings_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StyleSettings, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StyleSettings, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(Styles));
+      sizeof(StyleSettings));
 }
 
 namespace {
@@ -84,18 +84,18 @@ inline void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    Style_descriptor_, &Style::default_instance());
+    StyleSetting_descriptor_, &StyleSetting::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    Styles_descriptor_, &Styles::default_instance());
+    StyleSettings_descriptor_, &StyleSettings::default_instance());
 }
 
 }  // namespace
 
 void protobuf_ShutdownFile_editor_5fstyles_2eproto() {
-  delete Style::default_instance_;
-  delete Style_reflection_;
-  delete Styles::default_instance_;
-  delete Styles_reflection_;
+  delete StyleSetting::default_instance_;
+  delete StyleSetting_reflection_;
+  delete StyleSettings::default_instance_;
+  delete StyleSettings_reflection_;
 }
 
 void protobuf_AddDesc_editor_5fstyles_2eproto() {
@@ -108,19 +108,19 @@ void protobuf_AddDesc_editor_5fstyles_2eproto() {
   ::common::protocol::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\023editor_styles.proto\022\017editor.protocol\032\025"
-    "editor_settings.proto\032\014common.proto\"\242\001\n\005"
-    "Style\022\n\n\002id\030\001 \001(\t\022+\n\nfill_color\030\002 \001(\0132\027."
-    "common.protocol.Color4\022.\n\routline_color\030"
-    "\003 \001(\0132\027.common.protocol.Color4\022\034\n\021outlin"
-    "e_thickness\030\004 \001(\002:\0010\022\022\n\nfont_style\030\005 \001(\r"
-    "\"0\n\006Styles\022&\n\006styles\030\001 \003(\0132\026.editor.prot"
-    "ocol.Style", 290);
+    "editor_settings.proto\032\014common.proto\"\251\001\n\014"
+    "StyleSetting\022\n\n\002id\030\001 \001(\t\022+\n\nfill_color\030\002"
+    " \001(\0132\027.common.protocol.Color4\022.\n\routline"
+    "_color\030\003 \001(\0132\027.common.protocol.Color4\022\034\n"
+    "\021outline_thickness\030\004 \001(\002:\0010\022\022\n\nfont_styl"
+    "e\030\005 \001(\r\"E\n\rStyleSettings\0224\n\rstyle_settin"
+    "g\030\001 \003(\0132\035.editor.protocol.StyleSetting", 318);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_styles.proto", &protobuf_RegisterTypes);
-  Style::default_instance_ = new Style();
-  Styles::default_instance_ = new Styles();
-  Style::default_instance_->InitAsDefaultInstance();
-  Styles::default_instance_->InitAsDefaultInstance();
+  StyleSetting::default_instance_ = new StyleSetting();
+  StyleSettings::default_instance_ = new StyleSettings();
+  StyleSetting::default_instance_->InitAsDefaultInstance();
+  StyleSettings::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_editor_5fstyles_2eproto);
 }
 
@@ -134,30 +134,30 @@ struct StaticDescriptorInitializer_editor_5fstyles_2eproto {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Style::kIdFieldNumber;
-const int Style::kFillColorFieldNumber;
-const int Style::kOutlineColorFieldNumber;
-const int Style::kOutlineThicknessFieldNumber;
-const int Style::kFontStyleFieldNumber;
+const int StyleSetting::kIdFieldNumber;
+const int StyleSetting::kFillColorFieldNumber;
+const int StyleSetting::kOutlineColorFieldNumber;
+const int StyleSetting::kOutlineThicknessFieldNumber;
+const int StyleSetting::kFontStyleFieldNumber;
 #endif  // !_MSC_VER
 
-Style::Style()
+StyleSetting::StyleSetting()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void Style::InitAsDefaultInstance() {
+void StyleSetting::InitAsDefaultInstance() {
   fill_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
   outline_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
 }
 
-Style::Style(const Style& from)
+StyleSetting::StyleSetting(const StyleSetting& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void Style::SharedCtor() {
+void StyleSetting::SharedCtor() {
   _cached_size_ = 0;
   id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   fill_color_ = NULL;
@@ -167,11 +167,11 @@ void Style::SharedCtor() {
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-Style::~Style() {
+StyleSetting::~StyleSetting() {
   SharedDtor();
 }
 
-void Style::SharedDtor() {
+void StyleSetting::SharedDtor() {
   if (id_ != &::google::protobuf::internal::kEmptyString) {
     delete id_;
   }
@@ -181,28 +181,28 @@ void Style::SharedDtor() {
   }
 }
 
-void Style::SetCachedSize(int size) const {
+void StyleSetting::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* Style::descriptor() {
+const ::google::protobuf::Descriptor* StyleSetting::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return Style_descriptor_;
+  return StyleSetting_descriptor_;
 }
 
-const Style& Style::default_instance() {
+const StyleSetting& StyleSetting::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_editor_5fstyles_2eproto();
   return *default_instance_;
 }
 
-Style* Style::default_instance_ = NULL;
+StyleSetting* StyleSetting::default_instance_ = NULL;
 
-Style* Style::New() const {
-  return new Style;
+StyleSetting* StyleSetting::New() const {
+  return new StyleSetting;
 }
 
-void Style::Clear() {
+void StyleSetting::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_id()) {
       if (id_ != &::google::protobuf::internal::kEmptyString) {
@@ -222,7 +222,7 @@ void Style::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool Style::MergePartialFromCodedStream(
+bool StyleSetting::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
@@ -320,7 +320,7 @@ bool Style::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void Style::SerializeWithCachedSizes(
+void StyleSetting::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // optional string id = 1;
   if (has_id()) {
@@ -359,7 +359,7 @@ void Style::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* Style::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* StyleSetting::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // optional string id = 1;
   if (has_id()) {
@@ -402,7 +402,7 @@ void Style::SerializeWithCachedSizes(
   return target;
 }
 
-int Style::ByteSize() const {
+int StyleSetting::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -451,10 +451,10 @@ int Style::ByteSize() const {
   return total_size;
 }
 
-void Style::MergeFrom(const ::google::protobuf::Message& from) {
+void StyleSetting::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const Style* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const Style*>(
+  const StyleSetting* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const StyleSetting*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -463,7 +463,7 @@ void Style::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void Style::MergeFrom(const Style& from) {
+void StyleSetting::MergeFrom(const StyleSetting& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_id()) {
@@ -485,24 +485,24 @@ void Style::MergeFrom(const Style& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void Style::CopyFrom(const ::google::protobuf::Message& from) {
+void StyleSetting::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Style::CopyFrom(const Style& from) {
+void StyleSetting::CopyFrom(const StyleSetting& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Style::IsInitialized() const {
+bool StyleSetting::IsInitialized() const {
 
   return true;
 }
 
-void Style::Swap(Style* other) {
+void StyleSetting::Swap(StyleSetting* other) {
   if (other != this) {
     std::swap(id_, other->id_);
     std::swap(fill_color_, other->fill_color_);
@@ -515,11 +515,11 @@ void Style::Swap(Style* other) {
   }
 }
 
-::google::protobuf::Metadata Style::GetMetadata() const {
+::google::protobuf::Metadata StyleSetting::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = Style_descriptor_;
-  metadata.reflection = Style_reflection_;
+  metadata.descriptor = StyleSetting_descriptor_;
+  metadata.reflection = StyleSetting_reflection_;
   return metadata;
 }
 
@@ -527,81 +527,81 @@ void Style::Swap(Style* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Styles::kStylesFieldNumber;
+const int StyleSettings::kStyleSettingFieldNumber;
 #endif  // !_MSC_VER
 
-Styles::Styles()
+StyleSettings::StyleSettings()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void Styles::InitAsDefaultInstance() {
+void StyleSettings::InitAsDefaultInstance() {
 }
 
-Styles::Styles(const Styles& from)
+StyleSettings::StyleSettings(const StyleSettings& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void Styles::SharedCtor() {
+void StyleSettings::SharedCtor() {
   _cached_size_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-Styles::~Styles() {
+StyleSettings::~StyleSettings() {
   SharedDtor();
 }
 
-void Styles::SharedDtor() {
+void StyleSettings::SharedDtor() {
   if (this != default_instance_) {
   }
 }
 
-void Styles::SetCachedSize(int size) const {
+void StyleSettings::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* Styles::descriptor() {
+const ::google::protobuf::Descriptor* StyleSettings::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return Styles_descriptor_;
+  return StyleSettings_descriptor_;
 }
 
-const Styles& Styles::default_instance() {
+const StyleSettings& StyleSettings::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_editor_5fstyles_2eproto();
   return *default_instance_;
 }
 
-Styles* Styles::default_instance_ = NULL;
+StyleSettings* StyleSettings::default_instance_ = NULL;
 
-Styles* Styles::New() const {
-  return new Styles;
+StyleSettings* StyleSettings::New() const {
+  return new StyleSettings;
 }
 
-void Styles::Clear() {
-  styles_.Clear();
+void StyleSettings::Clear() {
+  style_setting_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
-bool Styles::MergePartialFromCodedStream(
+bool StyleSettings::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .editor.protocol.Style styles = 1;
+      // repeated .editor.protocol.StyleSetting style_setting = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_styles:
+         parse_style_setting:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_styles()));
+                input, add_style_setting()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(10)) goto parse_styles;
+        if (input->ExpectTag(10)) goto parse_style_setting;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -622,12 +622,12 @@ bool Styles::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void Styles::SerializeWithCachedSizes(
+void StyleSettings::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .editor.protocol.Style styles = 1;
-  for (int i = 0; i < this->styles_size(); i++) {
+  // repeated .editor.protocol.StyleSetting style_setting = 1;
+  for (int i = 0; i < this->style_setting_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->styles(i), output);
+      1, this->style_setting(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -636,13 +636,13 @@ void Styles::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* Styles::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* StyleSettings::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .editor.protocol.Style styles = 1;
-  for (int i = 0; i < this->styles_size(); i++) {
+  // repeated .editor.protocol.StyleSetting style_setting = 1;
+  for (int i = 0; i < this->style_setting_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, this->styles(i), target);
+        1, this->style_setting(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -652,15 +652,15 @@ void Styles::SerializeWithCachedSizes(
   return target;
 }
 
-int Styles::ByteSize() const {
+int StyleSettings::ByteSize() const {
   int total_size = 0;
 
-  // repeated .editor.protocol.Style styles = 1;
-  total_size += 1 * this->styles_size();
-  for (int i = 0; i < this->styles_size(); i++) {
+  // repeated .editor.protocol.StyleSetting style_setting = 1;
+  total_size += 1 * this->style_setting_size();
+  for (int i = 0; i < this->style_setting_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->styles(i));
+        this->style_setting(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -674,10 +674,10 @@ int Styles::ByteSize() const {
   return total_size;
 }
 
-void Styles::MergeFrom(const ::google::protobuf::Message& from) {
+void StyleSettings::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const Styles* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const Styles*>(
+  const StyleSettings* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const StyleSettings*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -686,43 +686,43 @@ void Styles::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void Styles::MergeFrom(const Styles& from) {
+void StyleSettings::MergeFrom(const StyleSettings& from) {
   GOOGLE_CHECK_NE(&from, this);
-  styles_.MergeFrom(from.styles_);
+  style_setting_.MergeFrom(from.style_setting_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void Styles::CopyFrom(const ::google::protobuf::Message& from) {
+void StyleSettings::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Styles::CopyFrom(const Styles& from) {
+void StyleSettings::CopyFrom(const StyleSettings& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Styles::IsInitialized() const {
+bool StyleSettings::IsInitialized() const {
 
   return true;
 }
 
-void Styles::Swap(Styles* other) {
+void StyleSettings::Swap(StyleSettings* other) {
   if (other != this) {
-    styles_.Swap(&other->styles_);
+    style_setting_.Swap(&other->style_setting_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
   }
 }
 
-::google::protobuf::Metadata Styles::GetMetadata() const {
+::google::protobuf::Metadata StyleSettings::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = Styles_descriptor_;
-  metadata.reflection = Styles_reflection_;
+  metadata.descriptor = StyleSettings_descriptor_;
+  metadata.reflection = StyleSettings_reflection_;
   return metadata;
 }
 

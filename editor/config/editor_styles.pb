@@ -1,4 +1,4 @@
-styles {
+style_setting {
 	id : "default_row_color"
 	fill_color {
 		r : 40
@@ -13,7 +13,7 @@ styles {
 	outline_thickness : 1
 }
 
-styles {
+style_setting {
 	id : "selected_row_color"
 	fill_color {
 		r : 0
@@ -22,7 +22,7 @@ styles {
 	}
 }
 
-styles {
+style_setting {
 	id : "effect_icon_expanded_color"
 	fill_color {
 		r : 120
@@ -31,7 +31,7 @@ styles {
 	}
 }
 
-styles {
+style_setting {
 	id : "effect_icon_collapsed_color"
 	fill_color {
 		r : 120
@@ -40,7 +40,7 @@ styles {
 	}
 }
 
-styles {
+style_setting {
 	id : "invalid_hover_row_color"
 	fill_color {
 		r : 120
@@ -49,7 +49,7 @@ styles {
 	}
 }
 
-styles {
+style_setting {
 	id : "hover_row_color"
 	fill_color {
 		r : 40
@@ -58,7 +58,7 @@ styles {
 	}
 }
 
-styles {
+style_setting {
 	id : "var_text_editing"
 	fill_color {
 		r : 255
@@ -68,7 +68,7 @@ styles {
 	font_style : 4
 }
 
-styles {
+style_setting {
 	id : "var_text_normal"
 	fill_color {
 		r : 200
@@ -78,7 +78,7 @@ styles {
 	font_style : 0
 }
 
-styles {
+style_setting {
 	id : "keyframe_style"
 	fill_color {
 		r : 255
@@ -93,7 +93,7 @@ styles {
 	outline_thickness : 1
 }
 
-styles {
+style_setting {
 	id : "keyframe_style_selected"
 	fill_color {
 		r : 255
@@ -108,7 +108,7 @@ styles {
 	outline_thickness : 1
 }
 
-styles {
+style_setting {
 	id : "status_bar_style"
 	fill_color {
 		r : 20

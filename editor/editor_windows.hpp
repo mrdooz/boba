@@ -170,8 +170,8 @@ namespace editor
 
     Vector2i _lastDragPos;
 //    EffectRow* _editRow;
-    StyledRectangle* _tickerRect;
-    StyledRectangle* _statusBar;
+    StyledRect _tickerRect;
+    StyledRect _statusBar;
     vector<string> _statusBarValues;
 //    EffectRow* _movingKeyframe;
 //    EffectRow*_selectedRow;

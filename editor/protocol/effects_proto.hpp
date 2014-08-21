@@ -25,8 +25,8 @@ namespace editor
   struct Vector3Keyframe;
   struct Vector3Anim;
   struct Settings;
-  struct Style;
-  struct Styles;
+  struct StyleSetting;
+  struct StyleSettings;
   struct EffectSetting;
   struct EffectSettings;
   struct Plexus;
@@ -44,10 +44,10 @@ namespace editor
   void ToProtocol(const Vector3Anim& v, common::protocol::Vector3Anim* p);
   Settings FromProtocol(const editor::protocol::Settings& p);
   void ToProtocol(const Settings& v, editor::protocol::Settings* p);
-  Style FromProtocol(const editor::protocol::Style& p);
-  void ToProtocol(const Style& v, editor::protocol::Style* p);
-  Styles FromProtocol(const editor::protocol::Styles& p);
-  void ToProtocol(const Styles& v, editor::protocol::Styles* p);
+  StyleSetting FromProtocol(const editor::protocol::StyleSetting& p);
+  void ToProtocol(const StyleSetting& v, editor::protocol::StyleSetting* p);
+  StyleSettings FromProtocol(const editor::protocol::StyleSettings& p);
+  void ToProtocol(const StyleSettings& v, editor::protocol::StyleSettings* p);
   EffectSetting FromProtocol(const effect::protocol::EffectSetting& p);
   void ToProtocol(const EffectSetting& v, effect::protocol::EffectSetting* p);
   EffectSettings FromProtocol(const effect::protocol::EffectSettings& p);
@@ -112,7 +112,7 @@ namespace editor
     Color effectIconExpandedColor;
     Color effectIconCollapsedColor;
   };
-  struct Style
+  struct StyleSetting
   {
     string id;
     Color fillColor;
@@ -120,9 +120,9 @@ namespace editor
     float outlineThickness;
     uint32_t fontStyle;
   };
-  struct Styles
+  struct StyleSettings
   {
-    vector<Style> styles;
+    vector<StyleSetting> styleSetting;
   };
   struct EffectSetting
   {
@@ -307,9 +307,9 @@ namespace editor
   }
 
 
-  inline Style FromProtocol(const editor::protocol::Style& p)
+  inline StyleSetting FromProtocol(const editor::protocol::StyleSetting& p)
   {
-    Style res;
+    StyleSetting res;
     res.id = p.id();
     res.fillColor = FromProtocol(p.fill_color());
     res.outlineColor = FromProtocol(p.outline_color());
@@ -318,7 +318,7 @@ namespace editor
     return res;
   }
 
-  inline void ToProtocol(const Style& v, editor::protocol::Style* p)
+  inline void ToProtocol(const StyleSetting& v, editor::protocol::StyleSetting* p)
   {
     p->set_id(v.id);
     ToProtocol(v.fillColor, p->mutable_fill_color());
@@ -328,17 +328,17 @@ namespace editor
   }
 
 
-  inline Styles FromProtocol(const editor::protocol::Styles& p)
+  inline StyleSettings FromProtocol(const editor::protocol::StyleSettings& p)
   {
-    Styles res;
-    res.styles = FromProtocolRepeated<Style>(p.styles());
+    StyleSettings res;
+    res.styleSetting = FromProtocolRepeated<StyleSetting>(p.style_setting());
     return res;
   }
 
-  inline void ToProtocol(const Styles& v, editor::protocol::Styles* p)
+  inline void ToProtocol(const StyleSettings& v, editor::protocol::StyleSettings* p)
   {
-    for (const auto& x : v.styles)
-      ToProtocol(x, p->add_styles());
+    for (const auto& x : v.styleSetting)
+      ToProtocol(x, p->add_style_setting());
   }
 
 

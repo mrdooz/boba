@@ -1,6 +1,7 @@
 #pragma once
 
 #include "protocol/effects_proto.hpp"
+#include "style_factory.hpp"
 
 namespace editor
 {
@@ -33,7 +34,7 @@ namespace editor
     string _name;
     FloatAnim* _anim;
     VarFlags _flags;
-    StyledRectangle*_keyframeRect;
+    StyledRect _keyframeRect;
   };
 
   //----------------------------------------------------------------------------------
@@ -86,14 +87,14 @@ namespace editor
     string _str;
     RowFlags _flags;
     EffectRow* _parent;
-    StyledRectangle* _rect;
+    StyledRect _rect;
     vector<EffectRow*> _children;
     Text _text;
     Font _font;
     int _level;
     FloatRect _expandRect;
     FloatRect _varEditRect;
-    StyledRectangle*_keyframeRect;
+    StyledRect _keyframeRect;
     u32 _id;
     vector<RowVar> _vars;
   };
