@@ -96,6 +96,14 @@ namespace editor
   {
     friend struct EffectRow;
   public:
+
+    enum class DisplayMode
+    {
+      Keyframe,
+      Graph,
+      COUNT,
+    };
+
     TimelineWindow(
         const string& title,
         const Vector2f& pos,
@@ -113,16 +121,23 @@ namespace editor
 
     void KeyframesModified();
 
+    DisplayMode GetDisplayMode() const { return _displayMode; }
+
+    template<typename T>
+    sf::Vector2<T> PointToLocal(int x, int y)
+    {
+      return sf::Vector2<T>((T)(x - _pos.x), (T)(y - _pos.y));
+    }
+
     static TimelineWindow* _instance;
 
   private:
 
-    enum class DisplayMode
+    template <typename T>
+    T NextEnum(T t)
     {
-      Keyframe,
-      Graph,
-      NUM_DISPLAY_MODES
-    };
+      return (T)(((u32)t + 1) % (u32)T::COUNT);
+    }
 
     void DrawEffects();
     void DrawTimeline();
@@ -145,29 +160,23 @@ namespace editor
 
     void RecalcEffecRows();
 
-    template<typename T>
-    sf::Vector2<T> PointToLocal(int x, int y)
-    {
-      return sf::Vector2<T>((T)(x - _pos.x), (T)(y - _pos.y));
-    }
-
     time_duration _panelOffset;
     u32 _pixelsPerSecond;
     Font _font;
 
     TimelineFlags _timelineFlags;
     vector<EffectRow*> _effectRows;
+    EffectRow* _curRow;
 
     Vector2i _lastDragPos;
-    EffectRow* _editRow;
+//    EffectRow* _editRow;
     StyledRectangle* _tickerRect;
     StyledRectangle* _statusBar;
     vector<string> _statusBarValues;
-    EffectRow* _movingKeyframe;
-    EffectRow*_selectedRow;
+//    EffectRow* _movingKeyframe;
+//    EffectRow*_selectedRow;
     DisplayMode _displayMode;
-    ToggleSet<EffectRow*> _selectedRows;
-
+//    ToggleSet<EffectRow*> _selectedRows;
   };
 
 }

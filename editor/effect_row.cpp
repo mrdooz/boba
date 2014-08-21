@@ -40,10 +40,10 @@ void RowVar::DrawKeyframes(RenderTexture& texture)
   curLine.append(sf::Vertex(Vector2f(x + w, y), Color::White));
   texture.draw(curLine);
 
+  ApplyStyle(STYLE_FACTORY.GetStyle("keyframe_style"), &_keyframeRect->_shape);
+
   for (const FloatKeyframe& keyframe : _anim->keyframe)
   {
-    ApplyStyle(STYLE_FACTORY.GetStyle("keyframe_style"), &_keyframeRect->_shape);
-
     int x = TimelineWindow::_instance->TimeToPixel(milliseconds(keyframe.time));
     if (x < windowSize.x)
     {
@@ -72,6 +72,24 @@ void RowVar::Draw(RenderTexture& texture, const Vector2f& pos)
 
   _text.setPosition(pos);
   texture.draw(_text);
+}
+
+//----------------------------------------------------------------------------------
+bool RowVar::OnMouseButtonPressed(const Event &event)
+{
+  return false;
+}
+
+//----------------------------------------------------------------------------------
+bool RowVar::OnMouseButtonReleased(const Event &event)
+{
+  return false;
+}
+
+//----------------------------------------------------------------------------------
+bool RowVar::OnMouseMoved(const Event &event)
+{
+  return false;
 }
 
 //----------------------------------------------------------------------------------
@@ -139,6 +157,8 @@ void EffectRow::Reposition(float curY, float rowHeight)
     cur->_rect->_shape.setPosition(0, curY);
     cur->_rect->_shape.setSize(Vector2f(windowSize.x, (1 + cur->NumVars()) * rowHeight));
     curY += rowHeight;
+
+    // If row is expanded, add children
     if (cur->_flags.IsSet(EffectRow::RowFlagsF::Expanded))
     {
       for (EffectRow* c : cur->_children)
@@ -191,6 +211,118 @@ float EffectRow::RowHeight(float rowHeight)
   }
 
   return res;
+}
+
+//----------------------------------------------------------------------------------
+bool EffectRow::OnMouseButtonPressed(const Event &event)
+{
+  const Vector2f& windowPos = TimelineWindow::_instance->GetPosition();
+  int x = (int)(event.mouseButton.x - windowPos.x);
+  int y = (int)(event.mouseButton.y - windowPos.y);
+  Vector2f mousePos(x, y);
+
+  if (_expandRect.contains(mousePos))
+  {
+    _flags.Toggle(EffectRow::RowFlagsF::Expanded);
+    return true;
+  }
+
+  // check the vars
+  for (RowVar& v : _vars)
+  {
+    if (v.OnMouseButtonPressed(event))
+      return true;
+  }
+
+  if (_varEditRect.contains(mousePos))
+  {
+    BeginEditVars(x, y);
+    return true;
+  }
+
+  if (_rect->_shape.getGlobalBounds().contains(mousePos))
+  {
+    _flags.Toggle(EffectRow::RowFlagsF::Selected);
+    return true;
+  }
+
+  return false;
+}
+
+//----------------------------------------------------------------------------------
+bool EffectRow::OnKeyReleased(const Event& event)
+{
+  Keyboard::Key code = event.key.code;
+
+  if (_flags.IsSet(RowFlagsF::Editing))
+  {
+    // escape aborts the pending operation
+    if (code == Keyboard::Escape)
+    {
+      EndEditVars(false);
+      EndKeyframeUpdate(false);
+    }
+
+    if (code == Keyboard::Return)
+    {
+      EndEditVars(true);
+    }
+    else
+    {
+      UpdateEditVar(event.key.code);
+    }
+
+    return true;
+  }
+
+  return false;
+}
+
+//----------------------------------------------------------------------------------
+bool EffectRow::OnMouseMoved(const Event& event)
+{
+  TimelineWindow* timeline = TimelineWindow::_instance;
+  TimelineWindow::DisplayMode displayMode = timeline->GetDisplayMode();
+
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+  {
+    Vector2i posModule = timeline->PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
+    time_duration curTime = timeline->PixelToTime(posModule.x);
+
+    if (displayMode == TimelineWindow::DisplayMode::Keyframe)
+    {
+      if (!_flags.CheckAndSet(RowFlagsF::MovingKeyframe))
+      {
+        // send the BeginKeyframeUpdate, and check if we're copying or moving
+        BeginKeyframeUpdate(Keyboard::isKeyPressed(Keyboard::Key::LShift));
+      }
+
+      UpdateKeyframe(curTime);
+      return true;
+    }
+  }
+
+  return false;
+}
+
+//----------------------------------------------------------------------------------
+bool EffectRow::OnMouseButtonReleased(const Event &event)
+{
+  TimelineWindow* timeline = TimelineWindow::_instance;
+  TimelineWindow::DisplayMode displayMode = timeline->GetDisplayMode();
+
+  if (displayMode == TimelineWindow::DisplayMode::Graph)
+  {
+  }
+  else
+  {
+    if (_flags.CheckAndClear(RowFlagsF::MovingKeyframe))
+    {
+      EndKeyframeUpdate(true);
+      return true;
+    }
+  }
+  return false;
 }
 
 //----------------------------------------------------------------------------------
@@ -289,7 +421,8 @@ bool EffectRowPlexus::ToProtocol(google::protobuf::Message* msg) const
 //----------------------------------------------------------------------------------
 bool EffectRowPlexus::FromProtocol(const google::protobuf::Message& proto)
 {
-  const effect::protocol::plexus::Plexus& p = static_cast<const effect::protocol::plexus::Plexus&>(proto);
+  const effect::protocol::plexus::Plexus& p =
+      static_cast<const effect::protocol::plexus::Plexus&>(proto);
 
   for (const effect::protocol::plexus::TextPath& textPath : p.text_paths())
   {
@@ -302,7 +435,8 @@ bool EffectRowPlexus::FromProtocol(const google::protobuf::Message& proto)
   for (const effect::protocol::plexus::NoiseEffector& effector : p.noise_effectors())
   {
     string str = to_string("Noise (%s)",
-      effector.apply_to() == effect::protocol::plexus::NoiseEffector_ApplyTo_Position ? "POS" : "SCALE");
+      effector.apply_to() == effect::protocol::plexus::NoiseEffector_ApplyTo_Position
+          ? "POS" : "SCALE");
 
     _children.push_back(new EffectRowNoise(_font, str, this));
     _children.back()->FromProtocol(effector);
@@ -738,6 +872,7 @@ void EffectRowNoise::DrawGraph(RenderTexture& texture, const Vector2f& size)
 //----------------------------------------------------------------------------------
 void EffectRowNoise::BeginEditVars(float x, float y)
 {
+  _flags.Set(RowFlagsF::Editing);
 #if 0
   const editor::protocol::Settings& settings = EDITOR.Settings();
   int h = settings.effect_row_height();
@@ -761,6 +896,8 @@ void EffectRowNoise::BeginEditVars(float x, float y)
 //----------------------------------------------------------------------------------
 void EffectRowNoise::EndEditVars(bool commit)
 {
+  _flags.Clear(RowFlagsF::Editing);
+
 #if 0
   if (commit)
   {

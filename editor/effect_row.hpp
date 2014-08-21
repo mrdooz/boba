@@ -13,14 +13,18 @@ namespace editor
 
     struct VarFlagsF
     {
-      enum Enum : u8 { Selected = 1 << 0, Editing = 1 << 1, Animating = 1 << 2 };
-      struct Bits { u8 selected : 1; u8 editing : 1; u8 animating : 1; };
+      enum Enum : u8 { Selected = 1 << 0, Editing = 1 << 1, Animating = 1 << 2, MovingKeyframe = 1 << 3 };
+      struct Bits { u8 selected : 1; u8 editing : 1; u8 animating : 1; u32 movingKeyframe : 1; };
     };
 
     typedef Flags<VarFlagsF> VarFlags;
 
     void Draw(RenderTexture& texture, const Vector2f& pos);
     void DrawKeyframes(RenderTexture& texture);
+
+    bool OnMouseButtonPressed(const Event &event);
+    bool OnMouseButtonReleased(const Event &event);
+    bool OnMouseMoved(const Event &event);
 
     Text _text;
     Font _font;
@@ -37,8 +41,8 @@ namespace editor
   {
     struct RowFlagsF
     {
-      enum Enum { Expanded = 1 << 0, Selected = 1 << 1 };
-      struct Bits { u32 expanded : 1; u32 selected : 1; };
+      enum Enum { Expanded = 1 << 0, Selected = 1 << 1, Editing = 1 << 2, MovingKeyframe = 1 << 3 };
+      struct Bits { u32 expanded : 1; u32 selected : 1; u32 editing : 1; u32 movingKeyframe : 1; };
     };
 
     typedef Flags<RowFlagsF> RowFlags;
@@ -70,9 +74,10 @@ namespace editor
     // return true if cycled through all graphs
     virtual bool NextGraph() { return true; }
     virtual void DrawGraph(RenderTexture& texture, const Vector2f& size) {}
-    virtual bool OnMouseMoved(const Event &event) { return true; }
-    virtual bool OnMouseButtonPressed(const Event &event) { return true; }
-    virtual bool OnMouseButtonReleased(const Event &event) { return true; }
+    virtual bool OnMouseMoved(const Event &event);
+    virtual bool OnMouseButtonPressed(const Event &event);
+    virtual bool OnMouseButtonReleased(const Event &event);
+    virtual bool OnKeyReleased(const Event& event);
 
     virtual bool ToProtocol(google::protobuf::Message* msg) const { return true; }
     virtual bool FromProtocol(const google::protobuf::Message& msg) { return true; }

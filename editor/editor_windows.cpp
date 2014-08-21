@@ -9,6 +9,8 @@ using namespace bristol;
 
 #pragma warning(disable: 4244)
 
+
+
 //----------------------------------------------------------------------------------
 PropertyWindow::PropertyWindow(
   const string& title,
@@ -37,12 +39,13 @@ TimelineWindow::TimelineWindow(
     : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
     , _panelOffset(seconds(0))
     , _pixelsPerSecond(EDITOR.Settings().timeline_zoom_default())
+    , _curRow(nullptr)
     , _lastDragPos(-1, -1)
-    , _editRow(nullptr)
+//    , _editRow(nullptr)
     , _tickerRect(nullptr)
     , _statusBar(nullptr)
-    , _movingKeyframe(nullptr)
-    , _selectedRow(nullptr)
+//    , _movingKeyframe(nullptr)
+//    , _selectedRow(nullptr)
     , _displayMode(DisplayMode::Keyframe)
 {
   _instance = this;
@@ -136,53 +139,73 @@ void TimelineWindow::RecalcEffecRows()
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnKeyReleased(const Event &event)
 {
+  if (_curRow)
+  {
+    if (_curRow->OnKeyReleased(event))
+      return true;
+  }
+
+  // The current row didn't handle the key..
   Keyboard::Key code = event.key.code;
 
-  // escape aborts the pending operation
-  if (code == Keyboard::Escape)
+  if (code == Keyboard::U)
   {
-    if (_editRow)
-    {
-      _editRow->EndEditVars(false);
-    }
-    else if (_movingKeyframe)
-    {
-      _movingKeyframe->EndKeyframeUpdate(false);
-    }
+    _displayMode = NextEnum(_displayMode);
+  }
+  else if (code == Keyboard::R)
+  {
+    _displayMode = DisplayMode::Keyframe;
+  }
 
-    _selectedRow = nullptr;
-    _movingKeyframe = nullptr;
-  }
-  else
-  {
-    if (_editRow)
-    {
-      if (code == Keyboard::Return)
-      {
-        _editRow->EndEditVars(true);
-        _editRow = nullptr;
-      }
-      else
-      {
-        _editRow->UpdateEditVar(event.key.code);
-      }
-    }
-    else
-    {
-      if (code == Keyboard::U && !_selectedRows.IsEmpty())
-      {
-        _displayMode = _selectedRows.Next() ? DisplayMode::Graph : DisplayMode::Keyframe;
-      }
-      else if (code == Keyboard::R)
-      {
-        _displayMode = DisplayMode::Keyframe;
-        for (EffectRow* r : _selectedRows.backingSet)
-        {
-          r->ToggleGraphView(false);
-        }
-      }
-    }
-  }
+
+
+//  Keyboard::Key code = event.key.code;
+//
+//  // escape aborts the pending operation
+//  if (code == Keyboard::Escape)
+//  {
+//    if (_editRow)
+//    {
+//      _editRow->EndEditVars(false);
+//    }
+//    else if (_movingKeyframe)
+//    {
+//      _movingKeyframe->EndKeyframeUpdate(false);
+//    }
+//
+//    _selectedRow = nullptr;
+//    _movingKeyframe = nullptr;
+//  }
+//  else
+//  {
+//    if (_editRow)
+//    {
+//      if (code == Keyboard::Return)
+//      {
+//        _editRow->EndEditVars(true);
+//        _editRow = nullptr;
+//      }
+//      else
+//      {
+//        _editRow->UpdateEditVar(event.key.code);
+//      }
+//    }
+//    else
+//    {
+//      if (code == Keyboard::U && !_selectedRows.IsEmpty())
+//      {
+//        _displayMode = _selectedRows.Next() ? DisplayMode::Graph : DisplayMode::Keyframe;
+//      }
+//      else if (code == Keyboard::R)
+//      {
+//        _displayMode = DisplayMode::Keyframe;
+//        for (EffectRow* r : _selectedRows.backingSet)
+//        {
+//          r->ToggleGraphView(false);
+//        }
+//      }
+//    }
+//  }
 
   return true;
 }
@@ -200,6 +223,7 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
   for (EffectRow* row : _effectRows)
     row->Flatten(&effects);
 
+  // check for a click in the ticker
   if (y < (int)settings.ticker_height())
   {
     time_duration t = PixelToTime(event.mouseButton.x - (int)_pos.x);
@@ -207,87 +231,98 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
     {
       EDITOR.SetCurTime(t);
     }
+    return true;
   }
-  else if (x < (int)settings.effect_view_width())
+
+  // check for hits on an effect row
+  for (EffectRow* row : effects)
   {
-    // Check for hits in the effect view
-    EffectRow* rowHit = nullptr;
-    for (EffectRow* row : effects)
+    if (row->OnMouseButtonPressed(event))
     {
-      if (row->_expandRect.contains(mousePos))
-      {
-        row->_flags.Toggle(EffectRow::RowFlagsF::Expanded);
-        rowHit = row;
-        break;
-      }
-      else if (row->_varEditRect.contains(mousePos))
-      {
-        row->BeginEditVars(x, y);
-        rowHit = row;
-        _editRow = row;
-        break;
-      }
-      else if (row->_rect->_shape.getGlobalBounds().contains(mousePos))
-      {
-        _selectedRows.Toggle(row);
-        row->_flags.Toggle(EffectRow::RowFlagsF::Selected);
-        rowHit = row;
-        break;
-      }
-    }
-
-    if (rowHit)
-    {
-      // if a new row is hit, end any current editing
-      if (_editRow && rowHit != _editRow)
-      {
-        _editRow->EndEditVars(true);
-      }
-
-      RecalcEffecRows();
-    }
-    else
-    {
-      _editRow = nullptr;
+      return true;
     }
   }
-  else
-  {
-    if (_displayMode == DisplayMode::Graph)
-    {
-      _selectedRows.CurRow()->OnMouseButtonPressed(event);
-    }
-    else
-    {
-//      int a = 10;
-    }
 
-    if (_selectedRow)
-    {
-      _selectedRow->DeselectKeyframe();
-      _selectedRow = nullptr;
-    }
+//  if (x < (int)settings.effect_view_width())
+//  {
+//    // Check for hits in the effect view
+//    EffectRow* rowHit = nullptr;
+//    for (EffectRow* row : effects)
+//    {
+//      if (row->_expandRect.contains(mousePos))
+//      {
+//        row->_flags.Toggle(EffectRow::RowFlagsF::Expanded);
+//        rowHit = row;
+//        break;
+//      }
+//      else if (row->_varEditRect.contains(mousePos))
+//      {
+//        row->BeginEditVars(x, y);
+//        rowHit = row;
+//        _editRow = row;
+//        break;
+//      }
+//      else if (row->_rect->_shape.getGlobalBounds().contains(mousePos))
+//      {
+//        _selectedRows.Toggle(row);
+//        row->_flags.Toggle(EffectRow::RowFlagsF::Selected);
+//        rowHit = row;
+//        break;
+//      }
+//    }
 
-    for (EffectRow* row : effects)
-    {
-      if (row->KeyframeIntersect(mousePos, _size))
-      {
-        _selectedRow = row;
-        break;
-      }
-    }
-
-  }
-  return true;
+//    if (rowHit)
+//    {
+//      // if a new row is hit, end any current editing
+//      if (_editRow && rowHit != _editRow)
+//      {
+//        _editRow->EndEditVars(true);
+//      }
+//
+//      RecalcEffecRows();
+//    }
+//    else
+//    {
+//      _editRow = nullptr;
+//    }
+//  }
+//  else
+//  {
+//    if (_displayMode == DisplayMode::Graph)
+//    {
+//      _selectedRows.CurRow()->OnMouseButtonPressed(event);
+//    }
+//    else
+//    {
+////      int a = 10;
+//    }
+//
+//    if (_selectedRow)
+//    {
+//      _selectedRow->DeselectKeyframe();
+//      _selectedRow = nullptr;
+//    }
+//
+//    for (EffectRow* row : effects)
+//    {
+//      if (row->KeyframeIntersect(mousePos, _size))
+//      {
+//        _selectedRow = row;
+//        break;
+//      }
+//    }
+//
+//  }
+  return false;
 }
 
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseMoved(const Event& event)
 {
   Vector2i posModule = PointToLocal<int>(event.mouseMove.x, event.mouseMove.y);
-
   time_duration curTime = PixelToTime(posModule.x);
 
+  // Check if the timeline is being dragged
   if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
   {
     if (_lastDragPos.x == -1)
@@ -305,46 +340,55 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     _lastDragPos = Vector2i(event.mouseMove.x, event.mouseMove.y);
     return true;
   }
-  else if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-  {
-    if (_displayMode == DisplayMode::Keyframe && _selectedRow)
-    {
-      if (!_movingKeyframe)
-      {
-        // send the BeginKeyframeUpdate, and check if we're copying or moving
-        _selectedRow->BeginKeyframeUpdate(Keyboard::isKeyPressed(Keyboard::Key::LShift));
-        _movingKeyframe = _selectedRow;
-      }
 
-      _movingKeyframe->UpdateKeyframe(curTime);
-    }
-    else if (_displayMode == DisplayMode::Graph && _selectedRows.CurRow())
-    {
-      _selectedRows.CurRow()->OnMouseMoved(event);
-    }
-  }
 
-  return true;
+  if (_curRow && _curRow->OnMouseMoved(event))
+    return true;
+
+//  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+//  {
+//
+//    if (_displayMode == DisplayMode::Keyframe && _selectedRow)
+//    {
+//      if (!_movingKeyframe)
+//      {
+//        // send the BeginKeyframeUpdate, and check if we're copying or moving
+//        _selectedRow->BeginKeyframeUpdate(Keyboard::isKeyPressed(Keyboard::Key::LShift));
+//        _movingKeyframe = _selectedRow;
+//      }
+//
+//      _movingKeyframe->UpdateKeyframe(curTime);
+//    }
+//    else if (_displayMode == DisplayMode::Graph && _selectedRows.CurRow())
+//    {
+//      _selectedRows.CurRow()->OnMouseMoved(event);
+//    }
+//  }
+
+  return false;
 }
 
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 {
-  if (_displayMode == DisplayMode::Graph)
-  {
-    if (_selectedRows.CurRow())
-      return _selectedRows.CurRow()->OnMouseButtonReleased(event);
-  }
-  else
-  {
-    if (_movingKeyframe)
-    {
-      _movingKeyframe->EndKeyframeUpdate(true);
-      _movingKeyframe = nullptr;
-    }
+  if (_curRow && _curRow->OnMouseButtonPressed(event))
     return true;
-  }
-  return true;
+
+//  if (_displayMode == DisplayMode::Graph)
+//  {
+//    if (_selectedRows.CurRow())
+//      return _selectedRows.CurRow()->OnMouseButtonReleased(event);
+//  }
+//  else
+//  {
+//    if (_movingKeyframe)
+//    {
+//      _movingKeyframe->EndKeyframeUpdate(true);
+//      _movingKeyframe = nullptr;
+//    }
+//    return true;
+//  }
+  return false;
 }
 
 //----------------------------------------------------------------------------------
@@ -443,9 +487,9 @@ void TimelineWindow::DrawEffects()
     row->Draw(_texture, _displayMode == DisplayMode::Keyframe);
   }
 
-  if (_displayMode == DisplayMode::Graph && !_selectedRows.IsEmpty())
+  if (_displayMode == DisplayMode::Graph && _curRow)
   {
-    _selectedRows.CurRow()->DrawGraph(_texture, _size);
+    _curRow->DrawGraph(_texture, _size);
   }
 }
 
