@@ -10,6 +10,7 @@
 #include "effect_settings.pb.h"
 #include "effect_settings_plexus.pb.h"
 #include "editor_styles.pb.h"
+#include <bristol/flags.hpp>
 
 #ifdef _WIN32
 #pragma warning(pop)
@@ -27,6 +28,7 @@ namespace editor
   {% endfor %}
   {% for fwd in forward_decls %}
   {{ fwd }}
+
   {% endfor %}
   
   template<typename T, typename U>
@@ -55,7 +57,14 @@ namespace editor
     {% for member in class.members %}
     {{ member.type }} {{ member.name }};
     {% endfor %}
+
+    struct FlagsF {
+      enum Enum { {% for member in class.members %}Has{{ member.name_title }} = 1 << {{ member.idx }}, {% endfor %}};
+      struct Bits { {% for member in class.members %}u32 has{{ member.name_title }} : 1; {% endfor %}};
+    };
+    Flags<FlagsF> flags;
   };
+
   {% endfor %}  
 
   inline Color FromProtocol(const common::protocol::Color4& col)
@@ -84,7 +93,6 @@ namespace editor
   }
 
   {% for class in classes %}
-
   inline {{ class.name }} FromProtocol(const {{ class.proto_type }}& p)
   {
     {{ class.name }} res;
@@ -92,7 +100,11 @@ namespace editor
     {% if member.is_enum %}
     res.{{ member.name }} = ({{ member.type}})p.{{ member.proto_name }}();
     {% elif member.is_native %}
-    res.{{ member.name }} = p.{{ member.proto_name }}();
+    if (p.has_{{ member.proto_name}}())
+    {
+      res.flags.Set({{ class.name }}::FlagsF::Has{{ member.name_title}});
+      res.{{ member.name }} = p.{{ member.proto_name }}();
+    }
     {% elif member.is_bytes %}
     res.{{ member.name }}.resize(p.{{ member.proto_name }}().size());
     memcpy(res.{{ member.name }}.data(), p.{{ member.proto_name }}().data(), p.{{ member.proto_name }}().size());
@@ -100,7 +112,11 @@ namespace editor
     {% if member.is_repeated %}
     res.{{ member.name }} = FromProtocolRepeated<{{ member.base_type }}>(p.{{ member.proto_name }}());
     {% else %}
-    res.{{ member.name }} = FromProtocol(p.{{ member.proto_name }}());
+    if (p.has_{{ member.proto_name}}())
+    {
+      res.flags.Set({{ class.name }}::FlagsF::Has{{ member.name_title}});
+      res.{{ member.name }} = FromProtocol(p.{{ member.proto_name }}());
+    }
     {% endif %}
     {% endif %}
     {% endfor %}

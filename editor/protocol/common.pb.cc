@@ -182,9 +182,12 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(FloatKeyframe));
   FloatAnim_descriptor_ = file->message_type(7);
-  static const int FloatAnim_offsets_[2] = {
+  static const int FloatAnim_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, keyframe_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, min_value_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, max_value_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, step_),
   };
   FloatAnim_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -214,9 +217,12 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector3Keyframe));
   Vector3Anim_descriptor_ = file->message_type(9);
-  static const int Vector3Anim_offsets_[2] = {
+  static const int Vector3Anim_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Anim, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Anim, keyframe_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Anim, min_value_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Anim, max_value_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Anim, step_),
   };
   Vector3Anim_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -309,13 +315,18 @@ void protobuf_AddDesc_common_2eproto() {
     ".common.protocol.Vector4\022\'\n\005row_3\030\003 \001(\0132"
     "\030.common.protocol.Vector4\022\'\n\005row_4\030\004 \001(\013"
     "2\030.common.protocol.Vector4\",\n\rFloatKeyfr"
-    "ame\022\014\n\004time\030\001 \001(\r\022\r\n\005value\030\002 \001(\002\"K\n\tFloa"
+    "ame\022\014\n\004time\030\001 \001(\r\022\r\n\005value\030\002 \001(\002\"\177\n\tFloa"
     "tAnim\022\014\n\004type\030\001 \001(\r\0220\n\010keyframe\030\002 \003(\0132\036."
-    "common.protocol.FloatKeyframe\"H\n\017Vector3"
-    "Keyframe\022\014\n\004time\030\001 \001(\r\022\'\n\005value\030\002 \001(\0132\030."
-    "common.protocol.Vector3\"O\n\013Vector3Anim\022\014"
-    "\n\004type\030\001 \001(\r\0222\n\010keyframe\030\002 \003(\0132 .common."
-    "protocol.Vector3Keyframe", 824);
+    "common.protocol.FloatKeyframe\022\021\n\tmin_val"
+    "ue\030\003 \001(\002\022\021\n\tmax_value\030\004 \001(\002\022\014\n\004step\030\005 \001("
+    "\002\"H\n\017Vector3Keyframe\022\014\n\004time\030\001 \001(\r\022\'\n\005va"
+    "lue\030\002 \001(\0132\030.common.protocol.Vector3\"\321\001\n\013"
+    "Vector3Anim\022\014\n\004type\030\001 \001(\r\0222\n\010keyframe\030\002 "
+    "\003(\0132 .common.protocol.Vector3Keyframe\022+\n"
+    "\tmin_value\030\003 \001(\0132\030.common.protocol.Vecto"
+    "r3\022+\n\tmax_value\030\004 \001(\0132\030.common.protocol."
+    "Vector3\022&\n\004step\030\005 \001(\0132\030.common.protocol."
+    "Vector3", 1007);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "common.proto", &protobuf_RegisterTypes);
   Color4::default_instance_ = new Color4();
@@ -2424,6 +2435,9 @@ void FloatKeyframe::Swap(FloatKeyframe* other) {
 #ifndef _MSC_VER
 const int FloatAnim::kTypeFieldNumber;
 const int FloatAnim::kKeyframeFieldNumber;
+const int FloatAnim::kMinValueFieldNumber;
+const int FloatAnim::kMaxValueFieldNumber;
+const int FloatAnim::kStepFieldNumber;
 #endif  // !_MSC_VER
 
 FloatAnim::FloatAnim()
@@ -2443,6 +2457,9 @@ FloatAnim::FloatAnim(const FloatAnim& from)
 void FloatAnim::SharedCtor() {
   _cached_size_ = 0;
   type_ = 0u;
+  min_value_ = 0;
+  max_value_ = 0;
+  step_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2479,6 +2496,9 @@ FloatAnim* FloatAnim::New() const {
 void FloatAnim::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     type_ = 0u;
+    min_value_ = 0;
+    max_value_ = 0;
+    step_ = 0;
   }
   keyframe_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2517,6 +2537,54 @@ bool FloatAnim::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(18)) goto parse_keyframe;
+        if (input->ExpectTag(29)) goto parse_min_value;
+        break;
+      }
+
+      // optional float min_value = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_min_value:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &min_value_)));
+          set_has_min_value();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(37)) goto parse_max_value;
+        break;
+      }
+
+      // optional float max_value = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_max_value:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &max_value_)));
+          set_has_max_value();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(45)) goto parse_step;
+        break;
+      }
+
+      // optional float step = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_step:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &step_)));
+          set_has_step();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2550,6 +2618,21 @@ void FloatAnim::SerializeWithCachedSizes(
       2, this->keyframe(i), output);
   }
 
+  // optional float min_value = 3;
+  if (has_min_value()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->min_value(), output);
+  }
+
+  // optional float max_value = 4;
+  if (has_max_value()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->max_value(), output);
+  }
+
+  // optional float step = 5;
+  if (has_step()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(5, this->step(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2570,6 +2653,21 @@ void FloatAnim::SerializeWithCachedSizes(
         2, this->keyframe(i), target);
   }
 
+  // optional float min_value = 3;
+  if (has_min_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->min_value(), target);
+  }
+
+  // optional float max_value = 4;
+  if (has_max_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->max_value(), target);
+  }
+
+  // optional float step = 5;
+  if (has_step()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(5, this->step(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -2586,6 +2684,21 @@ int FloatAnim::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->type());
+    }
+
+    // optional float min_value = 3;
+    if (has_min_value()) {
+      total_size += 1 + 4;
+    }
+
+    // optional float max_value = 4;
+    if (has_max_value()) {
+      total_size += 1 + 4;
+    }
+
+    // optional float step = 5;
+    if (has_step()) {
+      total_size += 1 + 4;
     }
 
   }
@@ -2627,6 +2740,15 @@ void FloatAnim::MergeFrom(const FloatAnim& from) {
     if (from.has_type()) {
       set_type(from.type());
     }
+    if (from.has_min_value()) {
+      set_min_value(from.min_value());
+    }
+    if (from.has_max_value()) {
+      set_max_value(from.max_value());
+    }
+    if (from.has_step()) {
+      set_step(from.step());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2652,6 +2774,9 @@ void FloatAnim::Swap(FloatAnim* other) {
   if (other != this) {
     std::swap(type_, other->type_);
     keyframe_.Swap(&other->keyframe_);
+    std::swap(min_value_, other->min_value_);
+    std::swap(max_value_, other->max_value_);
+    std::swap(step_, other->step_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -2925,6 +3050,9 @@ void Vector3Keyframe::Swap(Vector3Keyframe* other) {
 #ifndef _MSC_VER
 const int Vector3Anim::kTypeFieldNumber;
 const int Vector3Anim::kKeyframeFieldNumber;
+const int Vector3Anim::kMinValueFieldNumber;
+const int Vector3Anim::kMaxValueFieldNumber;
+const int Vector3Anim::kStepFieldNumber;
 #endif  // !_MSC_VER
 
 Vector3Anim::Vector3Anim()
@@ -2933,6 +3061,9 @@ Vector3Anim::Vector3Anim()
 }
 
 void Vector3Anim::InitAsDefaultInstance() {
+  min_value_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
+  max_value_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
+  step_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
 }
 
 Vector3Anim::Vector3Anim(const Vector3Anim& from)
@@ -2944,6 +3075,9 @@ Vector3Anim::Vector3Anim(const Vector3Anim& from)
 void Vector3Anim::SharedCtor() {
   _cached_size_ = 0;
   type_ = 0u;
+  min_value_ = NULL;
+  max_value_ = NULL;
+  step_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2953,6 +3087,9 @@ Vector3Anim::~Vector3Anim() {
 
 void Vector3Anim::SharedDtor() {
   if (this != default_instance_) {
+    delete min_value_;
+    delete max_value_;
+    delete step_;
   }
 }
 
@@ -2980,6 +3117,15 @@ Vector3Anim* Vector3Anim::New() const {
 void Vector3Anim::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     type_ = 0u;
+    if (has_min_value()) {
+      if (min_value_ != NULL) min_value_->::common::protocol::Vector3::Clear();
+    }
+    if (has_max_value()) {
+      if (max_value_ != NULL) max_value_->::common::protocol::Vector3::Clear();
+    }
+    if (has_step()) {
+      if (step_ != NULL) step_->::common::protocol::Vector3::Clear();
+    }
   }
   keyframe_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -3018,6 +3164,48 @@ bool Vector3Anim::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(18)) goto parse_keyframe;
+        if (input->ExpectTag(26)) goto parse_min_value;
+        break;
+      }
+
+      // optional .common.protocol.Vector3 min_value = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_min_value:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_min_value()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(34)) goto parse_max_value;
+        break;
+      }
+
+      // optional .common.protocol.Vector3 max_value = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_max_value:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_max_value()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(42)) goto parse_step;
+        break;
+      }
+
+      // optional .common.protocol.Vector3 step = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_step:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_step()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -3051,6 +3239,24 @@ void Vector3Anim::SerializeWithCachedSizes(
       2, this->keyframe(i), output);
   }
 
+  // optional .common.protocol.Vector3 min_value = 3;
+  if (has_min_value()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, this->min_value(), output);
+  }
+
+  // optional .common.protocol.Vector3 max_value = 4;
+  if (has_max_value()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      4, this->max_value(), output);
+  }
+
+  // optional .common.protocol.Vector3 step = 5;
+  if (has_step()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, this->step(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -3071,6 +3277,27 @@ void Vector3Anim::SerializeWithCachedSizes(
         2, this->keyframe(i), target);
   }
 
+  // optional .common.protocol.Vector3 min_value = 3;
+  if (has_min_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        3, this->min_value(), target);
+  }
+
+  // optional .common.protocol.Vector3 max_value = 4;
+  if (has_max_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        4, this->max_value(), target);
+  }
+
+  // optional .common.protocol.Vector3 step = 5;
+  if (has_step()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        5, this->step(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -3087,6 +3314,27 @@ int Vector3Anim::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->type());
+    }
+
+    // optional .common.protocol.Vector3 min_value = 3;
+    if (has_min_value()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->min_value());
+    }
+
+    // optional .common.protocol.Vector3 max_value = 4;
+    if (has_max_value()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->max_value());
+    }
+
+    // optional .common.protocol.Vector3 step = 5;
+    if (has_step()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->step());
     }
 
   }
@@ -3128,6 +3376,15 @@ void Vector3Anim::MergeFrom(const Vector3Anim& from) {
     if (from.has_type()) {
       set_type(from.type());
     }
+    if (from.has_min_value()) {
+      mutable_min_value()->::common::protocol::Vector3::MergeFrom(from.min_value());
+    }
+    if (from.has_max_value()) {
+      mutable_max_value()->::common::protocol::Vector3::MergeFrom(from.max_value());
+    }
+    if (from.has_step()) {
+      mutable_step()->::common::protocol::Vector3::MergeFrom(from.step());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -3153,6 +3410,9 @@ void Vector3Anim::Swap(Vector3Anim* other) {
   if (other != this) {
     std::swap(type_, other->type_);
     keyframe_.Swap(&other->keyframe_);
+    std::swap(min_value_, other->min_value_);
+    std::swap(max_value_, other->max_value_);
+    std::swap(step_, other->step_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

@@ -8,68 +8,8 @@ namespace editor
   struct Plexus;
   struct StyleFactory;
   struct EffectRow;
-
-  template <typename T>
-  struct ToggleSet
-  {
-    ToggleSet()
-      : it(backingSet.end())
-    {
-
-    }
-
-    bool IsEmpty()
-    {
-      return backingSet.empty();
-    }
-
-    void Reset()
-    {
-      it = backingSet.begin();
-    }
-
-    bool Next()
-    {
-      if (IsEmpty())
-        return false;
-
-      // display the next graph, or step to the next row if done
-      if ((*it)->NextGraph())
-      {
-        ++it;
-        if (it == backingSet.end())
-        {
-          Reset();
-          return false;
-        }
-        (*it)->ToggleGraphView(true);
-      }
-
-      return true;
-    }
-
-    void Toggle(const T& t)
-    {
-      auto it = find(backingSet.begin(), backingSet.end(), t);
-      if (it == backingSet.end())
-      {
-        backingSet.push_back(t);
-      }
-      else
-      {
-        backingSet.erase(it);
-      }
-      Reset();
-    }
-
-    T CurRow()
-    {
-      return *it;
-    }
-
-    vector<T> backingSet;
-    typename vector<T>::iterator it;
-  };
+  struct EffectRowEvent;
+  struct RowVar;
 
   //----------------------------------------------------------------------------------
   class PropertyWindow : public VirtualWindow
@@ -121,6 +61,8 @@ namespace editor
 
     void KeyframesModified();
 
+    void SendEffectEvent(RowVar* sender, const EffectRowEvent& event);
+
     DisplayMode GetDisplayMode() const { return _displayMode; }
 
     template<typename T>
@@ -170,14 +112,11 @@ namespace editor
     EffectRow* _curRow;
 
     Vector2i _lastDragPos;
-//    EffectRow* _editRow;
     StyledRect _tickerRect;
     StyledRect _statusBar;
     vector<string> _statusBarValues;
-//    EffectRow* _movingKeyframe;
-//    EffectRow*_selectedRow;
     DisplayMode _displayMode;
-//    ToggleSet<EffectRow*> _selectedRows;
+    RowVar* _selectedVar;
   };
 
 }

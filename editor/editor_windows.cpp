@@ -47,6 +47,7 @@ TimelineWindow::TimelineWindow(
 //    , _movingKeyframe(nullptr)
 //    , _selectedRow(nullptr)
     , _displayMode(DisplayMode::Keyframe)
+    , _selectedVar(nullptr)
 {
   _instance = this;
 }
@@ -217,11 +218,6 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 
   int x = (int)(event.mouseButton.x - _pos.x);
   int y = (int)(event.mouseButton.y - _pos.y);
-  Vector2f mousePos(x, y);
-
-  vector<EffectRow*> effects;
-  for (EffectRow* row : _effectRows)
-    row->Flatten(&effects);
 
   // check for a click in the ticker
   if (y < (int)settings.ticker_height())
@@ -233,6 +229,10 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
     }
     return true;
   }
+
+  vector<EffectRow*> effects;
+  for (EffectRow* row : _effectRows)
+    row->Flatten(&effects);
 
   // check for hits on an effect row
   for (EffectRow* row : effects)
@@ -341,6 +341,18 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     return true;
   }
 
+  vector<EffectRow*> effects;
+  for (EffectRow* row : _effectRows)
+    row->Flatten(&effects);
+
+  for (EffectRow* row : effects)
+  {
+    if (row->OnMouseMoved(event))
+    {
+      return true;
+    }
+  }
+
 
   if (_curRow && _curRow->OnMouseMoved(event))
     return true;
@@ -371,8 +383,19 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 {
-  if (_curRow && _curRow->OnMouseButtonPressed(event))
-    return true;
+  vector<EffectRow*> effects;
+  for (EffectRow* row : _effectRows)
+    row->Flatten(&effects);
+
+  // check for hits on an effect row
+  for (EffectRow* row : effects)
+  {
+    if (row->OnMouseButtonReleased(event))
+    {
+      RecalcEffecRows();
+      return true;
+    }
+  }
 
 //  if (_displayMode == DisplayMode::Graph)
 //  {
@@ -487,9 +510,9 @@ void TimelineWindow::DrawEffects()
     row->Draw(_texture, _displayMode == DisplayMode::Keyframe);
   }
 
-  if (_displayMode == DisplayMode::Graph && _curRow)
+  if (_displayMode == DisplayMode::Graph && _selectedVar)
   {
-    _curRow->DrawGraph(_texture, _size);
+    _selectedVar->DrawGraph(_texture);
   }
 }
 
@@ -629,4 +652,14 @@ void TimelineWindow::Reset(const effect::protocol::EffectSettings& settings)
   }
 
   RecalcEffecRows();
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::SendEffectEvent(RowVar* sender, const EffectRowEvent& event)
+{
+  if (event.type == EffectRowEvent::Type::VarSelected)
+    _selectedVar = sender;
+
+  for (EffectRow* e : _effectRows)
+    e->SendEvent(sender, event);
 }

@@ -858,18 +858,48 @@ class FloatAnim : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::common::protocol::FloatKeyframe >*
       mutable_keyframe();
 
+  // optional float min_value = 3;
+  inline bool has_min_value() const;
+  inline void clear_min_value();
+  static const int kMinValueFieldNumber = 3;
+  inline float min_value() const;
+  inline void set_min_value(float value);
+
+  // optional float max_value = 4;
+  inline bool has_max_value() const;
+  inline void clear_max_value();
+  static const int kMaxValueFieldNumber = 4;
+  inline float max_value() const;
+  inline void set_max_value(float value);
+
+  // optional float step = 5;
+  inline bool has_step() const;
+  inline void clear_step();
+  static const int kStepFieldNumber = 5;
+  inline float step() const;
+  inline void set_step(float value);
+
   // @@protoc_insertion_point(class_scope:common.protocol.FloatAnim)
  private:
   inline void set_has_type();
   inline void clear_has_type();
+  inline void set_has_min_value();
+  inline void clear_has_min_value();
+  inline void set_has_max_value();
+  inline void clear_has_max_value();
+  inline void set_has_step();
+  inline void clear_has_step();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::RepeatedPtrField< ::common::protocol::FloatKeyframe > keyframe_;
   ::google::protobuf::uint32 type_;
+  float min_value_;
+  float max_value_;
+  float step_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_common_2eproto();
   friend void protobuf_AssignDesc_common_2eproto();
@@ -1047,18 +1077,54 @@ class Vector3Anim : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe >*
       mutable_keyframe();
 
+  // optional .common.protocol.Vector3 min_value = 3;
+  inline bool has_min_value() const;
+  inline void clear_min_value();
+  static const int kMinValueFieldNumber = 3;
+  inline const ::common::protocol::Vector3& min_value() const;
+  inline ::common::protocol::Vector3* mutable_min_value();
+  inline ::common::protocol::Vector3* release_min_value();
+  inline void set_allocated_min_value(::common::protocol::Vector3* min_value);
+
+  // optional .common.protocol.Vector3 max_value = 4;
+  inline bool has_max_value() const;
+  inline void clear_max_value();
+  static const int kMaxValueFieldNumber = 4;
+  inline const ::common::protocol::Vector3& max_value() const;
+  inline ::common::protocol::Vector3* mutable_max_value();
+  inline ::common::protocol::Vector3* release_max_value();
+  inline void set_allocated_max_value(::common::protocol::Vector3* max_value);
+
+  // optional .common.protocol.Vector3 step = 5;
+  inline bool has_step() const;
+  inline void clear_step();
+  static const int kStepFieldNumber = 5;
+  inline const ::common::protocol::Vector3& step() const;
+  inline ::common::protocol::Vector3* mutable_step();
+  inline ::common::protocol::Vector3* release_step();
+  inline void set_allocated_step(::common::protocol::Vector3* step);
+
   // @@protoc_insertion_point(class_scope:common.protocol.Vector3Anim)
  private:
   inline void set_has_type();
   inline void clear_has_type();
+  inline void set_has_min_value();
+  inline void clear_has_min_value();
+  inline void set_has_max_value();
+  inline void clear_has_max_value();
+  inline void set_has_step();
+  inline void clear_has_step();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe > keyframe_;
+  ::common::protocol::Vector3* min_value_;
+  ::common::protocol::Vector3* max_value_;
+  ::common::protocol::Vector3* step_;
   ::google::protobuf::uint32 type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_common_2eproto();
   friend void protobuf_AssignDesc_common_2eproto();
@@ -1745,6 +1811,72 @@ FloatAnim::mutable_keyframe() {
   return &keyframe_;
 }
 
+// optional float min_value = 3;
+inline bool FloatAnim::has_min_value() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void FloatAnim::set_has_min_value() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void FloatAnim::clear_has_min_value() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void FloatAnim::clear_min_value() {
+  min_value_ = 0;
+  clear_has_min_value();
+}
+inline float FloatAnim::min_value() const {
+  return min_value_;
+}
+inline void FloatAnim::set_min_value(float value) {
+  set_has_min_value();
+  min_value_ = value;
+}
+
+// optional float max_value = 4;
+inline bool FloatAnim::has_max_value() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void FloatAnim::set_has_max_value() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void FloatAnim::clear_has_max_value() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void FloatAnim::clear_max_value() {
+  max_value_ = 0;
+  clear_has_max_value();
+}
+inline float FloatAnim::max_value() const {
+  return max_value_;
+}
+inline void FloatAnim::set_max_value(float value) {
+  set_has_max_value();
+  max_value_ = value;
+}
+
+// optional float step = 5;
+inline bool FloatAnim::has_step() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void FloatAnim::set_has_step() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void FloatAnim::clear_has_step() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void FloatAnim::clear_step() {
+  step_ = 0;
+  clear_has_step();
+}
+inline float FloatAnim::step() const {
+  return step_;
+}
+inline void FloatAnim::set_step(float value) {
+  set_has_step();
+  step_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // Vector3Keyframe
@@ -1858,6 +1990,120 @@ Vector3Anim::keyframe() const {
 inline ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe >*
 Vector3Anim::mutable_keyframe() {
   return &keyframe_;
+}
+
+// optional .common.protocol.Vector3 min_value = 3;
+inline bool Vector3Anim::has_min_value() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Vector3Anim::set_has_min_value() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Vector3Anim::clear_has_min_value() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Vector3Anim::clear_min_value() {
+  if (min_value_ != NULL) min_value_->::common::protocol::Vector3::Clear();
+  clear_has_min_value();
+}
+inline const ::common::protocol::Vector3& Vector3Anim::min_value() const {
+  return min_value_ != NULL ? *min_value_ : *default_instance_->min_value_;
+}
+inline ::common::protocol::Vector3* Vector3Anim::mutable_min_value() {
+  set_has_min_value();
+  if (min_value_ == NULL) min_value_ = new ::common::protocol::Vector3;
+  return min_value_;
+}
+inline ::common::protocol::Vector3* Vector3Anim::release_min_value() {
+  clear_has_min_value();
+  ::common::protocol::Vector3* temp = min_value_;
+  min_value_ = NULL;
+  return temp;
+}
+inline void Vector3Anim::set_allocated_min_value(::common::protocol::Vector3* min_value) {
+  delete min_value_;
+  min_value_ = min_value;
+  if (min_value) {
+    set_has_min_value();
+  } else {
+    clear_has_min_value();
+  }
+}
+
+// optional .common.protocol.Vector3 max_value = 4;
+inline bool Vector3Anim::has_max_value() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Vector3Anim::set_has_max_value() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Vector3Anim::clear_has_max_value() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Vector3Anim::clear_max_value() {
+  if (max_value_ != NULL) max_value_->::common::protocol::Vector3::Clear();
+  clear_has_max_value();
+}
+inline const ::common::protocol::Vector3& Vector3Anim::max_value() const {
+  return max_value_ != NULL ? *max_value_ : *default_instance_->max_value_;
+}
+inline ::common::protocol::Vector3* Vector3Anim::mutable_max_value() {
+  set_has_max_value();
+  if (max_value_ == NULL) max_value_ = new ::common::protocol::Vector3;
+  return max_value_;
+}
+inline ::common::protocol::Vector3* Vector3Anim::release_max_value() {
+  clear_has_max_value();
+  ::common::protocol::Vector3* temp = max_value_;
+  max_value_ = NULL;
+  return temp;
+}
+inline void Vector3Anim::set_allocated_max_value(::common::protocol::Vector3* max_value) {
+  delete max_value_;
+  max_value_ = max_value;
+  if (max_value) {
+    set_has_max_value();
+  } else {
+    clear_has_max_value();
+  }
+}
+
+// optional .common.protocol.Vector3 step = 5;
+inline bool Vector3Anim::has_step() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Vector3Anim::set_has_step() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Vector3Anim::clear_has_step() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Vector3Anim::clear_step() {
+  if (step_ != NULL) step_->::common::protocol::Vector3::Clear();
+  clear_has_step();
+}
+inline const ::common::protocol::Vector3& Vector3Anim::step() const {
+  return step_ != NULL ? *step_ : *default_instance_->step_;
+}
+inline ::common::protocol::Vector3* Vector3Anim::mutable_step() {
+  set_has_step();
+  if (step_ == NULL) step_ = new ::common::protocol::Vector3;
+  return step_;
+}
+inline ::common::protocol::Vector3* Vector3Anim::release_step() {
+  clear_has_step();
+  ::common::protocol::Vector3* temp = step_;
+  step_ = NULL;
+  return temp;
+}
+inline void Vector3Anim::set_allocated_step(::common::protocol::Vector3* step) {
+  delete step_;
+  step_ = step;
+  if (step) {
+    set_has_step();
+  } else {
+    clear_has_step();
+  }
 }
 
 

@@ -7,6 +7,18 @@ namespace editor
 {
   struct StyledRectangle;
 
+  struct EffectRowEvent
+  {
+    enum class Type
+    {
+      VarSelected,
+    };
+
+    EffectRowEvent(Type type) : type(type) {}
+
+    Type type;
+  };
+
   //----------------------------------------------------------------------------------
   struct RowVar
   {
@@ -14,8 +26,8 @@ namespace editor
 
     struct VarFlagsF
     {
-      enum Enum : u8 { Selected = 1 << 0, Editing = 1 << 1, Animating = 1 << 2, MovingKeyframe = 1 << 3 };
-      struct Bits { u8 selected : 1; u8 editing : 1; u8 animating : 1; u32 movingKeyframe : 1; };
+      enum Enum : u8 { Selected = 1 << 0, Editing = 1 << 1, Animating = 1 << 2, GraphMode  = 1 << 3, PreEdit = 1 << 4, };
+      struct Bits { u8 selected : 1; u8 editing : 1; u8 animating : 1; u32 graphMode : 1; u32 preEdit : 1; };
     };
 
     typedef Flags<VarFlagsF> VarFlags;
@@ -26,16 +38,33 @@ namespace editor
     bool OnMouseButtonPressed(const Event &event);
     bool OnMouseButtonReleased(const Event &event);
     bool OnMouseMoved(const Event &event);
+    void OnEvent(RowVar* sender, const EffectRowEvent& event);
+    void DrawGraph(RenderTexture& texture);
+    Vector2f ToLocal(int x, int y) const;
+
+    float PixelToValue(float value) const;
+    float ValueToPixel(float value) const;
+
+    void VisibleKeyframes(
+        const Vector2f& size,
+        bool addBorderPoints,
+        vector<pair<Vector2f, FloatKeyframe*>>* keyframes);
 
     Text _text;
     Font _font;
     FloatRect _bounds;
 
     string _name;
+    float _value;
     FloatAnim* _anim;
     VarFlags _flags;
     StyledRect _keyframeRect;
     u32 _selectedKeyframe;
+    FloatKeyframe _prevKeyframe;
+    Vector2f _prevPos;
+
+    float _minValue, _maxValue;
+    float _realMinValue, _realMaxValue;
   };
 
   //----------------------------------------------------------------------------------
@@ -43,8 +72,8 @@ namespace editor
   {
     struct RowFlagsF
     {
-      enum Enum { Expanded = 1 << 0, Selected = 1 << 1, Editing = 1 << 2, MovingKeyframe = 1 << 3 };
-      struct Bits { u32 expanded : 1; u32 selected : 1; u32 editing : 1; u32 movingKeyframe : 1; };
+      enum Enum { Expanded = 1 << 0 };
+      struct Bits { u32 expanded : 1; };
     };
 
     typedef Flags<RowFlagsF> RowFlags;
@@ -84,6 +113,7 @@ namespace editor
     virtual bool ToProtocol(google::protobuf::Message* msg) const { return true; }
     virtual bool FromProtocol(const google::protobuf::Message& msg) { return true; }
     u32 NumVars() const { return (u32)_vars.size(); }
+    void SendEvent(RowVar* sender, const EffectRowEvent& event);
 
     string _str;
     RowFlags _flags;
@@ -97,7 +127,7 @@ namespace editor
     FloatRect _varEditRect;
     StyledRect _keyframeRect;
     u32 _id;
-    vector<RowVar> _vars;
+    vector<RowVar*> _vars;
   };
 
 
@@ -139,9 +169,9 @@ namespace editor
         const string& str,
         EffectRow* parent = nullptr);
 
-    virtual void BeginEditVars(float x, float y);
-    virtual void EndEditVars(bool commit);
-    virtual void UpdateEditVar(Keyboard::Key key);
+//    virtual void BeginEditVars(float x, float y);
+//    virtual void EndEditVars(bool commit);
+//    virtual void UpdateEditVar(Keyboard::Key key);
 
     virtual bool KeyframeIntersect(const Vector2f& pt, const Vector2f& size);
     virtual void BeginKeyframeUpdate(bool copy);
@@ -150,25 +180,9 @@ namespace editor
     virtual void DeselectKeyframe();
     virtual void DeleteKeyframe();
 
-    virtual void ToggleGraphView(bool value);
-    virtual bool NextGraph();
-    virtual void DrawGraph(RenderTexture& texture, const Vector2f& size);
-
     virtual bool FromProtocol(const google::protobuf::Message& msg);
     virtual bool ToProtocol(google::protobuf::Message* msg) const;
 
-    //void DrawKeyframes(RenderTexture& texture, const Vector2f& size);
-
-    void VisibleKeyframes(
-        const Vector2f& size,
-        bool addBorderPoints,
-        vector<pair<Vector2f, Vector3Keyframe*>>* keyframes);
-
-    float CalcGraphValue(const Vector3f& value) const;
-    float ExtractGraphValue(const Vector3f& value) const;
-    float& ExtractGraphValue(Vector3f& value);
-    Vector3f PixelToValue(int x) const;
-    int ValueToPixel(const Vector3f& v);
     Vector3f UpdateKeyframe(const Vector3f& newValue, const Vector3f& old) const;
 
     void CalcCeilAndStep(float value, float* stepValue, float* ceilValue);

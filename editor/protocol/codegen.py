@@ -42,6 +42,11 @@ def underscore_to_camel_case(str):
     x = str.split('_')
     return x[0] + ''.join(map(lambda x : x.title(), x[1:]))
 
+def underscore_to_title_case(str):
+    # 'under_score_hej' -> 'underScoreHej'
+    x = str.split('_')
+    return ''.join(map(lambda x : x.title(), x))
+
 env = Environment(
     loader=PackageLoader('codegen', 'templates'),
     trim_blocks = True,
@@ -91,6 +96,7 @@ for file_desc in fds.file:
                 e['vals'].append({'name' : value.name, 'number' : value.number})
 
         # process fields
+        idx = 0
         for field_desc in msg_desc.field:
             type_number = field_desc.type
 
@@ -132,18 +138,23 @@ for file_desc in fds.file:
 
             proto_field_name = field_desc.name
             field_name = underscore_to_camel_case(field_desc.name)
+            title_name = underscore_to_title_case(field_desc.name)
 
             cur_member = { 
                 'name' : field_name,
+                'name_title' : title_name,
                 'type' : field_type,
                 'base_type' : base_type,
+                'is_optional' : is_optional,
                 'is_repeated' : is_repeated,
                 'is_native' : is_native,
                 'is_enum' : is_enum,
                 'is_bytes' : is_bytes,
                 'proto_name' : proto_field_name, 
                 'proto_type' : proto_type,
+                'idx' : idx,
                 }
+            idx += 1
             cur_class['members'].append(cur_member)
             # print '  ', field_desc.name
     # exit(1)

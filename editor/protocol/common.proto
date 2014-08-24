@@ -54,6 +54,9 @@ message FloatAnim
 {
   optional uint32 type = 1;
   repeated FloatKeyframe keyframe = 2;
+  optional float min_value = 3;
+  optional float max_value = 4;
+  optional float step = 5;
 }
 
 message Vector3Keyframe
@@ -67,4 +70,7 @@ message Vector3Anim
 {
   optional uint32 type = 1;
   repeated Vector3Keyframe keyframe = 2;
+  optional Vector3 min_value = 3;
+  optional Vector3 max_value = 4;
+  optional Vector3 step = 5;
 }
