@@ -75,12 +75,16 @@ namespace editor
   
   struct FloatKeyframe
   {
-    uint32_t time;
+    int32_t time;
     float value;
+    int32_t cpInTime;
+    float cpInValue;
+    int32_t cpOutTime;
+    float cpOutValue;
 
     struct FlagsF {
-      enum Enum { HasTime = 1 << 0, HasValue = 1 << 1, };
-      struct Bits { u32 hasTime : 1; u32 hasValue : 1; };
+      enum Enum { HasTime = 1 << 0, HasValue = 1 << 1, HasCpInTime = 1 << 2, HasCpInValue = 1 << 3, HasCpOutTime = 1 << 4, HasCpOutValue = 1 << 5, };
+      struct Bits { u32 hasTime : 1; u32 hasValue : 1; u32 hasCpInTime : 1; u32 hasCpInValue : 1; u32 hasCpOutTime : 1; u32 hasCpOutValue : 1; };
     };
     Flags<FlagsF> flags;
   };
@@ -102,7 +106,7 @@ namespace editor
 
   struct Vector3Keyframe
   {
-    uint32_t time;
+    int32_t time;
     Vector3f value;
 
     struct FlagsF {
@@ -320,6 +324,26 @@ namespace editor
       res.flags.Set(FloatKeyframe::FlagsF::HasValue);
       res.value = p.value();
     }
+    if (p.has_cp_in_time())
+    {
+      res.flags.Set(FloatKeyframe::FlagsF::HasCpInTime);
+      res.cpInTime = p.cp_in_time();
+    }
+    if (p.has_cp_in_value())
+    {
+      res.flags.Set(FloatKeyframe::FlagsF::HasCpInValue);
+      res.cpInValue = p.cp_in_value();
+    }
+    if (p.has_cp_out_time())
+    {
+      res.flags.Set(FloatKeyframe::FlagsF::HasCpOutTime);
+      res.cpOutTime = p.cp_out_time();
+    }
+    if (p.has_cp_out_value())
+    {
+      res.flags.Set(FloatKeyframe::FlagsF::HasCpOutValue);
+      res.cpOutValue = p.cp_out_value();
+    }
     return res;
   }
 
@@ -327,6 +351,10 @@ namespace editor
   {
     p->set_time(v.time);
     p->set_value(v.value);
+    p->set_cp_in_time(v.cpInTime);
+    p->set_cp_in_value(v.cpInValue);
+    p->set_cp_out_time(v.cpOutTime);
+    p->set_cp_out_value(v.cpOutValue);
   }
 
   inline FloatAnim FromProtocol(const common::protocol::FloatAnim& p)

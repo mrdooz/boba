@@ -261,7 +261,7 @@ bool RowVar::OnMouseMoved(const Event &event)
   {
     vector<FloatKeyframe>& keyframes = _anim->keyframe;
 
-    u32 t = timeline->PixelToTime(mousePos.x).total_milliseconds();
+    s32 t = timeline->PixelToTime(mousePos.x).total_milliseconds();
 
     if (_flags.IsSet(VarFlagsF::GraphMode))
     {
@@ -444,7 +444,8 @@ void RowVar::DrawGraph(RenderTexture& texture)
   const editor::protocol::Settings& settings = EDITOR.Settings();
   int ofs = settings.effect_view_width();
 
-  Vector2f size = TimelineWindow::_instance->GetSize();
+  TimelineWindow* timeline = TimelineWindow::_instance;
+  Vector2f size = timeline->GetSize();
 
   vector<pair<Vector2f, FloatKeyframe*>> keyframes;
   VisibleKeyframes(size, false, &keyframes);
@@ -484,17 +485,34 @@ void RowVar::DrawGraph(RenderTexture& texture)
 
   // draw the keyframes normalized to the min/max values
 
-  if (true)
+  if (_anim->type == 1)
   {
     VertexArray curLine(sf::LinesStrip);
     VertexArray controlPoints(sf::Lines);
 
-    for (u32 i = 0; i < keyframes.size() - 3; i += 3)
+    for (u32 i = 0; i < keyframes.size() - 1; ++i)
     {
-      const Vector2f& p0 = keyframes[i+0].first;
-      const Vector2f& p1 = keyframes[i+1].first;
-      const Vector2f& p2 = keyframes[i+2].first;
-      const Vector2f& p3 = keyframes[i+3].first;
+      FloatKeyframe* k0 = keyframes[i+0].second;
+      FloatKeyframe* k1 = keyframes[i+1].second;
+
+      if (!(k0 && k1))
+        continue;
+
+      const Vector2f& p0 = Vector2f(
+          timeline->TimeToPixel(milliseconds(k0->time)),
+          ValueToPixel(k0->value));
+
+      const Vector2f& p1 = Vector2f(
+          timeline->TimeToPixel(milliseconds(k0->cpOutTime)),
+          ValueToPixel(k0->cpOutValue));
+
+      const Vector2f& p2 = Vector2f(
+          timeline->TimeToPixel(milliseconds(k1->cpInTime)),
+          ValueToPixel(k1->cpInValue));
+
+      const Vector2f& p3 = Vector2f(
+          timeline->TimeToPixel(milliseconds(k1->time)),
+          ValueToPixel(k1->value));
 
       Color c(180, 200, 0);
       controlPoints.append(sf::Vertex(p0, c));

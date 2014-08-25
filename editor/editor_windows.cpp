@@ -103,7 +103,7 @@ bool TimelineWindow::Init()
     e.displacement.x.type = 1;
     e.displacement.y.type = 1;
     e.displacement.z.type = 1;
-    u32 t = randf(0.f, 500.f);
+    s32 t = randf(0.f, 500.f);
     for (u32 j = 0; j < 50; ++j)
     {
       e.displacement.x.keyframe.push_back({ t, randf(-10.f, 20.f) });
@@ -112,6 +112,37 @@ bool TimelineWindow::Init()
       t += randf(150.f, 1000.f);
       e.displacement.z.keyframe.push_back({ t, randf(-10.f, 20.f) });
       t += randf(150.f, 1000.f);
+
+      float d;
+      s32 t;
+
+      float s = 250;
+      if (j == 0)
+      {
+        d = e.displacement.x.keyframe[1].value - e.displacement.x.keyframe[0].value;
+        t = e.displacement.x.keyframe[1].time - e.displacement.x.keyframe[0].time;
+        float len = sqrtf(d*d+t*t) / s;
+
+        e.displacement.x.keyframe.back().cpOutValue = e.displacement.x.keyframe[0].value + d / len;
+        e.displacement.x.keyframe.back().cpOutTime = e.displacement.x.keyframe[0].time + t / len;
+
+
+      }
+      else if (j == 48)
+      {
+
+      }
+      else
+      {
+        d = e.displacement.x.keyframe[j+1].value - e.displacement.x.keyframe[j-1].value;
+        t = e.displacement.x.keyframe[j+1].time - e.displacement.x.keyframe[j-1].time;
+        float len = sqrtf(d*d+t*t) / s;
+
+        e.displacement.x.keyframe.back().cpInValue = e.displacement.x.keyframe[j].value - d / len;
+        e.displacement.x.keyframe.back().cpInTime = e.displacement.x.keyframe[j].time - t / len;
+        e.displacement.x.keyframe.back().cpOutValue = e.displacement.x.keyframe[j].value + d / len;
+        e.displacement.x.keyframe.back().cpOutTime = e.displacement.x.keyframe[j].time + t / len;
+      }
     }
     n->_effector = e;
     parent->_children.push_back(n);

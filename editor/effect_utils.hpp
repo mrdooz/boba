@@ -103,7 +103,7 @@ namespace editor
     typedef typename KeyframeTraits<T>::Keyframes Keyframes;
 
     Keyframes& keyframes = anim->keyframe;
-    u32 time_ms = t.total_milliseconds();
+    s32 time_ms = t.total_milliseconds();
 
     if (keyframes.empty())
     {

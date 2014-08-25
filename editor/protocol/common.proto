@@ -46,8 +46,15 @@ message Matrix4x4
 
 message FloatKeyframe
 {
-  optional uint32 time = 1;
+  optional int32 time = 1;
   optional float value = 2;
+
+  // bezier control points
+  optional int32 cp_in_time = 3;
+  optional float cp_in_value = 4;
+
+  optional int32 cp_out_time = 5;
+  optional float cp_out_value = 6;
 }
 
 message FloatAnim
@@ -62,7 +69,7 @@ message FloatAnim
 message Vector3Keyframe
 {
 //  option (common.protocol.context) = "void* context";
-  optional uint32 time = 1;
+  optional int32 time = 1;
   optional Vector3 value = 2;
 }
 

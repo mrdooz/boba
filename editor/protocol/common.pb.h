@@ -747,12 +747,12 @@ class FloatKeyframe : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional uint32 time = 1;
+  // optional int32 time = 1;
   inline bool has_time() const;
   inline void clear_time();
   static const int kTimeFieldNumber = 1;
-  inline ::google::protobuf::uint32 time() const;
-  inline void set_time(::google::protobuf::uint32 value);
+  inline ::google::protobuf::int32 time() const;
+  inline void set_time(::google::protobuf::int32 value);
 
   // optional float value = 2;
   inline bool has_value() const;
@@ -761,20 +761,60 @@ class FloatKeyframe : public ::google::protobuf::Message {
   inline float value() const;
   inline void set_value(float value);
 
+  // optional int32 cp_in_time = 3;
+  inline bool has_cp_in_time() const;
+  inline void clear_cp_in_time();
+  static const int kCpInTimeFieldNumber = 3;
+  inline ::google::protobuf::int32 cp_in_time() const;
+  inline void set_cp_in_time(::google::protobuf::int32 value);
+
+  // optional float cp_in_value = 4;
+  inline bool has_cp_in_value() const;
+  inline void clear_cp_in_value();
+  static const int kCpInValueFieldNumber = 4;
+  inline float cp_in_value() const;
+  inline void set_cp_in_value(float value);
+
+  // optional int32 cp_out_time = 5;
+  inline bool has_cp_out_time() const;
+  inline void clear_cp_out_time();
+  static const int kCpOutTimeFieldNumber = 5;
+  inline ::google::protobuf::int32 cp_out_time() const;
+  inline void set_cp_out_time(::google::protobuf::int32 value);
+
+  // optional float cp_out_value = 6;
+  inline bool has_cp_out_value() const;
+  inline void clear_cp_out_value();
+  static const int kCpOutValueFieldNumber = 6;
+  inline float cp_out_value() const;
+  inline void set_cp_out_value(float value);
+
   // @@protoc_insertion_point(class_scope:common.protocol.FloatKeyframe)
  private:
   inline void set_has_time();
   inline void clear_has_time();
   inline void set_has_value();
   inline void clear_has_value();
+  inline void set_has_cp_in_time();
+  inline void clear_has_cp_in_time();
+  inline void set_has_cp_in_value();
+  inline void clear_has_cp_in_value();
+  inline void set_has_cp_out_time();
+  inline void clear_has_cp_out_time();
+  inline void set_has_cp_out_value();
+  inline void clear_has_cp_out_value();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::uint32 time_;
+  ::google::protobuf::int32 time_;
   float value_;
+  ::google::protobuf::int32 cp_in_time_;
+  float cp_in_value_;
+  ::google::protobuf::int32 cp_out_time_;
+  float cp_out_value_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_common_2eproto();
   friend void protobuf_AssignDesc_common_2eproto();
@@ -964,12 +1004,12 @@ class Vector3Keyframe : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional uint32 time = 1;
+  // optional int32 time = 1;
   inline bool has_time() const;
   inline void clear_time();
   static const int kTimeFieldNumber = 1;
-  inline ::google::protobuf::uint32 time() const;
-  inline void set_time(::google::protobuf::uint32 value);
+  inline ::google::protobuf::int32 time() const;
+  inline void set_time(::google::protobuf::int32 value);
 
   // optional .common.protocol.Vector3 value = 2;
   inline bool has_value() const;
@@ -990,7 +1030,7 @@ class Vector3Keyframe : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::common::protocol::Vector3* value_;
-  ::google::protobuf::uint32 time_;
+  ::google::protobuf::int32 time_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -1716,7 +1756,7 @@ inline void Matrix4x4::set_allocated_row_4(::common::protocol::Vector4* row_4) {
 
 // FloatKeyframe
 
-// optional uint32 time = 1;
+// optional int32 time = 1;
 inline bool FloatKeyframe::has_time() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1727,13 +1767,13 @@ inline void FloatKeyframe::clear_has_time() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void FloatKeyframe::clear_time() {
-  time_ = 0u;
+  time_ = 0;
   clear_has_time();
 }
-inline ::google::protobuf::uint32 FloatKeyframe::time() const {
+inline ::google::protobuf::int32 FloatKeyframe::time() const {
   return time_;
 }
-inline void FloatKeyframe::set_time(::google::protobuf::uint32 value) {
+inline void FloatKeyframe::set_time(::google::protobuf::int32 value) {
   set_has_time();
   time_ = value;
 }
@@ -1758,6 +1798,94 @@ inline float FloatKeyframe::value() const {
 inline void FloatKeyframe::set_value(float value) {
   set_has_value();
   value_ = value;
+}
+
+// optional int32 cp_in_time = 3;
+inline bool FloatKeyframe::has_cp_in_time() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void FloatKeyframe::set_has_cp_in_time() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void FloatKeyframe::clear_has_cp_in_time() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void FloatKeyframe::clear_cp_in_time() {
+  cp_in_time_ = 0;
+  clear_has_cp_in_time();
+}
+inline ::google::protobuf::int32 FloatKeyframe::cp_in_time() const {
+  return cp_in_time_;
+}
+inline void FloatKeyframe::set_cp_in_time(::google::protobuf::int32 value) {
+  set_has_cp_in_time();
+  cp_in_time_ = value;
+}
+
+// optional float cp_in_value = 4;
+inline bool FloatKeyframe::has_cp_in_value() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void FloatKeyframe::set_has_cp_in_value() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void FloatKeyframe::clear_has_cp_in_value() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void FloatKeyframe::clear_cp_in_value() {
+  cp_in_value_ = 0;
+  clear_has_cp_in_value();
+}
+inline float FloatKeyframe::cp_in_value() const {
+  return cp_in_value_;
+}
+inline void FloatKeyframe::set_cp_in_value(float value) {
+  set_has_cp_in_value();
+  cp_in_value_ = value;
+}
+
+// optional int32 cp_out_time = 5;
+inline bool FloatKeyframe::has_cp_out_time() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void FloatKeyframe::set_has_cp_out_time() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void FloatKeyframe::clear_has_cp_out_time() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void FloatKeyframe::clear_cp_out_time() {
+  cp_out_time_ = 0;
+  clear_has_cp_out_time();
+}
+inline ::google::protobuf::int32 FloatKeyframe::cp_out_time() const {
+  return cp_out_time_;
+}
+inline void FloatKeyframe::set_cp_out_time(::google::protobuf::int32 value) {
+  set_has_cp_out_time();
+  cp_out_time_ = value;
+}
+
+// optional float cp_out_value = 6;
+inline bool FloatKeyframe::has_cp_out_value() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void FloatKeyframe::set_has_cp_out_value() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void FloatKeyframe::clear_has_cp_out_value() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void FloatKeyframe::clear_cp_out_value() {
+  cp_out_value_ = 0;
+  clear_has_cp_out_value();
+}
+inline float FloatKeyframe::cp_out_value() const {
+  return cp_out_value_;
+}
+inline void FloatKeyframe::set_cp_out_value(float value) {
+  set_has_cp_out_value();
+  cp_out_value_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1881,7 +2009,7 @@ inline void FloatAnim::set_step(float value) {
 
 // Vector3Keyframe
 
-// optional uint32 time = 1;
+// optional int32 time = 1;
 inline bool Vector3Keyframe::has_time() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1892,13 +2020,13 @@ inline void Vector3Keyframe::clear_has_time() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void Vector3Keyframe::clear_time() {
-  time_ = 0u;
+  time_ = 0;
   clear_has_time();
 }
-inline ::google::protobuf::uint32 Vector3Keyframe::time() const {
+inline ::google::protobuf::int32 Vector3Keyframe::time() const {
   return time_;
 }
-inline void Vector3Keyframe::set_time(::google::protobuf::uint32 value) {
+inline void Vector3Keyframe::set_time(::google::protobuf::int32 value) {
   set_has_time();
   time_ = value;
 }
