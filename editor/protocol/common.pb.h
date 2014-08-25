@@ -747,74 +747,50 @@ class FloatKeyframe : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int32 time = 1;
-  inline bool has_time() const;
-  inline void clear_time();
-  static const int kTimeFieldNumber = 1;
-  inline ::google::protobuf::int32 time() const;
-  inline void set_time(::google::protobuf::int32 value);
+  // optional .common.protocol.Vector2 key = 1;
+  inline bool has_key() const;
+  inline void clear_key();
+  static const int kKeyFieldNumber = 1;
+  inline const ::common::protocol::Vector2& key() const;
+  inline ::common::protocol::Vector2* mutable_key();
+  inline ::common::protocol::Vector2* release_key();
+  inline void set_allocated_key(::common::protocol::Vector2* key);
 
-  // optional float value = 2;
-  inline bool has_value() const;
-  inline void clear_value();
-  static const int kValueFieldNumber = 2;
-  inline float value() const;
-  inline void set_value(float value);
+  // optional .common.protocol.Vector2 cp_in = 2;
+  inline bool has_cp_in() const;
+  inline void clear_cp_in();
+  static const int kCpInFieldNumber = 2;
+  inline const ::common::protocol::Vector2& cp_in() const;
+  inline ::common::protocol::Vector2* mutable_cp_in();
+  inline ::common::protocol::Vector2* release_cp_in();
+  inline void set_allocated_cp_in(::common::protocol::Vector2* cp_in);
 
-  // optional int32 cp_in_time = 3;
-  inline bool has_cp_in_time() const;
-  inline void clear_cp_in_time();
-  static const int kCpInTimeFieldNumber = 3;
-  inline ::google::protobuf::int32 cp_in_time() const;
-  inline void set_cp_in_time(::google::protobuf::int32 value);
-
-  // optional float cp_in_value = 4;
-  inline bool has_cp_in_value() const;
-  inline void clear_cp_in_value();
-  static const int kCpInValueFieldNumber = 4;
-  inline float cp_in_value() const;
-  inline void set_cp_in_value(float value);
-
-  // optional int32 cp_out_time = 5;
-  inline bool has_cp_out_time() const;
-  inline void clear_cp_out_time();
-  static const int kCpOutTimeFieldNumber = 5;
-  inline ::google::protobuf::int32 cp_out_time() const;
-  inline void set_cp_out_time(::google::protobuf::int32 value);
-
-  // optional float cp_out_value = 6;
-  inline bool has_cp_out_value() const;
-  inline void clear_cp_out_value();
-  static const int kCpOutValueFieldNumber = 6;
-  inline float cp_out_value() const;
-  inline void set_cp_out_value(float value);
+  // optional .common.protocol.Vector2 cp_out = 3;
+  inline bool has_cp_out() const;
+  inline void clear_cp_out();
+  static const int kCpOutFieldNumber = 3;
+  inline const ::common::protocol::Vector2& cp_out() const;
+  inline ::common::protocol::Vector2* mutable_cp_out();
+  inline ::common::protocol::Vector2* release_cp_out();
+  inline void set_allocated_cp_out(::common::protocol::Vector2* cp_out);
 
   // @@protoc_insertion_point(class_scope:common.protocol.FloatKeyframe)
  private:
-  inline void set_has_time();
-  inline void clear_has_time();
-  inline void set_has_value();
-  inline void clear_has_value();
-  inline void set_has_cp_in_time();
-  inline void clear_has_cp_in_time();
-  inline void set_has_cp_in_value();
-  inline void clear_has_cp_in_value();
-  inline void set_has_cp_out_time();
-  inline void clear_has_cp_out_time();
-  inline void set_has_cp_out_value();
-  inline void clear_has_cp_out_value();
+  inline void set_has_key();
+  inline void clear_has_key();
+  inline void set_has_cp_in();
+  inline void clear_has_cp_in();
+  inline void set_has_cp_out();
+  inline void clear_has_cp_out();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::int32 time_;
-  float value_;
-  ::google::protobuf::int32 cp_in_time_;
-  float cp_in_value_;
-  ::google::protobuf::int32 cp_out_time_;
-  float cp_out_value_;
+  ::common::protocol::Vector2* key_;
+  ::common::protocol::Vector2* cp_in_;
+  ::common::protocol::Vector2* cp_out_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_common_2eproto();
   friend void protobuf_AssignDesc_common_2eproto();
@@ -1756,136 +1732,118 @@ inline void Matrix4x4::set_allocated_row_4(::common::protocol::Vector4* row_4) {
 
 // FloatKeyframe
 
-// optional int32 time = 1;
-inline bool FloatKeyframe::has_time() const {
+// optional .common.protocol.Vector2 key = 1;
+inline bool FloatKeyframe::has_key() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void FloatKeyframe::set_has_time() {
+inline void FloatKeyframe::set_has_key() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void FloatKeyframe::clear_has_time() {
+inline void FloatKeyframe::clear_has_key() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void FloatKeyframe::clear_time() {
-  time_ = 0;
-  clear_has_time();
+inline void FloatKeyframe::clear_key() {
+  if (key_ != NULL) key_->::common::protocol::Vector2::Clear();
+  clear_has_key();
 }
-inline ::google::protobuf::int32 FloatKeyframe::time() const {
-  return time_;
+inline const ::common::protocol::Vector2& FloatKeyframe::key() const {
+  return key_ != NULL ? *key_ : *default_instance_->key_;
 }
-inline void FloatKeyframe::set_time(::google::protobuf::int32 value) {
-  set_has_time();
-  time_ = value;
+inline ::common::protocol::Vector2* FloatKeyframe::mutable_key() {
+  set_has_key();
+  if (key_ == NULL) key_ = new ::common::protocol::Vector2;
+  return key_;
+}
+inline ::common::protocol::Vector2* FloatKeyframe::release_key() {
+  clear_has_key();
+  ::common::protocol::Vector2* temp = key_;
+  key_ = NULL;
+  return temp;
+}
+inline void FloatKeyframe::set_allocated_key(::common::protocol::Vector2* key) {
+  delete key_;
+  key_ = key;
+  if (key) {
+    set_has_key();
+  } else {
+    clear_has_key();
+  }
 }
 
-// optional float value = 2;
-inline bool FloatKeyframe::has_value() const {
+// optional .common.protocol.Vector2 cp_in = 2;
+inline bool FloatKeyframe::has_cp_in() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void FloatKeyframe::set_has_value() {
+inline void FloatKeyframe::set_has_cp_in() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void FloatKeyframe::clear_has_value() {
+inline void FloatKeyframe::clear_has_cp_in() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void FloatKeyframe::clear_value() {
-  value_ = 0;
-  clear_has_value();
+inline void FloatKeyframe::clear_cp_in() {
+  if (cp_in_ != NULL) cp_in_->::common::protocol::Vector2::Clear();
+  clear_has_cp_in();
 }
-inline float FloatKeyframe::value() const {
-  return value_;
+inline const ::common::protocol::Vector2& FloatKeyframe::cp_in() const {
+  return cp_in_ != NULL ? *cp_in_ : *default_instance_->cp_in_;
 }
-inline void FloatKeyframe::set_value(float value) {
-  set_has_value();
-  value_ = value;
+inline ::common::protocol::Vector2* FloatKeyframe::mutable_cp_in() {
+  set_has_cp_in();
+  if (cp_in_ == NULL) cp_in_ = new ::common::protocol::Vector2;
+  return cp_in_;
+}
+inline ::common::protocol::Vector2* FloatKeyframe::release_cp_in() {
+  clear_has_cp_in();
+  ::common::protocol::Vector2* temp = cp_in_;
+  cp_in_ = NULL;
+  return temp;
+}
+inline void FloatKeyframe::set_allocated_cp_in(::common::protocol::Vector2* cp_in) {
+  delete cp_in_;
+  cp_in_ = cp_in;
+  if (cp_in) {
+    set_has_cp_in();
+  } else {
+    clear_has_cp_in();
+  }
 }
 
-// optional int32 cp_in_time = 3;
-inline bool FloatKeyframe::has_cp_in_time() const {
+// optional .common.protocol.Vector2 cp_out = 3;
+inline bool FloatKeyframe::has_cp_out() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void FloatKeyframe::set_has_cp_in_time() {
+inline void FloatKeyframe::set_has_cp_out() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void FloatKeyframe::clear_has_cp_in_time() {
+inline void FloatKeyframe::clear_has_cp_out() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void FloatKeyframe::clear_cp_in_time() {
-  cp_in_time_ = 0;
-  clear_has_cp_in_time();
+inline void FloatKeyframe::clear_cp_out() {
+  if (cp_out_ != NULL) cp_out_->::common::protocol::Vector2::Clear();
+  clear_has_cp_out();
 }
-inline ::google::protobuf::int32 FloatKeyframe::cp_in_time() const {
-  return cp_in_time_;
+inline const ::common::protocol::Vector2& FloatKeyframe::cp_out() const {
+  return cp_out_ != NULL ? *cp_out_ : *default_instance_->cp_out_;
 }
-inline void FloatKeyframe::set_cp_in_time(::google::protobuf::int32 value) {
-  set_has_cp_in_time();
-  cp_in_time_ = value;
+inline ::common::protocol::Vector2* FloatKeyframe::mutable_cp_out() {
+  set_has_cp_out();
+  if (cp_out_ == NULL) cp_out_ = new ::common::protocol::Vector2;
+  return cp_out_;
 }
-
-// optional float cp_in_value = 4;
-inline bool FloatKeyframe::has_cp_in_value() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+inline ::common::protocol::Vector2* FloatKeyframe::release_cp_out() {
+  clear_has_cp_out();
+  ::common::protocol::Vector2* temp = cp_out_;
+  cp_out_ = NULL;
+  return temp;
 }
-inline void FloatKeyframe::set_has_cp_in_value() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void FloatKeyframe::clear_has_cp_in_value() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void FloatKeyframe::clear_cp_in_value() {
-  cp_in_value_ = 0;
-  clear_has_cp_in_value();
-}
-inline float FloatKeyframe::cp_in_value() const {
-  return cp_in_value_;
-}
-inline void FloatKeyframe::set_cp_in_value(float value) {
-  set_has_cp_in_value();
-  cp_in_value_ = value;
-}
-
-// optional int32 cp_out_time = 5;
-inline bool FloatKeyframe::has_cp_out_time() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void FloatKeyframe::set_has_cp_out_time() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void FloatKeyframe::clear_has_cp_out_time() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void FloatKeyframe::clear_cp_out_time() {
-  cp_out_time_ = 0;
-  clear_has_cp_out_time();
-}
-inline ::google::protobuf::int32 FloatKeyframe::cp_out_time() const {
-  return cp_out_time_;
-}
-inline void FloatKeyframe::set_cp_out_time(::google::protobuf::int32 value) {
-  set_has_cp_out_time();
-  cp_out_time_ = value;
-}
-
-// optional float cp_out_value = 6;
-inline bool FloatKeyframe::has_cp_out_value() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-inline void FloatKeyframe::set_has_cp_out_value() {
-  _has_bits_[0] |= 0x00000020u;
-}
-inline void FloatKeyframe::clear_has_cp_out_value() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-inline void FloatKeyframe::clear_cp_out_value() {
-  cp_out_value_ = 0;
-  clear_has_cp_out_value();
-}
-inline float FloatKeyframe::cp_out_value() const {
-  return cp_out_value_;
-}
-inline void FloatKeyframe::set_cp_out_value(float value) {
-  set_has_cp_out_value();
-  cp_out_value_ = value;
+inline void FloatKeyframe::set_allocated_cp_out(::common::protocol::Vector2* cp_out) {
+  delete cp_out_;
+  cp_out_ = cp_out;
+  if (cp_out) {
+    set_has_cp_out();
+  } else {
+    clear_has_cp_out();
+  }
 }
 
 // -------------------------------------------------------------------

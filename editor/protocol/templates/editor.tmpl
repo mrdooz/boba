@@ -92,6 +92,17 @@ namespace editor
     p->set_z(v.z);
   }
 
+  inline Vector2f FromProtocol(const common::protocol::Vector2& v)
+  {
+    return Vector2f(v.x(), v.y());
+  }
+
+  inline void ToProtocol(const Vector2f& v, common::protocol::Vector2* p)
+  {
+    p->set_x(v.x);
+    p->set_y(v.y);
+  }
+
   {% for class in classes %}
   inline {{ class.name }} FromProtocol(const {{ class.proto_type }}& p)
   {

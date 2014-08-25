@@ -68,13 +68,13 @@ namespace editor
   {
     *idxLower = *idxUpper = 0xffffffff;
 
-    if (time_ms <= keyframes.front().time)
+    if (time_ms <= keyframes.front().key.x)
     {
       *idxLower = 0;
       return false;
     }
 
-    if (time_ms >= keyframes.back().time)
+    if (time_ms >= keyframes.back().key.x)
     {
       *idxLower = (u32)keyframes.size() - 1;
       return false;
@@ -82,7 +82,7 @@ namespace editor
 
     // find upper idx
     int tmp = 0;
-    while (time_ms > keyframes[tmp].time)
+    while (time_ms > keyframes[tmp].key.x)
       ++tmp;
 
     *idxUpper = (u32)tmp;
@@ -107,19 +107,19 @@ namespace editor
 
     if (keyframes.empty())
     {
-      keyframes.push_back({time_ms, value});
+      keyframes.push_back({Vector2f(time_ms, value)});
       return &keyframes.back();
     }
 
-    if (time_ms <= keyframes.front().time)
+    if (time_ms <= keyframes.front().key.x)
     {
-      keyframes.insert(keyframes.begin(), {time_ms, value});
+      keyframes.insert(keyframes.begin(), {Vector2f(time_ms, value)});
 
       return &keyframes.front();
     }
-    else if (time_ms >= keyframes.back().time)
+    else if (time_ms >= keyframes.back().key.x)
     {
-      keyframes.push_back({time_ms, value});
+      keyframes.push_back({Vector2f(time_ms, value)});
       return &keyframes.back();
     }
 
@@ -129,15 +129,15 @@ namespace editor
 
     // check if the lower key has the same time as the current one, in which
     // case we'll just replace it
-    if (!forceAdd && keyframes[idxLower].time == time_ms)
+    if (!forceAdd && keyframes[idxLower].key.x == time_ms)
     {
-      keyframes[idxLower].value = value;
+      keyframes[idxLower].key.y = value;
       return &keyframes[idxLower];
     }
     else
     {
       u32 idx = idxUpper == 0xffffffff ? idxLower : idxUpper;
-      auto it = keyframes.insert(keyframes.begin() + idx, {time_ms, value});
+      auto it = keyframes.insert(keyframes.begin() + idx, {Vector2f(time_ms, value)});
       return &(*it);
     }
   }
@@ -165,18 +165,18 @@ namespace editor
     u32 idxLower, idxUpper;
     if (!FindKeyframePair<T>(keyframes, time_ms, &idxLower, &idxUpper))
     {
-      return keyframes[idxLower].value;
+      return keyframes[idxLower].key.y;
     }
 
     const Keyframe& lower = keyframes[idxLower];
     const Keyframe& upper = keyframes[idxUpper];
 
-    float t = (time_ms - lower.time) / (float)(upper.time - lower.time);
+    float t = (time_ms - lower.key.x) / (float)(upper.key.x - lower.key.x);
 
     if (anim.type == 0 || keyframes.size() == 2)
     {
       // linear interpolation
-      return lower.value + t * (upper.value - lower.value);
+      return lower.key.y + t * (upper.key.y - lower.key.y);
     }
     else
     {

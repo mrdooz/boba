@@ -32,7 +32,7 @@ namespace editor
 
     typedef Flags<VarFlagsF> VarFlags;
 
-    void Draw(RenderTexture& texture);
+    void Draw(RenderTexture& texture, bool drawKeyframes);
     void DrawKeyframes(RenderTexture& texture);
 
     bool OnMouseButtonPressed(const Event &event);
@@ -45,10 +45,12 @@ namespace editor
     float PixelToValue(float value) const;
     float ValueToPixel(float value) const;
 
+    enum VisibleKeyframesFlags { AddBorderPoints = 1 << 0, AddOutside = 1 << 1 };
+
     void VisibleKeyframes(
         const Vector2f& size,
-        bool addBorderPoints,
-        vector<pair<Vector2f, FloatKeyframe*>>* keyframes);
+        u32 flags,
+        vector<pair<Vector2f, const FloatKeyframe*>>* keyframes);
 
     Text _text;
     Font _font;
@@ -169,11 +171,6 @@ namespace editor
         const string& str,
         EffectRow* parent = nullptr);
 
-//    virtual void BeginEditVars(float x, float y);
-//    virtual void EndEditVars(bool commit);
-//    virtual void UpdateEditVar(Keyboard::Key key);
-
-    virtual bool KeyframeIntersect(const Vector2f& pt, const Vector2f& size);
     virtual void BeginKeyframeUpdate(bool copy);
     virtual void UpdateKeyframe(const time_duration& t);
     virtual void EndKeyframeUpdate(bool commit);
@@ -183,24 +180,9 @@ namespace editor
     virtual bool FromProtocol(const google::protobuf::Message& msg);
     virtual bool ToProtocol(google::protobuf::Message* msg) const;
 
-    Vector3f UpdateKeyframe(const Vector3f& newValue, const Vector3f& old) const;
-
-    void CalcCeilAndStep(float value, float* stepValue, float* ceilValue);
-    void CalcCeilAndStep(const Vector3f& value, Vector3f* stepValue, Vector3f* ceilValue);
-    float SnappedValue(float value);
-
     int _editingIdx;
 
     NoiseEffector _effector;
-    Vector3f _prevValue;
-    string _curEdit;
-    Vector3Keyframe*_selectedKeyframe;
-    Vector3Keyframe _oldKeyframe;
-    bool _copyingKeyframe;
-
-    u32 _graphMode;
-    Vector3f _minValue, _maxValue;
-    Vector3f _realMinValue, _realMaxValue;
   };
 
 }

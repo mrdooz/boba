@@ -166,13 +166,10 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Matrix4x4));
   FloatKeyframe_descriptor_ = file->message_type(6);
-  static const int FloatKeyframe_offsets_[6] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKeyframe, time_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKeyframe, value_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKeyframe, cp_in_time_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKeyframe, cp_in_value_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKeyframe, cp_out_time_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKeyframe, cp_out_value_),
+  static const int FloatKeyframe_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKeyframe, key_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKeyframe, cp_in_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKeyframe, cp_out_),
   };
   FloatKeyframe_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -318,21 +315,21 @@ void protobuf_AddDesc_common_2eproto() {
     "common.protocol.Vector4\022\'\n\005row_2\030\002 \001(\0132\030"
     ".common.protocol.Vector4\022\'\n\005row_3\030\003 \001(\0132"
     "\030.common.protocol.Vector4\022\'\n\005row_4\030\004 \001(\013"
-    "2\030.common.protocol.Vector4\"\200\001\n\rFloatKeyf"
-    "rame\022\014\n\004time\030\001 \001(\005\022\r\n\005value\030\002 \001(\002\022\022\n\ncp_"
-    "in_time\030\003 \001(\005\022\023\n\013cp_in_value\030\004 \001(\002\022\023\n\013cp"
-    "_out_time\030\005 \001(\005\022\024\n\014cp_out_value\030\006 \001(\002\"\177\n"
-    "\tFloatAnim\022\014\n\004type\030\001 \001(\r\0220\n\010keyframe\030\002 \003"
-    "(\0132\036.common.protocol.FloatKeyframe\022\021\n\tmi"
-    "n_value\030\003 \001(\002\022\021\n\tmax_value\030\004 \001(\002\022\014\n\004step"
-    "\030\005 \001(\002\"H\n\017Vector3Keyframe\022\014\n\004time\030\001 \001(\005\022"
-    "\'\n\005value\030\002 \001(\0132\030.common.protocol.Vector3"
-    "\"\321\001\n\013Vector3Anim\022\014\n\004type\030\001 \001(\r\0222\n\010keyfra"
-    "me\030\002 \003(\0132 .common.protocol.Vector3Keyfra"
-    "me\022+\n\tmin_value\030\003 \001(\0132\030.common.protocol."
-    "Vector3\022+\n\tmax_value\030\004 \001(\0132\030.common.prot"
-    "ocol.Vector3\022&\n\004step\030\005 \001(\0132\030.common.prot"
-    "ocol.Vector3", 1092);
+    "2\030.common.protocol.Vector4\"\211\001\n\rFloatKeyf"
+    "rame\022%\n\003key\030\001 \001(\0132\030.common.protocol.Vect"
+    "or2\022\'\n\005cp_in\030\002 \001(\0132\030.common.protocol.Vec"
+    "tor2\022(\n\006cp_out\030\003 \001(\0132\030.common.protocol.V"
+    "ector2\"\177\n\tFloatAnim\022\014\n\004type\030\001 \001(\r\0220\n\010key"
+    "frame\030\002 \003(\0132\036.common.protocol.FloatKeyfr"
+    "ame\022\021\n\tmin_value\030\003 \001(\002\022\021\n\tmax_value\030\004 \001("
+    "\002\022\014\n\004step\030\005 \001(\002\"H\n\017Vector3Keyframe\022\014\n\004ti"
+    "me\030\001 \001(\005\022\'\n\005value\030\002 \001(\0132\030.common.protoco"
+    "l.Vector3\"\321\001\n\013Vector3Anim\022\014\n\004type\030\001 \001(\r\022"
+    "2\n\010keyframe\030\002 \003(\0132 .common.protocol.Vect"
+    "or3Keyframe\022+\n\tmin_value\030\003 \001(\0132\030.common."
+    "protocol.Vector3\022+\n\tmax_value\030\004 \001(\0132\030.co"
+    "mmon.protocol.Vector3\022&\n\004step\030\005 \001(\0132\030.co"
+    "mmon.protocol.Vector3", 1101);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "common.proto", &protobuf_RegisterTypes);
   Color4::default_instance_ = new Color4();
@@ -2193,12 +2190,9 @@ void Matrix4x4::Swap(Matrix4x4* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int FloatKeyframe::kTimeFieldNumber;
-const int FloatKeyframe::kValueFieldNumber;
-const int FloatKeyframe::kCpInTimeFieldNumber;
-const int FloatKeyframe::kCpInValueFieldNumber;
-const int FloatKeyframe::kCpOutTimeFieldNumber;
-const int FloatKeyframe::kCpOutValueFieldNumber;
+const int FloatKeyframe::kKeyFieldNumber;
+const int FloatKeyframe::kCpInFieldNumber;
+const int FloatKeyframe::kCpOutFieldNumber;
 #endif  // !_MSC_VER
 
 FloatKeyframe::FloatKeyframe()
@@ -2207,6 +2201,9 @@ FloatKeyframe::FloatKeyframe()
 }
 
 void FloatKeyframe::InitAsDefaultInstance() {
+  key_ = const_cast< ::common::protocol::Vector2*>(&::common::protocol::Vector2::default_instance());
+  cp_in_ = const_cast< ::common::protocol::Vector2*>(&::common::protocol::Vector2::default_instance());
+  cp_out_ = const_cast< ::common::protocol::Vector2*>(&::common::protocol::Vector2::default_instance());
 }
 
 FloatKeyframe::FloatKeyframe(const FloatKeyframe& from)
@@ -2217,12 +2214,9 @@ FloatKeyframe::FloatKeyframe(const FloatKeyframe& from)
 
 void FloatKeyframe::SharedCtor() {
   _cached_size_ = 0;
-  time_ = 0;
-  value_ = 0;
-  cp_in_time_ = 0;
-  cp_in_value_ = 0;
-  cp_out_time_ = 0;
-  cp_out_value_ = 0;
+  key_ = NULL;
+  cp_in_ = NULL;
+  cp_out_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2232,6 +2226,9 @@ FloatKeyframe::~FloatKeyframe() {
 
 void FloatKeyframe::SharedDtor() {
   if (this != default_instance_) {
+    delete key_;
+    delete cp_in_;
+    delete cp_out_;
   }
 }
 
@@ -2258,12 +2255,15 @@ FloatKeyframe* FloatKeyframe::New() const {
 
 void FloatKeyframe::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    time_ = 0;
-    value_ = 0;
-    cp_in_time_ = 0;
-    cp_in_value_ = 0;
-    cp_out_time_ = 0;
-    cp_out_value_ = 0;
+    if (has_key()) {
+      if (key_ != NULL) key_->::common::protocol::Vector2::Clear();
+    }
+    if (has_cp_in()) {
+      if (cp_in_ != NULL) cp_in_->::common::protocol::Vector2::Clear();
+    }
+    if (has_cp_out()) {
+      if (cp_out_ != NULL) cp_out_->::common::protocol::Vector2::Clear();
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -2275,94 +2275,40 @@ bool FloatKeyframe::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int32 time = 1;
+      // optional .common.protocol.Vector2 key = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &time_)));
-          set_has_time();
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_key()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(21)) goto parse_value;
+        if (input->ExpectTag(18)) goto parse_cp_in;
         break;
       }
 
-      // optional float value = 2;
+      // optional .common.protocol.Vector2 cp_in = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
-         parse_value:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &value_)));
-          set_has_value();
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_cp_in:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_cp_in()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(24)) goto parse_cp_in_time;
+        if (input->ExpectTag(26)) goto parse_cp_out;
         break;
       }
 
-      // optional int32 cp_in_time = 3;
+      // optional .common.protocol.Vector2 cp_out = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_cp_in_time:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &cp_in_time_)));
-          set_has_cp_in_time();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(37)) goto parse_cp_in_value;
-        break;
-      }
-
-      // optional float cp_in_value = 4;
-      case 4: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
-         parse_cp_in_value:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &cp_in_value_)));
-          set_has_cp_in_value();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(40)) goto parse_cp_out_time;
-        break;
-      }
-
-      // optional int32 cp_out_time = 5;
-      case 5: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_cp_out_time:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &cp_out_time_)));
-          set_has_cp_out_time();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(53)) goto parse_cp_out_value;
-        break;
-      }
-
-      // optional float cp_out_value = 6;
-      case 6: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
-         parse_cp_out_value:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &cp_out_value_)));
-          set_has_cp_out_value();
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_cp_out:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_cp_out()));
         } else {
           goto handle_uninterpreted;
         }
@@ -2388,34 +2334,22 @@ bool FloatKeyframe::MergePartialFromCodedStream(
 
 void FloatKeyframe::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional int32 time = 1;
-  if (has_time()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->time(), output);
+  // optional .common.protocol.Vector2 key = 1;
+  if (has_key()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->key(), output);
   }
 
-  // optional float value = 2;
-  if (has_value()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->value(), output);
+  // optional .common.protocol.Vector2 cp_in = 2;
+  if (has_cp_in()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->cp_in(), output);
   }
 
-  // optional int32 cp_in_time = 3;
-  if (has_cp_in_time()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->cp_in_time(), output);
-  }
-
-  // optional float cp_in_value = 4;
-  if (has_cp_in_value()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->cp_in_value(), output);
-  }
-
-  // optional int32 cp_out_time = 5;
-  if (has_cp_out_time()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->cp_out_time(), output);
-  }
-
-  // optional float cp_out_value = 6;
-  if (has_cp_out_value()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(6, this->cp_out_value(), output);
+  // optional .common.protocol.Vector2 cp_out = 3;
+  if (has_cp_out()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, this->cp_out(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -2426,34 +2360,25 @@ void FloatKeyframe::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* FloatKeyframe::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional int32 time = 1;
-  if (has_time()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->time(), target);
+  // optional .common.protocol.Vector2 key = 1;
+  if (has_key()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->key(), target);
   }
 
-  // optional float value = 2;
-  if (has_value()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->value(), target);
+  // optional .common.protocol.Vector2 cp_in = 2;
+  if (has_cp_in()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->cp_in(), target);
   }
 
-  // optional int32 cp_in_time = 3;
-  if (has_cp_in_time()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->cp_in_time(), target);
-  }
-
-  // optional float cp_in_value = 4;
-  if (has_cp_in_value()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->cp_in_value(), target);
-  }
-
-  // optional int32 cp_out_time = 5;
-  if (has_cp_out_time()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->cp_out_time(), target);
-  }
-
-  // optional float cp_out_value = 6;
-  if (has_cp_out_value()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(6, this->cp_out_value(), target);
+  // optional .common.protocol.Vector2 cp_out = 3;
+  if (has_cp_out()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        3, this->cp_out(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2467,40 +2392,25 @@ int FloatKeyframe::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional int32 time = 1;
-    if (has_time()) {
+    // optional .common.protocol.Vector2 key = 1;
+    if (has_key()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->time());
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->key());
     }
 
-    // optional float value = 2;
-    if (has_value()) {
-      total_size += 1 + 4;
-    }
-
-    // optional int32 cp_in_time = 3;
-    if (has_cp_in_time()) {
+    // optional .common.protocol.Vector2 cp_in = 2;
+    if (has_cp_in()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->cp_in_time());
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->cp_in());
     }
 
-    // optional float cp_in_value = 4;
-    if (has_cp_in_value()) {
-      total_size += 1 + 4;
-    }
-
-    // optional int32 cp_out_time = 5;
-    if (has_cp_out_time()) {
+    // optional .common.protocol.Vector2 cp_out = 3;
+    if (has_cp_out()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->cp_out_time());
-    }
-
-    // optional float cp_out_value = 6;
-    if (has_cp_out_value()) {
-      total_size += 1 + 4;
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->cp_out());
     }
 
   }
@@ -2530,23 +2440,14 @@ void FloatKeyframe::MergeFrom(const ::google::protobuf::Message& from) {
 void FloatKeyframe::MergeFrom(const FloatKeyframe& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_time()) {
-      set_time(from.time());
+    if (from.has_key()) {
+      mutable_key()->::common::protocol::Vector2::MergeFrom(from.key());
     }
-    if (from.has_value()) {
-      set_value(from.value());
+    if (from.has_cp_in()) {
+      mutable_cp_in()->::common::protocol::Vector2::MergeFrom(from.cp_in());
     }
-    if (from.has_cp_in_time()) {
-      set_cp_in_time(from.cp_in_time());
-    }
-    if (from.has_cp_in_value()) {
-      set_cp_in_value(from.cp_in_value());
-    }
-    if (from.has_cp_out_time()) {
-      set_cp_out_time(from.cp_out_time());
-    }
-    if (from.has_cp_out_value()) {
-      set_cp_out_value(from.cp_out_value());
+    if (from.has_cp_out()) {
+      mutable_cp_out()->::common::protocol::Vector2::MergeFrom(from.cp_out());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2571,12 +2472,9 @@ bool FloatKeyframe::IsInitialized() const {
 
 void FloatKeyframe::Swap(FloatKeyframe* other) {
   if (other != this) {
-    std::swap(time_, other->time_);
-    std::swap(value_, other->value_);
-    std::swap(cp_in_time_, other->cp_in_time_);
-    std::swap(cp_in_value_, other->cp_in_value_);
-    std::swap(cp_out_time_, other->cp_out_time_);
-    std::swap(cp_out_value_, other->cp_out_value_);
+    std::swap(key_, other->key_);
+    std::swap(cp_in_, other->cp_in_);
+    std::swap(cp_out_, other->cp_out_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

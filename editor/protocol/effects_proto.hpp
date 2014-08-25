@@ -75,16 +75,13 @@ namespace editor
   
   struct FloatKeyframe
   {
-    int32_t time;
-    float value;
-    int32_t cpInTime;
-    float cpInValue;
-    int32_t cpOutTime;
-    float cpOutValue;
+    Vector2f key;
+    Vector2f cpIn;
+    Vector2f cpOut;
 
     struct FlagsF {
-      enum Enum { HasTime = 1 << 0, HasValue = 1 << 1, HasCpInTime = 1 << 2, HasCpInValue = 1 << 3, HasCpOutTime = 1 << 4, HasCpOutValue = 1 << 5, };
-      struct Bits { u32 hasTime : 1; u32 hasValue : 1; u32 hasCpInTime : 1; u32 hasCpInValue : 1; u32 hasCpOutTime : 1; u32 hasCpOutValue : 1; };
+      enum Enum { HasKey = 1 << 0, HasCpIn = 1 << 1, HasCpOut = 1 << 2, };
+      struct Bits { u32 hasKey : 1; u32 hasCpIn : 1; u32 hasCpOut : 1; };
     };
     Flags<FlagsF> flags;
   };
@@ -311,50 +308,43 @@ namespace editor
     p->set_z(v.z);
   }
 
+  inline Vector2f FromProtocol(const common::protocol::Vector2& v)
+  {
+    return Vector2f(v.x(), v.y());
+  }
+
+  inline void ToProtocol(const Vector2f& v, common::protocol::Vector2* p)
+  {
+    p->set_x(v.x);
+    p->set_y(v.y);
+  }
+
   inline FloatKeyframe FromProtocol(const common::protocol::FloatKeyframe& p)
   {
     FloatKeyframe res;
-    if (p.has_time())
+    if (p.has_key())
     {
-      res.flags.Set(FloatKeyframe::FlagsF::HasTime);
-      res.time = p.time();
+      res.flags.Set(FloatKeyframe::FlagsF::HasKey);
+      res.key = FromProtocol(p.key());
     }
-    if (p.has_value())
+    if (p.has_cp_in())
     {
-      res.flags.Set(FloatKeyframe::FlagsF::HasValue);
-      res.value = p.value();
+      res.flags.Set(FloatKeyframe::FlagsF::HasCpIn);
+      res.cpIn = FromProtocol(p.cp_in());
     }
-    if (p.has_cp_in_time())
+    if (p.has_cp_out())
     {
-      res.flags.Set(FloatKeyframe::FlagsF::HasCpInTime);
-      res.cpInTime = p.cp_in_time();
-    }
-    if (p.has_cp_in_value())
-    {
-      res.flags.Set(FloatKeyframe::FlagsF::HasCpInValue);
-      res.cpInValue = p.cp_in_value();
-    }
-    if (p.has_cp_out_time())
-    {
-      res.flags.Set(FloatKeyframe::FlagsF::HasCpOutTime);
-      res.cpOutTime = p.cp_out_time();
-    }
-    if (p.has_cp_out_value())
-    {
-      res.flags.Set(FloatKeyframe::FlagsF::HasCpOutValue);
-      res.cpOutValue = p.cp_out_value();
+      res.flags.Set(FloatKeyframe::FlagsF::HasCpOut);
+      res.cpOut = FromProtocol(p.cp_out());
     }
     return res;
   }
 
   inline void ToProtocol(const FloatKeyframe& v, common::protocol::FloatKeyframe* p)
   {
-    p->set_time(v.time);
-    p->set_value(v.value);
-    p->set_cp_in_time(v.cpInTime);
-    p->set_cp_in_value(v.cpInValue);
-    p->set_cp_out_time(v.cpOutTime);
-    p->set_cp_out_value(v.cpOutValue);
+    ToProtocol(v.key, p->mutable_key());
+    ToProtocol(v.cpIn, p->mutable_cp_in());
+    ToProtocol(v.cpOut, p->mutable_cp_out());
   }
 
   inline FloatAnim FromProtocol(const common::protocol::FloatAnim& p)

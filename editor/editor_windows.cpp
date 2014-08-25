@@ -10,6 +10,12 @@ using namespace bristol;
 #pragma warning(disable: 4244)
 
 
+//----------------------------------------------------------------------------------
+Vector2f Normalize(const Vector2f& v)
+{
+  float len = sqrtf(v.x*v.x + v.y*v.y);
+  return v / len;
+}
 
 //----------------------------------------------------------------------------------
 PropertyWindow::PropertyWindow(
@@ -41,11 +47,8 @@ TimelineWindow::TimelineWindow(
     , _pixelsPerSecond(EDITOR.Settings().timeline_zoom_default())
     , _curRow(nullptr)
     , _lastDragPos(-1, -1)
-//    , _editRow(nullptr)
     , _tickerRect(nullptr)
     , _statusBar(nullptr)
-//    , _movingKeyframe(nullptr)
-//    , _selectedRow(nullptr)
     , _displayMode(DisplayMode::Keyframe)
     , _selectedVar(nullptr)
 {
@@ -103,45 +106,66 @@ bool TimelineWindow::Init()
     e.displacement.x.type = 1;
     e.displacement.y.type = 1;
     e.displacement.z.type = 1;
-    s32 t = randf(0.f, 500.f);
+    float t = randf(0.f, 500.f);
     for (u32 j = 0; j < 50; ++j)
     {
-      e.displacement.x.keyframe.push_back({ t, randf(-10.f, 20.f) });
+      e.displacement.x.keyframe.push_back({ Vector2f(t, randf(-10.f, 20.f)) });
       t += randf(150.f, 1000.f);
-      e.displacement.y.keyframe.push_back({ t, randf(-10.f, 20.f) });
+      e.displacement.y.keyframe.push_back({ Vector2f(t, randf(-10.f, 20.f)) });
       t += randf(150.f, 1000.f);
-      e.displacement.z.keyframe.push_back({ t, randf(-10.f, 20.f) });
+      e.displacement.z.keyframe.push_back({ Vector2f(t, randf(-10.f, 20.f)) });
       t += randf(150.f, 1000.f);
 
-      float d;
-      s32 t;
-
-      float s = 250;
+      float s = 10;
       if (j == 0)
       {
-        d = e.displacement.x.keyframe[1].value - e.displacement.x.keyframe[0].value;
-        t = e.displacement.x.keyframe[1].time - e.displacement.x.keyframe[0].time;
-        float len = sqrtf(d*d+t*t) / s;
+        const auto& fn = [&](FloatAnim* f){
+            Vector2f v = f->keyframe[1].key - f->keyframe[0].key;
+            v = Normalize(v);
 
-        e.displacement.x.keyframe.back().cpOutValue = e.displacement.x.keyframe[0].value + d / len;
-        e.displacement.x.keyframe.back().cpOutTime = e.displacement.x.keyframe[0].time + t / len;
+            f->keyframe.back().cpOut = f->keyframe[0].key;
+            f->keyframe.back().cpOut.x += 200;
+            f->keyframe.back().cpOut.y += s * v.y;
+        };
 
-
+        fn(&e.displacement.x);
+        fn(&e.displacement.y);
+        fn(&e.displacement.z);
       }
       else if (j == 48)
       {
+        const auto& fn = [&](FloatAnim* f){
+            Vector2f v = f->keyframe[1].key - f->keyframe[0].key;
+            v = Normalize(v);
 
+            f->keyframe.back().cpIn = f->keyframe[0].key;
+            f->keyframe.back().cpIn.x -= 200;
+            f->keyframe.back().cpIn.y -= s * v.y;
+        };
+
+        fn(&e.displacement.x);
+        fn(&e.displacement.y);
+        fn(&e.displacement.z);
       }
       else
       {
-        d = e.displacement.x.keyframe[j+1].value - e.displacement.x.keyframe[j-1].value;
-        t = e.displacement.x.keyframe[j+1].time - e.displacement.x.keyframe[j-1].time;
-        float len = sqrtf(d*d+t*t) / s;
+        const auto& fn = [&](FloatAnim* f) {
+            Vector2f v = f->keyframe[j+1].key - f->keyframe[j-1].key;
+            v = Normalize(v);
 
-        e.displacement.x.keyframe.back().cpInValue = e.displacement.x.keyframe[j].value - d / len;
-        e.displacement.x.keyframe.back().cpInTime = e.displacement.x.keyframe[j].time - t / len;
-        e.displacement.x.keyframe.back().cpOutValue = e.displacement.x.keyframe[j].value + d / len;
-        e.displacement.x.keyframe.back().cpOutTime = e.displacement.x.keyframe[j].time + t / len;
+            f->keyframe.back().cpIn = f->keyframe[j].key;
+            f->keyframe.back().cpOut = f->keyframe[j].key;
+
+            f->keyframe.back().cpIn.x -= 200;
+            f->keyframe.back().cpIn.y -= s * v.y;
+
+            f->keyframe.back().cpOut.x += 200;
+            f->keyframe.back().cpOut.y += s * v.y;
+        };
+
+        fn(&e.displacement.x);
+        fn(&e.displacement.y);
+        fn(&e.displacement.z);
       }
     }
     n->_effector = e;
@@ -275,76 +299,6 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
     }
   }
 
-//  if (x < (int)settings.effect_view_width())
-//  {
-//    // Check for hits in the effect view
-//    EffectRow* rowHit = nullptr;
-//    for (EffectRow* row : effects)
-//    {
-//      if (row->_expandRect.contains(mousePos))
-//      {
-//        row->_flags.Toggle(EffectRow::RowFlagsF::Expanded);
-//        rowHit = row;
-//        break;
-//      }
-//      else if (row->_varEditRect.contains(mousePos))
-//      {
-//        row->BeginEditVars(x, y);
-//        rowHit = row;
-//        _editRow = row;
-//        break;
-//      }
-//      else if (row->_rect->_shape.getGlobalBounds().contains(mousePos))
-//      {
-//        _selectedRows.Toggle(row);
-//        row->_flags.Toggle(EffectRow::RowFlagsF::Selected);
-//        rowHit = row;
-//        break;
-//      }
-//    }
-
-//    if (rowHit)
-//    {
-//      // if a new row is hit, end any current editing
-//      if (_editRow && rowHit != _editRow)
-//      {
-//        _editRow->EndEditVars(true);
-//      }
-//
-//      RecalcEffecRows();
-//    }
-//    else
-//    {
-//      _editRow = nullptr;
-//    }
-//  }
-//  else
-//  {
-//    if (_displayMode == DisplayMode::Graph)
-//    {
-//      _selectedRows.CurRow()->OnMouseButtonPressed(event);
-//    }
-//    else
-//    {
-////      int a = 10;
-//    }
-//
-//    if (_selectedRow)
-//    {
-//      _selectedRow->DeselectKeyframe();
-//      _selectedRow = nullptr;
-//    }
-//
-//    for (EffectRow* row : effects)
-//    {
-//      if (row->KeyframeIntersect(mousePos, _size))
-//      {
-//        _selectedRow = row;
-//        break;
-//      }
-//    }
-//
-//  }
   return false;
 }
 
@@ -384,29 +338,8 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     }
   }
 
-
   if (_curRow && _curRow->OnMouseMoved(event))
     return true;
-
-//  if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-//  {
-//
-//    if (_displayMode == DisplayMode::Keyframe && _selectedRow)
-//    {
-//      if (!_movingKeyframe)
-//      {
-//        // send the BeginKeyframeUpdate, and check if we're copying or moving
-//        _selectedRow->BeginKeyframeUpdate(Keyboard::isKeyPressed(Keyboard::Key::LShift));
-//        _movingKeyframe = _selectedRow;
-//      }
-//
-//      _movingKeyframe->UpdateKeyframe(curTime);
-//    }
-//    else if (_displayMode == DisplayMode::Graph && _selectedRows.CurRow())
-//    {
-//      _selectedRows.CurRow()->OnMouseMoved(event);
-//    }
-//  }
 
   return false;
 }
@@ -428,20 +361,6 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
     }
   }
 
-//  if (_displayMode == DisplayMode::Graph)
-//  {
-//    if (_selectedRows.CurRow())
-//      return _selectedRows.CurRow()->OnMouseButtonReleased(event);
-//  }
-//  else
-//  {
-//    if (_movingKeyframe)
-//    {
-//      _movingKeyframe->EndKeyframeUpdate(true);
-//      _movingKeyframe = nullptr;
-//    }
-//    return true;
-//  }
   return false;
 }
 
@@ -536,15 +455,16 @@ void TimelineWindow::DrawEffects()
   text.setCharacterSize(14);
   _texture.draw(text);
 
+  if (_displayMode == DisplayMode::Graph && _selectedVar)
+  {
+    _selectedVar->DrawGraph(_texture);
+  }
+
   for (EffectRow* row : _effectRows)
   {
     row->Draw(_texture, _displayMode == DisplayMode::Keyframe);
   }
 
-  if (_displayMode == DisplayMode::Graph && _selectedVar)
-  {
-    _selectedVar->DrawGraph(_texture);
-  }
 }
 
 //----------------------------------------------------------------------------------

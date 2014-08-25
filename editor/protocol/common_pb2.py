@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='common.proto',
   package='common.protocol',
-  serialized_pb='\n\x0c\x63ommon.proto\x12\x0f\x63ommon.protocol\"B\n\x06\x43olor4\x12\x0c\n\x01r\x18\x01 \x01(\r:\x01\x30\x12\x0c\n\x01g\x18\x02 \x01(\r:\x01\x30\x12\x0c\n\x01\x62\x18\x03 \x01(\r:\x01\x30\x12\x0e\n\x01\x61\x18\x04 \x01(\r:\x03\x32\x35\x35\"\x1f\n\x07Vector2\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"*\n\x07Vector3\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"5\n\x07Vector4\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"\x86\x01\n\tMatrix3x3\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector3\"\xaf\x01\n\tMatrix4x4\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_4\x18\x04 \x01(\x0b\x32\x18.common.protocol.Vector4\"\x80\x01\n\rFloatKeyframe\x12\x0c\n\x04time\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x02\x12\x12\n\ncp_in_time\x18\x03 \x01(\x05\x12\x13\n\x0b\x63p_in_value\x18\x04 \x01(\x02\x12\x13\n\x0b\x63p_out_time\x18\x05 \x01(\x05\x12\x14\n\x0c\x63p_out_value\x18\x06 \x01(\x02\"\x7f\n\tFloatAnim\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x30\n\x08keyframe\x18\x02 \x03(\x0b\x32\x1e.common.protocol.FloatKeyframe\x12\x11\n\tmin_value\x18\x03 \x01(\x02\x12\x11\n\tmax_value\x18\x04 \x01(\x02\x12\x0c\n\x04step\x18\x05 \x01(\x02\"H\n\x0fVector3Keyframe\x12\x0c\n\x04time\x18\x01 \x01(\x05\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\"\xd1\x01\n\x0bVector3Anim\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x32\n\x08keyframe\x18\x02 \x03(\x0b\x32 .common.protocol.Vector3Keyframe\x12+\n\tmin_value\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector3\x12+\n\tmax_value\x18\x04 \x01(\x0b\x32\x18.common.protocol.Vector3\x12&\n\x04step\x18\x05 \x01(\x0b\x32\x18.common.protocol.Vector3')
+  serialized_pb='\n\x0c\x63ommon.proto\x12\x0f\x63ommon.protocol\"B\n\x06\x43olor4\x12\x0c\n\x01r\x18\x01 \x01(\r:\x01\x30\x12\x0c\n\x01g\x18\x02 \x01(\r:\x01\x30\x12\x0c\n\x01\x62\x18\x03 \x01(\r:\x01\x30\x12\x0e\n\x01\x61\x18\x04 \x01(\r:\x03\x32\x35\x35\"\x1f\n\x07Vector2\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"*\n\x07Vector3\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"5\n\x07Vector4\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"\x86\x01\n\tMatrix3x3\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector3\"\xaf\x01\n\tMatrix4x4\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_4\x18\x04 \x01(\x0b\x32\x18.common.protocol.Vector4\"\x89\x01\n\rFloatKeyframe\x12%\n\x03key\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector2\x12\'\n\x05\x63p_in\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector2\x12(\n\x06\x63p_out\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector2\"\x7f\n\tFloatAnim\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x30\n\x08keyframe\x18\x02 \x03(\x0b\x32\x1e.common.protocol.FloatKeyframe\x12\x11\n\tmin_value\x18\x03 \x01(\x02\x12\x11\n\tmax_value\x18\x04 \x01(\x02\x12\x0c\n\x04step\x18\x05 \x01(\x02\"H\n\x0fVector3Keyframe\x12\x0c\n\x04time\x18\x01 \x01(\x05\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\"\xd1\x01\n\x0bVector3Anim\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x32\n\x08keyframe\x18\x02 \x03(\x0b\x32 .common.protocol.Vector3Keyframe\x12+\n\tmin_value\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector3\x12+\n\tmax_value\x18\x04 \x01(\x0b\x32\x18.common.protocol.Vector3\x12&\n\x04step\x18\x05 \x01(\x0b\x32\x18.common.protocol.Vector3')
 
 
 
@@ -292,44 +292,23 @@ _FLOATKEYFRAME = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='time', full_name='common.protocol.FloatKeyframe.time', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
+      name='key', full_name='common.protocol.FloatKeyframe.key', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='value', full_name='common.protocol.FloatKeyframe.value', index=1,
-      number=2, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
+      name='cp_in', full_name='common.protocol.FloatKeyframe.cp_in', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='cp_in_time', full_name='common.protocol.FloatKeyframe.cp_in_time', index=2,
-      number=3, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='cp_in_value', full_name='common.protocol.FloatKeyframe.cp_in_value', index=3,
-      number=4, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='cp_out_time', full_name='common.protocol.FloatKeyframe.cp_out_time', index=4,
-      number=5, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='cp_out_value', full_name='common.protocol.FloatKeyframe.cp_out_value', index=5,
-      number=6, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
+      name='cp_out', full_name='common.protocol.FloatKeyframe.cp_out', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -343,7 +322,7 @@ _FLOATKEYFRAME = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=549,
-  serialized_end=677,
+  serialized_end=686,
 )
 
 
@@ -398,8 +377,8 @@ _FLOATANIM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=679,
-  serialized_end=806,
+  serialized_start=688,
+  serialized_end=815,
 )
 
 
@@ -433,8 +412,8 @@ _VECTOR3KEYFRAME = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=808,
-  serialized_end=880,
+  serialized_start=817,
+  serialized_end=889,
 )
 
 
@@ -489,8 +468,8 @@ _VECTOR3ANIM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=883,
-  serialized_end=1092,
+  serialized_start=892,
+  serialized_end=1101,
 )
 
 _MATRIX3X3.fields_by_name['row_1'].message_type = _VECTOR3
@@ -500,6 +479,9 @@ _MATRIX4X4.fields_by_name['row_1'].message_type = _VECTOR4
 _MATRIX4X4.fields_by_name['row_2'].message_type = _VECTOR4
 _MATRIX4X4.fields_by_name['row_3'].message_type = _VECTOR4
 _MATRIX4X4.fields_by_name['row_4'].message_type = _VECTOR4
+_FLOATKEYFRAME.fields_by_name['key'].message_type = _VECTOR2
+_FLOATKEYFRAME.fields_by_name['cp_in'].message_type = _VECTOR2
+_FLOATKEYFRAME.fields_by_name['cp_out'].message_type = _VECTOR2
 _FLOATANIM.fields_by_name['keyframe'].message_type = _FLOATKEYFRAME
 _VECTOR3KEYFRAME.fields_by_name['value'].message_type = _VECTOR3
 _VECTOR3ANIM.fields_by_name['keyframe'].message_type = _VECTOR3KEYFRAME
