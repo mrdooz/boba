@@ -192,6 +192,17 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
 
   if (_flags.IsSet(VarFlagsF::GraphMode))
   {
+
+    // if shift is pressed, create a new control point at the cursor pos
+    if (Keyboard::isKeyPressed(Keyboard::Key::LShift))
+    {
+      time_duration t = timeline->PixelToTime(event.mouseButton.x);
+      float y = event.mouseButton.y - timeline->GetPosition().y;
+      float v = PixelToValue(y);
+      AddKeyframe<float>(t, v, true, _anim);
+      return true;
+    }
+
     for (u32 i = 0; i < _anim->keyframe.size(); ++i)
     {
       FloatKeyframe &keyframe = _anim->keyframe[i];
@@ -232,7 +243,7 @@ bool RowVar::OnMouseButtonReleased(const Event &event)
 
   if (_flags.IsSet(VarFlagsF::Animating) && _flags.IsSet(VarFlagsF::Editing))
   {
-    AddKeyframe(EDITOR.CurTime(), _value, false, _anim);
+    AddKeyframe<float>(EDITOR.CurTime(), _value, false, _anim);
     _flags.Clear(VarFlagsF::PreEdit);
     _flags.Clear(VarFlagsF::Editing);
   }
@@ -412,6 +423,20 @@ void RowVar::VisibleKeyframes(
 }
 
 //----------------------------------------------------------------------------------
+template <typename T>
+T Bezier(const T& p0, const T& p1, const T& p2, const T& p3, float t)
+{
+  float t2 = t*t;
+  float t3 = t2*t;
+
+  float u = (1-t);
+  float u2 = u*u;
+  float u3 = u2*u;
+
+  return u3 * p0 + 3 * u2 * t * p1 + 3 * u * t2 * p2 + t3 * p3;
+}
+
+//----------------------------------------------------------------------------------
 void RowVar::DrawGraph(RenderTexture& texture)
 {
   _flags.Set(VarFlagsF::GraphMode);
@@ -422,13 +447,12 @@ void RowVar::DrawGraph(RenderTexture& texture)
   Vector2f size = TimelineWindow::_instance->GetSize();
 
   vector<pair<Vector2f, FloatKeyframe*>> keyframes;
-  VisibleKeyframes(size, true, &keyframes);
+  VisibleKeyframes(size, false, &keyframes);
 
   Text label;
   label.setFont(_font);
   label.setCharacterSize(16);
 
-  // draw min/max lines
   VertexArray gridLines(sf::Lines);
   float t0 = _realMaxValue;
   float step, maxValue;
@@ -438,6 +462,7 @@ void RowVar::DrawGraph(RenderTexture& texture)
   Color c(100, 100, 100, 255);
   label.setColor(c);
 
+  // draw min/max lines
   float curY = maxValue;
   while (true)
   {
@@ -458,22 +483,74 @@ void RowVar::DrawGraph(RenderTexture& texture)
   texture.draw(gridLines);
 
   // draw the keyframes normalized to the min/max values
-  VertexArray curLine(sf::LinesStrip);
 
-  for (const auto& pp : keyframes)
+  if (true)
   {
-    const Vector2f& p = pp.first;
-    curLine.append(sf::Vertex(p));
+    VertexArray curLine(sf::LinesStrip);
+    VertexArray controlPoints(sf::Lines);
 
-    // if the point corresponds to a proper keyframe, draw the keyframe
-    if (pp.second)
+    for (u32 i = 0; i < keyframes.size() - 3; i += 3)
     {
-      _keyframeRect._rect.setPosition(p.x - 3, p.y - 3);
+      const Vector2f& p0 = keyframes[i+0].first;
+      const Vector2f& p1 = keyframes[i+1].first;
+      const Vector2f& p2 = keyframes[i+2].first;
+      const Vector2f& p3 = keyframes[i+3].first;
+
+      Color c(180, 200, 0);
+      controlPoints.append(sf::Vertex(p0, c));
+      controlPoints.append(sf::Vertex(p1, c));
+      controlPoints.append(sf::Vertex(p2, c));
+      controlPoints.append(sf::Vertex(p3, c));
+
+      _keyframeRect._rect.setPosition(p0.x - 3, p0.y - 3);
       texture.draw(_keyframeRect._rect);
+
+      _keyframeRect._rect.setPosition(p1.x - 3, p1.y - 3);
+      texture.draw(_keyframeRect._rect);
+
+      _keyframeRect._rect.setPosition(p2.x - 3, p2.y - 3);
+      texture.draw(_keyframeRect._rect);
+
+      _keyframeRect._rect.setPosition(p3.x - 3, p3.y - 3);
+      texture.draw(_keyframeRect._rect);
+
+      if (i == 0)
+      {
+        Vector2f v = Bezier(p0, p1, p2, p3, 0);
+        curLine.append(sf::Vertex(v));
+      }
+
+      for (u32 j = 1; j <= 10; ++j)
+      {
+        float t = j / 10.0f;
+        Vector2f v = Bezier(p0, p1, p2, p3, t);
+        curLine.append(sf::Vertex(v));
+      }
     }
+    texture.draw(curLine);
+    texture.draw(controlPoints);
+
+  }
+  else
+  {
+    VertexArray curLine(sf::LinesStrip);
+
+    for (const auto& pp : keyframes)
+    {
+      const Vector2f& p = pp.first;
+      curLine.append(sf::Vertex(p));
+
+      // if the point corresponds to a proper keyframe, draw the keyframe
+      if (pp.second)
+      {
+        _keyframeRect._rect.setPosition(p.x - 3, p.y - 3);
+        texture.draw(_keyframeRect._rect);
+      }
+    }
+
+    texture.draw(curLine);
   }
 
-  texture.draw(curLine);
 }
 
 //----------------------------------------------------------------------------------
