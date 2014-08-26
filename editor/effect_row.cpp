@@ -7,6 +7,14 @@ using namespace bristol;
 
 #pragma warning(disable: 4244)
 
+namespace
+{
+  // bitmasks used for encoding control points in the selected keyframe
+  const u32 SELECTED_NONE     = ~(u32)0;
+  const u32 SELECTED_CP_IN    = 1u << 30;
+  const u32 SELECTED_CP_OUT   = 1u << 31;
+  const u32 SELECTED_CP_MASK  = ~(SELECTED_CP_IN | SELECTED_CP_OUT);
+}
 
 //----------------------------------------------------------------------------------
 void CalcCeilAndStep(float value, float* stepValue, float* ceilValue)
@@ -55,7 +63,7 @@ RowVar::RowVar(
     , _name(name)
     , _value(0)
     , _anim(anim)
-    , _selectedKeyframe(~0)
+    , _selectedKeyframe(SELECTED_NONE)
 {
   _text.setFont(font);
   _text.setCharacterSize(16);
@@ -71,12 +79,14 @@ void RowVar::Draw(RenderTexture& texture, bool drawKeyframes)
       ? settings.effect_view_background_color_selected()
       : settings.effect_view_background_color());
 
+  // draw background
   RectangleShape bgRect;
   bgRect.setPosition(_bounds.left, _bounds.top);
   bgRect.setSize(Vector2f(_bounds.width, _bounds.height));
   bgRect.setFillColor(bgCol);
   texture.draw(bgRect);
 
+  // draw animating icon
   _text.setString("A");
   if (_flags.IsSet(VarFlagsF::Animating))
   {
@@ -91,6 +101,7 @@ void RowVar::Draw(RenderTexture& texture, bool drawKeyframes)
   _text.setPosition(_bounds.left, _bounds.top);
   texture.draw(_text);
 
+  // draw value
   const StyleSetting* style = _flags.IsSet(VarFlagsF::Editing)
     ? STYLE_FACTORY.GetStyle("var_text_editing")
     : STYLE_FACTORY.GetStyle("var_text_normal");
@@ -103,6 +114,7 @@ void RowVar::Draw(RenderTexture& texture, bool drawKeyframes)
   _text.setPosition(pos.x, pos.y);
   texture.draw(_text);
 
+  // draw row indicator
   DrawRow(texture, 0, pos.y, drawKeyframes ? windowSize.x : settings.effect_view_width(),
       _bounds.height, ::FromProtocol(settings.effect_line_color()));
 }
@@ -199,7 +211,25 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
       time_duration t = timeline->PixelToTime(event.mouseButton.x);
       float y = event.mouseButton.y - timeline->GetPosition().y;
       float v = PixelToValue(y);
-      AddKeyframe<float>(t, v, true, _anim);
+
+      if (_anim->type == 0)
+      {
+        AddKeyframe<float>(t, v, true, _anim);
+      }
+      else
+      {
+        // In bezier mode, evaluate the spline slightly before/after the new keyframe
+        // to get good values for the control points..
+        time_duration t0 = milliseconds(max((s64)0, t.total_milliseconds() - 250));
+        time_duration t1 = milliseconds(t.total_milliseconds() + 250);
+        float v0 = Interpolate<float>(*_anim, t0);
+        float v1 = Interpolate<float>(*_anim, t1);
+
+        FloatKeyframe* f = AddKeyframe<float>(t, v, true, _anim);
+        f->cpIn = Vector2f(t0.total_milliseconds(), v0);
+        f->cpOut = Vector2f(t1.total_milliseconds(), v1);
+      }
+
       return true;
     }
 
@@ -240,7 +270,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
             ValueToPixel(keyframe.cpIn.y), ofs, ofs);
         if (rectIn.contains(mousePos))
         {
-          _selectedKeyframe = i | (1 << 31);
+          _selectedKeyframe = i | SELECTED_CP_IN;
           _prevKeyframe = keyframe;
           return true;
         }
@@ -250,7 +280,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
             ValueToPixel(keyframe.cpOut.y), ofs, ofs);
         if (rectOut.contains(mousePos))
         {
-          _selectedKeyframe = i | (1 << 30);
+          _selectedKeyframe = i | SELECTED_CP_OUT;
           _prevKeyframe = keyframe;
           return true;
         }
@@ -261,8 +291,8 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
   else
   {
     // check if this intersects any keyframe
-    u32 t0 = timeline->PixelToTime(x - ofs2).total_milliseconds();
-    u32 t1 = timeline->PixelToTime(x + ofs2).total_milliseconds();
+    s64 t0 = timeline->PixelToTime(x - ofs2).total_milliseconds();
+    s64 t1 = timeline->PixelToTime(x + ofs2).total_milliseconds();
 
     for (u32 i = 0; i < _anim->keyframe.size(); ++i)
     {
@@ -330,14 +360,14 @@ bool RowVar::OnMouseMoved(const Event &event)
       {
         // bezier
         float y = event.mouseMove.y - timeline->GetPosition().y;
-        u32 k = _selectedKeyframe & ~(0x3 << 30);
+        u32 k = _selectedKeyframe & SELECTED_CP_MASK;
 
-        if (_selectedKeyframe & (1 << 31))
+        if (_selectedKeyframe & SELECTED_CP_IN)
         {
           keyframes[k].cpIn.x = t;
           keyframes[k].cpIn.y = PixelToValue(y);
         }
-        else if (_selectedKeyframe & (1 << 30))
+        else if (_selectedKeyframe & SELECTED_CP_OUT)
         {
           keyframes[k].cpOut.x = t;
           keyframes[k].cpOut.y = PixelToValue(y);
@@ -515,26 +545,13 @@ void RowVar::VisibleKeyframes(
 }
 
 //----------------------------------------------------------------------------------
-template <typename T>
-T Bezier(const T& p0, const T& p1, const T& p2, const T& p3, float t)
-{
-  float t2 = t*t;
-  float t3 = t2*t;
-
-  float u = (1-t);
-  float u2 = u*u;
-  float u3 = u2*u;
-
-  return u3 * p0 + 3 * u2 * t * p1 + 3 * u * t2 * p2 + t3 * p3;
-}
-
-//----------------------------------------------------------------------------------
 void RowVar::DrawGraph(RenderTexture& texture)
 {
   _flags.Set(VarFlagsF::GraphMode);
 
   const editor::protocol::Settings& settings = EDITOR.Settings();
   int ofs = settings.effect_view_width();
+  float rw = settings.keyframe_size() / 2.0f;
 
   TimelineWindow* timeline = TimelineWindow::_instance;
   Vector2f size = timeline->GetSize();
@@ -549,6 +566,7 @@ void RowVar::DrawGraph(RenderTexture& texture)
   rect.setFillColor(::FromProtocol(settings.timeline_view_background_color()));
   texture.draw(rect);
 
+  // get the visible keyframes
   vector<pair<Vector2f, const FloatKeyframe*>> keyframes;
   VisibleKeyframes(size, AddOutside, &keyframes);
 
@@ -622,29 +640,29 @@ void RowVar::DrawGraph(RenderTexture& texture)
       controlPoints.append(sf::Vertex(p2, c));
       controlPoints.append(sf::Vertex(p3, c));
 
-      _keyframeRect._rect.setPosition(p0.x - 3, p0.y - 3);
+      _keyframeRect._rect.setPosition(p0.x - rw, p0.y - rw);
       texture.draw(_keyframeRect._rect);
 
-      _keyframeRect._rect.setPosition(p1.x - 3, p1.y - 3);
+      _keyframeRect._rect.setPosition(p1.x - rw, p1.y - rw);
       texture.draw(_keyframeRect._rect);
 
-      _keyframeRect._rect.setPosition(p2.x - 3, p2.y - 3);
+      _keyframeRect._rect.setPosition(p2.x - rw, p2.y - rw);
       texture.draw(_keyframeRect._rect);
 
-      _keyframeRect._rect.setPosition(p3.x - 3, p3.y - 3);
+      _keyframeRect._rect.setPosition(p3.x - rw, p3.y - rw);
       texture.draw(_keyframeRect._rect);
 
       if (i == 0)
       {
         Vector2f v = Bezier(p0, p1, p2, p3, 0);
-        curLine.append(sf::Vertex(v));
+        curLine.append(sf::Vertex(Vector2f(p0.x, v.y)));
       }
 
-      for (u32 j = 1; j <= 10; ++j)
+      for (u32 j = 1; j <= 20; ++j)
       {
-        float t = j / 10.0f;
+        float t = j / 20.0f;
         Vector2f v = Bezier(p0, p1, p2, p3, t);
-        curLine.append(sf::Vertex(v));
+        curLine.append(sf::Vertex(Vector2f(lerp(p0.x, p3.x, t), v.y)));
       }
     }
     texture.draw(curLine);
@@ -663,7 +681,7 @@ void RowVar::DrawGraph(RenderTexture& texture)
       // if the point corresponds to a proper keyframe, draw the keyframe
       if (pp.second)
       {
-        _keyframeRect._rect.setPosition(p.x - 3, p.y - 3);
+        _keyframeRect._rect.setPosition(p.x - rw, p.y - rw);
         texture.draw(_keyframeRect._rect);
       }
     }

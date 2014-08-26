@@ -48,6 +48,14 @@ namespace editor
     typedef vector<Keyframe> Keyframes;
   };
 
+  template<> struct KeyframeTraits<Vector2f>
+  {
+    typedef Vector2f Value;
+    typedef FloatAnim Anim;
+    typedef FloatKeyframe Keyframe;
+    typedef vector<Keyframe> Keyframes;
+  };
+
   template<> struct KeyframeTraits<Vector3f>
   {
     typedef Vector3f Value;
@@ -144,12 +152,26 @@ namespace editor
 
   //----------------------------------------------------------------------------------
   template <typename T>
+  T Bezier(const T& p0, const T& p1, const T& p2, const T& p3, float t)
+  {
+    float t2 = t*t;
+    float t3 = t2*t;
+
+    float u = (1-t);
+    float u2 = u*u;
+    float u3 = u2*u;
+
+    return u3 * p0 + 3 * u2 * t * p1 + 3 * u * t2 * p2 + t3 * p3;
+  }
+
+  //----------------------------------------------------------------------------------
+  template <typename T>
   T Interpolate(const typename KeyframeTraits<T>::Anim& anim, const time_duration& t)
   {
     return Interpolate<T>(anim, t.total_milliseconds());
   }
 
-//----------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------
   template <typename T>
   T Interpolate(const typename KeyframeTraits<T>::Anim& anim, u32 time_ms)
   {
@@ -176,22 +198,18 @@ namespace editor
     if (anim.type == 0 || keyframes.size() == 2)
     {
       // linear interpolation
-      return lower.key.y + t * (upper.key.y - lower.key.y);
+      return lower.key.y + t * (upper.key - lower.key).y;
     }
     else
     {
-      // hermite splines
+      // bezier splines
+      return Bezier(lower.key, lower.cpOut, upper.cpIn, upper.key, t).y;
     }
 
     return T();
   }
 
-//  Vector3Keyframe* AddKeyframe(
-//      const time_duration& t,
-//      const Vector3f& value,
-//      bool forceAdd,
-//      Vector3Anim* anim);
-
+  //----------------------------------------------------------------------------------
   template<typename T>
   sf::Vector3<T> Min(const sf::Vector3<T>& a, const sf::Vector3<T>& b)
   {
@@ -202,6 +220,7 @@ namespace editor
     );
   }
 
+  //----------------------------------------------------------------------------------
   template<typename T>
   sf::Vector3<T> Max(const sf::Vector3<T>& a, const sf::Vector3<T>& b)
   {

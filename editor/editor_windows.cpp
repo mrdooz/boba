@@ -213,56 +213,6 @@ bool TimelineWindow::OnKeyReleased(const Event &event)
     _displayMode = DisplayMode::Keyframe;
   }
 
-
-
-//  Keyboard::Key code = event.key.code;
-//
-//  // escape aborts the pending operation
-//  if (code == Keyboard::Escape)
-//  {
-//    if (_editRow)
-//    {
-//      _editRow->EndEditVars(false);
-//    }
-//    else if (_movingKeyframe)
-//    {
-//      _movingKeyframe->EndKeyframeUpdate(false);
-//    }
-//
-//    _selectedRow = nullptr;
-//    _movingKeyframe = nullptr;
-//  }
-//  else
-//  {
-//    if (_editRow)
-//    {
-//      if (code == Keyboard::Return)
-//      {
-//        _editRow->EndEditVars(true);
-//        _editRow = nullptr;
-//      }
-//      else
-//      {
-//        _editRow->UpdateEditVar(event.key.code);
-//      }
-//    }
-//    else
-//    {
-//      if (code == Keyboard::U && !_selectedRows.IsEmpty())
-//      {
-//        _displayMode = _selectedRows.Next() ? DisplayMode::Graph : DisplayMode::Keyframe;
-//      }
-//      else if (code == Keyboard::R)
-//      {
-//        _displayMode = DisplayMode::Keyframe;
-//        for (EffectRow* r : _selectedRows.backingSet)
-//        {
-//          r->ToggleGraphView(false);
-//        }
-//      }
-//    }
-//  }
-
   return true;
 }
 
@@ -271,7 +221,6 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
 
-  int x = (int)(event.mouseButton.x - _pos.x);
   int y = (int)(event.mouseButton.y - _pos.y);
 
   // check for a click in the ticker
@@ -387,6 +336,7 @@ void TimelineWindow::DrawTimeline()
   time_duration curTime = EDITOR.CurTime();
 
   // draw the ticker
+  _tickerRect.Apply();
   _texture.draw(_tickerRect._rect);
 
   VertexArray lines(sf::Lines);
@@ -403,7 +353,7 @@ void TimelineWindow::DrawTimeline()
     time_duration t = PixelToTime(x);
 
     // round to nearest 0.250s
-    int ms = t.total_milliseconds() / 250 * 250;
+    int ms = (int)t.total_milliseconds() / 250 * 250;
     t = milliseconds(ms);
     int tmpX = x;
     x = TimeToPixel(t);
@@ -473,6 +423,7 @@ void TimelineWindow::DrawStatusBar()
   const editor::protocol::Settings& settings = EDITOR.Settings();
 
   // draw the background
+  _statusBar.Apply();
   _texture.draw(_statusBar._rect);
 
   Text t;

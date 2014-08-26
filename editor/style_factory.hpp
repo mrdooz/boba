@@ -33,7 +33,7 @@ namespace editor
   {
     StyledRect() {}
     StyledRect(Style* style) : _style(style) {}
-//    void Apply() { ApplyStyle(_style, &_rect); }
+    void Apply() { ApplyStyle(_style, &_rect); }
     Style* _style;
     RectangleShape _rect;
   };
