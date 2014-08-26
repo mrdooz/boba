@@ -39,6 +39,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Matrix4x4_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Matrix4x4_reflection_ = NULL;
+const ::google::protobuf::Descriptor* FloatKey_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  FloatKey_reflection_ = NULL;
 const ::google::protobuf::Descriptor* FloatKeyframe_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   FloatKeyframe_reflection_ = NULL;
@@ -165,7 +168,23 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Matrix4x4));
-  FloatKeyframe_descriptor_ = file->message_type(6);
+  FloatKey_descriptor_ = file->message_type(6);
+  static const int FloatKey_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKey, time_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKey, value_),
+  };
+  FloatKey_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      FloatKey_descriptor_,
+      FloatKey::default_instance_,
+      FloatKey_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKey, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKey, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(FloatKey));
+  FloatKeyframe_descriptor_ = file->message_type(7);
   static const int FloatKeyframe_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKeyframe, key_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatKeyframe, cp_in_),
@@ -182,7 +201,7 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(FloatKeyframe));
-  FloatAnim_descriptor_ = file->message_type(7);
+  FloatAnim_descriptor_ = file->message_type(8);
   static const int FloatAnim_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, keyframe_),
@@ -201,7 +220,7 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(FloatAnim));
-  Vector3Keyframe_descriptor_ = file->message_type(8);
+  Vector3Keyframe_descriptor_ = file->message_type(9);
   static const int Vector3Keyframe_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Keyframe, time_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Keyframe, value_),
@@ -217,7 +236,7 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Vector3Keyframe));
-  Vector3Anim_descriptor_ = file->message_type(9);
+  Vector3Anim_descriptor_ = file->message_type(10);
   static const int Vector3Anim_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Anim, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Vector3Anim, keyframe_),
@@ -261,6 +280,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Matrix4x4_descriptor_, &Matrix4x4::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    FloatKey_descriptor_, &FloatKey::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     FloatKeyframe_descriptor_, &FloatKeyframe::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     FloatAnim_descriptor_, &FloatAnim::default_instance());
@@ -285,6 +306,8 @@ void protobuf_ShutdownFile_common_2eproto() {
   delete Matrix3x3_reflection_;
   delete Matrix4x4::default_instance_;
   delete Matrix4x4_reflection_;
+  delete FloatKey::default_instance_;
+  delete FloatKey_reflection_;
   delete FloatKeyframe::default_instance_;
   delete FloatKeyframe_reflection_;
   delete FloatAnim::default_instance_;
@@ -315,21 +338,22 @@ void protobuf_AddDesc_common_2eproto() {
     "common.protocol.Vector4\022\'\n\005row_2\030\002 \001(\0132\030"
     ".common.protocol.Vector4\022\'\n\005row_3\030\003 \001(\0132"
     "\030.common.protocol.Vector4\022\'\n\005row_4\030\004 \001(\013"
-    "2\030.common.protocol.Vector4\"\211\001\n\rFloatKeyf"
-    "rame\022%\n\003key\030\001 \001(\0132\030.common.protocol.Vect"
-    "or2\022\'\n\005cp_in\030\002 \001(\0132\030.common.protocol.Vec"
-    "tor2\022(\n\006cp_out\030\003 \001(\0132\030.common.protocol.V"
-    "ector2\"\177\n\tFloatAnim\022\014\n\004type\030\001 \001(\r\0220\n\010key"
-    "frame\030\002 \003(\0132\036.common.protocol.FloatKeyfr"
-    "ame\022\021\n\tmin_value\030\003 \001(\002\022\021\n\tmax_value\030\004 \001("
-    "\002\022\014\n\004step\030\005 \001(\002\"H\n\017Vector3Keyframe\022\014\n\004ti"
-    "me\030\001 \001(\005\022\'\n\005value\030\002 \001(\0132\030.common.protoco"
-    "l.Vector3\"\321\001\n\013Vector3Anim\022\014\n\004type\030\001 \001(\r\022"
-    "2\n\010keyframe\030\002 \003(\0132 .common.protocol.Vect"
-    "or3Keyframe\022+\n\tmin_value\030\003 \001(\0132\030.common."
-    "protocol.Vector3\022+\n\tmax_value\030\004 \001(\0132\030.co"
-    "mmon.protocol.Vector3\022&\n\004step\030\005 \001(\0132\030.co"
-    "mmon.protocol.Vector3", 1101);
+    "2\030.common.protocol.Vector4\"\'\n\010FloatKey\022\014"
+    "\n\004time\030\001 \001(\003\022\r\n\005value\030\002 \001(\002\"\214\001\n\rFloatKey"
+    "frame\022&\n\003key\030\001 \001(\0132\031.common.protocol.Flo"
+    "atKey\022(\n\005cp_in\030\002 \001(\0132\031.common.protocol.F"
+    "loatKey\022)\n\006cp_out\030\003 \001(\0132\031.common.protoco"
+    "l.FloatKey\"\177\n\tFloatAnim\022\014\n\004type\030\001 \001(\r\0220\n"
+    "\010keyframe\030\002 \003(\0132\036.common.protocol.FloatK"
+    "eyframe\022\021\n\tmin_value\030\003 \001(\002\022\021\n\tmax_value\030"
+    "\004 \001(\002\022\014\n\004step\030\005 \001(\002\"H\n\017Vector3Keyframe\022\014"
+    "\n\004time\030\001 \001(\005\022\'\n\005value\030\002 \001(\0132\030.common.pro"
+    "tocol.Vector3\"\321\001\n\013Vector3Anim\022\014\n\004type\030\001 "
+    "\001(\r\0222\n\010keyframe\030\002 \003(\0132 .common.protocol."
+    "Vector3Keyframe\022+\n\tmin_value\030\003 \001(\0132\030.com"
+    "mon.protocol.Vector3\022+\n\tmax_value\030\004 \001(\0132"
+    "\030.common.protocol.Vector3\022&\n\004step\030\005 \001(\0132"
+    "\030.common.protocol.Vector3", 1145);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "common.proto", &protobuf_RegisterTypes);
   Color4::default_instance_ = new Color4();
@@ -338,6 +362,7 @@ void protobuf_AddDesc_common_2eproto() {
   Vector4::default_instance_ = new Vector4();
   Matrix3x3::default_instance_ = new Matrix3x3();
   Matrix4x4::default_instance_ = new Matrix4x4();
+  FloatKey::default_instance_ = new FloatKey();
   FloatKeyframe::default_instance_ = new FloatKeyframe();
   FloatAnim::default_instance_ = new FloatAnim();
   Vector3Keyframe::default_instance_ = new Vector3Keyframe();
@@ -348,6 +373,7 @@ void protobuf_AddDesc_common_2eproto() {
   Vector4::default_instance_->InitAsDefaultInstance();
   Matrix3x3::default_instance_->InitAsDefaultInstance();
   Matrix4x4::default_instance_->InitAsDefaultInstance();
+  FloatKey::default_instance_->InitAsDefaultInstance();
   FloatKeyframe::default_instance_->InitAsDefaultInstance();
   FloatAnim::default_instance_->InitAsDefaultInstance();
   Vector3Keyframe::default_instance_->InitAsDefaultInstance();
@@ -2190,6 +2216,252 @@ void Matrix4x4::Swap(Matrix4x4* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int FloatKey::kTimeFieldNumber;
+const int FloatKey::kValueFieldNumber;
+#endif  // !_MSC_VER
+
+FloatKey::FloatKey()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void FloatKey::InitAsDefaultInstance() {
+}
+
+FloatKey::FloatKey(const FloatKey& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void FloatKey::SharedCtor() {
+  _cached_size_ = 0;
+  time_ = GOOGLE_LONGLONG(0);
+  value_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+FloatKey::~FloatKey() {
+  SharedDtor();
+}
+
+void FloatKey::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void FloatKey::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* FloatKey::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return FloatKey_descriptor_;
+}
+
+const FloatKey& FloatKey::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_common_2eproto();
+  return *default_instance_;
+}
+
+FloatKey* FloatKey::default_instance_ = NULL;
+
+FloatKey* FloatKey::New() const {
+  return new FloatKey;
+}
+
+void FloatKey::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    time_ = GOOGLE_LONGLONG(0);
+    value_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool FloatKey::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional int64 time = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
+                 input, &time_)));
+          set_has_time();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(21)) goto parse_value;
+        break;
+      }
+
+      // optional float value = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_value:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &value_)));
+          set_has_value();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void FloatKey::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional int64 time = 1;
+  if (has_time()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->time(), output);
+  }
+
+  // optional float value = 2;
+  if (has_value()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->value(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* FloatKey::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional int64 time = 1;
+  if (has_time()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->time(), target);
+  }
+
+  // optional float value = 2;
+  if (has_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->value(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int FloatKey::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional int64 time = 1;
+    if (has_time()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int64Size(
+          this->time());
+    }
+
+    // optional float value = 2;
+    if (has_value()) {
+      total_size += 1 + 4;
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void FloatKey::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const FloatKey* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const FloatKey*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void FloatKey::MergeFrom(const FloatKey& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_time()) {
+      set_time(from.time());
+    }
+    if (from.has_value()) {
+      set_value(from.value());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void FloatKey::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void FloatKey::CopyFrom(const FloatKey& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool FloatKey::IsInitialized() const {
+
+  return true;
+}
+
+void FloatKey::Swap(FloatKey* other) {
+  if (other != this) {
+    std::swap(time_, other->time_);
+    std::swap(value_, other->value_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata FloatKey::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = FloatKey_descriptor_;
+  metadata.reflection = FloatKey_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
 const int FloatKeyframe::kKeyFieldNumber;
 const int FloatKeyframe::kCpInFieldNumber;
 const int FloatKeyframe::kCpOutFieldNumber;
@@ -2201,9 +2473,9 @@ FloatKeyframe::FloatKeyframe()
 }
 
 void FloatKeyframe::InitAsDefaultInstance() {
-  key_ = const_cast< ::common::protocol::Vector2*>(&::common::protocol::Vector2::default_instance());
-  cp_in_ = const_cast< ::common::protocol::Vector2*>(&::common::protocol::Vector2::default_instance());
-  cp_out_ = const_cast< ::common::protocol::Vector2*>(&::common::protocol::Vector2::default_instance());
+  key_ = const_cast< ::common::protocol::FloatKey*>(&::common::protocol::FloatKey::default_instance());
+  cp_in_ = const_cast< ::common::protocol::FloatKey*>(&::common::protocol::FloatKey::default_instance());
+  cp_out_ = const_cast< ::common::protocol::FloatKey*>(&::common::protocol::FloatKey::default_instance());
 }
 
 FloatKeyframe::FloatKeyframe(const FloatKeyframe& from)
@@ -2256,13 +2528,13 @@ FloatKeyframe* FloatKeyframe::New() const {
 void FloatKeyframe::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_key()) {
-      if (key_ != NULL) key_->::common::protocol::Vector2::Clear();
+      if (key_ != NULL) key_->::common::protocol::FloatKey::Clear();
     }
     if (has_cp_in()) {
-      if (cp_in_ != NULL) cp_in_->::common::protocol::Vector2::Clear();
+      if (cp_in_ != NULL) cp_in_->::common::protocol::FloatKey::Clear();
     }
     if (has_cp_out()) {
-      if (cp_out_ != NULL) cp_out_->::common::protocol::Vector2::Clear();
+      if (cp_out_ != NULL) cp_out_->::common::protocol::FloatKey::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2275,7 +2547,7 @@ bool FloatKeyframe::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .common.protocol.Vector2 key = 1;
+      // optional .common.protocol.FloatKey key = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -2288,7 +2560,7 @@ bool FloatKeyframe::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Vector2 cp_in = 2;
+      // optional .common.protocol.FloatKey cp_in = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -2302,7 +2574,7 @@ bool FloatKeyframe::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Vector2 cp_out = 3;
+      // optional .common.protocol.FloatKey cp_out = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -2334,19 +2606,19 @@ bool FloatKeyframe::MergePartialFromCodedStream(
 
 void FloatKeyframe::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .common.protocol.Vector2 key = 1;
+  // optional .common.protocol.FloatKey key = 1;
   if (has_key()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->key(), output);
   }
 
-  // optional .common.protocol.Vector2 cp_in = 2;
+  // optional .common.protocol.FloatKey cp_in = 2;
   if (has_cp_in()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->cp_in(), output);
   }
 
-  // optional .common.protocol.Vector2 cp_out = 3;
+  // optional .common.protocol.FloatKey cp_out = 3;
   if (has_cp_out()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->cp_out(), output);
@@ -2360,21 +2632,21 @@ void FloatKeyframe::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* FloatKeyframe::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .common.protocol.Vector2 key = 1;
+  // optional .common.protocol.FloatKey key = 1;
   if (has_key()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         1, this->key(), target);
   }
 
-  // optional .common.protocol.Vector2 cp_in = 2;
+  // optional .common.protocol.FloatKey cp_in = 2;
   if (has_cp_in()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         2, this->cp_in(), target);
   }
 
-  // optional .common.protocol.Vector2 cp_out = 3;
+  // optional .common.protocol.FloatKey cp_out = 3;
   if (has_cp_out()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -2392,21 +2664,21 @@ int FloatKeyframe::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .common.protocol.Vector2 key = 1;
+    // optional .common.protocol.FloatKey key = 1;
     if (has_key()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->key());
     }
 
-    // optional .common.protocol.Vector2 cp_in = 2;
+    // optional .common.protocol.FloatKey cp_in = 2;
     if (has_cp_in()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->cp_in());
     }
 
-    // optional .common.protocol.Vector2 cp_out = 3;
+    // optional .common.protocol.FloatKey cp_out = 3;
     if (has_cp_out()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -2441,13 +2713,13 @@ void FloatKeyframe::MergeFrom(const FloatKeyframe& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_key()) {
-      mutable_key()->::common::protocol::Vector2::MergeFrom(from.key());
+      mutable_key()->::common::protocol::FloatKey::MergeFrom(from.key());
     }
     if (from.has_cp_in()) {
-      mutable_cp_in()->::common::protocol::Vector2::MergeFrom(from.cp_in());
+      mutable_cp_in()->::common::protocol::FloatKey::MergeFrom(from.cp_in());
     }
     if (from.has_cp_out()) {
-      mutable_cp_out()->::common::protocol::Vector2::MergeFrom(from.cp_out());
+      mutable_cp_out()->::common::protocol::FloatKey::MergeFrom(from.cp_out());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());

@@ -106,41 +106,39 @@ bool TimelineWindow::Init()
     e.displacement.x.type = 1;
     e.displacement.y.type = 1;
     e.displacement.z.type = 1;
-    float t = randf(0.f, 500.f);
+    s64 t = randf(0, 500);
     for (u32 j = 0; j < 50; ++j)
     {
-      e.displacement.x.keyframe.push_back({ Vector2f(t, randf(-10.f, 20.f)) });
-      t += randf(150.f, 1000.f);
-      e.displacement.y.keyframe.push_back({ Vector2f(t, randf(-10.f, 20.f)) });
-      t += randf(150.f, 1000.f);
-      e.displacement.z.keyframe.push_back({ Vector2f(t, randf(-10.f, 20.f)) });
-      t += randf(150.f, 1000.f);
+      e.displacement.x.keyframe.push_back({t, randf(-10.f, 20.f)});
+      t += randf(150, 1000);
+      e.displacement.y.keyframe.push_back({t, randf(-10.f, 20.f)});
+      t += randf(150, 1000);
+      e.displacement.z.keyframe.push_back({t, randf(-10.f, 20.f)});
+      t += randf(150, 1000);
 
       float s = 10;
       if (j == 0)
       {
         const auto& fn = [&](FloatAnim* f){
-            Vector2f v = f->keyframe[1].key - f->keyframe[0].key;
-            v = Normalize(v);
+            float v = (f->keyframe[1].key.value - f->keyframe[0].key.value) / (f->keyframe[1].key.time - f->keyframe[0].key.time);
 
             f->keyframe.back().cpOut = f->keyframe[0].key;
-            f->keyframe.back().cpOut.x += 200;
-            f->keyframe.back().cpOut.y += s * v.y;
+            f->keyframe.back().cpOut.time += 200;
+            f->keyframe.back().cpOut.value += s * v;
         };
 
         fn(&e.displacement.x);
         fn(&e.displacement.y);
         fn(&e.displacement.z);
       }
-      else if (j == 48)
+      else if (j == 49)
       {
         const auto& fn = [&](FloatAnim* f){
-            Vector2f v = f->keyframe[1].key - f->keyframe[0].key;
-            v = Normalize(v);
+            float v = (f->keyframe[49].key.value - f->keyframe[48].key.value) / (f->keyframe[49].key.time - f->keyframe[48].key.time);
 
-            f->keyframe.back().cpIn = f->keyframe[0].key;
-            f->keyframe.back().cpIn.x -= 200;
-            f->keyframe.back().cpIn.y -= s * v.y;
+            f->keyframe.back().cpIn = f->keyframe[49].key;
+            f->keyframe.back().cpIn.time -= 200;
+            f->keyframe.back().cpIn.value -= s * v;
         };
 
         fn(&e.displacement.x);
@@ -150,17 +148,16 @@ bool TimelineWindow::Init()
       else
       {
         const auto& fn = [&](FloatAnim* f) {
-            Vector2f v = f->keyframe[j+1].key - f->keyframe[j-1].key;
-            v = Normalize(v);
+            float v = (f->keyframe[j+1].key.value - f->keyframe[j-1].key.value) / (f->keyframe[j+1].key.time - f->keyframe[j-1].key.time);
 
             f->keyframe.back().cpIn = f->keyframe[j].key;
             f->keyframe.back().cpOut = f->keyframe[j].key;
 
-            f->keyframe.back().cpIn.x -= 200;
-            f->keyframe.back().cpIn.y -= s * v.y;
+            f->keyframe.back().cpIn.time -= 200;
+            f->keyframe.back().cpIn.value -= s * v;
 
-            f->keyframe.back().cpOut.x += 200;
-            f->keyframe.back().cpOut.y += s * v.y;
+            f->keyframe.back().cpOut.time += 200;
+            f->keyframe.back().cpOut.value += s * v;
         };
 
         fn(&e.displacement.x);
@@ -264,6 +261,7 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
       _lastDragPos = Vector2i(event.mouseMove.x, event.mouseMove.y);
       return true;
     }
+
     int delta = event.mouseMove.x - _lastDragPos.x;
     time_duration d = AbsPixelToTime(delta);
     if (_panelOffset + d < seconds(0))
@@ -296,6 +294,8 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 {
+  _lastDragPos = {-1, -1};
+
   vector<EffectRow*> effects;
   for (EffectRow* row : _effectRows)
     row->Flatten(&effects);
@@ -443,6 +443,17 @@ void TimelineWindow::DrawStatusBar()
 }
 
 //----------------------------------------------------------------------------------
+int TimelineWindow::TimeToPixel(s64 ms) const
+{
+  int w = EDITOR.Settings().effect_view_width();
+
+  // p = s * (t + a) + m
+  // t = (p - m) / s - a
+  double s = (double)_pixelsPerSecond / 1000.0;
+  return (int)(w + s * (ms - _panelOffset.total_milliseconds()));
+}
+
+//----------------------------------------------------------------------------------
 int TimelineWindow::TimeToPixel(const time_duration& t) const
 {
   int w = EDITOR.Settings().effect_view_width();
@@ -463,6 +474,18 @@ time_duration TimelineWindow::PixelToTime(int x) const
     return milliseconds(0);
 
   return milliseconds(x / s) + _panelOffset;
+}
+
+//----------------------------------------------------------------------------------
+s64 TimelineWindow::PixelToTimeMs(int x) const
+{
+  double s = (double)_pixelsPerSecond / 1000.0;
+
+  x -= EDITOR.Settings().effect_view_width();
+  if (x < 0)
+    return 0;
+
+  return x / s + _panelOffset.total_milliseconds();
 }
 
 //----------------------------------------------------------------------------------

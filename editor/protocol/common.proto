@@ -46,17 +46,17 @@ message Matrix4x4
 
 message FloatKey
 {
-  optional s64 time = 1;
+  optional int64 time = 1;
   optional float value = 2;
 }
 
 message FloatKeyframe
 {
-  optional Vector2 key = 1;
+  optional FloatKey key = 1;
 
   // bezier control points
-  optional Vector2 cp_in = 2;
-  optional Vector2 cp_out = 3;
+  optional FloatKey cp_in = 2;
+  optional FloatKey cp_out = 3;
 }
 
 message FloatAnim

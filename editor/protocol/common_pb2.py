@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='common.proto',
   package='common.protocol',
-  serialized_pb='\n\x0c\x63ommon.proto\x12\x0f\x63ommon.protocol\"B\n\x06\x43olor4\x12\x0c\n\x01r\x18\x01 \x01(\r:\x01\x30\x12\x0c\n\x01g\x18\x02 \x01(\r:\x01\x30\x12\x0c\n\x01\x62\x18\x03 \x01(\r:\x01\x30\x12\x0e\n\x01\x61\x18\x04 \x01(\r:\x03\x32\x35\x35\"\x1f\n\x07Vector2\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"*\n\x07Vector3\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"5\n\x07Vector4\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"\x86\x01\n\tMatrix3x3\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector3\"\xaf\x01\n\tMatrix4x4\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_4\x18\x04 \x01(\x0b\x32\x18.common.protocol.Vector4\"\x89\x01\n\rFloatKeyframe\x12%\n\x03key\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector2\x12\'\n\x05\x63p_in\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector2\x12(\n\x06\x63p_out\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector2\"\x7f\n\tFloatAnim\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x30\n\x08keyframe\x18\x02 \x03(\x0b\x32\x1e.common.protocol.FloatKeyframe\x12\x11\n\tmin_value\x18\x03 \x01(\x02\x12\x11\n\tmax_value\x18\x04 \x01(\x02\x12\x0c\n\x04step\x18\x05 \x01(\x02\"H\n\x0fVector3Keyframe\x12\x0c\n\x04time\x18\x01 \x01(\x05\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\"\xd1\x01\n\x0bVector3Anim\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x32\n\x08keyframe\x18\x02 \x03(\x0b\x32 .common.protocol.Vector3Keyframe\x12+\n\tmin_value\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector3\x12+\n\tmax_value\x18\x04 \x01(\x0b\x32\x18.common.protocol.Vector3\x12&\n\x04step\x18\x05 \x01(\x0b\x32\x18.common.protocol.Vector3')
+  serialized_pb='\n\x0c\x63ommon.proto\x12\x0f\x63ommon.protocol\"B\n\x06\x43olor4\x12\x0c\n\x01r\x18\x01 \x01(\r:\x01\x30\x12\x0c\n\x01g\x18\x02 \x01(\r:\x01\x30\x12\x0c\n\x01\x62\x18\x03 \x01(\r:\x01\x30\x12\x0e\n\x01\x61\x18\x04 \x01(\r:\x03\x32\x35\x35\"\x1f\n\x07Vector2\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"*\n\x07Vector3\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"5\n\x07Vector4\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"\x86\x01\n\tMatrix3x3\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector3\"\xaf\x01\n\tMatrix4x4\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_4\x18\x04 \x01(\x0b\x32\x18.common.protocol.Vector4\"\'\n\x08\x46loatKey\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\r\n\x05value\x18\x02 \x01(\x02\"\x8c\x01\n\rFloatKeyframe\x12&\n\x03key\x18\x01 \x01(\x0b\x32\x19.common.protocol.FloatKey\x12(\n\x05\x63p_in\x18\x02 \x01(\x0b\x32\x19.common.protocol.FloatKey\x12)\n\x06\x63p_out\x18\x03 \x01(\x0b\x32\x19.common.protocol.FloatKey\"\x7f\n\tFloatAnim\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x30\n\x08keyframe\x18\x02 \x03(\x0b\x32\x1e.common.protocol.FloatKeyframe\x12\x11\n\tmin_value\x18\x03 \x01(\x02\x12\x11\n\tmax_value\x18\x04 \x01(\x02\x12\x0c\n\x04step\x18\x05 \x01(\x02\"H\n\x0fVector3Keyframe\x12\x0c\n\x04time\x18\x01 \x01(\x05\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\"\xd1\x01\n\x0bVector3Anim\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x32\n\x08keyframe\x18\x02 \x03(\x0b\x32 .common.protocol.Vector3Keyframe\x12+\n\tmin_value\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector3\x12+\n\tmax_value\x18\x04 \x01(\x0b\x32\x18.common.protocol.Vector3\x12&\n\x04step\x18\x05 \x01(\x0b\x32\x18.common.protocol.Vector3')
 
 
 
@@ -284,6 +284,41 @@ _MATRIX4X4 = _descriptor.Descriptor(
 )
 
 
+_FLOATKEY = _descriptor.Descriptor(
+  name='FloatKey',
+  full_name='common.protocol.FloatKey',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='time', full_name='common.protocol.FloatKey.time', index=0,
+      number=1, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='common.protocol.FloatKey.value', index=1,
+      number=2, type=2, cpp_type=6, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=548,
+  serialized_end=587,
+)
+
+
 _FLOATKEYFRAME = _descriptor.Descriptor(
   name='FloatKeyframe',
   full_name='common.protocol.FloatKeyframe',
@@ -321,8 +356,8 @@ _FLOATKEYFRAME = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=549,
-  serialized_end=686,
+  serialized_start=590,
+  serialized_end=730,
 )
 
 
@@ -377,8 +412,8 @@ _FLOATANIM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=688,
-  serialized_end=815,
+  serialized_start=732,
+  serialized_end=859,
 )
 
 
@@ -412,8 +447,8 @@ _VECTOR3KEYFRAME = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=817,
-  serialized_end=889,
+  serialized_start=861,
+  serialized_end=933,
 )
 
 
@@ -468,8 +503,8 @@ _VECTOR3ANIM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=892,
-  serialized_end=1101,
+  serialized_start=936,
+  serialized_end=1145,
 )
 
 _MATRIX3X3.fields_by_name['row_1'].message_type = _VECTOR3
@@ -479,9 +514,9 @@ _MATRIX4X4.fields_by_name['row_1'].message_type = _VECTOR4
 _MATRIX4X4.fields_by_name['row_2'].message_type = _VECTOR4
 _MATRIX4X4.fields_by_name['row_3'].message_type = _VECTOR4
 _MATRIX4X4.fields_by_name['row_4'].message_type = _VECTOR4
-_FLOATKEYFRAME.fields_by_name['key'].message_type = _VECTOR2
-_FLOATKEYFRAME.fields_by_name['cp_in'].message_type = _VECTOR2
-_FLOATKEYFRAME.fields_by_name['cp_out'].message_type = _VECTOR2
+_FLOATKEYFRAME.fields_by_name['key'].message_type = _FLOATKEY
+_FLOATKEYFRAME.fields_by_name['cp_in'].message_type = _FLOATKEY
+_FLOATKEYFRAME.fields_by_name['cp_out'].message_type = _FLOATKEY
 _FLOATANIM.fields_by_name['keyframe'].message_type = _FLOATKEYFRAME
 _VECTOR3KEYFRAME.fields_by_name['value'].message_type = _VECTOR3
 _VECTOR3ANIM.fields_by_name['keyframe'].message_type = _VECTOR3KEYFRAME
@@ -494,6 +529,7 @@ DESCRIPTOR.message_types_by_name['Vector3'] = _VECTOR3
 DESCRIPTOR.message_types_by_name['Vector4'] = _VECTOR4
 DESCRIPTOR.message_types_by_name['Matrix3x3'] = _MATRIX3X3
 DESCRIPTOR.message_types_by_name['Matrix4x4'] = _MATRIX4X4
+DESCRIPTOR.message_types_by_name['FloatKey'] = _FLOATKEY
 DESCRIPTOR.message_types_by_name['FloatKeyframe'] = _FLOATKEYFRAME
 DESCRIPTOR.message_types_by_name['FloatAnim'] = _FLOATANIM
 DESCRIPTOR.message_types_by_name['Vector3Keyframe'] = _VECTOR3KEYFRAME
@@ -534,6 +570,12 @@ class Matrix4x4(_message.Message):
   DESCRIPTOR = _MATRIX4X4
 
   # @@protoc_insertion_point(class_scope:common.protocol.Matrix4x4)
+
+class FloatKey(_message.Message):
+  __metaclass__ = _reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _FLOATKEY
+
+  # @@protoc_insertion_point(class_scope:common.protocol.FloatKey)
 
 class FloatKeyframe(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType

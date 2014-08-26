@@ -44,6 +44,8 @@ namespace editor
 
     float PixelToValue(float value) const;
     float ValueToPixel(float value) const;
+    FloatRect KeyframeRect(const FloatKey& k, float ofs);
+
 
     enum VisibleKeyframesFlags { AddBorderPoints = 1 << 0, AddOutside = 1 << 1 };
 
@@ -80,10 +82,7 @@ namespace editor
 
     typedef Flags<RowFlagsF> RowFlags;
 
-    EffectRow(
-        const Font& font,
-        const string& str,
-        EffectRow* parent = nullptr);
+    EffectRow(const Font& font, const string& str, EffectRow* parent = nullptr);
     virtual ~EffectRow();
 
     void Draw(RenderTexture& texture, bool drawKeyframes);
@@ -92,21 +91,6 @@ namespace editor
     float RowHeight(float rowHeight);
     void DrawVars(RenderTexture& texture, bool drawKeyframes);
 
-    virtual void BeginEditVars(float x, float y) {}
-    virtual void UpdateEditVar(Keyboard::Key key) {}
-    virtual void EndEditVars(bool commit) {}
-
-    virtual bool KeyframeIntersect(const Vector2f& pt, const Vector2f& size) { return false; }
-    virtual void BeginKeyframeUpdate(bool copy) {}
-    virtual void UpdateKeyframe(const time_duration& t) {}
-    virtual void EndKeyframeUpdate(bool commit) {}
-    virtual void DeselectKeyframe() {}
-    virtual void DeleteKeyframe() {}
-
-    virtual void ToggleGraphView(bool value) {}
-    // return true if cycled through all graphs
-    virtual bool NextGraph() { return true; }
-    virtual void DrawGraph(RenderTexture& texture, const Vector2f& size) {}
     virtual bool OnMouseMoved(const Event &event);
     virtual bool OnMouseButtonPressed(const Event &event);
     virtual bool OnMouseButtonReleased(const Event &event);
@@ -145,8 +129,6 @@ namespace editor
 
     virtual bool ToProtocol(google::protobuf::Message* msg) const;
     virtual bool FromProtocol(const google::protobuf::Message& msg);
-    //vector<EffectRowTextPath*> _textPaths;
-    //vector<EffectRowNoise*> _noise;
   };
 
   //----------------------------------------------------------------------------------
@@ -171,16 +153,8 @@ namespace editor
         const string& str,
         EffectRow* parent = nullptr);
 
-    virtual void BeginKeyframeUpdate(bool copy);
-    virtual void UpdateKeyframe(const time_duration& t);
-    virtual void EndKeyframeUpdate(bool commit);
-    virtual void DeselectKeyframe();
-    virtual void DeleteKeyframe();
-
     virtual bool FromProtocol(const google::protobuf::Message& msg);
     virtual bool ToProtocol(google::protobuf::Message* msg) const;
-
-    int _editingIdx;
 
     NoiseEffector _effector;
   };

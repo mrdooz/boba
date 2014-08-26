@@ -25,19 +25,6 @@ namespace editor
         : out->ParseFromString(str);
   }
 
-  struct Effect
-  {
-    enum class Type
-    {
-      Plexus,
-    };
-
-    union {
-      Plexus* plexus;
-    } data;
-
-  };
-
   template<typename T> struct KeyframeTraits {};
 
   template<> struct KeyframeTraits<float>
@@ -70,19 +57,19 @@ namespace editor
   template <typename T>
   bool FindKeyframePair(
       const typename KeyframeTraits<T>::Keyframes& keyframes,
-      u32 time_ms,
+      s64 time_ms,
       u32* idxLower,
       u32* idxUpper)
   {
     *idxLower = *idxUpper = 0xffffffff;
 
-    if (time_ms <= keyframes.front().key.x)
+    if (time_ms <= keyframes.front().key.time)
     {
       *idxLower = 0;
       return false;
     }
 
-    if (time_ms >= keyframes.back().key.x)
+    if (time_ms >= keyframes.back().key.time)
     {
       *idxLower = (u32)keyframes.size() - 1;
       return false;
@@ -90,7 +77,7 @@ namespace editor
 
     // find upper idx
     int tmp = 0;
-    while (time_ms > keyframes[tmp].key.x)
+    while (time_ms > keyframes[tmp].key.time)
       ++tmp;
 
     *idxUpper = (u32)tmp;
@@ -111,23 +98,23 @@ namespace editor
     typedef typename KeyframeTraits<T>::Keyframes Keyframes;
 
     Keyframes& keyframes = anim->keyframe;
-    s32 time_ms = t.total_milliseconds();
+    s64 time_ms = t.total_milliseconds();
 
     if (keyframes.empty())
     {
-      keyframes.push_back({Vector2f(time_ms, value)});
+      keyframes.push_back({time_ms, value});
       return &keyframes.back();
     }
 
-    if (time_ms <= keyframes.front().key.x)
+    if (time_ms <= keyframes.front().key.time)
     {
-      keyframes.insert(keyframes.begin(), {Vector2f(time_ms, value)});
+      keyframes.insert(keyframes.begin(), {time_ms, value});
 
       return &keyframes.front();
     }
-    else if (time_ms >= keyframes.back().key.x)
+    else if (time_ms >= keyframes.back().key.time)
     {
-      keyframes.push_back({Vector2f(time_ms, value)});
+      keyframes.push_back({time_ms, value});
       return &keyframes.back();
     }
 
@@ -137,15 +124,15 @@ namespace editor
 
     // check if the lower key has the same time as the current one, in which
     // case we'll just replace it
-    if (!forceAdd && keyframes[idxLower].key.x == time_ms)
+    if (!forceAdd && keyframes[idxLower].key.time == time_ms)
     {
-      keyframes[idxLower].key.y = value;
+      keyframes[idxLower].key.value = value;
       return &keyframes[idxLower];
     }
     else
     {
       u32 idx = idxUpper == 0xffffffff ? idxLower : idxUpper;
-      auto it = keyframes.insert(keyframes.begin() + idx, {Vector2f(time_ms, value)});
+      auto it = keyframes.insert(keyframes.begin() + idx, {time_ms, value});
       return &(*it);
     }
   }
@@ -173,7 +160,7 @@ namespace editor
 
   //----------------------------------------------------------------------------------
   template <typename T>
-  T Interpolate(const typename KeyframeTraits<T>::Anim& anim, u32 time_ms)
+  T Interpolate(const typename KeyframeTraits<T>::Anim& anim, s64 time_ms)
   {
     typedef typename KeyframeTraits<T>::Anim Anim;
     typedef typename KeyframeTraits<T>::Keyframe Keyframe;
@@ -187,23 +174,23 @@ namespace editor
     u32 idxLower, idxUpper;
     if (!FindKeyframePair<T>(keyframes, time_ms, &idxLower, &idxUpper))
     {
-      return keyframes[idxLower].key.y;
+      return keyframes[idxLower].key.value;
     }
 
     const Keyframe& lower = keyframes[idxLower];
     const Keyframe& upper = keyframes[idxUpper];
 
-    float t = (time_ms - lower.key.x) / (float)(upper.key.x - lower.key.x);
+    float t = (time_ms - lower.key.time) / (float)(upper.key.time - lower.key.time);
 
     if (anim.type == 0 || keyframes.size() == 2)
     {
       // linear interpolation
-      return lower.key.y + t * (upper.key - lower.key).y;
+      return lower.key.value + t * (upper.key.value - lower.key.value);
     }
     else
     {
       // bezier splines
-      return Bezier(lower.key, lower.cpOut, upper.cpIn, upper.key, t).y;
+      return Bezier(lower.key.value, lower.cpOut.value, upper.cpIn.value, upper.key.value, t);
     }
 
     return T();

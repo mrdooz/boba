@@ -55,7 +55,9 @@ namespace editor
     void Reset(const effect::protocol::EffectSettings& settings);
 
     int TimeToPixel(const time_duration& t) const;
+    int TimeToPixel(s64 ms) const;
     time_duration PixelToTime(int x) const;
+    s64 PixelToTimeMs(int x) const;
     time_duration AbsPixelToTime(int x) const;
     void UpdateStatusBar(int segment, const string& value);
 

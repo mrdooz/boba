@@ -14,7 +14,12 @@ namespace
   const u32 SELECTED_CP_IN    = 1u << 30;
   const u32 SELECTED_CP_OUT   = 1u << 31;
   const u32 SELECTED_CP_MASK  = ~(SELECTED_CP_IN | SELECTED_CP_OUT);
+
+  const u32 ANIM_TYPE_LINEAR  = 0;
+  const u32 ANIM_TYPE_BEZIER  = 1;
+  const u32 ANIM_TYPE_STEP    = 2;
 }
+
 
 //----------------------------------------------------------------------------------
 void CalcCeilAndStep(float value, float* stepValue, float* ceilValue)
@@ -151,8 +156,8 @@ void RowVar::DrawKeyframes(RenderTexture& texture)
   for (u32 i = 0; i < _anim->keyframe.size(); ++i)
   {
     const FloatKeyframe& keyframe = _anim->keyframe[i];
-    int keyX = TimelineWindow::_instance->TimeToPixel(milliseconds(keyframe.key.x));
-    if (keyX < windowSize.x)
+    int keyX = TimelineWindow::_instance->TimeToPixel(keyframe.key.time);
+    if (keyX >= settings.effect_view_width() && keyX < windowSize.x)
     {
       ApplyStyle(i == _selectedKeyframe ? selectedStryle : defaultStyle, &_keyframeRect._rect);
 
@@ -168,9 +173,12 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
   TimelineWindow* timeline = TimelineWindow::_instance;
   const editor::protocol::Settings& settings = EDITOR.Settings();
   Vector2f mousePos = ToLocal(event.mouseButton.x, event.mouseButton.y);
+  Vector2f windowSize = timeline->GetSize();
   float x = mousePos.x, y = mousePos.y;
 
-  _selectedKeyframe = ~(u32)0;
+  _selectedKeyframe = SELECTED_NONE;
+
+  int ofs = settings.keyframe_size();
 
   if (y >= _bounds.top && y < _bounds.top + _bounds.height)
   {
@@ -198,110 +206,118 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
       _flags.Toggle(VarFlagsF::Selected);
       return true;
     }
-  }
 
-  int ofs = settings.keyframe_size();
-  int ofs2 = ofs / 2;
+    if (!_flags.IsSet(VarFlagsF::GraphMode))
+    {
+      // check for keyframe intersection
+      s64 t0 = timeline->PixelToTimeMs(x - ofs/2);
+      s64 t1 = timeline->PixelToTimeMs(x + ofs/2);
+
+      for (u32 i = 0; i < _anim->keyframe.size(); ++i)
+      {
+        FloatKeyframe& keyframe = _anim->keyframe[i];
+        if (keyframe.key.time >= t0 && keyframe.key.time < t1)
+        {
+          _selectedKeyframe = i;
+          return true;
+        }
+      }
+    }
+  }
 
   if (_flags.IsSet(VarFlagsF::GraphMode))
   {
     // if shift is pressed, create a new control point at the cursor pos
     if (Keyboard::isKeyPressed(Keyboard::Key::LShift))
     {
-      time_duration t = timeline->PixelToTime(event.mouseButton.x);
+      s64 t = timeline->PixelToTimeMs(event.mouseButton.x);
       float y = event.mouseButton.y - timeline->GetPosition().y;
       float v = PixelToValue(y);
 
-      if (_anim->type == 0)
+      switch (_anim->type)
       {
-        AddKeyframe<float>(t, v, true, _anim);
-      }
-      else
-      {
-        // In bezier mode, evaluate the spline slightly before/after the new keyframe
-        // to get good values for the control points..
-        time_duration t0 = milliseconds(max((s64)0, t.total_milliseconds() - 250));
-        time_duration t1 = milliseconds(t.total_milliseconds() + 250);
-        float v0 = Interpolate<float>(*_anim, t0);
-        float v1 = Interpolate<float>(*_anim, t1);
+        case ANIM_TYPE_LINEAR:
+          AddKeyframe<float>(milliseconds(t), v, true, _anim);
+          break;
 
-        FloatKeyframe* f = AddKeyframe<float>(t, v, true, _anim);
-        f->cpIn = Vector2f(t0.total_milliseconds(), v0);
-        f->cpOut = Vector2f(t1.total_milliseconds(), v1);
+        case ANIM_TYPE_BEZIER:
+        {
+          // In bezier mode, evaluate the spline slightly before/after the new keyframe
+          // to get good values for the control points..
+          s64 t0 = max((s64)0, t - 250);
+          s64 t1 = t + 250;
+          float v0 = Interpolate<float>(*_anim, t0);
+          float v1 = Interpolate<float>(*_anim, t1);
+
+          FloatKeyframe* f = AddKeyframe<float>(milliseconds(t), v, true, _anim);
+          f->cpIn  = { t0, v0 };
+          f->cpOut = { t1, v1 };
+          break;
+        }
+
+        case ANIM_TYPE_STEP:
+          break;
       }
 
       return true;
     }
 
-    if (_anim->type == 0)
+    // check for hit on keyframe/control point
+    switch (_anim->type)
     {
-      for (u32 i = 0; i < _anim->keyframe.size(); ++i)
-      {
-        FloatKeyframe &keyframe = _anim->keyframe[i];
-        FloatRect rect(
-            timeline->TimeToPixel(milliseconds(keyframe.key.x)),
-            ValueToPixel(keyframe.key.y), ofs, ofs);
-        if (rect.contains(mousePos))
+      case ANIM_TYPE_LINEAR:
+        for (u32 i = 0; i < _anim->keyframe.size(); ++i)
         {
-          _selectedKeyframe = i;
-          _prevKeyframe = keyframe;
-          return true;
+          FloatKeyframe &keyframe = _anim->keyframe[i];
+          if (KeyframeRect(keyframe.key, ofs).contains(mousePos))
+          {
+            _selectedKeyframe = i;
+            _prevKeyframe = keyframe;
+            return true;
+          }
         }
-      }
-    }
-    else
-    {
-      // if in bezier, check for hits on control points
-      for (u32 i = 0; i < _anim->keyframe.size(); ++i)
-      {
-        FloatKeyframe &keyframe = _anim->keyframe[i];
-        FloatRect rect(
-            timeline->TimeToPixel(milliseconds(keyframe.key.x)),
-            ValueToPixel(keyframe.key.y), ofs, ofs);
-        if (rect.contains(mousePos))
+        break;
+
+      case ANIM_TYPE_BEZIER:
+        // if in bezier, check for hits on control points
+        for (u32 i = 0; i < _anim->keyframe.size(); ++i)
         {
-          _selectedKeyframe = i;
-          _prevKeyframe = keyframe;
-          return true;
+          FloatKeyframe &keyframe = _anim->keyframe[i];
+
+          s64 minT = min3(keyframe.cpIn.time, keyframe.key.time, keyframe.cpOut.time);
+          s64 maxT = max3(keyframe.cpIn.time, keyframe.key.time, keyframe.cpOut.time);
+
+          if (timeline->TimeToPixel(minT) < 0)
+            continue;
+
+          if (timeline->TimeToPixel(maxT) > windowSize.x)
+            break;
+
+          if (KeyframeRect(keyframe.key, ofs).contains(mousePos))
+          {
+            _selectedKeyframe = i;
+            _prevKeyframe = keyframe;
+            return true;
+          }
+
+          if (KeyframeRect(keyframe.cpIn, ofs).contains(mousePos))
+          {
+            _selectedKeyframe = i | SELECTED_CP_IN;
+            _prevKeyframe = keyframe;
+            return true;
+          }
+
+          if (KeyframeRect(keyframe.cpOut, ofs).contains(mousePos))
+          {
+            _selectedKeyframe = i | SELECTED_CP_OUT;
+            _prevKeyframe = keyframe;
+            return true;
+          }
         }
+        break;
 
-        FloatRect rectIn(
-            timeline->TimeToPixel(milliseconds(keyframe.cpIn.x)),
-            ValueToPixel(keyframe.cpIn.y), ofs, ofs);
-        if (rectIn.contains(mousePos))
-        {
-          _selectedKeyframe = i | SELECTED_CP_IN;
-          _prevKeyframe = keyframe;
-          return true;
-        }
-
-        FloatRect rectOut(
-            timeline->TimeToPixel(milliseconds(keyframe.cpOut.x)),
-            ValueToPixel(keyframe.cpOut.y), ofs, ofs);
-        if (rectOut.contains(mousePos))
-        {
-          _selectedKeyframe = i | SELECTED_CP_OUT;
-          _prevKeyframe = keyframe;
-          return true;
-        }
-      }
-
-    }
-  }
-  else
-  {
-    // check if this intersects any keyframe
-    s64 t0 = timeline->PixelToTime(x - ofs2).total_milliseconds();
-    s64 t1 = timeline->PixelToTime(x + ofs2).total_milliseconds();
-
-    for (u32 i = 0; i < _anim->keyframe.size(); ++i)
-    {
-      FloatKeyframe& keyframe = _anim->keyframe[i];
-      if (keyframe.key.x >= t0 && keyframe.key.x < t1)
-      {
-        _selectedKeyframe = i;
-        return true;
-      }
+      case ANIM_TYPE_STEP:
+        break;
     }
   }
 
@@ -311,7 +327,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
 //----------------------------------------------------------------------------------
 bool RowVar::OnMouseButtonReleased(const Event &event)
 {
-  _selectedKeyframe = ~(u32)0;
+  _selectedKeyframe = SELECTED_NONE;
 
   if (_flags.IsSet(VarFlagsF::Animating) && _flags.IsSet(VarFlagsF::Editing))
   {
@@ -329,32 +345,31 @@ bool RowVar::OnMouseMoved(const Event &event)
   Vector2f mousePos = ToLocal(event.mouseMove.x, event.mouseMove.y);
   TimelineWindow* timeline = TimelineWindow::_instance;
 
-  if (_selectedKeyframe != ~0)
+  if (_selectedKeyframe != SELECTED_NONE)
   {
     vector<FloatKeyframe>& keyframes = _anim->keyframe;
 
-    float t = timeline->PixelToTime(mousePos.x).total_milliseconds();
+    s64 t = timeline->PixelToTime(mousePos.x).total_milliseconds();
 
     if (_flags.IsSet(VarFlagsF::GraphMode))
     {
       if (_anim->type == 0)
       {
         // if moving past the previous or next keyframe, swap to it
-        if (_selectedKeyframe > 0 && t < keyframes[_selectedKeyframe-1].key.x)
+        if (_selectedKeyframe > 0 && t < keyframes[_selectedKeyframe-1].key.time)
         {
           keyframes[_selectedKeyframe] = _prevKeyframe;
           _prevKeyframe = keyframes[--_selectedKeyframe];
         }
 
-        if (_selectedKeyframe < keyframes.size() -1 && t >= keyframes[_selectedKeyframe+1].key.x)
+        if (_selectedKeyframe < keyframes.size() -1 && t >= keyframes[_selectedKeyframe+1].key.time)
         {
           keyframes[_selectedKeyframe] = _prevKeyframe;
           _prevKeyframe = keyframes[++_selectedKeyframe];
         }
 
         float y = event.mouseMove.y - timeline->GetPosition().y;
-        keyframes[_selectedKeyframe].key.x = t;
-        keyframes[_selectedKeyframe].key.y = PixelToValue(y);
+        keyframes[_selectedKeyframe].key = {t, PixelToValue(y)};
       }
       else
       {
@@ -364,26 +379,23 @@ bool RowVar::OnMouseMoved(const Event &event)
 
         if (_selectedKeyframe & SELECTED_CP_IN)
         {
-          keyframes[k].cpIn.x = t;
-          keyframes[k].cpIn.y = PixelToValue(y);
+          keyframes[k].cpIn = { t, PixelToValue(y) };
         }
         else if (_selectedKeyframe & SELECTED_CP_OUT)
         {
-          keyframes[k].cpOut.x = t;
-          keyframes[k].cpOut.y = PixelToValue(y);
+          keyframes[k].cpOut = { t, PixelToValue(y) };
         }
         else
         {
-          float dx = t - keyframes[k].key.x;
-          float dy = PixelToValue(y) - keyframes[k].key.y;
-          keyframes[k].key.x = t;
-          keyframes[k].key.y = PixelToValue(y);
+          s64 dx = t - keyframes[k].key.time;
+          float dy = PixelToValue(y) - keyframes[k].key.value;
+          keyframes[k].key = {t, PixelToValue(y)};
 
-          keyframes[k].cpIn.x += dx;
-          keyframes[k].cpIn.y += dy;
+          keyframes[k].cpIn.time += dx;
+          keyframes[k].cpIn.value += dy;
 
-          keyframes[k].cpOut.x += dx;
-          keyframes[k].cpOut.y += dy;
+          keyframes[k].cpOut.time += dx;
+          keyframes[k].cpOut.value += dy;
         }
       }
     }
@@ -391,12 +403,12 @@ bool RowVar::OnMouseMoved(const Event &event)
     {
       // don't allow the keyframe to move outside its neighbours
       if (_selectedKeyframe > 0)
-        t = max(t, keyframes[_selectedKeyframe-1].key.x);
+        t = max(t, keyframes[_selectedKeyframe-1].key.time);
 
       if (_selectedKeyframe < keyframes.size() -1)
-        t = min(t, keyframes[_selectedKeyframe+1].key.x);
+        t = min(t, keyframes[_selectedKeyframe+1].key.time);
 
-      keyframes[_selectedKeyframe].key.x = t;
+      keyframes[_selectedKeyframe].key.time = t;
     }
 
     return true;
@@ -490,33 +502,33 @@ void RowVar::VisibleKeyframes(
   vector<const FloatKeyframe*> validKeyframes;
 
   const FloatKeyframe* prevFrame = nullptr;
-  float minMs = minTime.total_milliseconds();
-  float maxMs = maxTime.total_milliseconds();
+  s64 minMs = minTime.total_milliseconds();
+  s64 maxMs = maxTime.total_milliseconds();
 
   for (u32 i = 0; i < _anim->keyframe.size(); ++i)
   {
     const FloatKeyframe& keyframe = _anim->keyframe[i];
 
-    if (keyframe.key.x < minMs)
+    if (keyframe.key.time < minMs)
     {
       prevFrame = &keyframe;
       continue;
     }
 
-    if (keyframe.key.x > maxMs)
+    if (keyframe.key.time > maxMs)
     {
       if (flags & AddOutside)
         validKeyframes.push_back(&keyframe);
       break;
     }
 
-    if (prevFrame && prevFrame->key.x < minMs && flags & AddOutside)
+    if (prevFrame && prevFrame->key.time < minMs && flags & AddOutside)
       validKeyframes.push_back(prevFrame);
 
     validKeyframes.push_back(&keyframe);
 
-    _minValue = min(_minValue, keyframe.key.y);
-    _maxValue = max(_maxValue, keyframe.key.y);
+    _minValue = min(_minValue, keyframe.key.value);
+    _maxValue = max(_maxValue, keyframe.key.value);
 
     prevFrame = &keyframe;
   }
@@ -533,9 +545,7 @@ void RowVar::VisibleKeyframes(
 
   for (const FloatKeyframe* keyframe : validKeyframes)
   {
-    Vector2f p = Vector2f(
-        timeline->TimeToPixel(milliseconds(keyframe->key.x)),
-        ValueToPixel(keyframe->key.y));
+    Vector2f p = Vector2f(timeline->TimeToPixel(keyframe->key.time), ValueToPixel(keyframe->key.value));
 
     keyframes->push_back(make_pair(p, keyframe));
   }
@@ -618,21 +628,10 @@ void RowVar::DrawGraph(RenderTexture& texture)
       if (!(k0 && k1))
         continue;
 
-      const Vector2f& p0 = Vector2f(
-          timeline->TimeToPixel(milliseconds(k0->key.x)),
-          ValueToPixel(k0->key.y));
-
-      const Vector2f& p1 = Vector2f(
-          timeline->TimeToPixel(milliseconds(k0->cpOut.x)),
-          ValueToPixel(k0->cpOut.y));
-
-      const Vector2f& p2 = Vector2f(
-          timeline->TimeToPixel(milliseconds(k1->cpIn.x)),
-          ValueToPixel(k1->cpIn.y));
-
-      const Vector2f& p3 = Vector2f(
-          timeline->TimeToPixel(milliseconds(k1->key.x)),
-          ValueToPixel(k1->key.y));
+      const Vector2f& p0 = Vector2f(timeline->TimeToPixel(k0->key.time), ValueToPixel(k0->key.value));
+      const Vector2f& p1 = Vector2f(timeline->TimeToPixel(k0->cpOut.time), ValueToPixel(k0->cpOut.value));
+      const Vector2f& p2 = Vector2f(timeline->TimeToPixel(k1->cpIn.time), ValueToPixel(k1->cpIn.value));
+      const Vector2f& p3 = Vector2f(timeline->TimeToPixel(k1->key.time), ValueToPixel(k1->key.value));
 
       Color c(180, 200, 0);
       controlPoints.append(sf::Vertex(p0, c));
@@ -688,7 +687,14 @@ void RowVar::DrawGraph(RenderTexture& texture)
 
     texture.draw(curLine);
   }
+}
 
+
+//----------------------------------------------------------------------------------
+FloatRect RowVar::KeyframeRect(const FloatKey& k, float ofs)
+{
+  TimelineWindow* timeline = TimelineWindow::_instance;
+  return FloatRect(timeline->TimeToPixel(k.time) - ofs/2, ValueToPixel(k.value) - ofs/2, ofs, ofs);
 }
 
 //----------------------------------------------------------------------------------
@@ -835,7 +841,7 @@ bool EffectRow::OnMouseButtonPressed(const Event &event)
 
   if (_varEditRect.contains(mousePos))
   {
-    BeginEditVars(x, y);
+//    BeginEditVars(x, y);
     return true;
   }
 
@@ -908,6 +914,14 @@ bool EffectRow::OnKeyReleased(const Event& event)
 //----------------------------------------------------------------------------------
 void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
 {
+  // Draw the keyframes before anything else so we can cheese a bit and draw over
+  // any potential errant keyframes :)
+  if (drawKeyframes)
+  {
+    for (RowVar* var : _vars)
+      var->DrawKeyframes(texture);
+  }
+
   const editor::protocol::Settings& settings = EDITOR.Settings();
   Color bgCol = ::FromProtocol(settings.effect_view_background_color());
 
@@ -964,12 +978,9 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
 //----------------------------------------------------------------------------------
 void EffectRow::DrawVars(RenderTexture& texture, bool drawKeyframes)
 {
-  for (u32 i = 0; i < _vars.size(); ++i)
+  for (RowVar* var : _vars)
   {
-    RowVar* var = _vars[i];
     var->Draw(texture, drawKeyframes);
-    if (drawKeyframes)
-      var->DrawKeyframes(texture);
   }
 }
 
@@ -1071,69 +1082,10 @@ EffectRowNoise::EffectRowNoise(
     const string& str,
     EffectRow* parent)
     : EffectRow(font, str, parent)
-    , _editingIdx(-1)
 {
   _vars.push_back(new RowVar(_font, "x", &_effector.displacement.x));
   _vars.push_back(new RowVar(_font, "y", &_effector.displacement.y));
   _vars.push_back(new RowVar(_font, "z", &_effector.displacement.z));
-}
-
-////----------------------------------------------------------------------------------
-//void EffectRowNoise::UpdateEditVar(Keyboard::Key key)
-//{
-//  if (key >= Keyboard::Key::Num0 && key <= Keyboard::Key::Num9)
-//  {
-//    _curEdit += '0' + key - Keyboard::Key::Num0;
-//  }
-//  else if (key == Keyboard::Key::BackSpace)
-//  {
-//    if (_curEdit.size() > 0)
-//    {
-//      _curEdit.pop_back();
-//    }
-//  }
-//  else if (key == Keyboard::Key::Period && _curEdit.find('.') == _curEdit.npos)
-//  {
-//    _curEdit += '.';
-//  }
-//}
-
-//----------------------------------------------------------------------------------
-void EffectRowNoise::UpdateKeyframe(const time_duration &t)
-{
-}
-
-//----------------------------------------------------------------------------------
-void EffectRowNoise::BeginKeyframeUpdate(bool copy)
-{
-#if 0
-  _copyingKeyframe = copy;
-  if (_copyingKeyframe)
-  {
-    // insert a copy of the existing keyframe
-    _selectedKeyframe = AddKeyframe(
-        milliseconds(_selectedKeyframe->time),
-        _selectedKeyframe->value,
-        true,
-        &_effector.displacement);
-  }
-#endif
-}
-
-//----------------------------------------------------------------------------------
-void EffectRowNoise::EndKeyframeUpdate(bool commit)
-{
-
-}
-
-//----------------------------------------------------------------------------------
-void EffectRowNoise::DeselectKeyframe()
-{
-}
-
-//----------------------------------------------------------------------------------
-void EffectRowNoise::DeleteKeyframe()
-{
 }
 
 //----------------------------------------------------------------------------------

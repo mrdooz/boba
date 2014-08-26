@@ -21,6 +21,7 @@ namespace editor
   struct Vector2;
   struct Vector3;
   struct Vector4;
+  struct FloatKey;
   struct FloatKeyframe;
   struct FloatAnim;
   struct Vector3Keyframe;
@@ -35,6 +36,8 @@ namespace editor
   struct Displacement;
   struct NoiseEffector;
 
+  FloatKey FromProtocol(const common::protocol::FloatKey& p);
+  void ToProtocol(const FloatKey& v, common::protocol::FloatKey* p);
   FloatKeyframe FromProtocol(const common::protocol::FloatKeyframe& p);
   void ToProtocol(const FloatKeyframe& v, common::protocol::FloatKeyframe* p);
   FloatAnim FromProtocol(const common::protocol::FloatAnim& p);
@@ -73,11 +76,23 @@ namespace editor
     return res;
   }
   
+  struct FloatKey
+  {
+    int64_t time;
+    float value;
+
+    struct FlagsF {
+      enum Enum { HasTime = 1 << 0, HasValue = 1 << 1, };
+      struct Bits { u32 hasTime : 1; u32 hasValue : 1; };
+    };
+    Flags<FlagsF> flags;
+  };
+
   struct FloatKeyframe
   {
-    Vector2f key;
-    Vector2f cpIn;
-    Vector2f cpOut;
+    FloatKey key;
+    FloatKey cpIn;
+    FloatKey cpOut;
 
     struct FlagsF {
       enum Enum { HasKey = 1 << 0, HasCpIn = 1 << 1, HasCpOut = 1 << 2, };
@@ -317,6 +332,28 @@ namespace editor
   {
     p->set_x(v.x);
     p->set_y(v.y);
+  }
+
+  inline FloatKey FromProtocol(const common::protocol::FloatKey& p)
+  {
+    FloatKey res;
+    if (p.has_time())
+    {
+      res.flags.Set(FloatKey::FlagsF::HasTime);
+      res.time = p.time();
+    }
+    if (p.has_value())
+    {
+      res.flags.Set(FloatKey::FlagsF::HasValue);
+      res.value = p.value();
+    }
+    return res;
+  }
+
+  inline void ToProtocol(const FloatKey& v, common::protocol::FloatKey* p)
+  {
+    p->set_time(v.time);
+    p->set_value(v.value);
   }
 
   inline FloatKeyframe FromProtocol(const common::protocol::FloatKeyframe& p)
