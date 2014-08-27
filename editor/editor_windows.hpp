@@ -96,7 +96,6 @@ namespace editor
 
     typedef Flags<TimelineFlagsF> TimelineFlags;
 
-
     bool OnMouseButtonPressed(const Event& event);
     bool OnMouseMoved(const Event& event);
     bool OnMouseButtonReleased(const Event& event);
@@ -106,7 +105,6 @@ namespace editor
     void RecalcEffecRows();
 
     time_duration _panelOffset;
-    u32 _pixelsPerSecond;
     Font _font;
 
     TimelineFlags _timelineFlags;
@@ -119,6 +117,9 @@ namespace editor
     vector<string> _statusBarValues;
     DisplayMode _displayMode;
     RowVar* _selectedVar;
+
+    vector<time_duration> _tickIntervals;
+    int _curZoom;
   };
 
 }

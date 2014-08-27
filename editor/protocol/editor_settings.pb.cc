@@ -35,7 +35,7 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
       "editor_settings.proto");
   GOOGLE_CHECK(file != NULL);
   Settings_descriptor_ = file->message_type(0);
-  static const int Settings_offsets_[27] = {
+  static const int Settings_offsets_[29] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_height_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticker_interval_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, ticks_per_interval_),
@@ -59,6 +59,8 @@ void protobuf_AssignDesc_editor_5fsettings_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, effect_line_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, keyframe_default_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, keyframe_selected_color_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, keyframe_control_color_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, graph_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, var_text_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, var_value_color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Settings, effect_icon_expanded_color_),
@@ -107,7 +109,7 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
   ::common::protocol::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\025editor_settings.proto\022\017editor.protocol"
-    "\032\014common.proto\"\323\t\n\010Settings\022\031\n\rticker_he"
+    "\032\014common.proto\"\274\n\n\010Settings\022\031\n\rticker_he"
     "ight\030\001 \001(\r:\00250\022\033\n\017ticker_interval\030\002 \001(\r:"
     "\00220\022\035\n\022ticks_per_interval\030\003 \001(\r:\0014\022\036\n\021ef"
     "fect_view_width\030\024 \001(\r:\003200\022\035\n\021effect_row"
@@ -132,13 +134,15 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
     " \001(\0132\027.common.protocol.Color4\0228\n\026keyfram"
     "e_default_color\030\226\001 \001(\0132\027.common.protocol"
     ".Color4\0229\n\027keyframe_selected_color\030\227\001 \001("
-    "\0132\027.common.protocol.Color4\0220\n\016var_text_c"
-    "olor\030\240\001 \001(\0132\027.common.protocol.Color4\0221\n\017"
-    "var_value_color\030\241\001 \001(\0132\027.common.protocol"
-    ".Color4\022<\n\032effect_icon_expanded_color\030\310\001"
-    " \001(\0132\027.common.protocol.Color4\022=\n\033effect_"
-    "icon_collapsed_color\030\311\001 \001(\0132\027.common.pro"
-    "tocol.Color4", 1292);
+    "\0132\027.common.protocol.Color4\0228\n\026keyframe_c"
+    "ontrol_color\030\230\001 \001(\0132\027.common.protocol.Co"
+    "lor4\022-\n\013graph_color\030\231\001 \001(\0132\027.common.prot"
+    "ocol.Color4\0220\n\016var_text_color\030\240\001 \001(\0132\027.c"
+    "ommon.protocol.Color4\0221\n\017var_value_color"
+    "\030\241\001 \001(\0132\027.common.protocol.Color4\022<\n\032effe"
+    "ct_icon_expanded_color\030\310\001 \001(\0132\027.common.p"
+    "rotocol.Color4\022=\n\033effect_icon_collapsed_"
+    "color\030\311\001 \001(\0132\027.common.protocol.Color4", 1397);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_settings.proto", &protobuf_RegisterTypes);
   Settings::default_instance_ = new Settings();
@@ -179,6 +183,8 @@ const int Settings::kTimelineViewBackgroundColorFieldNumber;
 const int Settings::kEffectLineColorFieldNumber;
 const int Settings::kKeyframeDefaultColorFieldNumber;
 const int Settings::kKeyframeSelectedColorFieldNumber;
+const int Settings::kKeyframeControlColorFieldNumber;
+const int Settings::kGraphColorFieldNumber;
 const int Settings::kVarTextColorFieldNumber;
 const int Settings::kVarValueColorFieldNumber;
 const int Settings::kEffectIconExpandedColorFieldNumber;
@@ -202,6 +208,8 @@ void Settings::InitAsDefaultInstance() {
   effect_line_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
   keyframe_default_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
   keyframe_selected_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
+  keyframe_control_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
+  graph_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
   var_text_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
   var_value_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
   effect_icon_expanded_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
@@ -239,6 +247,8 @@ void Settings::SharedCtor() {
   effect_line_color_ = NULL;
   keyframe_default_color_ = NULL;
   keyframe_selected_color_ = NULL;
+  keyframe_control_color_ = NULL;
+  graph_color_ = NULL;
   var_text_color_ = NULL;
   var_value_color_ = NULL;
   effect_icon_expanded_color_ = NULL;
@@ -263,6 +273,8 @@ void Settings::SharedDtor() {
     delete effect_line_color_;
     delete keyframe_default_color_;
     delete keyframe_selected_color_;
+    delete keyframe_control_color_;
+    delete graph_color_;
     delete var_text_color_;
     delete var_value_color_;
     delete effect_icon_expanded_color_;
@@ -342,11 +354,17 @@ void Settings::Clear() {
     if (has_keyframe_selected_color()) {
       if (keyframe_selected_color_ != NULL) keyframe_selected_color_->::common::protocol::Color4::Clear();
     }
-    if (has_var_text_color()) {
-      if (var_text_color_ != NULL) var_text_color_->::common::protocol::Color4::Clear();
+    if (has_keyframe_control_color()) {
+      if (keyframe_control_color_ != NULL) keyframe_control_color_->::common::protocol::Color4::Clear();
     }
   }
   if (_has_bits_[24 / 32] & (0xffu << (24 % 32))) {
+    if (has_graph_color()) {
+      if (graph_color_ != NULL) graph_color_->::common::protocol::Color4::Clear();
+    }
+    if (has_var_text_color()) {
+      if (var_text_color_ != NULL) var_text_color_->::common::protocol::Color4::Clear();
+    }
     if (has_var_value_color()) {
       if (var_value_color_ != NULL) var_value_color_->::common::protocol::Color4::Clear();
     }
@@ -708,6 +726,34 @@ bool Settings::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(1218)) goto parse_keyframe_control_color;
+        break;
+      }
+
+      // optional .common.protocol.Color4 keyframe_control_color = 152;
+      case 152: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_keyframe_control_color:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_keyframe_control_color()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(1226)) goto parse_graph_color;
+        break;
+      }
+
+      // optional .common.protocol.Color4 graph_color = 153;
+      case 153: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_graph_color:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_graph_color()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectTag(1282)) goto parse_var_text_color;
         break;
       }
@@ -912,6 +958,18 @@ void Settings::SerializeWithCachedSizes(
       151, this->keyframe_selected_color(), output);
   }
 
+  // optional .common.protocol.Color4 keyframe_control_color = 152;
+  if (has_keyframe_control_color()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      152, this->keyframe_control_color(), output);
+  }
+
+  // optional .common.protocol.Color4 graph_color = 153;
+  if (has_graph_color()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      153, this->graph_color(), output);
+  }
+
   // optional .common.protocol.Color4 var_text_color = 160;
   if (has_var_text_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -1079,6 +1137,20 @@ void Settings::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         151, this->keyframe_selected_color(), target);
+  }
+
+  // optional .common.protocol.Color4 keyframe_control_color = 152;
+  if (has_keyframe_control_color()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        152, this->keyframe_control_color(), target);
+  }
+
+  // optional .common.protocol.Color4 graph_color = 153;
+  if (has_graph_color()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        153, this->graph_color(), target);
   }
 
   // optional .common.protocol.Color4 var_text_color = 160;
@@ -1285,6 +1357,22 @@ int Settings::ByteSize() const {
           this->keyframe_selected_color());
     }
 
+    // optional .common.protocol.Color4 keyframe_control_color = 152;
+    if (has_keyframe_control_color()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->keyframe_control_color());
+    }
+
+  }
+  if (_has_bits_[24 / 32] & (0xffu << (24 % 32))) {
+    // optional .common.protocol.Color4 graph_color = 153;
+    if (has_graph_color()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->graph_color());
+    }
+
     // optional .common.protocol.Color4 var_text_color = 160;
     if (has_var_text_color()) {
       total_size += 2 +
@@ -1292,8 +1380,6 @@ int Settings::ByteSize() const {
           this->var_text_color());
     }
 
-  }
-  if (_has_bits_[24 / 32] & (0xffu << (24 % 32))) {
     // optional .common.protocol.Color4 var_value_color = 161;
     if (has_var_value_color()) {
       total_size += 2 +
@@ -1415,11 +1501,17 @@ void Settings::MergeFrom(const Settings& from) {
     if (from.has_keyframe_selected_color()) {
       mutable_keyframe_selected_color()->::common::protocol::Color4::MergeFrom(from.keyframe_selected_color());
     }
-    if (from.has_var_text_color()) {
-      mutable_var_text_color()->::common::protocol::Color4::MergeFrom(from.var_text_color());
+    if (from.has_keyframe_control_color()) {
+      mutable_keyframe_control_color()->::common::protocol::Color4::MergeFrom(from.keyframe_control_color());
     }
   }
   if (from._has_bits_[24 / 32] & (0xffu << (24 % 32))) {
+    if (from.has_graph_color()) {
+      mutable_graph_color()->::common::protocol::Color4::MergeFrom(from.graph_color());
+    }
+    if (from.has_var_text_color()) {
+      mutable_var_text_color()->::common::protocol::Color4::MergeFrom(from.var_text_color());
+    }
     if (from.has_var_value_color()) {
       mutable_var_value_color()->::common::protocol::Color4::MergeFrom(from.var_value_color());
     }
@@ -1475,6 +1567,8 @@ void Settings::Swap(Settings* other) {
     std::swap(effect_line_color_, other->effect_line_color_);
     std::swap(keyframe_default_color_, other->keyframe_default_color_);
     std::swap(keyframe_selected_color_, other->keyframe_selected_color_);
+    std::swap(keyframe_control_color_, other->keyframe_control_color_);
+    std::swap(graph_color_, other->graph_color_);
     std::swap(var_text_color_, other->var_text_color_);
     std::swap(var_value_color_, other->var_value_color_);
     std::swap(effect_icon_expanded_color_, other->effect_icon_expanded_color_);

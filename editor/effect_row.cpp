@@ -9,6 +9,15 @@ using namespace bristol;
 
 namespace
 {
+  Vector2f Normalize(const Vector2f& v)
+  {
+    float len = sqrtf(v.x*v.x + v.y*v.y);
+    return 1/len * v;
+  }
+}
+
+namespace
+{
   // bitmasks used for encoding control points in the selected keyframe
   const u32 SELECTED_NONE     = ~(u32)0;
   const u32 SELECTED_CP_IN    = 1u << 30;
@@ -18,45 +27,44 @@ namespace
   const u32 ANIM_TYPE_LINEAR  = 0;
   const u32 ANIM_TYPE_BEZIER  = 1;
   const u32 ANIM_TYPE_STEP    = 2;
-}
 
-
-//----------------------------------------------------------------------------------
-void CalcCeilAndStep(float value, float* stepValue, float* ceilValue)
-{
-  if (value == 0)
+  //----------------------------------------------------------------------------------
+  void CalcCeilAndStep(float value, float* stepValue, float* ceilValue)
   {
-    *stepValue = 0.1f;
-    *ceilValue = 0;
-    return;
+    if (value == 0)
+    {
+      *stepValue = 0.1f;
+      *ceilValue = 0;
+      return;
+    }
+
+    float base = 10;
+    float log10 = logf(value) / logf(base);
+    *stepValue = powf(base, floorf(log10));
+
+    // step down from the ceil until we find the multiple of step just below
+    float tmp = powf(base, ceilf(log10));
+    float step = *stepValue;
+    while (true)
+    {
+      if (tmp - step < value)
+        break;
+      tmp -= step;
+    }
+
+    *ceilValue = tmp + step;
   }
 
-  float base = 10;
-  float log10 = logf(value) / logf(base);
-  *stepValue = powf(base, floorf(log10));
-
-  // step down from the ceil until we find the multiple of step just below
-  float tmp = powf(base, ceilf(log10));
-  float step = *stepValue;
-  while (true)
-  {
-    if (tmp - step < value)
-      break;
-    tmp -= step;
-  }
-
-  *ceilValue = tmp + step;
-}
-
 //----------------------------------------------------------------------------------
-void DrawRow(RenderTexture& texture, float x, float y, float w, float h, const Color& color)
-{
-  VertexArray curLine(sf::Lines);
-  curLine.append(sf::Vertex(Vector2f(x, y), color));
-  curLine.append(sf::Vertex(Vector2f(w, y), color));
-  curLine.append(sf::Vertex(Vector2f(x, y+h), color));
-  curLine.append(sf::Vertex(Vector2f(w, y+h), color));
-  texture.draw(curLine);
+  void DrawRow(RenderTexture& texture, float x, float y, float w, float h, const Color& color)
+  {
+    VertexArray curLine(sf::Lines);
+    curLine.append(Vertex(Vector2f(x, y), color));
+    curLine.append(Vertex(Vector2f(w, y), color));
+    curLine.append(Vertex(Vector2f(x, y+h), color));
+    curLine.append(Vertex(Vector2f(w, y+h), color));
+    texture.draw(curLine);
+  }
 }
 
 //----------------------------------------------------------------------------------
@@ -478,10 +486,12 @@ float RowVar::ValueToPixel(float value) const
 }
 
 //----------------------------------------------------------------------------------
+
 void RowVar::VisibleKeyframes(
     const Vector2f& size,
-    u32 flags,
-    vector<pair<Vector2f, const FloatKeyframe*>>* keyframes)
+    bool addBorderPoints,
+    bool addOutsidePoints,
+    vector<VisibleKeyframe>* keyframes)
 {
 
   const editor::protocol::Settings& settings = EDITOR.Settings();
@@ -490,8 +500,8 @@ void RowVar::VisibleKeyframes(
   TimelineWindow* timeline = TimelineWindow::_instance;
 
   // find min/max values for keyframes within the view
-  time_duration minTime = timeline->PixelToTime(0);
-  time_duration maxTime = timeline->PixelToTime(size.x);
+  s64 minTime = timeline->PixelToTimeMs(0);
+  s64 maxTime = timeline->PixelToTimeMs(size.x);
 
   float value0 = Interpolate<float>(*_anim, minTime);
   float valueLast = Interpolate<float>(*_anim, maxTime);
@@ -499,39 +509,73 @@ void RowVar::VisibleKeyframes(
   _minValue = min(value0, valueLast);
   _maxValue = max(value0, valueLast);
 
-  vector<const FloatKeyframe*> validKeyframes;
+  //vector<const FloatKeyframe*> validKeyframes;
 
   const FloatKeyframe* prevFrame = nullptr;
-  s64 minMs = minTime.total_milliseconds();
-  s64 maxMs = maxTime.total_milliseconds();
+  const FloatKeyframe* keyframe = nullptr;
+  u32 flags = 0;
+  u32 prevFlags = 0;
 
-  for (u32 i = 0; i < _anim->keyframe.size(); ++i)
+  if (addBorderPoints)
+    keyframes->push_back({Vector2f(ofs, ValueToPixel(value0)), nullptr, VisibleKeyframe::FLAG_VIRTUAL});
+
+  u32 numKeyframes = _anim->keyframe.size();
+  for (u32 i = 0; i < numKeyframes; ++i, prevFrame = keyframe, prevFlags = flags)
   {
-    const FloatKeyframe& keyframe = _anim->keyframe[i];
+    flags = i == 0 ? VisibleKeyframe::FLAG_FIRST : i == numKeyframes - 1 ? VisibleKeyframe::FLAG_LAST : 0;
+    keyframe = &_anim->keyframe[i];
 
-    if (keyframe.key.time < minMs)
-    {
-      prevFrame = &keyframe;
+    if (keyframe->key.time < minTime)
       continue;
-    }
 
-    if (keyframe.key.time > maxMs)
-    {
-      if (flags & AddOutside)
-        validKeyframes.push_back(&keyframe);
+    if (keyframe->key.time > maxTime)
       break;
+
+    // If this is the first inside keyframe, add the previous one of 'addOutsidePoints' is specified
+    if (prevFrame && prevFrame->key.time < minTime && addOutsidePoints)
+    {
+      Vector2f p = Vector2f(timeline->TimeToPixel(prevFrame->key.time), ValueToPixel(prevFrame->key.value));
+      keyframes->push_back({p, prevFrame, prevFlags});
     }
 
-    if (prevFrame && prevFrame->key.time < minMs && flags & AddOutside)
-      validKeyframes.push_back(prevFrame);
+    Vector2f p = Vector2f(timeline->TimeToPixel(keyframe->key.time), ValueToPixel(keyframe->key.value));
+    keyframes->push_back({p, keyframe, flags});
 
-    validKeyframes.push_back(&keyframe);
+    switch (_anim->type)
+    {
+      case ANIM_TYPE_LINEAR:
+        _minValue = min(_minValue, keyframe->key.value);
+        _maxValue = max(_maxValue, keyframe->key.value);
+        break;
 
-    _minValue = min(_minValue, keyframe.key.value);
-    _maxValue = max(_maxValue, keyframe.key.value);
-
-    prevFrame = &keyframe;
+      case ANIM_TYPE_BEZIER:
+        if (flags & VisibleKeyframe::FLAG_FIRST)
+        {
+          _minValue = min3(_minValue, keyframe->key.value, keyframe->cpOut.value);
+          _maxValue = max3(_maxValue, keyframe->key.value, keyframe->cpOut.value);
+        }
+        else if (flags & VisibleKeyframe::FLAG_LAST)
+        {
+          _minValue = min3(_minValue, keyframe->key.value, keyframe->cpIn.value);
+          _maxValue = max3(_maxValue, keyframe->key.value, keyframe->cpIn.value);
+        }
+        else
+        {
+          _minValue = min4(_minValue, keyframe->key.value, keyframe->cpIn.value, keyframe->cpOut.value);
+          _maxValue = max4(_maxValue, keyframe->key.value, keyframe->cpIn.value, keyframe->cpOut.value);
+        }
+        break;
+    }
   }
+
+  if (addOutsidePoints)
+  {
+    Vector2f p = Vector2f(timeline->TimeToPixel(keyframe->key.time), ValueToPixel(keyframe->key.value));
+    keyframes->push_back({p, keyframe, flags});
+  }
+
+  if (addBorderPoints)
+    keyframes->push_back({Vector2f(size.x, ValueToPixel(valueLast)), nullptr, VisibleKeyframe::FLAG_VIRTUAL});
 
   _realMinValue = _minValue;
   _realMaxValue = _maxValue;
@@ -539,19 +583,6 @@ void RowVar::VisibleKeyframes(
   float step;
   CalcCeilAndStep(_maxValue, &step, &_maxValue);
   _minValue = _realMinValue - step;
-
-  if (flags & AddBorderPoints)
-    keyframes->push_back(make_pair(Vector2f(ofs, ValueToPixel(value0)), nullptr));
-
-  for (const FloatKeyframe* keyframe : validKeyframes)
-  {
-    Vector2f p = Vector2f(timeline->TimeToPixel(keyframe->key.time), ValueToPixel(keyframe->key.value));
-
-    keyframes->push_back(make_pair(p, keyframe));
-  }
-
-  if (flags & AddBorderPoints)
-    keyframes->push_back(make_pair(Vector2f(size.x, ValueToPixel(valueLast)), nullptr));
 }
 
 //----------------------------------------------------------------------------------
@@ -577,12 +608,8 @@ void RowVar::DrawGraph(RenderTexture& texture)
   texture.draw(rect);
 
   // get the visible keyframes
-  vector<pair<Vector2f, const FloatKeyframe*>> keyframes;
-  VisibleKeyframes(size, AddOutside, &keyframes);
-
-  Text label;
-  label.setFont(_font);
-  label.setCharacterSize(16);
+  vector<VisibleKeyframe> keyframes;
+  VisibleKeyframes(size, false, true, &keyframes);
 
   VertexArray gridLines(sf::Lines);
   float t0 = _realMaxValue;
@@ -591,6 +618,9 @@ void RowVar::DrawGraph(RenderTexture& texture)
   float minValue = _realMinValue;
 
   Color c(100, 100, 100, 255);
+  Text label;
+  label.setFont(_font);
+  label.setCharacterSize(16);
   label.setColor(c);
 
   // draw min/max lines
@@ -601,8 +631,8 @@ void RowVar::DrawGraph(RenderTexture& texture)
       break;
 
     float y = ValueToPixel(curY);
-    gridLines.append(sf::Vertex(Vector2f(ofs, y), c));
-    gridLines.append(sf::Vertex(Vector2f(size.x, y), c));
+    gridLines.append(Vertex(Vector2f(ofs, y), c));
+    gridLines.append(Vertex(Vector2f(size.x, y), c));
 
     label.setPosition(ofs + 10, y - 20);
     label.setString(to_string("%.2f", curY).c_str());
@@ -614,87 +644,112 @@ void RowVar::DrawGraph(RenderTexture& texture)
   texture.draw(gridLines);
 
   // draw the keyframes normalized to the min/max values
-
-  if (_anim->type == 1)
+  switch (_anim->type)
   {
-    VertexArray curLine(sf::LinesStrip);
-    VertexArray controlPoints(sf::Lines);
-
-    for (u32 i = 0; i < keyframes.size() - 1; ++i)
+    case ANIM_TYPE_LINEAR:
     {
-      const FloatKeyframe* k0 = keyframes[i+0].second;
-      const FloatKeyframe* k1 = keyframes[i+1].second;
+      VertexArray curLine(sf::LinesStrip);
 
-      if (!(k0 && k1))
-        continue;
-
-      const Vector2f& p0 = Vector2f(timeline->TimeToPixel(k0->key.time), ValueToPixel(k0->key.value));
-      const Vector2f& p1 = Vector2f(timeline->TimeToPixel(k0->cpOut.time), ValueToPixel(k0->cpOut.value));
-      const Vector2f& p2 = Vector2f(timeline->TimeToPixel(k1->cpIn.time), ValueToPixel(k1->cpIn.value));
-      const Vector2f& p3 = Vector2f(timeline->TimeToPixel(k1->key.time), ValueToPixel(k1->key.value));
-
-      Color c(180, 200, 0);
-      controlPoints.append(sf::Vertex(p0, c));
-      controlPoints.append(sf::Vertex(p1, c));
-      controlPoints.append(sf::Vertex(p2, c));
-      controlPoints.append(sf::Vertex(p3, c));
-
-      _keyframeRect._rect.setPosition(p0.x - rw, p0.y - rw);
-      texture.draw(_keyframeRect._rect);
-
-      _keyframeRect._rect.setPosition(p1.x - rw, p1.y - rw);
-      texture.draw(_keyframeRect._rect);
-
-      _keyframeRect._rect.setPosition(p2.x - rw, p2.y - rw);
-      texture.draw(_keyframeRect._rect);
-
-      _keyframeRect._rect.setPosition(p3.x - rw, p3.y - rw);
-      texture.draw(_keyframeRect._rect);
-
-      if (i == 0)
+      for (const auto& pp : keyframes)
       {
-        Vector2f v = Bezier(p0, p1, p2, p3, 0);
-        curLine.append(sf::Vertex(Vector2f(p0.x, v.y)));
+        const Vector2f& p = pp.p;
+        curLine.append(Vertex(p));
+
+        // if the point corresponds to a proper keyframe, draw the keyframe
+        if (!(pp.flags & VisibleKeyframe::FLAG_VIRTUAL))
+        {
+          _keyframeRect._rect.setPosition(p.x - rw, p.y - rw);
+          texture.draw(_keyframeRect._rect);
+        }
       }
 
-      for (u32 j = 1; j <= 20; ++j)
-      {
-        float t = j / 20.0f;
-        Vector2f v = Bezier(p0, p1, p2, p3, t);
-        curLine.append(sf::Vertex(Vector2f(lerp(p0.x, p3.x, t), v.y)));
-      }
+      texture.draw(curLine);
+      break;
     }
-    texture.draw(curLine);
-    texture.draw(controlPoints);
 
-  }
-  else
-  {
-    VertexArray curLine(sf::LinesStrip);
-
-    for (const auto& pp : keyframes)
+    case ANIM_TYPE_BEZIER:
     {
-      const Vector2f& p = pp.first;
-      curLine.append(sf::Vertex(p));
+      VertexArray controlPoints(sf::Lines);
+      Color c = ::FromProtocol(settings.keyframe_control_color());
 
-      // if the point corresponds to a proper keyframe, draw the keyframe
-      if (pp.second)
+      LineStrip curve(4, ::FromProtocol(settings.graph_color()));
+
+      u32 lastIdx = keyframes.size() - 2;
+      for (u32 i = 0; i <= lastIdx; ++i)
       {
-        _keyframeRect._rect.setPosition(p.x - rw, p.y - rw);
+        u32 flags = keyframes[i].flags;
+
+        const FloatKeyframe* k0 = keyframes[i+0].keyframe;
+        const FloatKeyframe* k1 = keyframes[i+1].keyframe;
+
+        if (!(k0 && k1))
+          continue;
+
+        const Vector2f& p0 = KeyToPoint(k0->key);
+        const Vector2f& p1 = KeyToPoint(k0->cpOut);
+        const Vector2f& p2 = KeyToPoint(k1->cpIn);
+        const Vector2f& p3 = KeyToPoint(k1->key);
+
+        // draw key-in
+        if (!(flags & VisibleKeyframe::FLAG_FIRST))
+        {
+          const Vector2f& keyIn = KeyToPoint(k0->cpIn);
+
+          controlPoints.append(Vertex(keyIn, c));
+          controlPoints.append(Vertex(p0, c));
+
+          _keyframeRect._rect.setPosition(keyIn.x - rw, keyIn.y - rw);
+          texture.draw(_keyframeRect._rect);
+        }
+
+        // draw key
+        _keyframeRect._rect.setPosition(p0.x - rw, p0.y - rw);
         texture.draw(_keyframeRect._rect);
-      }
-    }
 
-    texture.draw(curLine);
+        // draw key-out
+        if (!(flags & VisibleKeyframe::FLAG_LAST))
+        {
+          const Vector2f& keyOut = KeyToPoint(k0->cpOut);
+
+          controlPoints.append(Vertex(p0, c));
+          controlPoints.append(Vertex(keyOut, c));
+
+          _keyframeRect._rect.setPosition(keyOut.x - rw, keyOut.y - rw);
+          texture.draw(_keyframeRect._rect);
+        }
+
+        if (i == 0)
+        {
+          Vector2f v = Bezier(p0, p1, p2, p3, 0);
+          curve.addPoint({p0.x, v.y});
+        }
+
+        for (u32 j = 1; j <= 20; ++j)
+        {
+          float t = j / 20.0f;
+          Vector2f v = Bezier(p0, p1, p2, p3, t);
+          curve.addPoint({lerp(p0.x, p3.x, t), v.y});
+        }
+      }
+      texture.draw(curve);
+      texture.draw(controlPoints);
+      break;
+    }
   }
 }
-
 
 //----------------------------------------------------------------------------------
 FloatRect RowVar::KeyframeRect(const FloatKey& k, float ofs)
 {
   TimelineWindow* timeline = TimelineWindow::_instance;
   return FloatRect(timeline->TimeToPixel(k.time) - ofs/2, ValueToPixel(k.value) - ofs/2, ofs, ofs);
+}
+
+//----------------------------------------------------------------------------------
+Vector2f RowVar::KeyToPoint(const FloatKey& k)
+{
+  TimelineWindow* timeline = TimelineWindow::_instance;
+  return Vector2f(timeline->TimeToPixel(k.time), ValueToPixel(k.value));
 }
 
 //----------------------------------------------------------------------------------
@@ -952,18 +1007,18 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
   {
     const StyleSetting* s = STYLE_FACTORY.GetStyle("effect_icon_collapsed_color");
     // y increases downwards
-    tri.append(sf::Vertex(Vector2f(left+5, y+5), s->fillColor));
-    tri.append(sf::Vertex(Vector2f(left+5, y+15), s->fillColor));
-    tri.append(sf::Vertex(Vector2f(left+15, y+10), s->fillColor));
+    tri.append(Vertex(Vector2f(left+5, y+5), s->fillColor));
+    tri.append(Vertex(Vector2f(left+5, y+15), s->fillColor));
+    tri.append(Vertex(Vector2f(left+15, y+10), s->fillColor));
     texture.draw(tri);
   }
   else
   {
     // Row is expanded, so draw the Vars and children
     const StyleSetting* s = STYLE_FACTORY.GetStyle("effect_icon_expanded_color");
-    tri.append(sf::Vertex(Vector2f(left+5, y+5), s->fillColor));
-    tri.append(sf::Vertex(Vector2f(left+15, y+5), s->fillColor));
-    tri.append(sf::Vertex(Vector2f(left+10, y+15), s->fillColor));
+    tri.append(Vertex(Vector2f(left+5, y+5), s->fillColor));
+    tri.append(Vertex(Vector2f(left+15, y+5), s->fillColor));
+    tri.append(Vertex(Vector2f(left+10, y+15), s->fillColor));
     texture.draw(tri);
 
     DrawVars(texture, drawKeyframes);

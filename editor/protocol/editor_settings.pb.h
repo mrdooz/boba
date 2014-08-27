@@ -276,6 +276,24 @@ class Settings : public ::google::protobuf::Message {
   inline ::common::protocol::Color4* release_keyframe_selected_color();
   inline void set_allocated_keyframe_selected_color(::common::protocol::Color4* keyframe_selected_color);
 
+  // optional .common.protocol.Color4 keyframe_control_color = 152;
+  inline bool has_keyframe_control_color() const;
+  inline void clear_keyframe_control_color();
+  static const int kKeyframeControlColorFieldNumber = 152;
+  inline const ::common::protocol::Color4& keyframe_control_color() const;
+  inline ::common::protocol::Color4* mutable_keyframe_control_color();
+  inline ::common::protocol::Color4* release_keyframe_control_color();
+  inline void set_allocated_keyframe_control_color(::common::protocol::Color4* keyframe_control_color);
+
+  // optional .common.protocol.Color4 graph_color = 153;
+  inline bool has_graph_color() const;
+  inline void clear_graph_color();
+  static const int kGraphColorFieldNumber = 153;
+  inline const ::common::protocol::Color4& graph_color() const;
+  inline ::common::protocol::Color4* mutable_graph_color();
+  inline ::common::protocol::Color4* release_graph_color();
+  inline void set_allocated_graph_color(::common::protocol::Color4* graph_color);
+
   // optional .common.protocol.Color4 var_text_color = 160;
   inline bool has_var_text_color() const;
   inline void clear_var_text_color();
@@ -360,6 +378,10 @@ class Settings : public ::google::protobuf::Message {
   inline void clear_has_keyframe_default_color();
   inline void set_has_keyframe_selected_color();
   inline void clear_has_keyframe_selected_color();
+  inline void set_has_keyframe_control_color();
+  inline void clear_has_keyframe_control_color();
+  inline void set_has_graph_color();
+  inline void clear_has_graph_color();
   inline void set_has_var_text_color();
   inline void clear_has_var_text_color();
   inline void set_has_var_value_color();
@@ -394,13 +416,15 @@ class Settings : public ::google::protobuf::Message {
   ::common::protocol::Color4* effect_line_color_;
   ::common::protocol::Color4* keyframe_default_color_;
   ::common::protocol::Color4* keyframe_selected_color_;
+  ::common::protocol::Color4* keyframe_control_color_;
+  ::common::protocol::Color4* graph_color_;
   ::common::protocol::Color4* var_text_color_;
   ::common::protocol::Color4* var_value_color_;
   ::common::protocol::Color4* effect_icon_expanded_color_;
   ::common::protocol::Color4* effect_icon_collapsed_color_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(27 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(29 + 31) / 32];
 
   friend void  protobuf_AddDesc_editor_5fsettings_2eproto();
   friend void protobuf_AssignDesc_editor_5fsettings_2eproto();
@@ -1098,15 +1122,91 @@ inline void Settings::set_allocated_keyframe_selected_color(::common::protocol::
   }
 }
 
-// optional .common.protocol.Color4 var_text_color = 160;
-inline bool Settings::has_var_text_color() const {
+// optional .common.protocol.Color4 keyframe_control_color = 152;
+inline bool Settings::has_keyframe_control_color() const {
   return (_has_bits_[0] & 0x00800000u) != 0;
 }
-inline void Settings::set_has_var_text_color() {
+inline void Settings::set_has_keyframe_control_color() {
   _has_bits_[0] |= 0x00800000u;
 }
-inline void Settings::clear_has_var_text_color() {
+inline void Settings::clear_has_keyframe_control_color() {
   _has_bits_[0] &= ~0x00800000u;
+}
+inline void Settings::clear_keyframe_control_color() {
+  if (keyframe_control_color_ != NULL) keyframe_control_color_->::common::protocol::Color4::Clear();
+  clear_has_keyframe_control_color();
+}
+inline const ::common::protocol::Color4& Settings::keyframe_control_color() const {
+  return keyframe_control_color_ != NULL ? *keyframe_control_color_ : *default_instance_->keyframe_control_color_;
+}
+inline ::common::protocol::Color4* Settings::mutable_keyframe_control_color() {
+  set_has_keyframe_control_color();
+  if (keyframe_control_color_ == NULL) keyframe_control_color_ = new ::common::protocol::Color4;
+  return keyframe_control_color_;
+}
+inline ::common::protocol::Color4* Settings::release_keyframe_control_color() {
+  clear_has_keyframe_control_color();
+  ::common::protocol::Color4* temp = keyframe_control_color_;
+  keyframe_control_color_ = NULL;
+  return temp;
+}
+inline void Settings::set_allocated_keyframe_control_color(::common::protocol::Color4* keyframe_control_color) {
+  delete keyframe_control_color_;
+  keyframe_control_color_ = keyframe_control_color;
+  if (keyframe_control_color) {
+    set_has_keyframe_control_color();
+  } else {
+    clear_has_keyframe_control_color();
+  }
+}
+
+// optional .common.protocol.Color4 graph_color = 153;
+inline bool Settings::has_graph_color() const {
+  return (_has_bits_[0] & 0x01000000u) != 0;
+}
+inline void Settings::set_has_graph_color() {
+  _has_bits_[0] |= 0x01000000u;
+}
+inline void Settings::clear_has_graph_color() {
+  _has_bits_[0] &= ~0x01000000u;
+}
+inline void Settings::clear_graph_color() {
+  if (graph_color_ != NULL) graph_color_->::common::protocol::Color4::Clear();
+  clear_has_graph_color();
+}
+inline const ::common::protocol::Color4& Settings::graph_color() const {
+  return graph_color_ != NULL ? *graph_color_ : *default_instance_->graph_color_;
+}
+inline ::common::protocol::Color4* Settings::mutable_graph_color() {
+  set_has_graph_color();
+  if (graph_color_ == NULL) graph_color_ = new ::common::protocol::Color4;
+  return graph_color_;
+}
+inline ::common::protocol::Color4* Settings::release_graph_color() {
+  clear_has_graph_color();
+  ::common::protocol::Color4* temp = graph_color_;
+  graph_color_ = NULL;
+  return temp;
+}
+inline void Settings::set_allocated_graph_color(::common::protocol::Color4* graph_color) {
+  delete graph_color_;
+  graph_color_ = graph_color;
+  if (graph_color) {
+    set_has_graph_color();
+  } else {
+    clear_has_graph_color();
+  }
+}
+
+// optional .common.protocol.Color4 var_text_color = 160;
+inline bool Settings::has_var_text_color() const {
+  return (_has_bits_[0] & 0x02000000u) != 0;
+}
+inline void Settings::set_has_var_text_color() {
+  _has_bits_[0] |= 0x02000000u;
+}
+inline void Settings::clear_has_var_text_color() {
+  _has_bits_[0] &= ~0x02000000u;
 }
 inline void Settings::clear_var_text_color() {
   if (var_text_color_ != NULL) var_text_color_->::common::protocol::Color4::Clear();
@@ -1138,13 +1238,13 @@ inline void Settings::set_allocated_var_text_color(::common::protocol::Color4* v
 
 // optional .common.protocol.Color4 var_value_color = 161;
 inline bool Settings::has_var_value_color() const {
-  return (_has_bits_[0] & 0x01000000u) != 0;
+  return (_has_bits_[0] & 0x04000000u) != 0;
 }
 inline void Settings::set_has_var_value_color() {
-  _has_bits_[0] |= 0x01000000u;
+  _has_bits_[0] |= 0x04000000u;
 }
 inline void Settings::clear_has_var_value_color() {
-  _has_bits_[0] &= ~0x01000000u;
+  _has_bits_[0] &= ~0x04000000u;
 }
 inline void Settings::clear_var_value_color() {
   if (var_value_color_ != NULL) var_value_color_->::common::protocol::Color4::Clear();
@@ -1176,13 +1276,13 @@ inline void Settings::set_allocated_var_value_color(::common::protocol::Color4* 
 
 // optional .common.protocol.Color4 effect_icon_expanded_color = 200;
 inline bool Settings::has_effect_icon_expanded_color() const {
-  return (_has_bits_[0] & 0x02000000u) != 0;
+  return (_has_bits_[0] & 0x08000000u) != 0;
 }
 inline void Settings::set_has_effect_icon_expanded_color() {
-  _has_bits_[0] |= 0x02000000u;
+  _has_bits_[0] |= 0x08000000u;
 }
 inline void Settings::clear_has_effect_icon_expanded_color() {
-  _has_bits_[0] &= ~0x02000000u;
+  _has_bits_[0] &= ~0x08000000u;
 }
 inline void Settings::clear_effect_icon_expanded_color() {
   if (effect_icon_expanded_color_ != NULL) effect_icon_expanded_color_->::common::protocol::Color4::Clear();
@@ -1214,13 +1314,13 @@ inline void Settings::set_allocated_effect_icon_expanded_color(::common::protoco
 
 // optional .common.protocol.Color4 effect_icon_collapsed_color = 201;
 inline bool Settings::has_effect_icon_collapsed_color() const {
-  return (_has_bits_[0] & 0x04000000u) != 0;
+  return (_has_bits_[0] & 0x10000000u) != 0;
 }
 inline void Settings::set_has_effect_icon_collapsed_color() {
-  _has_bits_[0] |= 0x04000000u;
+  _has_bits_[0] |= 0x10000000u;
 }
 inline void Settings::clear_has_effect_icon_collapsed_color() {
-  _has_bits_[0] &= ~0x04000000u;
+  _has_bits_[0] &= ~0x10000000u;
 }
 inline void Settings::clear_effect_icon_collapsed_color() {
   if (effect_icon_collapsed_color_ != NULL) effect_icon_collapsed_color_->::common::protocol::Color4::Clear();

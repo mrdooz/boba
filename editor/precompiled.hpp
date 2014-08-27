@@ -111,6 +111,7 @@ namespace editor
   using sf::Time;
   using sf::Clock;
   using sf::VertexArray;
+  using sf::Vertex;
 
   using sf::Vector2f;
   using sf::Vector3f;

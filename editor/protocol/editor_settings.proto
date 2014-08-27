@@ -34,6 +34,8 @@ message Settings
 
   optional common.protocol.Color4 keyframe_default_color = 150;
   optional common.protocol.Color4 keyframe_selected_color = 151;
+  optional common.protocol.Color4 keyframe_control_color = 152;
+  optional common.protocol.Color4 graph_color = 153;
 
   optional common.protocol.Color4 var_text_color = 160;
   optional common.protocol.Color4 var_value_color = 161;

@@ -45,14 +45,21 @@ namespace editor
     float PixelToValue(float value) const;
     float ValueToPixel(float value) const;
     FloatRect KeyframeRect(const FloatKey& k, float ofs);
+    Vector2f KeyToPoint(const FloatKey& k);
 
-
-    enum VisibleKeyframesFlags { AddBorderPoints = 1 << 0, AddOutside = 1 << 1 };
+    struct VisibleKeyframe
+    {
+      enum { FLAG_FIRST = 1 << 0, FLAG_LAST = 1 << 1, FLAG_VIRTUAL = 1 << 2};
+      Vector2f p;
+      const FloatKeyframe* keyframe;
+      u32 flags;
+    };
 
     void VisibleKeyframes(
         const Vector2f& size,
-        u32 flags,
-        vector<pair<Vector2f, const FloatKeyframe*>>* keyframes);
+        bool addBorderPoints,
+        bool addOutsidePoints,
+        vector<VisibleKeyframe>* keyframes);
 
     Text _text;
     Font _font;

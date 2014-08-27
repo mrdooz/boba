@@ -92,6 +92,21 @@ keyframe_selected_color :
 	b : 21
 }
 
+keyframe_control_color :
+{
+	r : 217
+	g : 50
+	b : 0
+}
+
+graph_color :
+{
+	r : 200
+	g : 200
+	b : 250
+	a : 100
+}
+
 var_text_color :
 {
 	r : 179

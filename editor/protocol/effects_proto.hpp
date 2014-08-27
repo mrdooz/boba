@@ -168,14 +168,16 @@ namespace editor
     Color effectLineColor;
     Color keyframeDefaultColor;
     Color keyframeSelectedColor;
+    Color keyframeControlColor;
+    Color graphColor;
     Color varTextColor;
     Color varValueColor;
     Color effectIconExpandedColor;
     Color effectIconCollapsedColor;
 
     struct FlagsF {
-      enum Enum { HasTickerHeight = 1 << 0, HasTickerInterval = 1 << 1, HasTicksPerInterval = 1 << 2, HasEffectViewWidth = 1 << 3, HasEffectRowHeight = 1 << 4, HasStatusBarHeight = 1 << 5, HasEffectHeight = 1 << 6, HasResizeHandle = 1 << 7, HasTimelineZoomMin = 1 << 8, HasTimelineZoomMax = 1 << 9, HasTimelineZoomDefault = 1 << 10, HasKeyframeSize = 1 << 11, HasDefaultRowColor = 1 << 12, HasSelectedRowColor = 1 << 13, HasHoverRowColor = 1 << 14, HasInvalidHoverRowColor = 1 << 15, HasDefaultLineColor = 1 << 16, HasEffectViewBackgroundColor = 1 << 17, HasEffectViewBackgroundColorSelected = 1 << 18, HasTimelineViewBackgroundColor = 1 << 19, HasEffectLineColor = 1 << 20, HasKeyframeDefaultColor = 1 << 21, HasKeyframeSelectedColor = 1 << 22, HasVarTextColor = 1 << 23, HasVarValueColor = 1 << 24, HasEffectIconExpandedColor = 1 << 25, HasEffectIconCollapsedColor = 1 << 26, };
-      struct Bits { u32 hasTickerHeight : 1; u32 hasTickerInterval : 1; u32 hasTicksPerInterval : 1; u32 hasEffectViewWidth : 1; u32 hasEffectRowHeight : 1; u32 hasStatusBarHeight : 1; u32 hasEffectHeight : 1; u32 hasResizeHandle : 1; u32 hasTimelineZoomMin : 1; u32 hasTimelineZoomMax : 1; u32 hasTimelineZoomDefault : 1; u32 hasKeyframeSize : 1; u32 hasDefaultRowColor : 1; u32 hasSelectedRowColor : 1; u32 hasHoverRowColor : 1; u32 hasInvalidHoverRowColor : 1; u32 hasDefaultLineColor : 1; u32 hasEffectViewBackgroundColor : 1; u32 hasEffectViewBackgroundColorSelected : 1; u32 hasTimelineViewBackgroundColor : 1; u32 hasEffectLineColor : 1; u32 hasKeyframeDefaultColor : 1; u32 hasKeyframeSelectedColor : 1; u32 hasVarTextColor : 1; u32 hasVarValueColor : 1; u32 hasEffectIconExpandedColor : 1; u32 hasEffectIconCollapsedColor : 1; };
+      enum Enum { HasTickerHeight = 1 << 0, HasTickerInterval = 1 << 1, HasTicksPerInterval = 1 << 2, HasEffectViewWidth = 1 << 3, HasEffectRowHeight = 1 << 4, HasStatusBarHeight = 1 << 5, HasEffectHeight = 1 << 6, HasResizeHandle = 1 << 7, HasTimelineZoomMin = 1 << 8, HasTimelineZoomMax = 1 << 9, HasTimelineZoomDefault = 1 << 10, HasKeyframeSize = 1 << 11, HasDefaultRowColor = 1 << 12, HasSelectedRowColor = 1 << 13, HasHoverRowColor = 1 << 14, HasInvalidHoverRowColor = 1 << 15, HasDefaultLineColor = 1 << 16, HasEffectViewBackgroundColor = 1 << 17, HasEffectViewBackgroundColorSelected = 1 << 18, HasTimelineViewBackgroundColor = 1 << 19, HasEffectLineColor = 1 << 20, HasKeyframeDefaultColor = 1 << 21, HasKeyframeSelectedColor = 1 << 22, HasKeyframeControlColor = 1 << 23, HasGraphColor = 1 << 24, HasVarTextColor = 1 << 25, HasVarValueColor = 1 << 26, HasEffectIconExpandedColor = 1 << 27, HasEffectIconCollapsedColor = 1 << 28, };
+      struct Bits { u32 hasTickerHeight : 1; u32 hasTickerInterval : 1; u32 hasTicksPerInterval : 1; u32 hasEffectViewWidth : 1; u32 hasEffectRowHeight : 1; u32 hasStatusBarHeight : 1; u32 hasEffectHeight : 1; u32 hasResizeHandle : 1; u32 hasTimelineZoomMin : 1; u32 hasTimelineZoomMax : 1; u32 hasTimelineZoomDefault : 1; u32 hasKeyframeSize : 1; u32 hasDefaultRowColor : 1; u32 hasSelectedRowColor : 1; u32 hasHoverRowColor : 1; u32 hasInvalidHoverRowColor : 1; u32 hasDefaultLineColor : 1; u32 hasEffectViewBackgroundColor : 1; u32 hasEffectViewBackgroundColorSelected : 1; u32 hasTimelineViewBackgroundColor : 1; u32 hasEffectLineColor : 1; u32 hasKeyframeDefaultColor : 1; u32 hasKeyframeSelectedColor : 1; u32 hasKeyframeControlColor : 1; u32 hasGraphColor : 1; u32 hasVarTextColor : 1; u32 hasVarValueColor : 1; u32 hasEffectIconExpandedColor : 1; u32 hasEffectIconCollapsedColor : 1; };
     };
     Flags<FlagsF> flags;
   };
@@ -598,6 +600,16 @@ namespace editor
       res.flags.Set(Settings::FlagsF::HasKeyframeSelectedColor);
       res.keyframeSelectedColor = FromProtocol(p.keyframe_selected_color());
     }
+    if (p.has_keyframe_control_color())
+    {
+      res.flags.Set(Settings::FlagsF::HasKeyframeControlColor);
+      res.keyframeControlColor = FromProtocol(p.keyframe_control_color());
+    }
+    if (p.has_graph_color())
+    {
+      res.flags.Set(Settings::FlagsF::HasGraphColor);
+      res.graphColor = FromProtocol(p.graph_color());
+    }
     if (p.has_var_text_color())
     {
       res.flags.Set(Settings::FlagsF::HasVarTextColor);
@@ -646,6 +658,8 @@ namespace editor
     ToProtocol(v.effectLineColor, p->mutable_effect_line_color());
     ToProtocol(v.keyframeDefaultColor, p->mutable_keyframe_default_color());
     ToProtocol(v.keyframeSelectedColor, p->mutable_keyframe_selected_color());
+    ToProtocol(v.keyframeControlColor, p->mutable_keyframe_control_color());
+    ToProtocol(v.graphColor, p->mutable_graph_color());
     ToProtocol(v.varTextColor, p->mutable_var_text_color());
     ToProtocol(v.varValueColor, p->mutable_var_value_color());
     ToProtocol(v.effectIconExpandedColor, p->mutable_effect_icon_expanded_color());

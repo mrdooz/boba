@@ -9,7 +9,6 @@ using namespace bristol;
 
 #pragma warning(disable: 4244)
 
-
 //----------------------------------------------------------------------------------
 Vector2f Normalize(const Vector2f& v)
 {
@@ -44,13 +43,15 @@ TimelineWindow::TimelineWindow(
   const Vector2f& size)
     : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
     , _panelOffset(seconds(0))
-    , _pixelsPerSecond(EDITOR.Settings().timeline_zoom_default())
+//    , _pixelsPerSecond(EDITOR.Settings().timeline_zoom_default())
     , _curRow(nullptr)
     , _lastDragPos(-1, -1)
     , _tickerRect(nullptr)
     , _statusBar(nullptr)
     , _displayMode(DisplayMode::Keyframe)
     , _selectedVar(nullptr)
+    , _tickIntervals({milliseconds(50), milliseconds(100), milliseconds(250), milliseconds(500), seconds(1), seconds(5), seconds(10), seconds(30), seconds(60)})
+    , _curZoom(3)
 {
   _instance = this;
 }
@@ -201,13 +202,19 @@ bool TimelineWindow::OnKeyReleased(const Event &event)
   // The current row didn't handle the key..
   Keyboard::Key code = event.key.code;
 
-  if (code == Keyboard::U)
+  switch (code)
   {
-    _displayMode = NextEnum(_displayMode);
-  }
-  else if (code == Keyboard::R)
-  {
-    _displayMode = DisplayMode::Keyframe;
+    case Keyboard::Home:
+      EDITOR.SetCurTime(seconds(0));
+      break;
+
+    case Keyboard::U:
+      _displayMode = NextEnum(_displayMode);
+      break;
+
+    case Keyboard::R:
+      _displayMode = DisplayMode::Keyframe;
+      break;
   }
 
   return true;
@@ -316,14 +323,11 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseWheelMoved(const Event& event)
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+//  const editor::protocol::Settings& settings = EDITOR.Settings();
 
-  if (event.mouseWheel.delta < 0)
-    _pixelsPerSecond *= 2;
-  else if (event.mouseWheel.delta > 0)
-    _pixelsPerSecond /= 2;
-
-  _pixelsPerSecond = Clamp(settings.timeline_zoom_min(), settings.timeline_zoom_max(), _pixelsPerSecond);
+  _curZoom = Clamp(0, (int)_tickIntervals.size() -1,
+      _curZoom + (event.mouseWheel.delta < 0 ? -1 : event.mouseWheel.delta > 1 ? 1 : 0));
+//  _pixelsPerSecond = Clamp(settings.timeline_zoom_min(), settings.timeline_zoom_max(), _pixelsPerSecond);
 
   return true;
 }
@@ -333,32 +337,46 @@ void TimelineWindow::DrawTimeline()
 {
   const editor::protocol::Settings& settings = EDITOR.Settings();
 
-  time_duration curTime = EDITOR.CurTime();
+  float w = settings.effect_view_width();
+
+  RectangleShape s;
+  s.setPosition(w, 0);
+  s.setSize(Vector2f(_size.x - w, _size.y));
+  s.setFillColor(::FromProtocol(settings.timeline_view_background_color()));
+  _texture.draw(s);
+
+
+  // If running, adjust the panel offset so it contains the timeline
+  if (!EDITOR._stateFlags.IsSet(Editor::StateFlagsF::Paused))
+  {
+    time_duration curTime = EDITOR.CurTime();
+    int pageWidth = GetSize().x - w;
+    time_duration pageTime = AbsPixelToTime(pageWidth);
+
+    while (_panelOffset + pageTime < curTime)
+    {
+      _panelOffset += pageTime;
+    }
+  }
 
   // draw the ticker
   _tickerRect.Apply();
   _texture.draw(_tickerRect._rect);
 
   VertexArray lines(sf::Lines);
-  int x = settings.effect_view_width();
   int y = settings.ticker_height() - 25;
   int minorInc = settings.ticker_interval() / settings.ticks_per_interval();
   Text text;
   text.setFont(_font);
   text.setCharacterSize(16);
 
-  // calc rounded starting time
+  // round to nearest tick interval
+  s64 tick = _tickIntervals[_curZoom].total_milliseconds();
+  s64 curTime = _panelOffset.total_milliseconds() / tick * tick;
+  int x = TimeToPixel(curTime);
   while (x < _size.x)
   {
-    time_duration t = PixelToTime(x);
-
-    // round to nearest 0.250s
-    int ms = (int)t.total_milliseconds() / 250 * 250;
-    t = milliseconds(ms);
-    int tmpX = x;
-    x = TimeToPixel(t);
-
-    text.setString(to_string("%.2f", t.total_milliseconds() / 1000.0f));
+    text.setString(to_string("%.2f", curTime / 1000.0f).c_str());
     text.setPosition(x, y-20);
     _texture.draw(text);
 
@@ -369,38 +387,51 @@ void TimelineWindow::DrawTimeline()
       lines.append(sf::Vertex(Vector2f(x + i * minorInc, y + 5)));
       lines.append(sf::Vertex(Vector2f(x + i * minorInc, y + 15)));
     }
-    x = tmpX + settings.ticker_interval();
+
+    x += settings.ticker_interval();
+    curTime += tick;
   }
   _texture.draw(lines);
 
-  // draw time line
   VertexArray curLine(sf::Lines);
-  int w = _size.x;
-  y = settings.ticker_height() - 25;
-  while (TimeToPixel(curTime - _panelOffset) > w)
-  {
-    _panelOffset += PixelToTime(w);
-  }
 
+  // border line
   x = settings.effect_view_width();
+  y = settings.ticker_height() - 25;
   curLine.append(sf::Vertex(Vector2f(x, y), Color::White));
   curLine.append(sf::Vertex(Vector2f(x, _size.y), Color::White));
 
+  // time line
   x = TimeToPixel(EDITOR.CurTime());
-  curLine.append(sf::Vertex(Vector2f(x, y), Color::Red));
-  curLine.append(sf::Vertex(Vector2f(x, _size.y), Color::Red));
+  if (x >= settings.effect_view_width())
+  {
+    LineStrip ll(2, Color::Red);
+    ll.addPoint({x, y});
+    ll.addPoint({x, _size.y});
+    _texture.draw(ll);
+  }
+
   _texture.draw(curLine);
 }
 
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawEffects()
 {
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  float w = settings.effect_view_width();
+
+  RectangleShape s;
+  s.setPosition(0, 0);
+  s.setSize(Vector2f(w, _size.y));
+  s.setFillColor(::FromProtocol(settings.effect_view_background_color()));
+  _texture.draw(s);
+
   // draw the header
   time_duration t = EDITOR.CurTime();
   Text text(to_string("TIME: %.3f, OFS: %.3f, SCALE: %.3f",
     t.total_milliseconds() / 1000.0f,
     _panelOffset.total_milliseconds() / 1000.0f,
-    _pixelsPerSecond / 100.0f), _font);
+      (float)_tickIntervals[_curZoom].total_milliseconds()), _font);
   text.setPosition(10, 0);
   text.setCharacterSize(14);
   _texture.draw(text);
@@ -414,7 +445,6 @@ void TimelineWindow::DrawEffects()
   {
     row->Draw(_texture, _displayMode == DisplayMode::Keyframe);
   }
-
 }
 
 //----------------------------------------------------------------------------------
@@ -439,59 +469,45 @@ void TimelineWindow::DrawStatusBar()
     t.setString(str);
     _texture.draw(t);
   }
-
 }
 
 //----------------------------------------------------------------------------------
 int TimelineWindow::TimeToPixel(s64 ms) const
 {
-  int w = EDITOR.Settings().effect_view_width();
-
-  // p = s * (t + a) + m
-  // t = (p - m) / s - a
-  double s = (double)_pixelsPerSecond / 1000.0;
-  return (int)(w + s * (ms - _panelOffset.total_milliseconds()));
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  int w = settings.effect_view_width();
+  return w + (ms - _panelOffset.total_milliseconds()) / (float)_tickIntervals[_curZoom].total_milliseconds() * settings.ticker_interval();
 }
 
 //----------------------------------------------------------------------------------
 int TimelineWindow::TimeToPixel(const time_duration& t) const
 {
-  int w = EDITOR.Settings().effect_view_width();
-
-  // p = s * (t + a) + m
-  // t = (p - m) / s - a
-  double s = (double)_pixelsPerSecond / 1000.0;
-  return (int)(w + s * (t.total_milliseconds() - _panelOffset.total_milliseconds()));
+  return TimeToPixel(t.total_milliseconds());
 }
 
 //----------------------------------------------------------------------------------
 time_duration TimelineWindow::PixelToTime(int x) const
 {
-  double s = (double)_pixelsPerSecond / 1000.0;
-
-  x -= EDITOR.Settings().effect_view_width();
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  int w = settings.effect_view_width();
+  x -= w;
   if (x < 0)
     return milliseconds(0);
 
-  return milliseconds(x / s) + _panelOffset;
+  return _tickIntervals[_curZoom] * (float)x / settings.ticker_interval() + _panelOffset;
 }
 
 //----------------------------------------------------------------------------------
 s64 TimelineWindow::PixelToTimeMs(int x) const
 {
-  double s = (double)_pixelsPerSecond / 1000.0;
-
-  x -= EDITOR.Settings().effect_view_width();
-  if (x < 0)
-    return 0;
-
-  return x / s + _panelOffset.total_milliseconds();
+  return PixelToTime(x).total_milliseconds();
 }
 
 //----------------------------------------------------------------------------------
 time_duration TimelineWindow::AbsPixelToTime(int x) const
 {
-  return milliseconds(1000 * x / (int)_pixelsPerSecond);
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+  return _tickIntervals[_curZoom] * x / (float)settings.ticker_interval();
 }
 
 //----------------------------------------------------------------------------------
@@ -501,11 +517,6 @@ void TimelineWindow::DrawBackground()
   float w = settings.effect_view_width();
 
   RectangleShape s;
-  s.setPosition(0, 0);
-  s.setSize(Vector2f(w, _size.y));
-  s.setFillColor(::FromProtocol(settings.effect_view_background_color()));
-  _texture.draw(s);
-
   s.setPosition(w, 0);
   s.setSize(Vector2f(_size.x - w, _size.y));
   s.setFillColor(::FromProtocol(settings.timeline_view_background_color()));
@@ -518,8 +529,8 @@ void TimelineWindow::Draw()
   _texture.clear();
 
   DrawBackground();
-  DrawEffects();
   DrawTimeline();
+  DrawEffects();
   DrawStatusBar();
 
   _texture.display();

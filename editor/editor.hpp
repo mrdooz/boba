@@ -80,7 +80,6 @@ namespace editor
 
     static Editor* _instance;
     editor::protocol::Settings _settings;
-    //Plexus _plexus;
     string _appRoot;
     ptime _lastUpdate;
     time_duration _curTime;
