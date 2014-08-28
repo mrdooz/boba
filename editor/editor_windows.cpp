@@ -43,7 +43,6 @@ TimelineWindow::TimelineWindow(
   const Vector2f& size)
     : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
     , _panelOffset(seconds(0))
-//    , _pixelsPerSecond(EDITOR.Settings().timeline_zoom_default())
     , _curRow(nullptr)
     , _lastDragPos(-1, -1)
     , _tickerRect(nullptr)
@@ -90,6 +89,16 @@ bool TimelineWindow::Init()
   _statusBar._rect.setSize(Vector2f(windowSize.x, settings.status_bar_height()));
 
   // add temporary effect rows until we get the websocket update
+  AddDefaultRows();
+
+  RecalcEffecRows();
+
+  return true;
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::AddDefaultRows()
+{
   string str;
   for (int i = 0; i < 5; ++i)
   {
@@ -170,10 +179,8 @@ bool TimelineWindow::Init()
     parent->_children.push_back(n);
   }
 
-  RecalcEffecRows();
-
-  return true;
 }
+
 
 //----------------------------------------------------------------------------------
 void TimelineWindow::RecalcEffecRows()
@@ -323,11 +330,12 @@ bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseWheelMoved(const Event& event)
 {
-//  const editor::protocol::Settings& settings = EDITOR.Settings();
-
+  // Note, due to the mouse wheel implementation in SFML, delta will often be 0 for small
+  // movements
   _curZoom = Clamp(0, (int)_tickIntervals.size() -1,
       _curZoom + (event.mouseWheel.delta < 0 ? -1 : event.mouseWheel.delta > 1 ? 1 : 0));
-//  _pixelsPerSecond = Clamp(settings.timeline_zoom_min(), settings.timeline_zoom_max(), _pixelsPerSecond);
+
+  //printf("wheel: %d %d %d\n", event.mouseWheel.delta, event.mouseWheel.x, event.mouseWheel.y);
 
   return true;
 }
@@ -393,11 +401,18 @@ void TimelineWindow::DrawTimeline()
   }
   _texture.draw(lines);
 
+}
+
+//----------------------------------------------------------------------------------
+void TimelineWindow::DrawTimelinePost()
+{
+  const editor::protocol::Settings& settings = EDITOR.Settings();
+
   VertexArray curLine(sf::Lines);
 
   // border line
-  x = settings.effect_view_width();
-  y = settings.ticker_height() - 25;
+  int x = settings.effect_view_width();
+  int y = settings.ticker_height() - 25;
   curLine.append(sf::Vertex(Vector2f(x, y), Color::White));
   curLine.append(sf::Vertex(Vector2f(x, _size.y), Color::White));
 
@@ -412,6 +427,7 @@ void TimelineWindow::DrawTimeline()
   }
 
   _texture.draw(curLine);
+
 }
 
 //----------------------------------------------------------------------------------
@@ -531,6 +547,7 @@ void TimelineWindow::Draw()
   DrawBackground();
   DrawTimeline();
   DrawEffects();
+  DrawTimelinePost();
   DrawStatusBar();
 
   _texture.display();

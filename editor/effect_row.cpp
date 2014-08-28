@@ -29,30 +29,48 @@ namespace
   const u32 ANIM_TYPE_STEP    = 2;
 
   //----------------------------------------------------------------------------------
-  void CalcCeilAndStep(float value, float* stepValue, float* ceilValue)
+  float log10(float x)
   {
-    if (value == 0)
+    return logf(x) / logf(10);
+  }
+
+  //----------------------------------------------------------------------------------
+  // from Graphic Gems 1
+  float NiceNum(float x, bool round)
+  {
+    float e = floorf(log10(x));
+    float f = x / powf(10, e);
+    float nf = 10;
+    if (round)
     {
-      *stepValue = 0.1f;
-      *ceilValue = 0;
-      return;
+      if (f < 1.5)
+        nf = 1;
+      else if (f < 3)
+        nf = 2;
+      else if (f < 7)
+        nf = 5;
+    }
+    else
+    {
+      if (f <= 1)
+        nf = 1;
+      else if (f <= 2)
+        nf = 2;
+      else if (f <= 5)
+        nf = 5;
     }
 
-    float base = 10;
-    float log10 = logf(value) / logf(base);
-    *stepValue = powf(base, floorf(log10));
+    return nf * powf(10, e);
+  }
 
-    // step down from the ceil until we find the multiple of step just below
-    float tmp = powf(base, ceilf(log10));
-    float step = *stepValue;
-    while (true)
-    {
-      if (tmp - step < value)
-        break;
-      tmp -= step;
-    }
-
-    *ceilValue = tmp + step;
+  void LooseLabel(float lower, float upper, float* tickSpacing, float* graphMin, float* graphMax)
+  {
+    int NUM_TICKS = 10;
+    float range = NiceNum(upper - lower, false);
+    float d = NiceNum(range / (NUM_TICKS-1), true);
+    *tickSpacing = d;
+    *graphMin = floorf(lower/d) * d;
+    *graphMax = ceilf(upper/d) * d + 0.5f * d;
   }
 
 //----------------------------------------------------------------------------------
@@ -462,8 +480,8 @@ float RowVar::PixelToValue(float y) const
   Vector2f size = TimelineWindow::_instance->GetSize();
   const editor::protocol::Settings& settings = EDITOR.Settings();
   float topY = settings.ticker_height();
-  float h = size.y - topY;
-  float bottom = size.y - 1;
+  float h = size.y - settings.status_bar_height() - topY;
+  float bottom = size.y - 1 - settings.status_bar_height();
 
   float span = _maxValue - _minValue;
   return (bottom - y) * span / h + _minValue;
@@ -477,8 +495,8 @@ float RowVar::ValueToPixel(float value) const
   Vector2f size = TimelineWindow::_instance->GetSize();
   const editor::protocol::Settings& settings = EDITOR.Settings();
   float topY = settings.ticker_height();
-  float h = size.y - topY;
-  float bottom = size.y - 1;
+  float h = size.y - settings.status_bar_height() - topY;
+  float bottom = size.y - 1 - settings.status_bar_height();
 
   float span = _maxValue - _minValue;
   float v = value - _minValue;
@@ -581,8 +599,9 @@ void RowVar::VisibleKeyframes(
   _realMaxValue = _maxValue;
 
   float step;
-  CalcCeilAndStep(_maxValue, &step, &_maxValue);
-  _minValue = _realMinValue - step;
+  LooseLabel(_minValue, _maxValue, &step, &_minValue, &_maxValue);
+//  CalcCeilAndStep(_maxValue - _minValue, &step);
+//  _minValue = _realMinValue - step;
 }
 
 //----------------------------------------------------------------------------------
@@ -612,10 +631,9 @@ void RowVar::DrawGraph(RenderTexture& texture)
   VisibleKeyframes(size, false, true, &keyframes);
 
   VertexArray gridLines(sf::Lines);
-  float t0 = _realMaxValue;
-  float step, maxValue;
-  CalcCeilAndStep(t0, &step, &maxValue);
-  float minValue = _realMinValue;
+
+  float step;
+  LooseLabel(_realMinValue, _realMaxValue, &step, &_minValue, &_maxValue);
 
   Color c(100, 100, 100, 255);
   Text label;
@@ -624,17 +642,17 @@ void RowVar::DrawGraph(RenderTexture& texture)
   label.setColor(c);
 
   // draw min/max lines
-  float curY = maxValue;
+  float curY = _maxValue;
   while (true)
   {
-    if (curY < minValue - step)
+    if (curY < _minValue - step)
       break;
 
     float y = ValueToPixel(curY);
     gridLines.append(Vertex(Vector2f(ofs, y), c));
     gridLines.append(Vertex(Vector2f(size.x, y), c));
 
-    label.setPosition(ofs + 10, y - 20);
+    label.setPosition(ofs + 10, y + 25);
     label.setString(to_string("%.2f", curY).c_str());
     texture.draw(label);
 

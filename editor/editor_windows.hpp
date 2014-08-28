@@ -53,6 +53,7 @@ namespace editor
     virtual bool Init();
     virtual void Draw();
     void Reset(const effect::protocol::EffectSettings& settings);
+    void AddDefaultRows();
 
     int TimeToPixel(const time_duration& t) const;
     int TimeToPixel(s64 ms) const;
@@ -85,6 +86,7 @@ namespace editor
 
     void DrawEffects();
     void DrawTimeline();
+    void DrawTimelinePost();
     void DrawStatusBar();
     void DrawBackground();
 
