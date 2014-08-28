@@ -90,14 +90,6 @@ namespace editor
     void DrawStatusBar();
     void DrawBackground();
 
-    struct TimelineFlagsF
-    {
-      enum Enum { PendingDrag = 1 << 0, PendingEffectMove = 1 << 1};
-      struct Bits { u32 pendingDrag : 1; u32 pendingEffectMove : 1; };
-    };
-
-    typedef Flags<TimelineFlagsF> TimelineFlags;
-
     bool OnMouseButtonPressed(const Event& event);
     bool OnMouseMoved(const Event& event);
     bool OnMouseButtonReleased(const Event& event);
@@ -109,9 +101,7 @@ namespace editor
     time_duration _panelOffset;
     Font _font;
 
-    TimelineFlags _timelineFlags;
     vector<EffectRow*> _effectRows;
-    EffectRow* _curRow;
 
     Vector2i _lastDragPos;
     StyledRect _tickerRect;

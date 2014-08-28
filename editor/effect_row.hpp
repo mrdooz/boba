@@ -35,9 +35,10 @@ namespace editor
     void Draw(RenderTexture& texture, bool drawKeyframes);
     void DrawKeyframes(RenderTexture& texture);
 
-    bool OnMouseButtonPressed(const Event &event);
-    bool OnMouseButtonReleased(const Event &event);
-    bool OnMouseMoved(const Event &event);
+    bool OnMouseButtonPressed(const Event& event);
+    bool OnMouseButtonReleased(const Event& event);
+    bool OnMouseMoved(const Event& event);
+    bool OnKeyReleased(const Event& event);
     void OnEvent(RowVar* sender, const EffectRowEvent& event);
     void DrawGraph(RenderTexture& texture);
     Vector2f ToLocal(int x, int y) const;
@@ -49,7 +50,7 @@ namespace editor
 
     struct VisibleKeyframe
     {
-      enum { FLAG_FIRST = 1 << 0, FLAG_LAST = 1 << 1, FLAG_VIRTUAL = 1 << 2};
+      enum { FLAG_FIRST = 1 << 0, FLAG_LAST = 1 << 1, FLAG_VIRTUAL = 1 << 2, FLAG_SELECTED = 1 << 3};
       Vector2f p;
       const FloatKeyframe* keyframe;
       u32 flags;

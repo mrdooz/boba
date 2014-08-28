@@ -43,7 +43,6 @@ TimelineWindow::TimelineWindow(
   const Vector2f& size)
     : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
     , _panelOffset(seconds(0))
-    , _curRow(nullptr)
     , _lastDragPos(-1, -1)
     , _tickerRect(nullptr)
     , _statusBar(nullptr)
@@ -200,11 +199,20 @@ void TimelineWindow::RecalcEffecRows()
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnKeyReleased(const Event &event)
 {
-  if (_curRow)
+
+  vector<EffectRow*> effects;
+  for (EffectRow* row : _effectRows)
+    row->Flatten(&effects);
+
+  // check for hits on an effect row
+  for (EffectRow* row : effects)
   {
-    if (_curRow->OnKeyReleased(event))
+    if (row->OnKeyReleased(event))
+    {
       return true;
+    }
   }
+
 
   // The current row didn't handle the key..
   Keyboard::Key code = event.key.code;
@@ -223,6 +231,8 @@ bool TimelineWindow::OnKeyReleased(const Event &event)
       _displayMode = DisplayMode::Keyframe;
       break;
   }
+
+
 
   return true;
 }
@@ -298,9 +308,6 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
       return true;
     }
   }
-
-  if (_curRow && _curRow->OnMouseMoved(event))
-    return true;
 
   return false;
 }
@@ -427,7 +434,6 @@ void TimelineWindow::DrawTimelinePost()
   }
 
   _texture.draw(curLine);
-
 }
 
 //----------------------------------------------------------------------------------

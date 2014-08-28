@@ -9,15 +9,6 @@ using namespace bristol;
 
 namespace
 {
-  Vector2f Normalize(const Vector2f& v)
-  {
-    float len = sqrtf(v.x*v.x + v.y*v.y);
-    return 1/len * v;
-  }
-}
-
-namespace
-{
   // bitmasks used for encoding control points in the selected keyframe
   const u32 SELECTED_NONE     = ~(u32)0;
   const u32 SELECTED_CP_IN    = 1u << 30;
@@ -65,7 +56,9 @@ namespace
 
   void LooseLabel(float lower, float upper, float* tickSpacing, float* graphMin, float* graphMax)
   {
-    int NUM_TICKS = 10;
+    const editor::protocol::Settings& settings = EDITOR.Settings();
+
+    int NUM_TICKS = settings.ticks_per_interval();
     float range = NiceNum(upper - lower, false);
     float d = NiceNum(range / (NUM_TICKS-1), true);
     *tickSpacing = d;
@@ -173,7 +166,7 @@ void RowVar::DrawKeyframes(RenderTexture& texture)
   float y = _bounds.top;
 
   const StyleSetting* defaultStyle = STYLE_FACTORY.GetStyle("keyframe_style");
-  const StyleSetting* selectedStryle = STYLE_FACTORY.GetStyle("keyframe_style_selected");
+  const StyleSetting* selectedStyle = STYLE_FACTORY.GetStyle("keyframe_style_selected");
 
   _keyframeRect._rect.setSize(Vector2f(settings.keyframe_size(), settings.keyframe_size()));
 
@@ -185,7 +178,7 @@ void RowVar::DrawKeyframes(RenderTexture& texture)
     int keyX = TimelineWindow::_instance->TimeToPixel(keyframe.key.time);
     if (keyX >= settings.effect_view_width() && keyX < windowSize.x)
     {
-      ApplyStyle(i == _selectedKeyframe ? selectedStryle : defaultStyle, &_keyframeRect._rect);
+      ApplyStyle(i == _selectedKeyframe ? selectedStyle : defaultStyle, &_keyframeRect._rect);
 
       _keyframeRect._rect.setPosition(keyX - s/2, y + ofs);
       texture.draw(_keyframeRect._rect);
@@ -353,7 +346,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
 //----------------------------------------------------------------------------------
 bool RowVar::OnMouseButtonReleased(const Event &event)
 {
-  _selectedKeyframe = SELECTED_NONE;
+//  _selectedKeyframe = SELECTED_NONE;
 
   if (_flags.IsSet(VarFlagsF::Animating) && _flags.IsSet(VarFlagsF::Editing))
   {
@@ -459,6 +452,23 @@ bool RowVar::OnMouseMoved(const Event &event)
 }
 
 //----------------------------------------------------------------------------------
+bool RowVar::OnKeyReleased(const Event& event)
+{
+  switch (event.key.code)
+  {
+    case Keyboard::Key::Delete:
+      if (_selectedKeyframe != SELECTED_NONE)
+      {
+        u32 idx = _selectedKeyframe & SELECTED_CP_MASK;
+        _anim->keyframe.erase(_anim->keyframe.begin() + idx);
+        _selectedKeyframe = SELECTED_NONE;
+      }
+      break;
+  }
+  return false;
+}
+
+//----------------------------------------------------------------------------------
 void RowVar::OnEvent(RowVar* sender, const EffectRowEvent& event)
 {
   if (event.type == EffectRowEvent::Type::VarSelected)
@@ -541,6 +551,7 @@ void RowVar::VisibleKeyframes(
   for (u32 i = 0; i < numKeyframes; ++i, prevFrame = keyframe, prevFlags = flags)
   {
     flags = i == 0 ? VisibleKeyframe::FLAG_FIRST : i == numKeyframes - 1 ? VisibleKeyframe::FLAG_LAST : 0;
+    flags |= ((_selectedKeyframe & SELECTED_CP_MASK) == i) ? VisibleKeyframe::FLAG_SELECTED : 0;
     keyframe = &_anim->keyframe[i];
 
     if (keyframe->key.time < minTime)
@@ -600,8 +611,6 @@ void RowVar::VisibleKeyframes(
 
   float step;
   LooseLabel(_minValue, _maxValue, &step, &_minValue, &_maxValue);
-//  CalcCeilAndStep(_maxValue - _minValue, &step);
-//  _minValue = _realMinValue - step;
 }
 
 //----------------------------------------------------------------------------------
@@ -661,6 +670,9 @@ void RowVar::DrawGraph(RenderTexture& texture)
 
   texture.draw(gridLines);
 
+  const StyleSetting* defaultStyle = STYLE_FACTORY.GetStyle("keyframe_style");
+  const StyleSetting* selectedStyle = STYLE_FACTORY.GetStyle("keyframe_style_selected");
+
   // draw the keyframes normalized to the min/max values
   switch (_anim->type)
   {
@@ -707,6 +719,8 @@ void RowVar::DrawGraph(RenderTexture& texture)
         const Vector2f& p1 = KeyToPoint(k0->cpOut);
         const Vector2f& p2 = KeyToPoint(k1->cpIn);
         const Vector2f& p3 = KeyToPoint(k1->key);
+
+        ApplyStyle(flags & VisibleKeyframe::FLAG_SELECTED ? selectedStyle : defaultStyle, &_keyframeRect._rect);
 
         // draw key-in
         if (!(flags & VisibleKeyframe::FLAG_FIRST))
@@ -771,10 +785,7 @@ Vector2f RowVar::KeyToPoint(const FloatKey& k)
 }
 
 //----------------------------------------------------------------------------------
-EffectRow::EffectRow(
-    const Font& font,
-    const string& str,
-    EffectRow* parent)
+EffectRow::EffectRow(const Font& font, const string& str, EffectRow* parent)
     : _str(str)
     , _parent(parent)
     , _font(font)
@@ -958,6 +969,14 @@ bool EffectRow::OnMouseButtonReleased(const Event &event)
 //----------------------------------------------------------------------------------
 bool EffectRow::OnKeyReleased(const Event& event)
 {
+
+  for (RowVar* var : _vars)
+  {
+    if (var->OnKeyReleased(event))
+      return true;
+  }
+
+  int a = 10;
 //  Keyboard::Key code = event.key.code;
 
 //  if (_flags.IsSet(RowFlagsF::Editing))
