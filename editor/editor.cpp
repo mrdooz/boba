@@ -1,5 +1,6 @@
 #include "editor.hpp"
 #include "editor_windows.hpp"
+#include "timeline_window.hpp"
 #include "webby/webby.h"
 
 using namespace editor;
@@ -108,7 +109,6 @@ bool Editor::Init()
     float h = (float)height/2;
 
     _virtualWindowManager->AddWindow(new PropertyWindow("PROPERTIES", Vector2f(0, 0), Vector2f(w, h)));
-    _virtualWindowManager->AddWindow(new PreviewWindow("PREVIEW", Vector2f(w, 0), Vector2f(rw, h)));
     _timeline = new TimelineWindow("TIMELINE", Vector2f(0, h), Vector2f((float)width, h));
     _virtualWindowManager->AddWindow(_timeline);
   }

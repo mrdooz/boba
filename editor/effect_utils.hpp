@@ -4,6 +4,16 @@
 namespace editor
 {
   //----------------------------------------------------------------------------------
+  inline Vector2f Normalize(const Vector2f& v)
+  {
+    float len = sqrtf(v.x*v.x + v.y*v.y);
+    return v / len;
+  }
+
+  //----------------------------------------------------------------------------------
+  void DrawRow(RenderTexture& texture, float x, float y, float w, float h, const Color& color);
+
+  //----------------------------------------------------------------------------------
   template <typename T>
   bool LoadProto(const char* filename, T* out, bool textFormat = true)
   {

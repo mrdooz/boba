@@ -3,7 +3,19 @@
 namespace editor
 {
 
-  #if 0
+  //----------------------------------------------------------------------------------
+  void DrawRow(RenderTexture& texture, float x, float y, float w, float h, const Color& color)
+  {
+    VertexArray curLine(sf::Lines);
+    curLine.append(Vertex(Vector2f(x, y), color));
+    curLine.append(Vertex(Vector2f(w, y), color));
+    curLine.append(Vertex(Vector2f(x, y+h), color));
+    curLine.append(Vertex(Vector2f(w, y+h), color));
+    texture.draw(curLine);
+  }
+
+
+#if 0
   //----------------------------------------------------------------------------------
   Vector3Keyframe* AddKeyframe(
       const time_duration& t,
