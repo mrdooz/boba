@@ -1,6 +1,7 @@
 #include "property_window.hpp"
 #include "editor.hpp"
 #include "row_var.hpp"
+#include "protocol/effects_proto.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -14,6 +15,8 @@ PropertyWindow::PropertyWindow(
   const Vector2f& size)
     : VirtualWindow(title, pos, size, bristol::WindowFlags(bristol::WindowFlag::StaticWindow))
     , _var(nullptr)
+    , _anim(nullptr)
+    , _keyframe(nullptr)
     , _gui(_texture, _font)
     , _keyboardFocus(false)
 {
@@ -48,17 +51,33 @@ void PropertyWindow::Draw()
 
   _gui.BeginFrame();
 
-  if (_var)
+  if (_anim)
+  {
+
+  }
+  else if (_keyframe)
   {
     ImGui::WidgetResult  res;
-    res = _gui.Button(_gui.WidgetId(), IntRect(10, 10, 50, 40), "test");
-    res = _gui.Button(_gui.WidgetId(), IntRect(70, 10, 50, 40), "test");
-
-    res = _gui.EditBox(_gui.WidgetId(), IntRect(10, 60, 100, 20), &_varValue);
-    switch (res)
+    _gui.Label(_gui.WidgetId(), IntRect(10, 60, 60, 20), "time: ");
+    res = _gui.EditBox(_gui.WidgetId(), IntRect(80, 60, 100, 20), &_varTime);
+    if (res == ImGui::WidgetResult::LostFocus)
     {
-      case ImGui::WidgetResult::LostFocus: _keyboardFocus = false; break;
-      case ImGui::WidgetResult::InputDone: _var->_value = atof(_varValue.c_str()); break;
+      _keyboardFocus = false;
+    }
+    else if (res == ImGui::WidgetResult::InputDone)
+    {
+      _keyframe->key.time = atol(_varTime.c_str());
+    }
+
+    _gui.Label(_gui.WidgetId(), IntRect(10, 90, 60, 20), "value: ");
+    res = _gui.EditBox(_gui.WidgetId(), IntRect(80, 90, 100, 20), &_varValue);
+    if (res == ImGui::WidgetResult::LostFocus)
+    {
+      _keyboardFocus = false;
+    }
+    else if (res == ImGui::WidgetResult::InputDone)
+    {
+      _keyframe->key.value = atof(_varValue.c_str());
     }
   }
 
@@ -78,10 +97,23 @@ void PropertyWindow::Update()
 //----------------------------------------------------------------------------------
 void PropertyWindow::SendEffectEvent(RowVar* sender, const EffectRowEvent& event)
 {
-  if (event.type == EffectRowEvent::Type::VarSelected)
+  switch (event.type)
   {
-    _var = sender;
-    _varValue = to_string("%.3f", _var->_value);
+    case EffectRowEvent::Type::VarSelected:
+      _var = sender;
+      _anim = (FloatAnim*)event.data;
+      break;
+
+    case EffectRowEvent::Type::KeyframeUpdated:
+    case EffectRowEvent::Type::KeyframeSelected:
+      _var = sender;
+      _keyframe = (FloatKeyframe*)event.data;
+      if (_keyframe)
+      {
+        _varValue = to_string("%.3f", _keyframe->key.value);
+        _varTime = to_string("%d", _keyframe->key.time);
+      }
+      break;
   }
 }
 

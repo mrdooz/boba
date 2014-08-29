@@ -21,6 +21,12 @@ namespace
   const u32 ANIM_TYPE_STEP    = 2;
 
   //----------------------------------------------------------------------------------
+  bool IsControlPoint(u32 idx)
+  {
+    return idx == (idx & SELECTED_CP_MASK);
+  }
+
+  //----------------------------------------------------------------------------------
   float log10(float x)
   {
     return logf(x) / logf(10);
@@ -187,6 +193,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
   float x = mousePos.x, y = mousePos.y;
 
   _selectedKeyframe = SELECTED_NONE;
+  EDITOR.SendEffectEvent(this, EffectRowEvent(EffectRowEvent::Type::KeyframeSelected, nullptr));
 
   int ofs = settings.keyframe_size();
 
@@ -212,7 +219,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
     // check for hit on the var window
     if (_bounds.contains(mousePos))
     {
-      EDITOR.SendEffectEvent(this, EffectRowEvent(EffectRowEvent::Type::VarSelected));
+      EDITOR.SendEffectEvent(this, EffectRowEvent(EffectRowEvent::Type::VarSelected, _anim));
       _flags.Toggle(VarFlagsF::Selected);
       return true;
     }
@@ -283,7 +290,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
           {
             _selectedKeyframe = i;
             _prevKeyframe = keyframe;
-            return true;
+            goto SELECTION_DONE;
           }
         }
         break;
@@ -307,21 +314,21 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
           {
             _selectedKeyframe = i;
             _prevKeyframe = keyframe;
-            return true;
+            goto SELECTION_DONE;
           }
 
           if (KeyframeRect(keyframe.cpIn, ofs).contains(mousePos))
           {
             _selectedKeyframe = i | SELECTED_CP_IN;
             _prevKeyframe = keyframe;
-            return true;
+            goto SELECTION_DONE;
           }
 
           if (KeyframeRect(keyframe.cpOut, ofs).contains(mousePos))
           {
             _selectedKeyframe = i | SELECTED_CP_OUT;
             _prevKeyframe = keyframe;
-            return true;
+            goto SELECTION_DONE;
           }
         }
         break;
@@ -329,6 +336,16 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
       case ANIM_TYPE_STEP:
         break;
     }
+  }
+
+  SELECTION_DONE:;
+  if (_selectedKeyframe != SELECTED_NONE)
+  {
+    if (IsControlPoint(_selectedKeyframe))
+    {
+      EDITOR.SendEffectEvent(this, EffectRowEvent(EffectRowEvent::Type::KeyframeSelected, &_anim->keyframe[_selectedKeyframe]));
+    }
+    return true;
   }
 
   return false;
@@ -421,6 +438,11 @@ bool RowVar::OnMouseMoved(const Event &event)
       keyframes[_selectedKeyframe].key.time = t;
     }
 
+    if (IsControlPoint(_selectedKeyframe))
+    {
+      EDITOR.SendEffectEvent(this, EffectRowEvent(EffectRowEvent::Type::KeyframeUpdated, &_anim->keyframe[_selectedKeyframe]));
+    }
+
     return true;
   }
 
@@ -453,6 +475,8 @@ bool RowVar::OnKeyReleased(const Event& event)
         u32 idx = _selectedKeyframe & SELECTED_CP_MASK;
         _anim->keyframe.erase(_anim->keyframe.begin() + idx);
         _selectedKeyframe = SELECTED_NONE;
+        EDITOR.SendEffectEvent(this, EffectRowEvent(EffectRowEvent::Type::KeyframeSelected, nullptr));
+
         return true;
       }
       break;

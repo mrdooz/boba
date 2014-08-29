@@ -106,7 +106,6 @@ bool Editor::Init()
     _virtualWindowManager = new VirtualWindowManager(_renderWindow, _eventManager);
 
     float w = (float)width/4;
-    float rw = (float)width - w;
     float h = (float)height/2;
 
     _propertyWindow = new PropertyWindow("PROPERTIES", Vector2f(0, 0), Vector2f(w, h));

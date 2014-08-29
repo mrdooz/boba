@@ -53,6 +53,7 @@ namespace editor
 
     u32 WidgetId();
 
+    void Label(u32 id, const IntRect& rect, const char* label);
     WidgetResult Button(u32 id, const IntRect& rect, const char* label);
     WidgetResult EditBox(u32 id, const IntRect& rect, string* str);
 

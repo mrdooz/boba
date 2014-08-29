@@ -11,11 +11,15 @@ namespace editor
     enum class Type
     {
       VarSelected,
+      KeyframeSelected,
+      KeyframeUpdated,
     };
 
-    EffectRowEvent(Type type) : type(type) {}
+    EffectRowEvent(Type type) : type(type), data(nullptr) {}
+    EffectRowEvent(Type type, void* data) : type(type), data(data) {}
 
     Type type;
+    void* data;
   };
 
 //----------------------------------------------------------------------------------

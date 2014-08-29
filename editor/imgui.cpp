@@ -14,6 +14,18 @@ ImGui::ImGui(sf::RenderTexture& texture, sf::Font& font)
 }
 
 //----------------------------------------------------------------------------------
+void ImGui::Label(u32 id, const IntRect& rect, const char* label)
+{
+  DrawWidget(id, rect);
+
+  Vector2f s = SizeFromRect<int, float>(rect);
+  Vector2f p = PosFromRect<int, float>(rect);
+
+  Text text = CreateText(_font, {p.x, p.y-s.y/4}, rect.height, label);
+  _texture.draw(text);
+}
+
+//----------------------------------------------------------------------------------
 ImGui::WidgetResult ImGui::Button(u32 id, const IntRect& rect, const char* label)
 {
   bool isHot, isActive, hasKeyboardFocus;
@@ -53,7 +65,18 @@ ImGui::WidgetResult ImGui::EditBox(u32 id, const IntRect& rect, string* str)
 
   Vector2f s = SizeFromRect<int, float>(rect);
   Vector2f p = PosFromRect<int, float>(rect);
-  Text text = CreateText(_font, {p.x, p.y-s.y/4}, rect.height, str->c_str());
+
+  string tmpString = *str;
+  if (hasKeyboardFocus)
+  {
+    // add blinking caret
+    time_duration now = microsec_clock::local_time().time_of_day();
+    if (now.total_seconds() & 1)
+      tmpString += '_';
+  }
+
+  Text text = CreateText(_font, {p.x, p.y-s.y/4}, rect.height, tmpString.c_str());
+
   _texture.draw(text);
 
   if (hasKeyboardFocus)
@@ -127,9 +150,7 @@ void ImGui::DrawWidget(u32 id, const IntRect& rect)
 
   // show if we have keyboard focus
   if (keyboardFocus)
-    _texture.draw(CreateRect(PosFromRect<int, float>(rect) - ofs, SizeFromRect<int, float>(rect) + 3.0f * ofs, Color(200, 0, 0,255)));
-
-  _texture.draw(CreateRect(PosFromRect<int, float>(rect) + ofs, SizeFromRect<int, float>(rect), Color(0,0,0,255)));
+    _texture.draw(CreateRect(PosFromRect<int, float>(rect) - ofs, SizeFromRect<int, float>(rect) + 2.0f * ofs, Color(200, 0, 0,255)));
 
   // active << 1 | hot
   Color cols[4] = { Color(150, 150, 150, 255), Color(200, 200, 200, 255), Color(255, 255, 255, 255), Color(255, 255, 255, 255) };
