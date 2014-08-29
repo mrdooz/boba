@@ -52,9 +52,8 @@ namespace editor
 
     void KeyframesModified();
 
-    void SendEffectEvent(RowVar* sender, const EffectRowEvent& event);
-
     DisplayMode GetDisplayMode() const { return _displayMode; }
+    void SendEffectEvent(RowVar* sender, const EffectRowEvent& event);
 
     template<typename T>
     sf::Vector2<T> PointToLocal(int x, int y)
@@ -65,13 +64,6 @@ namespace editor
     static TimelineWindow* _instance;
 
   private:
-
-    template <typename T>
-    T NextEnum(T t)
-    {
-      return (T)(((u32)t + 1) % (u32)T::COUNT);
-    }
-
     void DrawEffects();
     void DrawTimeline();
     void DrawTimelinePost();

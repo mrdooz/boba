@@ -614,8 +614,5 @@ void TimelineWindow::SendEffectEvent(RowVar* sender, const EffectRowEvent& event
         e->SendEvent(sender, event);
       break;
     }
-
-    case EffectRowEvent::Type::CreateEditWindow:
-      break;
   }
 }

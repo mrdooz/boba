@@ -1,8 +1,8 @@
 #include "effect_row.hpp"
-#include "editor_windows.hpp"
 #include "editor.hpp"
 #include "row_var.hpp"
 #include "timeline_window.hpp"
+#include "property_window.hpp"
 
 using namespace editor;
 using namespace bristol;

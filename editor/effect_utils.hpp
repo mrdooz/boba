@@ -4,10 +4,35 @@
 namespace editor
 {
   //----------------------------------------------------------------------------------
+  RectangleShape CreateRect(const Vector2f& pos, const Vector2f& size, const Color& col);
+  Text CreateText(const Font& font, const Vector2f& pos, int size, const char* str);
+
+  //----------------------------------------------------------------------------------
   inline Vector2f Normalize(const Vector2f& v)
   {
     float len = sqrtf(v.x*v.x + v.y*v.y);
     return v / len;
+  }
+
+  //----------------------------------------------------------------------------------
+  template <typename T>
+  T NextEnum(T t)
+  {
+    return (T)(((u32)t + 1) % (u32)T::COUNT);
+  }
+
+  //----------------------------------------------------------------------------------
+  template <typename T, typename U = T>
+  sf::Vector2<U> SizeFromRect(const sf::Rect<T>& r)
+  {
+    return sf::Vector2<U>((U)r.width, (U)r.height);
+  }
+
+  //----------------------------------------------------------------------------------
+  template <typename T, typename U = T>
+  sf::Vector2<U> PosFromRect(const sf::Rect<T>& r)
+  {
+    return sf::Vector2<U>((U)r.left, (U)r.top);
   }
 
   //----------------------------------------------------------------------------------

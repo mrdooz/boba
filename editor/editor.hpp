@@ -23,6 +23,9 @@ namespace bristol
 namespace editor
 {
   class TimelineWindow;
+  class PropertyWindow;
+  struct RowVar;
+  struct EffectRowEvent;
 
   class Editor
   {
@@ -67,6 +70,8 @@ namespace editor
 
     void SettingsUpdated(const effect::protocol::EffectSettings& settings);
 
+    void SendEffectEvent(RowVar* sender, const EffectRowEvent& event);
+
     static int WebbyOnWsConnect(WebbyConnection* connection);
     static void WebbyOnWsConnected(WebbyConnection* connection);
     static void WebbyOnWsClosed(WebbyConnection* connection);
@@ -93,7 +98,8 @@ namespace editor
     vector<u8> _serverMemory;
     vector<u8> _readBuffer;
     vector<WebbyConnection* > _connections;
-    TimelineWindow* _timeline;
+    TimelineWindow* _timelineWindow;
+    PropertyWindow* _propertyWindow;
   };
 
   #define EDITOR Editor::Instance()

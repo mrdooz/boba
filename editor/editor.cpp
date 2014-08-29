@@ -1,13 +1,13 @@
 #include "editor.hpp"
-#include "editor_windows.hpp"
+#include "property_window.hpp"
 #include "timeline_window.hpp"
 #include "webby/webby.h"
+#include "row_var.hpp"
 
 using namespace editor;
 using namespace google::protobuf;
 
 Editor* Editor::_instance;
-
 
 //----------------------------------------------------------------------------------
 void Editor::Create()
@@ -42,7 +42,8 @@ Editor::Editor()
     , _curTime(seconds(0))
     , _fileWatchAcc(seconds(0))
     , _readBuffer(256 * 1024)
-    , _timeline(nullptr)
+    , _timelineWindow(nullptr)
+    , _propertyWindow(nullptr)
 {
   _stateFlags.Set(StateFlagsF::Paused);
 }
@@ -108,9 +109,10 @@ bool Editor::Init()
     float rw = (float)width - w;
     float h = (float)height/2;
 
-    _virtualWindowManager->AddWindow(new PropertyWindow("PROPERTIES", Vector2f(0, 0), Vector2f(w, h)));
-    _timeline = new TimelineWindow("TIMELINE", Vector2f(0, h), Vector2f((float)width, h));
-    _virtualWindowManager->AddWindow(_timeline);
+    _propertyWindow = new PropertyWindow("PROPERTIES", Vector2f(0, 0), Vector2f(w, h));
+    _timelineWindow = new TimelineWindow("TIMELINE", Vector2f(0, h), Vector2f((float)width, h));
+    _virtualWindowManager->AddWindow(_propertyWindow);
+    _virtualWindowManager->AddWindow(_timelineWindow);
   }
 
   if (!InitWebby())
@@ -193,7 +195,7 @@ int Editor::WebbyOnWsFrame(WebbyConnection* connection, const WebbyWsFrame* fram
   effect::protocol::EffectSettings settings;
   settings.ParseFromArray(buf.data(), frame->payload_length);
 
-  EDITOR._timeline->Reset(settings);
+  EDITOR._timelineWindow->Reset(settings);
   return 0;
 }
 
@@ -344,6 +346,12 @@ void Editor::SettingsUpdated(const effect::protocol::EffectSettings& settings)
   }
 }
 
+//----------------------------------------------------------------------------------
+void Editor::SendEffectEvent(RowVar* sender, const EffectRowEvent& event)
+{
+  _timelineWindow->SendEffectEvent(sender, event);
+  _propertyWindow->SendEffectEvent(sender, event);
+}
 
 //----------------------------------------------------------------------------------
 int main(int argc, char** argv)

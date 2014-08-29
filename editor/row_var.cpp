@@ -1,7 +1,7 @@
 #include "row_var.hpp"
 #include "editor.hpp"
-#include "editor_windows.hpp"
 #include "timeline_window.hpp"
+#include "property_window.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -212,7 +212,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
     // check for hit on the var window
     if (_bounds.contains(mousePos))
     {
-      timeline->SendEffectEvent(this, EffectRowEvent(EffectRowEvent::Type::VarSelected));
+      EDITOR.SendEffectEvent(this, EffectRowEvent(EffectRowEvent::Type::VarSelected));
       _flags.Toggle(VarFlagsF::Selected);
       return true;
     }
@@ -456,14 +456,6 @@ bool RowVar::OnKeyReleased(const Event& event)
         return true;
       }
       break;
-
-    case Keyboard::Key::A:
-    {
-      sf::Window window(sf::VideoMode(800, 600), "My window");
-      window.setVisible(true);
-      return true;
-      break;
-    }
   }
   return false;
 }

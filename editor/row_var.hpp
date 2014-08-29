@@ -11,7 +11,6 @@ namespace editor
     enum class Type
     {
       VarSelected,
-      CreateEditWindow,
     };
 
     EffectRowEvent(Type type) : type(type) {}
