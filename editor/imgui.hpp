@@ -56,6 +56,7 @@ namespace editor
     void Label(u32 id, const IntRect& rect, const char* label);
     WidgetResult Button(u32 id, const IntRect& rect, const char* label);
     WidgetResult EditBox(u32 id, const IntRect& rect, string* str);
+    WidgetResult CheckBox(u32 id, const IntRect& rect, const char* label, bool* value);
 
     // check if hot/active state should be set to current widget
     void FocusCheck(u32 id, const IntRect& rect, bool* isHot, bool* isActive, bool* hasKeyboardFocus);

@@ -53,11 +53,13 @@ void PropertyWindow::Draw()
 
   if (_anim)
   {
-
+    bool b = !!_anim->type;
+    if (_gui.CheckBox(_gui.WidgetId(), IntRect(10, 60, 10, 10), "Bezier: ", &b) == ImGui::WidgetResult::ButtonPressed)
+      _anim->type ^= 1;
   }
   else if (_keyframe)
   {
-    ImGui::WidgetResult  res;
+    ImGui::WidgetResult res;
     _gui.Label(_gui.WidgetId(), IntRect(10, 60, 60, 20), "time: ");
     res = _gui.EditBox(_gui.WidgetId(), IntRect(80, 60, 100, 20), &_varTime);
     if (res == ImGui::WidgetResult::LostFocus)
@@ -102,12 +104,14 @@ void PropertyWindow::SendEffectEvent(RowVar* sender, const EffectRowEvent& event
     case EffectRowEvent::Type::VarSelected:
       _var = sender;
       _anim = (FloatAnim*)event.data;
+      _keyframe = nullptr;
       break;
 
     case EffectRowEvent::Type::KeyframeUpdated:
     case EffectRowEvent::Type::KeyframeSelected:
       _var = sender;
       _keyframe = (FloatKeyframe*)event.data;
+      _anim = nullptr;
       if (_keyframe)
       {
         _varValue = to_string("%.3f", _keyframe->key.value);

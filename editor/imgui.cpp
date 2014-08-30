@@ -21,7 +21,7 @@ void ImGui::Label(u32 id, const IntRect& rect, const char* label)
   Vector2f s = SizeFromRect<int, float>(rect);
   Vector2f p = PosFromRect<int, float>(rect);
 
-  Text text = CreateText(_font, {p.x, p.y-s.y/4}, rect.height, label);
+  Text text = CreateText(_font, {p.x, p.y-s.y/4}, 16, label);
   _texture.draw(text);
 }
 
@@ -75,7 +75,7 @@ ImGui::WidgetResult ImGui::EditBox(u32 id, const IntRect& rect, string* str)
       tmpString += '_';
   }
 
-  Text text = CreateText(_font, {p.x, p.y-s.y/4}, rect.height, tmpString.c_str());
+  Text text = CreateText(_font, {p.x, p.y-s.y/4}, 16, tmpString.c_str());
 
   _texture.draw(text);
 
@@ -118,6 +118,44 @@ ImGui::WidgetResult ImGui::EditBox(u32 id, const IntRect& rect, string* str)
 }
 
 //----------------------------------------------------------------------------------
+ImGui::WidgetResult ImGui::CheckBox(u32 id, const IntRect& rect, const char* label, bool* value)
+{
+  Vector2f tmpS = SizeFromRect<int, float>(rect);
+  Vector2f tmpP = PosFromRect<int, float>(rect);
+
+  Text text = CreateText(_font, {tmpP.x, tmpP.y-tmpS.y/4}, 16, label);
+  FloatRect r = text.getLocalBounds();
+
+  IntRect checkboxRect(rect);
+  checkboxRect.left += r.width + 5;
+
+  bool isHot, isActive, hasKeyboardFocus;
+  FocusCheck(id, checkboxRect, &isHot, &isActive, &hasKeyboardFocus);
+
+  Vector2f s = SizeFromRect<int, float>(checkboxRect);
+  Vector2f p = PosFromRect<int, float>(checkboxRect);
+
+  _texture.draw(text);
+
+  Vector2f ofs = 0.05f * SizeFromRect<int, float>(checkboxRect);
+
+  // show if we have keyboard focus
+  if (hasKeyboardFocus)
+    _texture.draw(CreateRect(p - ofs, s + 2.0f * ofs, Color(200, 0, 0,255)));
+
+  // active << 1 | hot
+  Color cols[4] = { Color(150, 150, 150, 255), Color(200, 200, 200, 255), Color(255, 255, 255, 255), Color(255, 255, 255, 255) };
+  Color col = cols[(isActive << 1) | isHot];
+  float f = 0.5f;
+  col = *value ? col : Color(f*col.r, f*col.g, f*col.b);
+  _texture.draw(CreateRect(p, s, col));
+
+  // if button is hot & active, but the mouse isn't down, button was clicked
+  return (_uiState.mouseButton == 0 && isHot && isActive) ? WidgetResult::ButtonPressed : WidgetResult::None;
+}
+
+
+//----------------------------------------------------------------------------------
 void ImGui::FocusCheck(u32 id, const IntRect& rect, bool* isHot, bool* isActive, bool* hasKeyboardFocus)
 {
   // check if the widget is hot
@@ -142,21 +180,20 @@ void ImGui::FocusCheck(u32 id, const IntRect& rect, bool* isHot, bool* isActive,
 //----------------------------------------------------------------------------------
 void ImGui::DrawWidget(u32 id, const IntRect& rect)
 {
-  bool isHot          = _uiState.hotItem == id;
-  bool isActive       = _uiState.activeItem == id;
-  bool keyboardFocus  = _uiState.keyboardItem == id;
+  bool isHot            = _uiState.hotItem == id;
+  bool isActive         = _uiState.activeItem == id;
+  bool hasKeyboardFocus = _uiState.keyboardItem == id;
 
   Vector2f ofs = 0.05f * SizeFromRect<int, float>(rect);
 
   // show if we have keyboard focus
-  if (keyboardFocus)
+  if (hasKeyboardFocus)
     _texture.draw(CreateRect(PosFromRect<int, float>(rect) - ofs, SizeFromRect<int, float>(rect) + 2.0f * ofs, Color(200, 0, 0,255)));
 
   // active << 1 | hot
   Color cols[4] = { Color(150, 150, 150, 255), Color(200, 200, 200, 255), Color(255, 255, 255, 255), Color(255, 255, 255, 255) };
   Color col = cols[(isActive << 1) | isHot];
   _texture.draw(CreateRect(PosFromRect<int, float>(rect), SizeFromRect<int, float>(rect), col));
-
 }
 
 //----------------------------------------------------------------------------------
