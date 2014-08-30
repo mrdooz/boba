@@ -4,6 +4,17 @@
 
 using namespace editor;
 
+//#####  Palette URL: http://paletton.com/#uid=50X0M0kl2lD0pZNaDw6vwbaZt0y
+//*** Primary color: rgb(172,135, 59) rgb(255,254,252) rgb(255,227,170) rgb( 89, 60,  1) rgb(  4,  3,  0)4
+//*** Secondary color (1): rgb(172,165, 59) rgb(255,255,252) rgb(255,249,170) rgb( 89, 83,  1) rgb(  4,  4,  0)
+//*** Secondary color (2): rgb(172, 85, 59) rgb(255,253,252) rgb(255,189,170) rgb( 89, 21,  1) rgb(  4,  1,  0)
+
+namespace
+{
+  // active << 1 | hot
+  Color g_cols[4] = { Color(89, 60,  1), Color(255,227,170), Color(172,135, 59), Color(255,254,252) };
+}
+
 //----------------------------------------------------------------------------------
 ImGui::ImGui(sf::RenderTexture& texture, sf::Font& font)
     : _texture(texture)
@@ -144,8 +155,7 @@ ImGui::WidgetResult ImGui::CheckBox(u32 id, const IntRect& rect, const char* lab
     _texture.draw(CreateRect(p - ofs, s + 2.0f * ofs, Color(200, 0, 0,255)));
 
   // active << 1 | hot
-  Color cols[4] = { Color(150, 150, 150, 255), Color(200, 200, 200, 255), Color(255, 255, 255, 255), Color(255, 255, 255, 255) };
-  Color col = cols[(isActive << 1) | isHot];
+  Color col = g_cols[(isActive << 1) | isHot];
   float f = 0.5f;
   col = *value ? col : Color(f*col.r, f*col.g, f*col.b);
   _texture.draw(CreateRect(p, s, col));
@@ -191,8 +201,7 @@ void ImGui::DrawWidget(u32 id, const IntRect& rect)
     _texture.draw(CreateRect(PosFromRect<int, float>(rect) - ofs, SizeFromRect<int, float>(rect) + 2.0f * ofs, Color(200, 0, 0,255)));
 
   // active << 1 | hot
-  Color cols[4] = { Color(150, 150, 150, 255), Color(200, 200, 200, 255), Color(255, 255, 255, 255), Color(255, 255, 255, 255) };
-  Color col = cols[(isActive << 1) | isHot];
+  Color col = g_cols[(isActive << 1) | isHot];
   _texture.draw(CreateRect(PosFromRect<int, float>(rect), SizeFromRect<int, float>(rect), col));
 }
 
