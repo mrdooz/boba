@@ -138,7 +138,7 @@ ImGui::WidgetResult ImGui::CheckBox(u32 id, const IntRect& rect, const char* lab
   FloatRect r = text.getLocalBounds();
 
   IntRect checkboxRect(rect);
-  checkboxRect.left += r.width + 5;
+  checkboxRect.left += (int)(r.width + 5);
 
   bool isHot, isActive, hasKeyboardFocus;
   FocusCheck(id, checkboxRect, &isHot, &isActive, &hasKeyboardFocus);
@@ -155,7 +155,7 @@ ImGui::WidgetResult ImGui::CheckBox(u32 id, const IntRect& rect, const char* lab
     _texture.draw(CreateRect(p - ofs, s + 2.0f * ofs, Color(200, 0, 0,255)));
 
   // active << 1 | hot
-  Color col = g_cols[(isActive << 1) | isHot];
+  Color col = g_cols[((int)isActive << 1) | (int)isHot];
   float f = 0.5f;
   col = *value ? col : Color(f*col.r, f*col.g, f*col.b);
   _texture.draw(CreateRect(p, s, col));
@@ -201,7 +201,7 @@ void ImGui::DrawWidget(u32 id, const IntRect& rect)
     _texture.draw(CreateRect(PosFromRect<int, float>(rect) - ofs, SizeFromRect<int, float>(rect) + 2.0f * ofs, Color(200, 0, 0,255)));
 
   // active << 1 | hot
-  Color col = g_cols[(isActive << 1) | isHot];
+  Color col = g_cols[((int)isActive << 1) | (int)isHot];
   _texture.draw(CreateRect(PosFromRect<int, float>(rect), SizeFromRect<int, float>(rect), col));
 }
 

@@ -856,6 +856,12 @@ namespace editor
       res.flags.Set(NoiseEffector::FlagsF::HasDisplacement);
       res.displacement = FromProtocol(p.displacement());
     }
+    else
+    {
+      res.displacement.x.type = 1;
+      res.displacement.y.type = 1;
+      res.displacement.z.type = 1;
+    }
     return res;
   }
 

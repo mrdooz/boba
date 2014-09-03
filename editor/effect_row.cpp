@@ -132,7 +132,7 @@ bool EffectRow::OnMouseButtonPressed(const Event &event)
   const Vector2f& windowPos = TimelineWindow::_instance->GetPosition();
   int x = (int)(event.mouseButton.x - windowPos.x);
   int y = (int)(event.mouseButton.y - windowPos.y);
-  Vector2f mousePos(x, y);
+  Vector2f mousePos((float)x, (float)y);
 
   if (_expandRect.contains(mousePos))
   {
@@ -180,13 +180,12 @@ bool EffectRow::OnMouseButtonReleased(const Event &event)
   if (displayMode == TimelineWindow::DisplayMode::Graph)
   {
   }
-  else
+
+  for (RowVar* v : _vars)
   {
-    for (RowVar* v : _vars)
-    {
-      v->OnMouseButtonReleased(event);
-    }
+    v->OnMouseButtonReleased(event);
   }
+
   return false;
 }
 
@@ -242,7 +241,7 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
   Color bgCol = ::FromProtocol(settings.effect_view_background_color());
 
   // draw background
-  float w = settings.effect_view_width();
+  float w = (float)settings.effect_view_width();
   _rect._rect.setFillColor(bgCol);
   Vector2f size = _rect._rect.getSize();
   Vector2f windowSize = TimelineWindow::_instance->GetSize();
@@ -399,6 +398,10 @@ EffectRowNoise::EffectRowNoise(
     EffectRow* parent)
     : EffectRow(font, str, parent)
 {
+  _effector.displacement.x.type = 1;
+  _effector.displacement.y.type = 1;
+  _effector.displacement.z.type = 1;
+
   _vars.push_back(new RowVar(_font, "x", &_effector.displacement.x));
   _vars.push_back(new RowVar(_font, "y", &_effector.displacement.y));
   _vars.push_back(new RowVar(_font, "z", &_effector.displacement.z));

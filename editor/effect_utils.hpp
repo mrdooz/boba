@@ -70,14 +70,6 @@ namespace editor
     typedef vector<Keyframe> Keyframes;
   };
 
-  template<> struct KeyframeTraits<Vector2f>
-  {
-    typedef Vector2f Value;
-    typedef FloatAnim Anim;
-    typedef FloatKeyframe Keyframe;
-    typedef vector<Keyframe> Keyframes;
-  };
-
   template<> struct KeyframeTraits<Vector3f>
   {
     typedef Vector3f Value;
@@ -128,6 +120,7 @@ namespace editor
       bool forceAdd,
       typename KeyframeTraits<T>::Anim* anim)
   {
+    typedef typename KeyframeTraits<T>::Value Value;
     typedef typename KeyframeTraits<T>::Anim Anim;
     typedef typename KeyframeTraits<T>::Keyframe Keyframe;
     typedef typename KeyframeTraits<T>::Keyframes Keyframes;
@@ -135,21 +128,23 @@ namespace editor
     Keyframes& keyframes = anim->keyframe;
     s64 time_ms = t.total_milliseconds();
 
+    Keyframe keyframe = { time_ms, value };
+
     if (keyframes.empty())
     {
-      keyframes.push_back({time_ms, value});
+      keyframes.push_back(keyframe);
       return &keyframes.back();
     }
 
     if (time_ms <= keyframes.front().key.time)
     {
-      keyframes.insert(keyframes.begin(), {time_ms, value});
+      keyframes.insert(keyframes.begin(), keyframe);
 
       return &keyframes.front();
     }
     else if (time_ms >= keyframes.back().key.time)
     {
-      keyframes.push_back({time_ms, value});
+      keyframes.push_back(keyframe);
       return &keyframes.back();
     }
 
@@ -167,7 +162,7 @@ namespace editor
     else
     {
       u32 idx = idxUpper == 0xffffffff ? idxLower : idxUpper;
-      auto it = keyframes.insert(keyframes.begin() + idx, {time_ms, value});
+      auto it = keyframes.insert(keyframes.begin() + idx, keyframe);
       return &(*it);
     }
   }

@@ -537,6 +537,11 @@ void RowVar::VisibleKeyframes(
     bool addOutsidePoints,
     vector<VisibleKeyframe>* keyframes)
 {
+  if (_anim->keyframe.empty())
+  {
+    keyframes->clear();
+    return;
+  }
 
   const editor::protocol::Settings& settings = EDITOR.Settings();
   float ofs = settings.effect_view_width();
@@ -552,8 +557,6 @@ void RowVar::VisibleKeyframes(
 
   _minValue = min(value0, valueLast);
   _maxValue = max(value0, valueLast);
-
-  //vector<const FloatKeyframe*> validKeyframes;
 
   const FloatKeyframe* prevFrame = nullptr;
   const FloatKeyframe* keyframe = nullptr;
@@ -654,6 +657,8 @@ void RowVar::DrawGraph(RenderTexture& texture)
   // get the visible keyframes
   vector<VisibleKeyframe> keyframes;
   VisibleKeyframes(size, false, true, &keyframes);
+  if (keyframes.empty())
+    return;
 
   VertexArray gridLines(sf::Lines);
 

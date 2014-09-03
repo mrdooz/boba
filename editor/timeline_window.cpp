@@ -99,24 +99,30 @@ void TimelineWindow::AddDefaultRows()
     e.displacement.y.type = 1;
     e.displacement.z.type = 1;
     s64 t = randf(0, 500);
+
+    // first pass to add the keyframes
     for (u32 j = 0; j < 50; ++j)
     {
-      e.displacement.x.keyframe.push_back({t, randf(-10.f, 20.f)});
+      e.displacement.x.keyframe.push_back({ t, randf(-10.f, 20.f) });
       t += randf(150, 1000);
-      e.displacement.y.keyframe.push_back({t, randf(-10.f, 20.f)});
+      e.displacement.y.keyframe.push_back({ t, randf(-10.f, 20.f) });
       t += randf(150, 1000);
-      e.displacement.z.keyframe.push_back({t, randf(-10.f, 20.f)});
+      e.displacement.z.keyframe.push_back({ t, randf(-10.f, 20.f) });
       t += randf(150, 1000);
+    }
 
+    // second pass to set up in/out keys
+    for (u32 j = 0; j < 50; ++j)
+    {
       float s = 10;
       if (j == 0)
       {
         const auto& fn = [&](FloatAnim* f){
             float v = (f->keyframe[1].key.value - f->keyframe[0].key.value) / (f->keyframe[1].key.time - f->keyframe[0].key.time);
 
-            f->keyframe.back().cpOut = f->keyframe[0].key;
-            f->keyframe.back().cpOut.time += 200;
-            f->keyframe.back().cpOut.value += s * v;
+            f->keyframe[j].cpOut = f->keyframe[0].key;
+            f->keyframe[j].cpOut.time += 200;
+            f->keyframe[j].cpOut.value += s * v;
         };
 
         fn(&e.displacement.x);
@@ -128,9 +134,9 @@ void TimelineWindow::AddDefaultRows()
         const auto& fn = [&](FloatAnim* f){
             float v = (f->keyframe[49].key.value - f->keyframe[48].key.value) / (f->keyframe[49].key.time - f->keyframe[48].key.time);
 
-            f->keyframe.back().cpIn = f->keyframe[49].key;
-            f->keyframe.back().cpIn.time -= 200;
-            f->keyframe.back().cpIn.value -= s * v;
+            f->keyframe[j].cpIn = f->keyframe[49].key;
+            f->keyframe[j].cpIn.time -= 200;
+            f->keyframe[j].cpIn.value -= s * v;
         };
 
         fn(&e.displacement.x);
@@ -142,14 +148,14 @@ void TimelineWindow::AddDefaultRows()
         const auto& fn = [&](FloatAnim* f) {
             float v = (f->keyframe[j+1].key.value - f->keyframe[j-1].key.value) / (f->keyframe[j+1].key.time - f->keyframe[j-1].key.time);
 
-            f->keyframe.back().cpIn = f->keyframe[j].key;
-            f->keyframe.back().cpOut = f->keyframe[j].key;
+            f->keyframe[j].cpIn = f->keyframe[j].key;
+            f->keyframe[j].cpOut = f->keyframe[j].key;
 
-            f->keyframe.back().cpIn.time -= 200;
-            f->keyframe.back().cpIn.value -= s * v;
+            f->keyframe[j].cpIn.time -= 200;
+            f->keyframe[j].cpIn.value -= s * v;
 
-            f->keyframe.back().cpOut.time += 200;
-            f->keyframe.back().cpOut.value += s * v;
+            f->keyframe[j].cpOut.time += 200;
+            f->keyframe[j].cpOut.value += s * v;
         };
 
         fn(&e.displacement.x);
@@ -408,11 +414,11 @@ void TimelineWindow::DrawTimelinePost()
 
   // time line
   x = TimeToPixel(EDITOR.CurTime());
-  if (x >= settings.effect_view_width())
+  if (x >= (int)settings.effect_view_width())
   {
     LineStrip ll(2, Color::Red);
-    ll.addPoint({x, y});
-    ll.addPoint({x, _size.y});
+    ll.addPoint({(float)x, (float)y});
+    ll.addPoint({(float)x, (float)_size.y});
     _texture.draw(ll);
   }
 
