@@ -530,7 +530,6 @@ float RowVar::ValueToPixel(float value) const
 }
 
 //----------------------------------------------------------------------------------
-
 void RowVar::VisibleKeyframes(
     const Vector2f& size,
     bool addBorderPoints,
@@ -539,6 +538,10 @@ void RowVar::VisibleKeyframes(
 {
   if (_anim->keyframe.empty())
   {
+    // add default values if no keyframes are present
+    _minValue = -10;
+    _maxValue = 10;
+    _step = 1;
     keyframes->clear();
     return;
   }
@@ -625,11 +628,7 @@ void RowVar::VisibleKeyframes(
   if (addBorderPoints)
     keyframes->push_back({Vector2f(size.x, ValueToPixel(valueLast)), nullptr, VisibleKeyframe::FLAG_VIRTUAL});
 
-  _realMinValue = _minValue;
-  _realMaxValue = _maxValue;
-
-  float step;
-  LooseLabel(_minValue, _maxValue, &step, &_minValue, &_maxValue);
+  LooseLabel(_minValue, _maxValue, &_step, &_minValue, &_maxValue);
 }
 
 //----------------------------------------------------------------------------------
@@ -657,13 +656,8 @@ void RowVar::DrawGraph(RenderTexture& texture)
   // get the visible keyframes
   vector<VisibleKeyframe> keyframes;
   VisibleKeyframes(size, false, true, &keyframes);
-  if (keyframes.empty())
-    return;
 
   VertexArray gridLines(sf::Lines);
-
-  float step;
-  LooseLabel(_realMinValue, _realMaxValue, &step, &_minValue, &_maxValue);
 
   Color c(100, 100, 100, 255);
   Text label;
@@ -675,7 +669,7 @@ void RowVar::DrawGraph(RenderTexture& texture)
   float curY = _maxValue;
   while (true)
   {
-    if (curY < _minValue - step)
+    if (curY < _minValue - _step)
       break;
 
     float y = ValueToPixel(curY);
@@ -686,10 +680,13 @@ void RowVar::DrawGraph(RenderTexture& texture)
     label.setString(to_string("%.2f", curY).c_str());
     texture.draw(label);
 
-    curY -= step;
+    curY -= _step;
   }
 
   texture.draw(gridLines);
+
+  if (keyframes.empty())
+    return;
 
   const StyleSetting* defaultStyle = STYLE_FACTORY.GetStyle("keyframe_style");
   const StyleSetting* selectedStyle = STYLE_FACTORY.GetStyle("keyframe_style_selected");

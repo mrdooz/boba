@@ -78,7 +78,6 @@ namespace editor
     FloatKeyframe _prevKeyframe;
     Vector2f _prevPos;
 
-    float _minValue, _maxValue;
-    float _realMinValue, _realMaxValue;
+    float _minValue, _maxValue, _step;
   };
 }

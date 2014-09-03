@@ -41,7 +41,7 @@ namespace editor
     virtual void Draw();
     virtual void Update();
     void Reset(const effect::protocol::EffectSettings& settings);
-    void AddDefaultRows();
+    void AddDefaultRows(bool addKeyframes);
 
     int TimeToPixel(const time_duration& t) const;
     int TimeToPixel(s64 ms) const;
