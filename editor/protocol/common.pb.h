@@ -948,7 +948,7 @@ class FloatAnim : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional uint32 type = 1;
+  // optional uint32 type = 1 [default = 1];
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 1;
@@ -1991,7 +1991,7 @@ inline void FloatKeyframe::set_allocated_cp_out(::common::protocol::FloatKey* cp
 
 // FloatAnim
 
-// optional uint32 type = 1;
+// optional uint32 type = 1 [default = 1];
 inline bool FloatAnim::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -2002,7 +2002,7 @@ inline void FloatAnim::clear_has_type() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void FloatAnim::clear_type() {
-  type_ = 0u;
+  type_ = 1u;
   clear_has_type();
 }
 inline ::google::protobuf::uint32 FloatAnim::type() const {

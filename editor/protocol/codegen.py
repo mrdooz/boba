@@ -99,6 +99,8 @@ for file_desc in fds.file:
         idx = 0
         for field_desc in msg_desc.field:
             type_number = field_desc.type
+            # type_name = .effect.protocol.plexus.NoiseEffector.ApplyTo
+            # import pdb; pdb.set_trace()
 
             is_msg = type_number == 11
             is_bytes = type_number == 12
@@ -109,6 +111,13 @@ for file_desc in fds.file:
             is_repeated = field_desc.label == 3
 
             proto_type = field_desc.type_name
+            default_value = None
+            if len(field_desc.default_value) > 0:
+                # handle special cases for default value
+                if is_enum:
+                    default_value = field_desc.type_name.split('.')[-1] + '::' + field_desc.default_value
+                else:
+                    default_value = field_desc.default_value
 
             if type_number in NATIVE_TYPES:
                 field_type = NATIVE_TYPES[type_number]
@@ -138,11 +147,11 @@ for file_desc in fds.file:
 
             proto_field_name = field_desc.name
             field_name = underscore_to_camel_case(field_desc.name)
-            title_name = underscore_to_title_case(field_desc.name)
+            name_title = underscore_to_title_case(field_desc.name)
 
             cur_member = { 
                 'name' : field_name,
-                'name_title' : title_name,
+                'name_title' : name_title,
                 'type' : field_type,
                 'base_type' : base_type,
                 'is_optional' : is_optional,
@@ -153,6 +162,7 @@ for file_desc in fds.file:
                 'proto_name' : proto_field_name, 
                 'proto_type' : proto_type,
                 'idx' : idx,
+                'default_value' : default_value,
                 }
             idx += 1
             cur_class['members'].append(cur_member)
