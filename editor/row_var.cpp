@@ -18,7 +18,7 @@ namespace
 
   const u32 ANIM_TYPE_LINEAR      = 0;
   const u32 ANIM_TYPE_BEZIER      = 1;
-  const u32 ANIM_TYPE_CATMUL_ROM  = 2;
+  const u32 ANIM_TYPE_CATMULL_ROM  = 2;
 
   //----------------------------------------------------------------------------------
   bool IsControlPoint(u32 idx)
@@ -64,6 +64,14 @@ namespace
   void LooseLabel(float lower, float upper, float* tickSpacing, float* graphMin, float* graphMax)
   {
     const editor::protocol::Settings& settings = EDITOR.Settings();
+
+    if (lower == upper)
+    {
+      *tickSpacing = 1;
+      *graphMin = NiceNum(lower, true);
+      *graphMax = NiceNum(upper, true);
+      return;
+    }
 
     int NUM_TICKS = settings.ticks_per_interval();
     float range = NiceNum(upper - lower, false);
@@ -254,7 +262,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
       switch (_anim->type)
       {
         case ANIM_TYPE_LINEAR:
-        case ANIM_TYPE_CATMUL_ROM:
+        case ANIM_TYPE_CATMULL_ROM:
           AddKeyframe<float>(milliseconds(t), v, true, _anim);
           break;
 
@@ -281,7 +289,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
     switch (_anim->type)
     {
       case ANIM_TYPE_LINEAR:
-      case ANIM_TYPE_CATMUL_ROM:
+      case ANIM_TYPE_CATMULL_ROM:
         for (u32 i = 0; i < _anim->keyframe.size(); ++i)
         {
           FloatKeyframe &keyframe = _anim->keyframe[i];
@@ -591,7 +599,7 @@ void RowVar::VisibleKeyframes(
     switch (_anim->type)
     {
       case ANIM_TYPE_LINEAR:
-      case ANIM_TYPE_CATMUL_ROM:
+      case ANIM_TYPE_CATMULL_ROM:
         _minValue = min(_minValue, keyframe->key.value);
         _maxValue = max(_maxValue, keyframe->key.value);
         break;
@@ -618,8 +626,11 @@ void RowVar::VisibleKeyframes(
 
   if (addOutsidePoints)
   {
-    Vector2f p = Vector2f(timeline->TimeToPixel(keyframe->key.time), ValueToPixel(keyframe->key.value));
-    keyframes->push_back({p, keyframe, flags});
+    if (keyframe->key.time > maxTime)
+    {
+      Vector2f p = Vector2f(timeline->TimeToPixel(keyframe->key.time), ValueToPixel(keyframe->key.value));
+      keyframes->push_back({ p, keyframe, flags });
+    }
   }
 
   if (addBorderPoints)
@@ -719,8 +730,7 @@ void RowVar::DrawGraph(RenderTexture& texture)
 
       LineStrip curve(4, ::FromProtocol(settings.graph_color()));
 
-      u32 lastIdx = keyframes.size() - 1;
-      for (u32 i = 0; i < lastIdx; ++i)
+      for (u32 i = 0; i < keyframes.size(); ++i)
       {
         u32 flags = keyframes[i].flags;
 
@@ -743,16 +753,17 @@ void RowVar::DrawGraph(RenderTexture& texture)
           texture.draw(_keyframeRect._rect);
         }
 
-        if (lastIdx > 0)
+        // draw current key
+        _keyframeRect._rect.setPosition(p0.x - rw, p0.y - rw);
+        texture.draw(_keyframeRect._rect);
+
+        // if more than 1 keyframe, draw the bezier curve
+        if ((int)i <= (int)keyframes.size() - 2)
         {
           const FloatKeyframe* k1 = keyframes[i + 1].keyframe;
 
           const Vector2f& p2 = KeyToPoint(k1->cpIn);
           const Vector2f& p3 = KeyToPoint(k1->key);
-
-          // draw key
-          _keyframeRect._rect.setPosition(p0.x - rw, p0.y - rw);
-          texture.draw(_keyframeRect._rect);
 
           // draw key-out
           if (!(flags & VisibleKeyframe::FLAG_LAST))
@@ -766,13 +777,7 @@ void RowVar::DrawGraph(RenderTexture& texture)
             texture.draw(_keyframeRect._rect);
           }
 
-          if (i == 0)
-          {
-            Vector2f v = Bezier(p0, p1, p2, p3, 0);
-            curve.addPoint({p0.x, v.y});
-          }
-
-          for (u32 j = 1; j <= 20; ++j)
+          for (u32 j = 0; j <= 20; ++j)
           {
             float t = j / 20.0f;
             Vector2f v = Bezier(p0, p1, p2, p3, t);
@@ -786,7 +791,7 @@ void RowVar::DrawGraph(RenderTexture& texture)
       break;
     }
 
-    case ANIM_TYPE_CATMUL_ROM:
+    case ANIM_TYPE_CATMULL_ROM:
     {
       VertexArray controlPoints(sf::Lines);
       Color c = ::FromProtocol(settings.keyframe_control_color());

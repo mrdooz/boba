@@ -188,14 +188,8 @@ namespace editor
     float t2 = t*t;
     float t3 = t2*t;
 
-    float a = -1*t3 +2*t2 -1*t +0;
-    float b = +3*t3 -5*t2 +4*t +2;
-    float c = -3*t3 +4*t2 +1*t +0;
-    float d =  1*t3 -1*t2 +0*t +0;
-
-    return a*p0 + b*p1 + c*p2 + d*p3;
+    return 0.5f * ((2.f*p1) + (-p0 + p2) * t + (2.f*p0 - 5.f*p1 + 4.f*p2 -p3) * t2 + (-p0 + 3.f*p1 - 3.f*p2 + p3) * t3);
   }
-
 
   //----------------------------------------------------------------------------------
   template <typename T>
