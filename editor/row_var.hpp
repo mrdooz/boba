@@ -29,8 +29,8 @@ namespace editor
 
     struct VarFlagsF
     {
-      enum Enum : u8 { Selected = 1 << 0, Editing = 1 << 1, Animating = 1 << 2, GraphMode  = 1 << 3, PreEdit = 1 << 4, };
-      struct Bits { u8 selected : 1; u8 editing : 1; u8 animating : 1; u32 graphMode : 1; u32 preEdit : 1; };
+      enum Enum : u8 { Selected = 1 << 0, Editing = 1 << 1, Animating = 1 << 2, GraphMode  = 1 << 3, PreEdit = 1 << 4, Moving = 1 << 5};
+      struct Bits { u8 selected : 1; u8 editing : 1; u8 animating : 1; u32 graphMode : 1; u32 preEdit : 1; u32 moving : 1; };
     };
 
     typedef Flags<VarFlagsF> VarFlags;

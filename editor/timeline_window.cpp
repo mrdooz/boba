@@ -246,6 +246,12 @@ bool TimelineWindow::OnMouseButtonPressed(const Event& event)
     return true;
   }
 
+  // First check if the selected var handles the event. Otherwise try the effect rows
+  if (_selectedVar && _selectedVar->OnMouseButtonPressed(event))
+  {
+    return true;
+  }
+
   vector<EffectRow*> effects;
   for (EffectRow* row : _effectRows)
     row->Flatten(&effects);
@@ -288,6 +294,12 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
     return true;
   }
 
+  // First check if the selected var handles the event. Otherwise try the effect rows
+  if (_selectedVar && _selectedVar->OnMouseMoved(event))
+  {
+    return true;
+  }
+
   vector<EffectRow*> effects;
   for (EffectRow* row : _effectRows)
     row->Flatten(&effects);
@@ -307,6 +319,12 @@ bool TimelineWindow::OnMouseMoved(const Event& event)
 bool TimelineWindow::OnMouseButtonReleased(const Event& event)
 {
   _lastDragPos = {-1, -1};
+
+  // First check if the selected var handles the event. Otherwise try the effect rows
+  if (_selectedVar && _selectedVar->OnMouseButtonReleased(event))
+  {
+    return true;
+  }
 
   vector<EffectRow*> effects;
   for (EffectRow* row : _effectRows)

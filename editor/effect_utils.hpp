@@ -207,10 +207,10 @@ namespace editor
     typedef typename KeyframeTraits<T>::Keyframes Keyframes;
 
     const Keyframes& keyframes = anim.keyframe;
-
     if (keyframes.empty())
       return T();
 
+    u32 lastIdx = keyframes.size() - 1;
     u32 idxLower, idxUpper;
     if (!FindKeyframePair<T>(keyframes, time_ms, &idxLower, &idxUpper))
     {
@@ -234,8 +234,8 @@ namespace editor
     }
     else if (anim.type == 2)
     {
-      const Keyframe& p0 = keyframes[idxLower-1];
-      const Keyframe& p3 = keyframes[idxUpper+1];
+      const Keyframe& p0 = keyframes[max(0, (s32)idxLower-1)];
+      const Keyframe& p3 = keyframes[min(lastIdx, idxUpper+1)];
 
       // catmul rom spline
       return CatmulRom(p0.key.value, lower.key.value, upper.key.value, p3.key.value, t);

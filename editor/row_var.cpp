@@ -68,8 +68,8 @@ namespace
     if (lower == upper)
     {
       *tickSpacing = 1;
-      *graphMin = NiceNum(lower, true);
-      *graphMax = NiceNum(upper, true);
+      *graphMin = floorf(lower - 0.001f);
+      *graphMax = ceilf(upper);
       return;
     }
 
@@ -80,7 +80,6 @@ namespace
     *graphMin = floorf(lower/d) * d;
     *graphMax = ceilf(upper/d) * d + 0.5f * d;
   }
-
 }
 
 //----------------------------------------------------------------------------------
@@ -348,6 +347,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
     if (IsControlPoint(_selectedKeyframe))
     {
       EDITOR.SendEffectEvent(this, EffectRowEvent(EffectRowEvent::Type::KeyframeSelected, &_anim->keyframe[_selectedKeyframe]));
+      _flags.Set(VarFlagsF::Moving);
     }
     return true;
   }
@@ -358,14 +358,14 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
 //----------------------------------------------------------------------------------
 bool RowVar::OnMouseButtonReleased(const Event &event)
 {
-//  _selectedKeyframe = SELECTED_NONE;
-
   if (_flags.IsSet(VarFlagsF::Animating) && _flags.IsSet(VarFlagsF::Editing))
   {
     AddKeyframe<float>(EDITOR.CurTime(), _value, false, _anim);
     _flags.Clear(VarFlagsF::PreEdit);
     _flags.Clear(VarFlagsF::Editing);
   }
+
+  _flags.Clear(VarFlagsF::Moving);
 
   return false;
 }
@@ -379,67 +379,76 @@ bool RowVar::OnMouseMoved(const Event &event)
   if (_selectedKeyframe != SELECTED_NONE)
   {
     vector<FloatKeyframe>& keyframes = _anim->keyframe;
-
     s64 t = timeline->PixelToTime(mousePos.x).total_milliseconds();
 
-    if (_flags.IsSet(VarFlagsF::GraphMode))
+    if (_flags.IsSet(VarFlagsF::Moving))
     {
-      if (_anim->type == 0)
+      // handle graph mode
+      if (_flags.IsSet(VarFlagsF::GraphMode))
       {
-        // if moving past the previous or next keyframe, swap to it
-        if (_selectedKeyframe > 0 && t < keyframes[_selectedKeyframe-1].key.time)
+        switch (_anim->type)
         {
-          keyframes[_selectedKeyframe] = _prevKeyframe;
-          _prevKeyframe = keyframes[--_selectedKeyframe];
-        }
+          case ANIM_TYPE_LINEAR:
+          {
+            // if moving past the previous or next keyframe, swap to it
+            if (_selectedKeyframe > 0 && t < keyframes[_selectedKeyframe-1].key.time)
+            {
+              keyframes[_selectedKeyframe] = _prevKeyframe;
+              _prevKeyframe = keyframes[--_selectedKeyframe];
+            }
 
-        if (_selectedKeyframe < keyframes.size() -1 && t >= keyframes[_selectedKeyframe+1].key.time)
-        {
-          keyframes[_selectedKeyframe] = _prevKeyframe;
-          _prevKeyframe = keyframes[++_selectedKeyframe];
-        }
+            if (_selectedKeyframe < keyframes.size() -1 && t >= keyframes[_selectedKeyframe+1].key.time)
+            {
+              keyframes[_selectedKeyframe] = _prevKeyframe;
+              _prevKeyframe = keyframes[++_selectedKeyframe];
+            }
 
-        float y = event.mouseMove.y - timeline->GetPosition().y;
-        keyframes[_selectedKeyframe].key = {t, PixelToValue(y)};
+            float y = event.mouseMove.y - timeline->GetPosition().y;
+            keyframes[_selectedKeyframe].key = {t, PixelToValue(y)};
+            break;
+          }
+
+          case ANIM_TYPE_BEZIER:
+          case ANIM_TYPE_CATMULL_ROM:
+          {
+            float y = event.mouseMove.y - timeline->GetPosition().y;
+            u32 k = _selectedKeyframe & SELECTED_CP_MASK;
+
+            if (_selectedKeyframe & SELECTED_CP_IN)
+            {
+              keyframes[k].cpIn = { t, PixelToValue(y) };
+            }
+            else if (_selectedKeyframe & SELECTED_CP_OUT)
+            {
+              keyframes[k].cpOut = { t, PixelToValue(y) };
+            }
+            else
+            {
+              s64 dx = t - keyframes[k].key.time;
+              float dy = PixelToValue(y) - keyframes[k].key.value;
+              keyframes[k].key = {t, PixelToValue(y)};
+
+              keyframes[k].cpIn.time += dx;
+              keyframes[k].cpIn.value += dy;
+
+              keyframes[k].cpOut.time += dx;
+              keyframes[k].cpOut.value += dy;
+            }
+            break;
+          }
+        }
       }
       else
       {
-        // bezier
-        float y = event.mouseMove.y - timeline->GetPosition().y;
-        u32 k = _selectedKeyframe & SELECTED_CP_MASK;
+        // don't allow the keyframe to move outside its neighbours
+        if (_selectedKeyframe > 0)
+          t = max(t, keyframes[_selectedKeyframe-1].key.time);
 
-        if (_selectedKeyframe & SELECTED_CP_IN)
-        {
-          keyframes[k].cpIn = { t, PixelToValue(y) };
-        }
-        else if (_selectedKeyframe & SELECTED_CP_OUT)
-        {
-          keyframes[k].cpOut = { t, PixelToValue(y) };
-        }
-        else
-        {
-          s64 dx = t - keyframes[k].key.time;
-          float dy = PixelToValue(y) - keyframes[k].key.value;
-          keyframes[k].key = {t, PixelToValue(y)};
+        if (_selectedKeyframe < keyframes.size() -1)
+          t = min(t, keyframes[_selectedKeyframe+1].key.time);
 
-          keyframes[k].cpIn.time += dx;
-          keyframes[k].cpIn.value += dy;
-
-          keyframes[k].cpOut.time += dx;
-          keyframes[k].cpOut.value += dy;
-        }
+        keyframes[_selectedKeyframe].key.time = t;
       }
-    }
-    else
-    {
-      // don't allow the keyframe to move outside its neighbours
-      if (_selectedKeyframe > 0)
-        t = max(t, keyframes[_selectedKeyframe-1].key.time);
-
-      if (_selectedKeyframe < keyframes.size() -1)
-        t = min(t, keyframes[_selectedKeyframe+1].key.time);
-
-      keyframes[_selectedKeyframe].key.time = t;
     }
 
     if (IsControlPoint(_selectedKeyframe))
@@ -576,7 +585,10 @@ void RowVar::VisibleKeyframes(
   u32 numKeyframes = _anim->keyframe.size();
   for (u32 i = 0; i < numKeyframes; ++i, prevFrame = keyframe, prevFlags = flags)
   {
+    // set flag/last flag
     flags = i == 0 ? VisibleKeyframe::FLAG_FIRST : i == numKeyframes - 1 ? VisibleKeyframe::FLAG_LAST : 0;
+
+    // set selected flag
     flags |= ((_selectedKeyframe & SELECTED_CP_MASK) == i) ? VisibleKeyframe::FLAG_SELECTED : 0;
     keyframe = &_anim->keyframe[i];
 
@@ -586,7 +598,7 @@ void RowVar::VisibleKeyframes(
     if (keyframe->key.time > maxTime)
       break;
 
-    // If this is the first inside keyframe, add the previous one of 'addOutsidePoints' is specified
+    // If this is the first visible keyframe, add the previous one of 'addOutsidePoints' is specified
     if (prevFrame && prevFrame->key.time < minTime && addOutsidePoints)
     {
       Vector2f p = Vector2f(timeline->TimeToPixel(prevFrame->key.time), ValueToPixel(prevFrame->key.value));
@@ -793,42 +805,41 @@ void RowVar::DrawGraph(RenderTexture& texture)
 
     case ANIM_TYPE_CATMULL_ROM:
     {
-      VertexArray controlPoints(sf::Lines);
-      Color c = ::FromProtocol(settings.keyframe_control_color());
-
       LineStrip curve(4, ::FromProtocol(settings.graph_color()));
 
-      for (u32 i = 1; i < keyframes.size() - 2; ++i)
+      u32 lastIdx = keyframes.size() - 1;
+      for (u32 i = 0; i < keyframes.size(); ++i)
       {
         u32 flags = keyframes[i].flags;
 
-        const FloatKeyframe* k0 = keyframes[i - 1].keyframe;
+        const FloatKeyframe* k0 = keyframes[max(0, (int)i - 1)].keyframe;
         const FloatKeyframe* k1 = keyframes[i + 0].keyframe;
-        const FloatKeyframe* k2 = keyframes[i + 1].keyframe;
-        const FloatKeyframe* k3 = keyframes[i + 2].keyframe;
+        const FloatKeyframe* k2 = keyframes[min(lastIdx, i + 1)].keyframe;
+        const FloatKeyframe* k3 = keyframes[min(lastIdx, i + 2)].keyframe;
 
         const Vector2f& p0 = KeyToPoint(k0->key);
         const Vector2f& p1 = KeyToPoint(k1->key);
         const Vector2f& p2 = KeyToPoint(k2->key);
         const Vector2f& p3 = KeyToPoint(k3->key);
 
+        // draw keyframe
         ApplyStyle(flags & VisibleKeyframe::FLAG_SELECTED ? selectedStyle : defaultStyle, &_keyframeRect._rect);
-
-        controlPoints.append(Vertex(p1, c));
-
         _keyframeRect._rect.setPosition(p1.x - rw, p1.y - rw);
         texture.draw(_keyframeRect._rect);
 
+        if (i == lastIdx)
+          break;
+
+        // draw curve
         for (u32 j = 0; j <= 20; ++j)
         {
           float t = j / 20.0f;
           Vector2f v = CatmulRom(p0, p1, p2, p3, t);
-          curve.addPoint({p1.x, v.y});
+          curve.addPoint({lerp(p1.x, p2.x, t), v.y});
         }
       }
 
       texture.draw(curve);
-      texture.draw(controlPoints);
       break;
     }
   }

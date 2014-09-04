@@ -103,7 +103,7 @@ namespace editor
 
   struct FloatAnim
   {
-    uint32_t type = 1;
+    uint32_t type = 2;
     vector<FloatKeyframe> keyframe;
     float minValue;
     float maxValue;
