@@ -16,9 +16,9 @@ namespace
   const u32 SELECTED_CP_OUT   = 1u << 31;
   const u32 SELECTED_CP_MASK  = ~(SELECTED_CP_IN | SELECTED_CP_OUT);
 
-  const u32 ANIM_TYPE_LINEAR  = 0;
-  const u32 ANIM_TYPE_BEZIER  = 1;
-  const u32 ANIM_TYPE_STEP    = 2;
+  const u32 ANIM_TYPE_LINEAR      = 0;
+  const u32 ANIM_TYPE_BEZIER      = 1;
+  const u32 ANIM_TYPE_CATMUL_ROM  = 2;
 
   //----------------------------------------------------------------------------------
   bool IsControlPoint(u32 idx)
@@ -254,6 +254,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
       switch (_anim->type)
       {
         case ANIM_TYPE_LINEAR:
+        case ANIM_TYPE_CATMUL_ROM:
           AddKeyframe<float>(milliseconds(t), v, true, _anim);
           break;
 
@@ -271,9 +272,6 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
           f->cpOut = { t1, v1 };
           break;
         }
-
-        case ANIM_TYPE_STEP:
-          break;
       }
 
       return true;
@@ -283,6 +281,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
     switch (_anim->type)
     {
       case ANIM_TYPE_LINEAR:
+      case ANIM_TYPE_CATMUL_ROM:
         for (u32 i = 0; i < _anim->keyframe.size(); ++i)
         {
           FloatKeyframe &keyframe = _anim->keyframe[i];
@@ -331,9 +330,6 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
             goto SELECTION_DONE;
           }
         }
-        break;
-
-      case ANIM_TYPE_STEP:
         break;
     }
   }
@@ -595,6 +591,7 @@ void RowVar::VisibleKeyframes(
     switch (_anim->type)
     {
       case ANIM_TYPE_LINEAR:
+      case ANIM_TYPE_CATMUL_ROM:
         _minValue = min(_minValue, keyframe->key.value);
         _maxValue = max(_maxValue, keyframe->key.value);
         break;
@@ -722,21 +719,15 @@ void RowVar::DrawGraph(RenderTexture& texture)
 
       LineStrip curve(4, ::FromProtocol(settings.graph_color()));
 
-      u32 lastIdx = keyframes.size() - 2;
-      for (u32 i = 0; i <= lastIdx; ++i)
+      u32 lastIdx = keyframes.size() - 1;
+      for (u32 i = 0; i < lastIdx; ++i)
       {
         u32 flags = keyframes[i].flags;
 
-        const FloatKeyframe* k0 = keyframes[i+0].keyframe;
-        const FloatKeyframe* k1 = keyframes[i+1].keyframe;
-
-        if (!(k0 && k1))
-          continue;
+        const FloatKeyframe* k0 = keyframes[i + 0].keyframe;
 
         const Vector2f& p0 = KeyToPoint(k0->key);
         const Vector2f& p1 = KeyToPoint(k0->cpOut);
-        const Vector2f& p2 = KeyToPoint(k1->cpIn);
-        const Vector2f& p3 = KeyToPoint(k1->key);
 
         ApplyStyle(flags & VisibleKeyframe::FLAG_SELECTED ? selectedStyle : defaultStyle, &_keyframeRect._rect);
 
@@ -752,35 +743,85 @@ void RowVar::DrawGraph(RenderTexture& texture)
           texture.draw(_keyframeRect._rect);
         }
 
-        // draw key
-        _keyframeRect._rect.setPosition(p0.x - rw, p0.y - rw);
+        if (lastIdx > 0)
+        {
+          const FloatKeyframe* k1 = keyframes[i + 1].keyframe;
+
+          const Vector2f& p2 = KeyToPoint(k1->cpIn);
+          const Vector2f& p3 = KeyToPoint(k1->key);
+
+          // draw key
+          _keyframeRect._rect.setPosition(p0.x - rw, p0.y - rw);
+          texture.draw(_keyframeRect._rect);
+
+          // draw key-out
+          if (!(flags & VisibleKeyframe::FLAG_LAST))
+          {
+            const Vector2f& keyOut = KeyToPoint(k0->cpOut);
+
+            controlPoints.append(Vertex(p0, c));
+            controlPoints.append(Vertex(keyOut, c));
+
+            _keyframeRect._rect.setPosition(keyOut.x - rw, keyOut.y - rw);
+            texture.draw(_keyframeRect._rect);
+          }
+
+          if (i == 0)
+          {
+            Vector2f v = Bezier(p0, p1, p2, p3, 0);
+            curve.addPoint({p0.x, v.y});
+          }
+
+          for (u32 j = 1; j <= 20; ++j)
+          {
+            float t = j / 20.0f;
+            Vector2f v = Bezier(p0, p1, p2, p3, t);
+            curve.addPoint({lerp(p0.x, p3.x, t), v.y});
+          }
+        }
+
+      }
+      texture.draw(curve);
+      texture.draw(controlPoints);
+      break;
+    }
+
+    case ANIM_TYPE_CATMUL_ROM:
+    {
+      VertexArray controlPoints(sf::Lines);
+      Color c = ::FromProtocol(settings.keyframe_control_color());
+
+      LineStrip curve(4, ::FromProtocol(settings.graph_color()));
+
+      for (u32 i = 1; i < keyframes.size() - 2; ++i)
+      {
+        u32 flags = keyframes[i].flags;
+
+        const FloatKeyframe* k0 = keyframes[i - 1].keyframe;
+        const FloatKeyframe* k1 = keyframes[i + 0].keyframe;
+        const FloatKeyframe* k2 = keyframes[i + 1].keyframe;
+        const FloatKeyframe* k3 = keyframes[i + 2].keyframe;
+
+        const Vector2f& p0 = KeyToPoint(k0->key);
+        const Vector2f& p1 = KeyToPoint(k1->key);
+        const Vector2f& p2 = KeyToPoint(k2->key);
+        const Vector2f& p3 = KeyToPoint(k3->key);
+
+        ApplyStyle(flags & VisibleKeyframe::FLAG_SELECTED ? selectedStyle : defaultStyle, &_keyframeRect._rect);
+
+        controlPoints.append(Vertex(p1, c));
+
+        _keyframeRect._rect.setPosition(p1.x - rw, p1.y - rw);
         texture.draw(_keyframeRect._rect);
 
-        // draw key-out
-        if (!(flags & VisibleKeyframe::FLAG_LAST))
-        {
-          const Vector2f& keyOut = KeyToPoint(k0->cpOut);
-
-          controlPoints.append(Vertex(p0, c));
-          controlPoints.append(Vertex(keyOut, c));
-
-          _keyframeRect._rect.setPosition(keyOut.x - rw, keyOut.y - rw);
-          texture.draw(_keyframeRect._rect);
-        }
-
-        if (i == 0)
-        {
-          Vector2f v = Bezier(p0, p1, p2, p3, 0);
-          curve.addPoint({p0.x, v.y});
-        }
-
-        for (u32 j = 1; j <= 20; ++j)
+        for (u32 j = 0; j <= 20; ++j)
         {
           float t = j / 20.0f;
-          Vector2f v = Bezier(p0, p1, p2, p3, t);
-          curve.addPoint({lerp(p0.x, p3.x, t), v.y});
+          Vector2f v = CatmulRom(p0, p1, p2, p3, t);
+          curve.addPoint({p1.x, v.y});
         }
       }
+
       texture.draw(curve);
       texture.draw(controlPoints);
       break;

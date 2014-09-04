@@ -183,6 +183,22 @@ namespace editor
 
   //----------------------------------------------------------------------------------
   template <typename T>
+  T CatmulRom(const T& p0, const T& p1, const T& p2, const T& p3, float t)
+  {
+    float t2 = t*t;
+    float t3 = t2*t;
+
+    float a = -1*t3 +2*t2 -1*t +0;
+    float b = +3*t3 -5*t2 +4*t +2;
+    float c = -3*t3 +4*t2 +1*t +0;
+    float d =  1*t3 -1*t2 +0*t +0;
+
+    return a*p0 + b*p1 + c*p2 + d*p3;
+  }
+
+
+  //----------------------------------------------------------------------------------
+  template <typename T>
   T Interpolate(const typename KeyframeTraits<T>::Anim& anim, const time_duration& t)
   {
     return Interpolate<T>(anim, t.total_milliseconds());
@@ -217,10 +233,18 @@ namespace editor
       // linear interpolation
       return lower.key.value + t * (upper.key.value - lower.key.value);
     }
-    else
+    else if (anim.type == 1)
     {
       // bezier splines
       return Bezier(lower.key.value, lower.cpOut.value, upper.cpIn.value, upper.key.value, t);
+    }
+    else if (anim.type == 2)
+    {
+      const Keyframe& p0 = keyframes[idxLower-1];
+      const Keyframe& p3 = keyframes[idxUpper+1];
+
+      // catmul rom spline
+      return CatmulRom(p0.key.value, lower.key.value, upper.key.value, p3.key.value, t);
     }
 
     return T();

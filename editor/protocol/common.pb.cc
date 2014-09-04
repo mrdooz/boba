@@ -344,7 +344,7 @@ void protobuf_AddDesc_common_2eproto() {
     "atKey\022(\n\005cp_in\030\002 \001(\0132\031.common.protocol.F"
     "loatKey\022)\n\006cp_out\030\003 \001(\0132\031.common.protoco"
     "l.FloatKey\"\202\001\n\tFloatAnim\022\017\n\004type\030\001 \001(\r:\001"
-    "1\0220\n\010keyframe\030\002 \003(\0132\036.common.protocol.Fl"
+    "2\0220\n\010keyframe\030\002 \003(\0132\036.common.protocol.Fl"
     "oatKeyframe\022\021\n\tmin_value\030\003 \001(\002\022\021\n\tmax_va"
     "lue\030\004 \001(\002\022\014\n\004step\030\005 \001(\002\"H\n\017Vector3Keyfra"
     "me\022\014\n\004time\030\001 \001(\005\022\'\n\005value\030\002 \001(\0132\030.common"
@@ -2788,7 +2788,7 @@ FloatAnim::FloatAnim(const FloatAnim& from)
 
 void FloatAnim::SharedCtor() {
   _cached_size_ = 0;
-  type_ = 1u;
+  type_ = 2u;
   min_value_ = 0;
   max_value_ = 0;
   step_ = 0;
@@ -2827,7 +2827,7 @@ FloatAnim* FloatAnim::New() const {
 
 void FloatAnim::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    type_ = 1u;
+    type_ = 2u;
     min_value_ = 0;
     max_value_ = 0;
     step_ = 0;
@@ -2843,7 +2843,7 @@ bool FloatAnim::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint32 type = 1 [default = 1];
+      // optional uint32 type = 1 [default = 2];
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -2939,7 +2939,7 @@ bool FloatAnim::MergePartialFromCodedStream(
 
 void FloatAnim::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional uint32 type = 1 [default = 1];
+  // optional uint32 type = 1 [default = 2];
   if (has_type()) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->type(), output);
   }
@@ -2973,7 +2973,7 @@ void FloatAnim::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* FloatAnim::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional uint32 type = 1 [default = 1];
+  // optional uint32 type = 1 [default = 2];
   if (has_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->type(), target);
   }
@@ -3011,7 +3011,7 @@ int FloatAnim::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional uint32 type = 1 [default = 1];
+    // optional uint32 type = 1 [default = 2];
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
