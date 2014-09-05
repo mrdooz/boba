@@ -29,12 +29,12 @@ namespace editor
   struct Settings;
   struct StyleSetting;
   struct StyleSettings;
-  struct EffectSetting;
-  struct EffectSettings;
   struct Plexus;
   struct TextPath;
   struct Displacement;
   struct NoiseEffector;
+  struct EffectSetting;
+  struct EffectSettings;
 
   FloatKey FromProtocol(const common::protocol::FloatKey& p);
   void ToProtocol(const FloatKey& v, common::protocol::FloatKey* p);
@@ -52,10 +52,6 @@ namespace editor
   void ToProtocol(const StyleSetting& v, editor::protocol::StyleSetting* p);
   StyleSettings FromProtocol(const editor::protocol::StyleSettings& p);
   void ToProtocol(const StyleSettings& v, editor::protocol::StyleSettings* p);
-  EffectSetting FromProtocol(const effect::protocol::EffectSetting& p);
-  void ToProtocol(const EffectSetting& v, effect::protocol::EffectSetting* p);
-  EffectSettings FromProtocol(const effect::protocol::EffectSettings& p);
-  void ToProtocol(const EffectSettings& v, effect::protocol::EffectSettings* p);
   Plexus FromProtocol(const effect::protocol::plexus::Plexus& p);
   void ToProtocol(const Plexus& v, effect::protocol::plexus::Plexus* p);
   TextPath FromProtocol(const effect::protocol::plexus::TextPath& p);
@@ -64,6 +60,10 @@ namespace editor
   void ToProtocol(const Displacement& v, effect::protocol::plexus::Displacement* p);
   NoiseEffector FromProtocol(const effect::protocol::plexus::NoiseEffector& p);
   void ToProtocol(const NoiseEffector& v, effect::protocol::plexus::NoiseEffector* p);
+  EffectSetting FromProtocol(const effect::protocol::EffectSetting& p);
+  void ToProtocol(const EffectSetting& v, effect::protocol::EffectSetting* p);
+  EffectSettings FromProtocol(const effect::protocol::EffectSettings& p);
+  void ToProtocol(const EffectSettings& v, effect::protocol::EffectSettings* p);
   
   template<typename T, typename U>
   vector<T> FromProtocolRepeated(const google::protobuf::RepeatedPtrField<U>& v)
@@ -80,12 +80,6 @@ namespace editor
   {
     int64_t time;
     float value;
-
-//    struct FlagsF {
-//      enum Enum { HasTime = 1 << 0, HasValue = 1 << 1, };
-//      struct Bits { u32 hasTime : 1; u32 hasValue : 1; };
-//    };
-//    Flags<FlagsF> flags;
   };
 
   struct FloatKeyframe
@@ -93,39 +87,21 @@ namespace editor
     FloatKey key;
     FloatKey cpIn;
     FloatKey cpOut;
-
-//    struct FlagsF {
-//      enum Enum { HasKey = 1 << 0, HasCpIn = 1 << 1, HasCpOut = 1 << 2, };
-//      struct Bits { u32 hasKey : 1; u32 hasCpIn : 1; u32 hasCpOut : 1; };
-//    };
-//    Flags<FlagsF> flags;
   };
 
   struct FloatAnim
   {
-    uint32_t type = 2;
+    uint32_t type = 1;
     vector<FloatKeyframe> keyframe;
     float minValue;
     float maxValue;
     float step;
-
-//    struct FlagsF {
-//      enum Enum { HasType = 1 << 0, HasKeyframe = 1 << 1, HasMinValue = 1 << 2, HasMaxValue = 1 << 3, HasStep = 1 << 4, };
-//      struct Bits { u32 hasType : 1; u32 hasKeyframe : 1; u32 hasMinValue : 1; u32 hasMaxValue : 1; u32 hasStep : 1; };
-//    };
-//    Flags<FlagsF> flags;
   };
 
   struct Vector3Keyframe
   {
     int32_t time;
     Vector3f value;
-
-//    struct FlagsF {
-//      enum Enum { HasTime = 1 << 0, HasValue = 1 << 1, };
-//      struct Bits { u32 hasTime : 1; u32 hasValue : 1; };
-//    };
-//    Flags<FlagsF> flags;
   };
 
   struct Vector3Anim
@@ -135,12 +111,6 @@ namespace editor
     Vector3f minValue;
     Vector3f maxValue;
     Vector3f step;
-
-//    struct FlagsF {
-//      enum Enum { HasType = 1 << 0, HasKeyframe = 1 << 1, HasMinValue = 1 << 2, HasMaxValue = 1 << 3, HasStep = 1 << 4, };
-//      struct Bits { u32 hasType : 1; u32 hasKeyframe : 1; u32 hasMinValue : 1; u32 hasMaxValue : 1; u32 hasStep : 1; };
-//    };
-//    Flags<FlagsF> flags;
   };
 
   struct Settings
@@ -174,12 +144,6 @@ namespace editor
     Color varValueColor;
     Color effectIconExpandedColor;
     Color effectIconCollapsedColor;
-
-//    struct FlagsF {
-//      enum Enum { HasTickerHeight = 1 << 0, HasTickerInterval = 1 << 1, HasTicksPerInterval = 1 << 2, HasEffectViewWidth = 1 << 3, HasEffectRowHeight = 1 << 4, HasStatusBarHeight = 1 << 5, HasEffectHeight = 1 << 6, HasResizeHandle = 1 << 7, HasTimelineZoomMin = 1 << 8, HasTimelineZoomMax = 1 << 9, HasTimelineZoomDefault = 1 << 10, HasKeyframeSize = 1 << 11, HasDefaultRowColor = 1 << 12, HasSelectedRowColor = 1 << 13, HasHoverRowColor = 1 << 14, HasInvalidHoverRowColor = 1 << 15, HasDefaultLineColor = 1 << 16, HasEffectViewBackgroundColor = 1 << 17, HasEffectViewBackgroundColorSelected = 1 << 18, HasTimelineViewBackgroundColor = 1 << 19, HasEffectLineColor = 1 << 20, HasKeyframeDefaultColor = 1 << 21, HasKeyframeSelectedColor = 1 << 22, HasKeyframeControlColor = 1 << 23, HasGraphColor = 1 << 24, HasVarTextColor = 1 << 25, HasVarValueColor = 1 << 26, HasEffectIconExpandedColor = 1 << 27, HasEffectIconCollapsedColor = 1 << 28, };
-//      struct Bits { u32 hasTickerHeight : 1; u32 hasTickerInterval : 1; u32 hasTicksPerInterval : 1; u32 hasEffectViewWidth : 1; u32 hasEffectRowHeight : 1; u32 hasStatusBarHeight : 1; u32 hasEffectHeight : 1; u32 hasResizeHandle : 1; u32 hasTimelineZoomMin : 1; u32 hasTimelineZoomMax : 1; u32 hasTimelineZoomDefault : 1; u32 hasKeyframeSize : 1; u32 hasDefaultRowColor : 1; u32 hasSelectedRowColor : 1; u32 hasHoverRowColor : 1; u32 hasInvalidHoverRowColor : 1; u32 hasDefaultLineColor : 1; u32 hasEffectViewBackgroundColor : 1; u32 hasEffectViewBackgroundColorSelected : 1; u32 hasTimelineViewBackgroundColor : 1; u32 hasEffectLineColor : 1; u32 hasKeyframeDefaultColor : 1; u32 hasKeyframeSelectedColor : 1; u32 hasKeyframeControlColor : 1; u32 hasGraphColor : 1; u32 hasVarTextColor : 1; u32 hasVarValueColor : 1; u32 hasEffectIconExpandedColor : 1; u32 hasEffectIconCollapsedColor : 1; };
-//    };
-//    Flags<FlagsF> flags;
   };
 
   struct StyleSetting
@@ -189,23 +153,41 @@ namespace editor
     Color outlineColor;
     float outlineThickness = 0;
     uint32_t fontStyle;
-
-//    struct FlagsF {
-//      enum Enum { HasId = 1 << 0, HasFillColor = 1 << 1, HasOutlineColor = 1 << 2, HasOutlineThickness = 1 << 3, HasFontStyle = 1 << 4, };
-//      struct Bits { u32 hasId : 1; u32 hasFillColor : 1; u32 hasOutlineColor : 1; u32 hasOutlineThickness : 1; u32 hasFontStyle : 1; };
-//    };
-//    Flags<FlagsF> flags;
   };
 
   struct StyleSettings
   {
     vector<StyleSetting> styleSetting;
+  };
 
-//    struct FlagsF {
-//      enum Enum { HasStyleSetting = 1 << 0, };
-//      struct Bits { u32 hasStyleSetting : 1; };
-//    };
-//    Flags<FlagsF> flags;
+  struct Plexus
+  {
+    vector<TextPath> textPaths;
+    vector<NoiseEffector> noiseEffectors;
+  };
+
+  struct TextPath
+  {
+    string text;
+  };
+
+  struct Displacement
+  {
+    FloatAnim x;
+    FloatAnim y;
+    FloatAnim z;
+  };
+
+  struct NoiseEffector
+  {
+    enum class ApplyTo
+    {
+      Position = 1,
+      Scale = 2,
+    };
+
+    NoiseEffector::ApplyTo applyTo = ApplyTo::Position;
+    Displacement displacement;
   };
 
   struct EffectSetting
@@ -224,78 +206,12 @@ namespace editor
     uint32_t endTime;
     std::vector<uint8_t> configMsg;
     string configFile;
-
-//    struct FlagsF {
-//      enum Enum { HasType = 1 << 0, HasEffectClass = 1 << 1, HasId = 1 << 2, HasName = 1 << 3, HasStartTime = 1 << 4, HasEndTime = 1 << 5, HasConfigMsg = 1 << 6, HasConfigFile = 1 << 7, };
-//      struct Bits { u32 hasType : 1; u32 hasEffectClass : 1; u32 hasId : 1; u32 hasName : 1; u32 hasStartTime : 1; u32 hasEndTime : 1; u32 hasConfigMsg : 1; u32 hasConfigFile : 1; };
-//    };
-//    Flags<FlagsF> flags;
   };
 
   struct EffectSettings
   {
     vector<EffectSetting> effectSetting;
     string soundtrack;
-
-//    struct FlagsF {
-//      enum Enum { HasEffectSetting = 1 << 0, HasSoundtrack = 1 << 1, };
-//      struct Bits { u32 hasEffectSetting : 1; u32 hasSoundtrack : 1; };
-//    };
-//    Flags<FlagsF> flags;
-  };
-
-  struct Plexus
-  {
-    vector<TextPath> textPaths;
-    vector<NoiseEffector> noiseEffectors;
-
-//    struct FlagsF {
-//      enum Enum { HasTextPaths = 1 << 0, HasNoiseEffectors = 1 << 1, };
-//      struct Bits { u32 hasTextPaths : 1; u32 hasNoiseEffectors : 1; };
-//    };
-//    Flags<FlagsF> flags;
-  };
-
-  struct TextPath
-  {
-    string text;
-
-//    struct FlagsF {
-//      enum Enum { HasText = 1 << 0, };
-//      struct Bits { u32 hasText : 1; };
-//    };
-//    Flags<FlagsF> flags;
-  };
-
-  struct Displacement
-  {
-    FloatAnim x;
-    FloatAnim y;
-    FloatAnim z;
-
-//    struct FlagsF {
-//      enum Enum { HasX = 1 << 0, HasY = 1 << 1, HasZ = 1 << 2, };
-//      struct Bits { u32 hasX : 1; u32 hasY : 1; u32 hasZ : 1; };
-//    };
-//    Flags<FlagsF> flags;
-  };
-
-  struct NoiseEffector
-  {
-    enum class ApplyTo
-    {
-      Position = 1,
-      Scale = 2,
-    };
-
-    NoiseEffector::ApplyTo applyTo = ApplyTo::Position;
-    Displacement displacement;
-
-//    struct FlagsF {
-//      enum Enum { HasApplyTo = 1 << 0, HasDisplacement = 1 << 1, };
-//      struct Bits { u32 hasApplyTo : 1; u32 hasDisplacement : 1; };
-//    };
-//    Flags<FlagsF> flags;
   };
 
   
@@ -341,12 +257,10 @@ namespace editor
     FloatKey res;
     if (p.has_time())
     {
-//      res.flags.Set(FloatKey::FlagsF::HasTime);
       res.time = p.time();
     }
     if (p.has_value())
     {
-//      res.flags.Set(FloatKey::FlagsF::HasValue);
       res.value = p.value();
     }
     return res;
@@ -363,17 +277,14 @@ namespace editor
     FloatKeyframe res;
     if (p.has_key())
     {
-//      res.flags.Set(FloatKeyframe::FlagsF::HasKey);
       res.key = FromProtocol(p.key());
     }
     if (p.has_cp_in())
     {
-//      res.flags.Set(FloatKeyframe::FlagsF::HasCpIn);
       res.cpIn = FromProtocol(p.cp_in());
     }
     if (p.has_cp_out())
     {
-//      res.flags.Set(FloatKeyframe::FlagsF::HasCpOut);
       res.cpOut = FromProtocol(p.cp_out());
     }
     return res;
@@ -391,23 +302,19 @@ namespace editor
     FloatAnim res;
     if (p.has_type())
     {
-//      res.flags.Set(FloatAnim::FlagsF::HasType);
       res.type = p.type();
     }
     res.keyframe = FromProtocolRepeated<FloatKeyframe>(p.keyframe());
     if (p.has_min_value())
     {
-//      res.flags.Set(FloatAnim::FlagsF::HasMinValue);
       res.minValue = p.min_value();
     }
     if (p.has_max_value())
     {
-//      res.flags.Set(FloatAnim::FlagsF::HasMaxValue);
       res.maxValue = p.max_value();
     }
     if (p.has_step())
     {
-//      res.flags.Set(FloatAnim::FlagsF::HasStep);
       res.step = p.step();
     }
     return res;
@@ -428,12 +335,10 @@ namespace editor
     Vector3Keyframe res;
     if (p.has_time())
     {
-//      res.flags.Set(Vector3Keyframe::FlagsF::HasTime);
       res.time = p.time();
     }
     if (p.has_value())
     {
-//      res.flags.Set(Vector3Keyframe::FlagsF::HasValue);
       res.value = FromProtocol(p.value());
     }
     return res;
@@ -450,23 +355,19 @@ namespace editor
     Vector3Anim res;
     if (p.has_type())
     {
-//      res.flags.Set(Vector3Anim::FlagsF::HasType);
       res.type = p.type();
     }
     res.keyframe = FromProtocolRepeated<Vector3Keyframe>(p.keyframe());
     if (p.has_min_value())
     {
-//      res.flags.Set(Vector3Anim::FlagsF::HasMinValue);
       res.minValue = FromProtocol(p.min_value());
     }
     if (p.has_max_value())
     {
-//      res.flags.Set(Vector3Anim::FlagsF::HasMaxValue);
       res.maxValue = FromProtocol(p.max_value());
     }
     if (p.has_step())
     {
-//      res.flags.Set(Vector3Anim::FlagsF::HasStep);
       res.step = FromProtocol(p.step());
     }
     return res;
@@ -487,147 +388,118 @@ namespace editor
     Settings res;
     if (p.has_ticker_height())
     {
-//      res.flags.Set(Settings::FlagsF::HasTickerHeight);
       res.tickerHeight = p.ticker_height();
     }
     if (p.has_ticker_interval())
     {
-//      res.flags.Set(Settings::FlagsF::HasTickerInterval);
       res.tickerInterval = p.ticker_interval();
     }
     if (p.has_ticks_per_interval())
     {
-//      res.flags.Set(Settings::FlagsF::HasTicksPerInterval);
       res.ticksPerInterval = p.ticks_per_interval();
     }
     if (p.has_effect_view_width())
     {
-//      res.flags.Set(Settings::FlagsF::HasEffectViewWidth);
       res.effectViewWidth = p.effect_view_width();
     }
     if (p.has_effect_row_height())
     {
-//      res.flags.Set(Settings::FlagsF::HasEffectRowHeight);
       res.effectRowHeight = p.effect_row_height();
     }
     if (p.has_status_bar_height())
     {
-//      res.flags.Set(Settings::FlagsF::HasStatusBarHeight);
       res.statusBarHeight = p.status_bar_height();
     }
     if (p.has_effect_height())
     {
-//      res.flags.Set(Settings::FlagsF::HasEffectHeight);
       res.effectHeight = p.effect_height();
     }
     if (p.has_resize_handle())
     {
-//      res.flags.Set(Settings::FlagsF::HasResizeHandle);
       res.resizeHandle = p.resize_handle();
     }
     if (p.has_timeline_zoom_min())
     {
-//      res.flags.Set(Settings::FlagsF::HasTimelineZoomMin);
       res.timelineZoomMin = p.timeline_zoom_min();
     }
     if (p.has_timeline_zoom_max())
     {
-//      res.flags.Set(Settings::FlagsF::HasTimelineZoomMax);
       res.timelineZoomMax = p.timeline_zoom_max();
     }
     if (p.has_timeline_zoom_default())
     {
-//      res.flags.Set(Settings::FlagsF::HasTimelineZoomDefault);
       res.timelineZoomDefault = p.timeline_zoom_default();
     }
     if (p.has_keyframe_size())
     {
-//      res.flags.Set(Settings::FlagsF::HasKeyframeSize);
       res.keyframeSize = p.keyframe_size();
     }
     if (p.has_default_row_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasDefaultRowColor);
       res.defaultRowColor = FromProtocol(p.default_row_color());
     }
     if (p.has_selected_row_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasSelectedRowColor);
       res.selectedRowColor = FromProtocol(p.selected_row_color());
     }
     if (p.has_hover_row_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasHoverRowColor);
       res.hoverRowColor = FromProtocol(p.hover_row_color());
     }
     if (p.has_invalid_hover_row_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasInvalidHoverRowColor);
       res.invalidHoverRowColor = FromProtocol(p.invalid_hover_row_color());
     }
     if (p.has_default_line_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasDefaultLineColor);
       res.defaultLineColor = FromProtocol(p.default_line_color());
     }
     if (p.has_effect_view_background_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasEffectViewBackgroundColor);
       res.effectViewBackgroundColor = FromProtocol(p.effect_view_background_color());
     }
     if (p.has_effect_view_background_color_selected())
     {
-//      res.flags.Set(Settings::FlagsF::HasEffectViewBackgroundColorSelected);
       res.effectViewBackgroundColorSelected = FromProtocol(p.effect_view_background_color_selected());
     }
     if (p.has_timeline_view_background_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasTimelineViewBackgroundColor);
       res.timelineViewBackgroundColor = FromProtocol(p.timeline_view_background_color());
     }
     if (p.has_effect_line_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasEffectLineColor);
       res.effectLineColor = FromProtocol(p.effect_line_color());
     }
     if (p.has_keyframe_default_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasKeyframeDefaultColor);
       res.keyframeDefaultColor = FromProtocol(p.keyframe_default_color());
     }
     if (p.has_keyframe_selected_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasKeyframeSelectedColor);
       res.keyframeSelectedColor = FromProtocol(p.keyframe_selected_color());
     }
     if (p.has_keyframe_control_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasKeyframeControlColor);
       res.keyframeControlColor = FromProtocol(p.keyframe_control_color());
     }
     if (p.has_graph_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasGraphColor);
       res.graphColor = FromProtocol(p.graph_color());
     }
     if (p.has_var_text_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasVarTextColor);
       res.varTextColor = FromProtocol(p.var_text_color());
     }
     if (p.has_var_value_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasVarValueColor);
       res.varValueColor = FromProtocol(p.var_value_color());
     }
     if (p.has_effect_icon_expanded_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasEffectIconExpandedColor);
       res.effectIconExpandedColor = FromProtocol(p.effect_icon_expanded_color());
     }
     if (p.has_effect_icon_collapsed_color())
     {
-//      res.flags.Set(Settings::FlagsF::HasEffectIconCollapsedColor);
       res.effectIconCollapsedColor = FromProtocol(p.effect_icon_collapsed_color());
     }
     return res;
@@ -671,27 +543,22 @@ namespace editor
     StyleSetting res;
     if (p.has_id())
     {
-//      res.flags.Set(StyleSetting::FlagsF::HasId);
       res.id = p.id();
     }
     if (p.has_fill_color())
     {
-//      res.flags.Set(StyleSetting::FlagsF::HasFillColor);
       res.fillColor = FromProtocol(p.fill_color());
     }
     if (p.has_outline_color())
     {
-//      res.flags.Set(StyleSetting::FlagsF::HasOutlineColor);
       res.outlineColor = FromProtocol(p.outline_color());
     }
     if (p.has_outline_thickness())
     {
-//      res.flags.Set(StyleSetting::FlagsF::HasOutlineThickness);
       res.outlineThickness = p.outline_thickness();
     }
     if (p.has_font_style())
     {
-//      res.flags.Set(StyleSetting::FlagsF::HasFontStyle);
       res.fontStyle = p.font_style();
     }
     return res;
@@ -719,74 +586,6 @@ namespace editor
       ToProtocol(x, p->add_style_setting());
   }
 
-  inline EffectSetting FromProtocol(const effect::protocol::EffectSetting& p)
-  {
-    EffectSetting res;
-    res.type = (EffectSetting::Type)p.type();
-    if (p.has_effect_class())
-    {
-//      res.flags.Set(EffectSetting::FlagsF::HasEffectClass);
-      res.effectClass = p.effect_class();
-    }
-    if (p.has_id())
-    {
-//      res.flags.Set(EffectSetting::FlagsF::HasId);
-      res.id = p.id();
-    }
-    if (p.has_name())
-    {
-//      res.flags.Set(EffectSetting::FlagsF::HasName);
-      res.name = p.name();
-    }
-    if (p.has_start_time())
-    {
-//      res.flags.Set(EffectSetting::FlagsF::HasStartTime);
-      res.startTime = p.start_time();
-    }
-    if (p.has_end_time())
-    {
-//      res.flags.Set(EffectSetting::FlagsF::HasEndTime);
-      res.endTime = p.end_time();
-    }
-    res.configMsg.resize(p.config_msg().size());
-    memcpy(res.configMsg.data(), p.config_msg().data(), p.config_msg().size());
-    if (p.has_config_file())
-    {
-//      res.flags.Set(EffectSetting::FlagsF::HasConfigFile);
-      res.configFile = p.config_file();
-    }
-    return res;
-  }
-
-  inline void ToProtocol(const EffectSetting& v, effect::protocol::EffectSetting* p)
-  {
-    p->set_effect_class(v.effectClass);
-    p->set_id(v.id);
-    p->set_name(v.name);
-    p->set_start_time(v.startTime);
-    p->set_end_time(v.endTime);
-    p->set_config_file(v.configFile);
-  }
-
-  inline EffectSettings FromProtocol(const effect::protocol::EffectSettings& p)
-  {
-    EffectSettings res;
-    res.effectSetting = FromProtocolRepeated<EffectSetting>(p.effect_setting());
-    if (p.has_soundtrack())
-    {
-//      res.flags.Set(EffectSettings::FlagsF::HasSoundtrack);
-      res.soundtrack = p.soundtrack();
-    }
-    return res;
-  }
-
-  inline void ToProtocol(const EffectSettings& v, effect::protocol::EffectSettings* p)
-  {
-    for (const auto& x : v.effectSetting)
-      ToProtocol(x, p->add_effect_setting());
-    p->set_soundtrack(v.soundtrack);
-  }
-
   inline Plexus FromProtocol(const effect::protocol::plexus::Plexus& p)
   {
     Plexus res;
@@ -808,7 +607,6 @@ namespace editor
     TextPath res;
     if (p.has_text())
     {
-//      res.flags.Set(TextPath::FlagsF::HasText);
       res.text = p.text();
     }
     return res;
@@ -824,17 +622,14 @@ namespace editor
     Displacement res;
     if (p.has_x())
     {
-//      res.flags.Set(Displacement::FlagsF::HasX);
       res.x = FromProtocol(p.x());
     }
     if (p.has_y())
     {
-//      res.flags.Set(Displacement::FlagsF::HasY);
       res.y = FromProtocol(p.y());
     }
     if (p.has_z())
     {
-//      res.flags.Set(Displacement::FlagsF::HasZ);
       res.z = FromProtocol(p.z());
     }
     return res;
@@ -853,7 +648,6 @@ namespace editor
     res.applyTo = (NoiseEffector::ApplyTo)p.apply_to();
     if (p.has_displacement())
     {
-//      res.flags.Set(NoiseEffector::FlagsF::HasDisplacement);
       res.displacement = FromProtocol(p.displacement());
     }
     return res;
@@ -862,6 +656,67 @@ namespace editor
   inline void ToProtocol(const NoiseEffector& v, effect::protocol::plexus::NoiseEffector* p)
   {
     ToProtocol(v.displacement, p->mutable_displacement());
+  }
+
+  inline EffectSetting FromProtocol(const effect::protocol::EffectSetting& p)
+  {
+    EffectSetting res;
+    res.type = (EffectSetting::Type)p.type();
+    if (p.has_effect_class())
+    {
+      res.effectClass = p.effect_class();
+    }
+    if (p.has_id())
+    {
+      res.id = p.id();
+    }
+    if (p.has_name())
+    {
+      res.name = p.name();
+    }
+    if (p.has_start_time())
+    {
+      res.startTime = p.start_time();
+    }
+    if (p.has_end_time())
+    {
+      res.endTime = p.end_time();
+    }
+    res.configMsg.resize(p.config_msg().size());
+    memcpy(res.configMsg.data(), p.config_msg().data(), p.config_msg().size());
+    if (p.has_config_file())
+    {
+      res.configFile = p.config_file();
+    }
+    return res;
+  }
+
+  inline void ToProtocol(const EffectSetting& v, effect::protocol::EffectSetting* p)
+  {
+    p->set_effect_class(v.effectClass);
+    p->set_id(v.id);
+    p->set_name(v.name);
+    p->set_start_time(v.startTime);
+    p->set_end_time(v.endTime);
+    p->set_config_file(v.configFile);
+  }
+
+  inline EffectSettings FromProtocol(const effect::protocol::EffectSettings& p)
+  {
+    EffectSettings res;
+    res.effectSetting = FromProtocolRepeated<EffectSetting>(p.effect_setting());
+    if (p.has_soundtrack())
+    {
+      res.soundtrack = p.soundtrack();
+    }
+    return res;
+  }
+
+  inline void ToProtocol(const EffectSettings& v, effect::protocol::EffectSettings* p)
+  {
+    for (const auto& x : v.effectSetting)
+      ToProtocol(x, p->add_effect_setting());
+    p->set_soundtrack(v.soundtrack);
   }
 
 	

@@ -576,6 +576,7 @@
   <ItemGroup>
     <None Include="..\protocol\anttweak.proto" />
     <None Include="..\protocol\common.proto" />
+    <None Include="..\protocol\effect_settings_plexus.proto" />
     <None Include="..\protocol\generator.proto" />
     <None Include="..\protocol\particle.proto" />
   </ItemGroup>

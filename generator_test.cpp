@@ -23,6 +23,13 @@ using namespace bristol;
 
 DynamicMesh g_mesh;
 
+enum class AnimationType
+{
+  Linear = 0,
+  Bezier = 1,
+  CatmullRom = 2,
+};
+
 struct TextWriter
 {
   bool Init(const char* filename)
@@ -789,6 +796,28 @@ void GeneratorTest::FromProtocol(const std::string& str)
 {
   effect::protocol::plexus::Plexus p;
   p.ParseFromString(str);
+
+  for (const auto& textPath : p.text_paths())
+  {
+
+  }
+
+  for (const auto& effector : p.noise_effectors())
+  {
+    const common::protocol::FloatAnim& xAnim = effector.displacement().x();
+    AnimationType xAnimType = (AnimationType)xAnim.type();
+    for (const auto& keyframe : xAnim.keyframe())
+    {
+      int a = 10;
+    }
+
+    const common::protocol::FloatAnim& yAnim = effector.displacement().y();
+    const common::protocol::FloatAnim& zAnim = effector.displacement().z();
+
+  }
+
+
+
   int a = 10;
 }
 

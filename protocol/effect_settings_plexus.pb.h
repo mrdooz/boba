@@ -39,6 +39,7 @@ void protobuf_ShutdownFile_effect_5fsettings_5fplexus_2eproto();
 
 class Plexus;
 class TextPath;
+class Displacement;
 class NoiseEffector;
 
 enum NoiseEffector_ApplyTo {
@@ -247,6 +248,114 @@ class TextPath : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Displacement : public ::google::protobuf::Message {
+ public:
+  Displacement();
+  virtual ~Displacement();
+
+  Displacement(const Displacement& from);
+
+  inline Displacement& operator=(const Displacement& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Displacement& default_instance();
+
+  void Swap(Displacement* other);
+
+  // implements Message ----------------------------------------------
+
+  Displacement* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Displacement& from);
+  void MergeFrom(const Displacement& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .common.protocol.FloatAnim x = 1;
+  inline bool has_x() const;
+  inline void clear_x();
+  static const int kXFieldNumber = 1;
+  inline const ::common::protocol::FloatAnim& x() const;
+  inline ::common::protocol::FloatAnim* mutable_x();
+  inline ::common::protocol::FloatAnim* release_x();
+  inline void set_allocated_x(::common::protocol::FloatAnim* x);
+
+  // optional .common.protocol.FloatAnim y = 2;
+  inline bool has_y() const;
+  inline void clear_y();
+  static const int kYFieldNumber = 2;
+  inline const ::common::protocol::FloatAnim& y() const;
+  inline ::common::protocol::FloatAnim* mutable_y();
+  inline ::common::protocol::FloatAnim* release_y();
+  inline void set_allocated_y(::common::protocol::FloatAnim* y);
+
+  // optional .common.protocol.FloatAnim z = 3;
+  inline bool has_z() const;
+  inline void clear_z();
+  static const int kZFieldNumber = 3;
+  inline const ::common::protocol::FloatAnim& z() const;
+  inline ::common::protocol::FloatAnim* mutable_z();
+  inline ::common::protocol::FloatAnim* release_z();
+  inline void set_allocated_z(::common::protocol::FloatAnim* z);
+
+  // @@protoc_insertion_point(class_scope:effect.protocol.plexus.Displacement)
+ private:
+  inline void set_has_x();
+  inline void clear_has_x();
+  inline void set_has_y();
+  inline void clear_has_y();
+  inline void set_has_z();
+  inline void clear_has_z();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::common::protocol::FloatAnim* x_;
+  ::common::protocol::FloatAnim* y_;
+  ::common::protocol::FloatAnim* z_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_effect_5fsettings_5fplexus_2eproto();
+  friend void protobuf_AssignDesc_effect_5fsettings_5fplexus_2eproto();
+  friend void protobuf_ShutdownFile_effect_5fsettings_5fplexus_2eproto();
+
+  void InitAsDefaultInstance();
+  static Displacement* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class NoiseEffector : public ::google::protobuf::Message {
  public:
   NoiseEffector();
@@ -332,14 +441,14 @@ class NoiseEffector : public ::google::protobuf::Message {
   inline ::effect::protocol::plexus::NoiseEffector_ApplyTo apply_to() const;
   inline void set_apply_to(::effect::protocol::plexus::NoiseEffector_ApplyTo value);
 
-  // optional .common.protocol.Vector3Anim displacement = 2;
+  // optional .effect.protocol.plexus.Displacement displacement = 2;
   inline bool has_displacement() const;
   inline void clear_displacement();
   static const int kDisplacementFieldNumber = 2;
-  inline const ::common::protocol::Vector3Anim& displacement() const;
-  inline ::common::protocol::Vector3Anim* mutable_displacement();
-  inline ::common::protocol::Vector3Anim* release_displacement();
-  inline void set_allocated_displacement(::common::protocol::Vector3Anim* displacement);
+  inline const ::effect::protocol::plexus::Displacement& displacement() const;
+  inline ::effect::protocol::plexus::Displacement* mutable_displacement();
+  inline ::effect::protocol::plexus::Displacement* release_displacement();
+  inline void set_allocated_displacement(::effect::protocol::plexus::Displacement* displacement);
 
   // @@protoc_insertion_point(class_scope:effect.protocol.plexus.NoiseEffector)
  private:
@@ -350,7 +459,7 @@ class NoiseEffector : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::common::protocol::Vector3Anim* displacement_;
+  ::effect::protocol::plexus::Displacement* displacement_;
   int apply_to_;
 
   mutable int _cached_size_;
@@ -496,6 +605,124 @@ inline void TextPath::set_allocated_text(::std::string* text) {
 
 // -------------------------------------------------------------------
 
+// Displacement
+
+// optional .common.protocol.FloatAnim x = 1;
+inline bool Displacement::has_x() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Displacement::set_has_x() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Displacement::clear_has_x() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Displacement::clear_x() {
+  if (x_ != NULL) x_->::common::protocol::FloatAnim::Clear();
+  clear_has_x();
+}
+inline const ::common::protocol::FloatAnim& Displacement::x() const {
+  return x_ != NULL ? *x_ : *default_instance_->x_;
+}
+inline ::common::protocol::FloatAnim* Displacement::mutable_x() {
+  set_has_x();
+  if (x_ == NULL) x_ = new ::common::protocol::FloatAnim;
+  return x_;
+}
+inline ::common::protocol::FloatAnim* Displacement::release_x() {
+  clear_has_x();
+  ::common::protocol::FloatAnim* temp = x_;
+  x_ = NULL;
+  return temp;
+}
+inline void Displacement::set_allocated_x(::common::protocol::FloatAnim* x) {
+  delete x_;
+  x_ = x;
+  if (x) {
+    set_has_x();
+  } else {
+    clear_has_x();
+  }
+}
+
+// optional .common.protocol.FloatAnim y = 2;
+inline bool Displacement::has_y() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Displacement::set_has_y() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Displacement::clear_has_y() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Displacement::clear_y() {
+  if (y_ != NULL) y_->::common::protocol::FloatAnim::Clear();
+  clear_has_y();
+}
+inline const ::common::protocol::FloatAnim& Displacement::y() const {
+  return y_ != NULL ? *y_ : *default_instance_->y_;
+}
+inline ::common::protocol::FloatAnim* Displacement::mutable_y() {
+  set_has_y();
+  if (y_ == NULL) y_ = new ::common::protocol::FloatAnim;
+  return y_;
+}
+inline ::common::protocol::FloatAnim* Displacement::release_y() {
+  clear_has_y();
+  ::common::protocol::FloatAnim* temp = y_;
+  y_ = NULL;
+  return temp;
+}
+inline void Displacement::set_allocated_y(::common::protocol::FloatAnim* y) {
+  delete y_;
+  y_ = y;
+  if (y) {
+    set_has_y();
+  } else {
+    clear_has_y();
+  }
+}
+
+// optional .common.protocol.FloatAnim z = 3;
+inline bool Displacement::has_z() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Displacement::set_has_z() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Displacement::clear_has_z() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Displacement::clear_z() {
+  if (z_ != NULL) z_->::common::protocol::FloatAnim::Clear();
+  clear_has_z();
+}
+inline const ::common::protocol::FloatAnim& Displacement::z() const {
+  return z_ != NULL ? *z_ : *default_instance_->z_;
+}
+inline ::common::protocol::FloatAnim* Displacement::mutable_z() {
+  set_has_z();
+  if (z_ == NULL) z_ = new ::common::protocol::FloatAnim;
+  return z_;
+}
+inline ::common::protocol::FloatAnim* Displacement::release_z() {
+  clear_has_z();
+  ::common::protocol::FloatAnim* temp = z_;
+  z_ = NULL;
+  return temp;
+}
+inline void Displacement::set_allocated_z(::common::protocol::FloatAnim* z) {
+  delete z_;
+  z_ = z;
+  if (z) {
+    set_has_z();
+  } else {
+    clear_has_z();
+  }
+}
+
+// -------------------------------------------------------------------
+
 // NoiseEffector
 
 // optional .effect.protocol.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
@@ -521,7 +748,7 @@ inline void NoiseEffector::set_apply_to(::effect::protocol::plexus::NoiseEffecto
   apply_to_ = value;
 }
 
-// optional .common.protocol.Vector3Anim displacement = 2;
+// optional .effect.protocol.plexus.Displacement displacement = 2;
 inline bool NoiseEffector::has_displacement() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -532,24 +759,24 @@ inline void NoiseEffector::clear_has_displacement() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void NoiseEffector::clear_displacement() {
-  if (displacement_ != NULL) displacement_->::common::protocol::Vector3Anim::Clear();
+  if (displacement_ != NULL) displacement_->::effect::protocol::plexus::Displacement::Clear();
   clear_has_displacement();
 }
-inline const ::common::protocol::Vector3Anim& NoiseEffector::displacement() const {
+inline const ::effect::protocol::plexus::Displacement& NoiseEffector::displacement() const {
   return displacement_ != NULL ? *displacement_ : *default_instance_->displacement_;
 }
-inline ::common::protocol::Vector3Anim* NoiseEffector::mutable_displacement() {
+inline ::effect::protocol::plexus::Displacement* NoiseEffector::mutable_displacement() {
   set_has_displacement();
-  if (displacement_ == NULL) displacement_ = new ::common::protocol::Vector3Anim;
+  if (displacement_ == NULL) displacement_ = new ::effect::protocol::plexus::Displacement;
   return displacement_;
 }
-inline ::common::protocol::Vector3Anim* NoiseEffector::release_displacement() {
+inline ::effect::protocol::plexus::Displacement* NoiseEffector::release_displacement() {
   clear_has_displacement();
-  ::common::protocol::Vector3Anim* temp = displacement_;
+  ::effect::protocol::plexus::Displacement* temp = displacement_;
   displacement_ = NULL;
   return temp;
 }
-inline void NoiseEffector::set_allocated_displacement(::common::protocol::Vector3Anim* displacement) {
+inline void NoiseEffector::set_allocated_displacement(::effect::protocol::plexus::Displacement* displacement) {
   delete displacement_;
   displacement_ = displacement;
   if (displacement) {

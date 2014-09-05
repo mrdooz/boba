@@ -632,6 +632,10 @@ void TimelineWindow::SendEffectEvent(RowVar* sender, const EffectRowEvent& event
 {
   switch (event.type)
   {
+    case EffectRowEvent::Type::KeyframeUpdated:
+      KeyframesModified();
+      break;
+
     case EffectRowEvent::Type::VarSelected:
     {
       _selectedVar = sender;

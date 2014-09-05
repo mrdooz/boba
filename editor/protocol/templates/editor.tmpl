@@ -61,12 +61,6 @@ namespace editor
     {{ member.type }} {{ member.name }};
     {% endif %}
     {% endfor %}
-
-//    struct FlagsF {
-//      enum Enum { {% for member in class.members %}Has{{ member.name_title }} = 1 << {{ member.idx }}, {% endfor %}};
-//      struct Bits { {% for member in class.members %}u32 has{{ member.name_title }} : 1; {% endfor %}};
-//    };
-//    Flags<FlagsF> flags;
   };
 
   {% endfor %}  
@@ -117,7 +111,6 @@ namespace editor
     {% elif member.is_native %}
     if (p.has_{{ member.proto_name}}())
     {
-//      res.flags.Set({{ class.name }}::FlagsF::Has{{ member.name_title}});
       res.{{ member.name }} = p.{{ member.proto_name }}();
     }
     {% elif member.is_bytes %}
@@ -129,7 +122,6 @@ namespace editor
     {% else %}
     if (p.has_{{ member.proto_name}}())
     {
-//      res.flags.Set({{ class.name }}::FlagsF::Has{{ member.name_title}});
       res.{{ member.name }} = FromProtocol(p.{{ member.proto_name }}());
     }
     {% endif %}

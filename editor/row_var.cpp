@@ -286,6 +286,8 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
         }
       }
 
+      EDITOR.SendEffectEvent(this, EffectRowEvent(EffectRowEvent::Type::KeyframeUpdated, nullptr));
+
       return true;
     }
 

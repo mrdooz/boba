@@ -40,6 +40,9 @@ class Vector3;
 class Vector4;
 class Matrix3x3;
 class Matrix4x4;
+class FloatKey;
+class FloatKeyframe;
+class FloatAnim;
 class Vector3Keyframe;
 class Vector3Anim;
 
@@ -691,6 +694,331 @@ class Matrix4x4 : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class FloatKey : public ::google::protobuf::Message {
+ public:
+  FloatKey();
+  virtual ~FloatKey();
+
+  FloatKey(const FloatKey& from);
+
+  inline FloatKey& operator=(const FloatKey& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const FloatKey& default_instance();
+
+  void Swap(FloatKey* other);
+
+  // implements Message ----------------------------------------------
+
+  FloatKey* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const FloatKey& from);
+  void MergeFrom(const FloatKey& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int64 time = 1;
+  inline bool has_time() const;
+  inline void clear_time();
+  static const int kTimeFieldNumber = 1;
+  inline ::google::protobuf::int64 time() const;
+  inline void set_time(::google::protobuf::int64 value);
+
+  // optional float value = 2;
+  inline bool has_value() const;
+  inline void clear_value();
+  static const int kValueFieldNumber = 2;
+  inline float value() const;
+  inline void set_value(float value);
+
+  // @@protoc_insertion_point(class_scope:common.protocol.FloatKey)
+ private:
+  inline void set_has_time();
+  inline void clear_has_time();
+  inline void set_has_value();
+  inline void clear_has_value();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int64 time_;
+  float value_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_common_2eproto();
+  friend void protobuf_AssignDesc_common_2eproto();
+  friend void protobuf_ShutdownFile_common_2eproto();
+
+  void InitAsDefaultInstance();
+  static FloatKey* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class FloatKeyframe : public ::google::protobuf::Message {
+ public:
+  FloatKeyframe();
+  virtual ~FloatKeyframe();
+
+  FloatKeyframe(const FloatKeyframe& from);
+
+  inline FloatKeyframe& operator=(const FloatKeyframe& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const FloatKeyframe& default_instance();
+
+  void Swap(FloatKeyframe* other);
+
+  // implements Message ----------------------------------------------
+
+  FloatKeyframe* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const FloatKeyframe& from);
+  void MergeFrom(const FloatKeyframe& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .common.protocol.FloatKey key = 1;
+  inline bool has_key() const;
+  inline void clear_key();
+  static const int kKeyFieldNumber = 1;
+  inline const ::common::protocol::FloatKey& key() const;
+  inline ::common::protocol::FloatKey* mutable_key();
+  inline ::common::protocol::FloatKey* release_key();
+  inline void set_allocated_key(::common::protocol::FloatKey* key);
+
+  // optional .common.protocol.FloatKey cp_in = 2;
+  inline bool has_cp_in() const;
+  inline void clear_cp_in();
+  static const int kCpInFieldNumber = 2;
+  inline const ::common::protocol::FloatKey& cp_in() const;
+  inline ::common::protocol::FloatKey* mutable_cp_in();
+  inline ::common::protocol::FloatKey* release_cp_in();
+  inline void set_allocated_cp_in(::common::protocol::FloatKey* cp_in);
+
+  // optional .common.protocol.FloatKey cp_out = 3;
+  inline bool has_cp_out() const;
+  inline void clear_cp_out();
+  static const int kCpOutFieldNumber = 3;
+  inline const ::common::protocol::FloatKey& cp_out() const;
+  inline ::common::protocol::FloatKey* mutable_cp_out();
+  inline ::common::protocol::FloatKey* release_cp_out();
+  inline void set_allocated_cp_out(::common::protocol::FloatKey* cp_out);
+
+  // @@protoc_insertion_point(class_scope:common.protocol.FloatKeyframe)
+ private:
+  inline void set_has_key();
+  inline void clear_has_key();
+  inline void set_has_cp_in();
+  inline void clear_has_cp_in();
+  inline void set_has_cp_out();
+  inline void clear_has_cp_out();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::common::protocol::FloatKey* key_;
+  ::common::protocol::FloatKey* cp_in_;
+  ::common::protocol::FloatKey* cp_out_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_common_2eproto();
+  friend void protobuf_AssignDesc_common_2eproto();
+  friend void protobuf_ShutdownFile_common_2eproto();
+
+  void InitAsDefaultInstance();
+  static FloatKeyframe* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class FloatAnim : public ::google::protobuf::Message {
+ public:
+  FloatAnim();
+  virtual ~FloatAnim();
+
+  FloatAnim(const FloatAnim& from);
+
+  inline FloatAnim& operator=(const FloatAnim& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const FloatAnim& default_instance();
+
+  void Swap(FloatAnim* other);
+
+  // implements Message ----------------------------------------------
+
+  FloatAnim* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const FloatAnim& from);
+  void MergeFrom(const FloatAnim& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional uint32 type = 1 [default = 1];
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::google::protobuf::uint32 type() const;
+  inline void set_type(::google::protobuf::uint32 value);
+
+  // repeated .common.protocol.FloatKeyframe keyframe = 2;
+  inline int keyframe_size() const;
+  inline void clear_keyframe();
+  static const int kKeyframeFieldNumber = 2;
+  inline const ::common::protocol::FloatKeyframe& keyframe(int index) const;
+  inline ::common::protocol::FloatKeyframe* mutable_keyframe(int index);
+  inline ::common::protocol::FloatKeyframe* add_keyframe();
+  inline const ::google::protobuf::RepeatedPtrField< ::common::protocol::FloatKeyframe >&
+      keyframe() const;
+  inline ::google::protobuf::RepeatedPtrField< ::common::protocol::FloatKeyframe >*
+      mutable_keyframe();
+
+  // optional float min_value = 3;
+  inline bool has_min_value() const;
+  inline void clear_min_value();
+  static const int kMinValueFieldNumber = 3;
+  inline float min_value() const;
+  inline void set_min_value(float value);
+
+  // optional float max_value = 4;
+  inline bool has_max_value() const;
+  inline void clear_max_value();
+  static const int kMaxValueFieldNumber = 4;
+  inline float max_value() const;
+  inline void set_max_value(float value);
+
+  // optional float step = 5;
+  inline bool has_step() const;
+  inline void clear_step();
+  static const int kStepFieldNumber = 5;
+  inline float step() const;
+  inline void set_step(float value);
+
+  // @@protoc_insertion_point(class_scope:common.protocol.FloatAnim)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_min_value();
+  inline void clear_has_min_value();
+  inline void set_has_max_value();
+  inline void clear_has_max_value();
+  inline void set_has_step();
+  inline void clear_has_step();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::common::protocol::FloatKeyframe > keyframe_;
+  ::google::protobuf::uint32 type_;
+  float min_value_;
+  float max_value_;
+  float step_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+
+  friend void  protobuf_AddDesc_common_2eproto();
+  friend void protobuf_AssignDesc_common_2eproto();
+  friend void protobuf_ShutdownFile_common_2eproto();
+
+  void InitAsDefaultInstance();
+  static FloatAnim* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Vector3Keyframe : public ::google::protobuf::Message {
  public:
   Vector3Keyframe();
@@ -745,12 +1073,12 @@ class Vector3Keyframe : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional uint32 time = 1;
+  // optional int32 time = 1;
   inline bool has_time() const;
   inline void clear_time();
   static const int kTimeFieldNumber = 1;
-  inline ::google::protobuf::uint32 time() const;
-  inline void set_time(::google::protobuf::uint32 value);
+  inline ::google::protobuf::int32 time() const;
+  inline void set_time(::google::protobuf::int32 value);
 
   // optional .common.protocol.Vector3 value = 2;
   inline bool has_value() const;
@@ -771,7 +1099,7 @@ class Vector3Keyframe : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::common::protocol::Vector3* value_;
-  ::google::protobuf::uint32 time_;
+  ::google::protobuf::int32 time_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -846,30 +1174,66 @@ class Vector3Anim : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 type() const;
   inline void set_type(::google::protobuf::uint32 value);
 
-  // repeated .common.protocol.Vector3Keyframe keyframes = 2;
-  inline int keyframes_size() const;
-  inline void clear_keyframes();
-  static const int kKeyframesFieldNumber = 2;
-  inline const ::common::protocol::Vector3Keyframe& keyframes(int index) const;
-  inline ::common::protocol::Vector3Keyframe* mutable_keyframes(int index);
-  inline ::common::protocol::Vector3Keyframe* add_keyframes();
+  // repeated .common.protocol.Vector3Keyframe keyframe = 2;
+  inline int keyframe_size() const;
+  inline void clear_keyframe();
+  static const int kKeyframeFieldNumber = 2;
+  inline const ::common::protocol::Vector3Keyframe& keyframe(int index) const;
+  inline ::common::protocol::Vector3Keyframe* mutable_keyframe(int index);
+  inline ::common::protocol::Vector3Keyframe* add_keyframe();
   inline const ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe >&
-      keyframes() const;
+      keyframe() const;
   inline ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe >*
-      mutable_keyframes();
+      mutable_keyframe();
+
+  // optional .common.protocol.Vector3 min_value = 3;
+  inline bool has_min_value() const;
+  inline void clear_min_value();
+  static const int kMinValueFieldNumber = 3;
+  inline const ::common::protocol::Vector3& min_value() const;
+  inline ::common::protocol::Vector3* mutable_min_value();
+  inline ::common::protocol::Vector3* release_min_value();
+  inline void set_allocated_min_value(::common::protocol::Vector3* min_value);
+
+  // optional .common.protocol.Vector3 max_value = 4;
+  inline bool has_max_value() const;
+  inline void clear_max_value();
+  static const int kMaxValueFieldNumber = 4;
+  inline const ::common::protocol::Vector3& max_value() const;
+  inline ::common::protocol::Vector3* mutable_max_value();
+  inline ::common::protocol::Vector3* release_max_value();
+  inline void set_allocated_max_value(::common::protocol::Vector3* max_value);
+
+  // optional .common.protocol.Vector3 step = 5;
+  inline bool has_step() const;
+  inline void clear_step();
+  static const int kStepFieldNumber = 5;
+  inline const ::common::protocol::Vector3& step() const;
+  inline ::common::protocol::Vector3* mutable_step();
+  inline ::common::protocol::Vector3* release_step();
+  inline void set_allocated_step(::common::protocol::Vector3* step);
 
   // @@protoc_insertion_point(class_scope:common.protocol.Vector3Anim)
  private:
   inline void set_has_type();
   inline void clear_has_type();
+  inline void set_has_min_value();
+  inline void clear_has_min_value();
+  inline void set_has_max_value();
+  inline void clear_has_max_value();
+  inline void set_has_step();
+  inline void clear_has_step();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe > keyframes_;
+  ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe > keyframe_;
+  ::common::protocol::Vector3* min_value_;
+  ::common::protocol::Vector3* max_value_;
+  ::common::protocol::Vector3* step_;
   ::google::protobuf::uint32 type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_common_2eproto();
   friend void protobuf_AssignDesc_common_2eproto();
@@ -1459,9 +1823,292 @@ inline void Matrix4x4::set_allocated_row_4(::common::protocol::Vector4* row_4) {
 
 // -------------------------------------------------------------------
 
+// FloatKey
+
+// optional int64 time = 1;
+inline bool FloatKey::has_time() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void FloatKey::set_has_time() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void FloatKey::clear_has_time() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void FloatKey::clear_time() {
+  time_ = GOOGLE_LONGLONG(0);
+  clear_has_time();
+}
+inline ::google::protobuf::int64 FloatKey::time() const {
+  return time_;
+}
+inline void FloatKey::set_time(::google::protobuf::int64 value) {
+  set_has_time();
+  time_ = value;
+}
+
+// optional float value = 2;
+inline bool FloatKey::has_value() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void FloatKey::set_has_value() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void FloatKey::clear_has_value() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void FloatKey::clear_value() {
+  value_ = 0;
+  clear_has_value();
+}
+inline float FloatKey::value() const {
+  return value_;
+}
+inline void FloatKey::set_value(float value) {
+  set_has_value();
+  value_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// FloatKeyframe
+
+// optional .common.protocol.FloatKey key = 1;
+inline bool FloatKeyframe::has_key() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void FloatKeyframe::set_has_key() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void FloatKeyframe::clear_has_key() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void FloatKeyframe::clear_key() {
+  if (key_ != NULL) key_->::common::protocol::FloatKey::Clear();
+  clear_has_key();
+}
+inline const ::common::protocol::FloatKey& FloatKeyframe::key() const {
+  return key_ != NULL ? *key_ : *default_instance_->key_;
+}
+inline ::common::protocol::FloatKey* FloatKeyframe::mutable_key() {
+  set_has_key();
+  if (key_ == NULL) key_ = new ::common::protocol::FloatKey;
+  return key_;
+}
+inline ::common::protocol::FloatKey* FloatKeyframe::release_key() {
+  clear_has_key();
+  ::common::protocol::FloatKey* temp = key_;
+  key_ = NULL;
+  return temp;
+}
+inline void FloatKeyframe::set_allocated_key(::common::protocol::FloatKey* key) {
+  delete key_;
+  key_ = key;
+  if (key) {
+    set_has_key();
+  } else {
+    clear_has_key();
+  }
+}
+
+// optional .common.protocol.FloatKey cp_in = 2;
+inline bool FloatKeyframe::has_cp_in() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void FloatKeyframe::set_has_cp_in() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void FloatKeyframe::clear_has_cp_in() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void FloatKeyframe::clear_cp_in() {
+  if (cp_in_ != NULL) cp_in_->::common::protocol::FloatKey::Clear();
+  clear_has_cp_in();
+}
+inline const ::common::protocol::FloatKey& FloatKeyframe::cp_in() const {
+  return cp_in_ != NULL ? *cp_in_ : *default_instance_->cp_in_;
+}
+inline ::common::protocol::FloatKey* FloatKeyframe::mutable_cp_in() {
+  set_has_cp_in();
+  if (cp_in_ == NULL) cp_in_ = new ::common::protocol::FloatKey;
+  return cp_in_;
+}
+inline ::common::protocol::FloatKey* FloatKeyframe::release_cp_in() {
+  clear_has_cp_in();
+  ::common::protocol::FloatKey* temp = cp_in_;
+  cp_in_ = NULL;
+  return temp;
+}
+inline void FloatKeyframe::set_allocated_cp_in(::common::protocol::FloatKey* cp_in) {
+  delete cp_in_;
+  cp_in_ = cp_in;
+  if (cp_in) {
+    set_has_cp_in();
+  } else {
+    clear_has_cp_in();
+  }
+}
+
+// optional .common.protocol.FloatKey cp_out = 3;
+inline bool FloatKeyframe::has_cp_out() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void FloatKeyframe::set_has_cp_out() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void FloatKeyframe::clear_has_cp_out() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void FloatKeyframe::clear_cp_out() {
+  if (cp_out_ != NULL) cp_out_->::common::protocol::FloatKey::Clear();
+  clear_has_cp_out();
+}
+inline const ::common::protocol::FloatKey& FloatKeyframe::cp_out() const {
+  return cp_out_ != NULL ? *cp_out_ : *default_instance_->cp_out_;
+}
+inline ::common::protocol::FloatKey* FloatKeyframe::mutable_cp_out() {
+  set_has_cp_out();
+  if (cp_out_ == NULL) cp_out_ = new ::common::protocol::FloatKey;
+  return cp_out_;
+}
+inline ::common::protocol::FloatKey* FloatKeyframe::release_cp_out() {
+  clear_has_cp_out();
+  ::common::protocol::FloatKey* temp = cp_out_;
+  cp_out_ = NULL;
+  return temp;
+}
+inline void FloatKeyframe::set_allocated_cp_out(::common::protocol::FloatKey* cp_out) {
+  delete cp_out_;
+  cp_out_ = cp_out;
+  if (cp_out) {
+    set_has_cp_out();
+  } else {
+    clear_has_cp_out();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// FloatAnim
+
+// optional uint32 type = 1 [default = 1];
+inline bool FloatAnim::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void FloatAnim::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void FloatAnim::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void FloatAnim::clear_type() {
+  type_ = 1u;
+  clear_has_type();
+}
+inline ::google::protobuf::uint32 FloatAnim::type() const {
+  return type_;
+}
+inline void FloatAnim::set_type(::google::protobuf::uint32 value) {
+  set_has_type();
+  type_ = value;
+}
+
+// repeated .common.protocol.FloatKeyframe keyframe = 2;
+inline int FloatAnim::keyframe_size() const {
+  return keyframe_.size();
+}
+inline void FloatAnim::clear_keyframe() {
+  keyframe_.Clear();
+}
+inline const ::common::protocol::FloatKeyframe& FloatAnim::keyframe(int index) const {
+  return keyframe_.Get(index);
+}
+inline ::common::protocol::FloatKeyframe* FloatAnim::mutable_keyframe(int index) {
+  return keyframe_.Mutable(index);
+}
+inline ::common::protocol::FloatKeyframe* FloatAnim::add_keyframe() {
+  return keyframe_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::common::protocol::FloatKeyframe >&
+FloatAnim::keyframe() const {
+  return keyframe_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::common::protocol::FloatKeyframe >*
+FloatAnim::mutable_keyframe() {
+  return &keyframe_;
+}
+
+// optional float min_value = 3;
+inline bool FloatAnim::has_min_value() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void FloatAnim::set_has_min_value() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void FloatAnim::clear_has_min_value() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void FloatAnim::clear_min_value() {
+  min_value_ = 0;
+  clear_has_min_value();
+}
+inline float FloatAnim::min_value() const {
+  return min_value_;
+}
+inline void FloatAnim::set_min_value(float value) {
+  set_has_min_value();
+  min_value_ = value;
+}
+
+// optional float max_value = 4;
+inline bool FloatAnim::has_max_value() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void FloatAnim::set_has_max_value() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void FloatAnim::clear_has_max_value() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void FloatAnim::clear_max_value() {
+  max_value_ = 0;
+  clear_has_max_value();
+}
+inline float FloatAnim::max_value() const {
+  return max_value_;
+}
+inline void FloatAnim::set_max_value(float value) {
+  set_has_max_value();
+  max_value_ = value;
+}
+
+// optional float step = 5;
+inline bool FloatAnim::has_step() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void FloatAnim::set_has_step() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void FloatAnim::clear_has_step() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void FloatAnim::clear_step() {
+  step_ = 0;
+  clear_has_step();
+}
+inline float FloatAnim::step() const {
+  return step_;
+}
+inline void FloatAnim::set_step(float value) {
+  set_has_step();
+  step_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // Vector3Keyframe
 
-// optional uint32 time = 1;
+// optional int32 time = 1;
 inline bool Vector3Keyframe::has_time() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1472,13 +2119,13 @@ inline void Vector3Keyframe::clear_has_time() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void Vector3Keyframe::clear_time() {
-  time_ = 0u;
+  time_ = 0;
   clear_has_time();
 }
-inline ::google::protobuf::uint32 Vector3Keyframe::time() const {
+inline ::google::protobuf::int32 Vector3Keyframe::time() const {
   return time_;
 }
-inline void Vector3Keyframe::set_time(::google::protobuf::uint32 value) {
+inline void Vector3Keyframe::set_time(::google::protobuf::int32 value) {
   set_has_time();
   time_ = value;
 }
@@ -1547,29 +2194,143 @@ inline void Vector3Anim::set_type(::google::protobuf::uint32 value) {
   type_ = value;
 }
 
-// repeated .common.protocol.Vector3Keyframe keyframes = 2;
-inline int Vector3Anim::keyframes_size() const {
-  return keyframes_.size();
+// repeated .common.protocol.Vector3Keyframe keyframe = 2;
+inline int Vector3Anim::keyframe_size() const {
+  return keyframe_.size();
 }
-inline void Vector3Anim::clear_keyframes() {
-  keyframes_.Clear();
+inline void Vector3Anim::clear_keyframe() {
+  keyframe_.Clear();
 }
-inline const ::common::protocol::Vector3Keyframe& Vector3Anim::keyframes(int index) const {
-  return keyframes_.Get(index);
+inline const ::common::protocol::Vector3Keyframe& Vector3Anim::keyframe(int index) const {
+  return keyframe_.Get(index);
 }
-inline ::common::protocol::Vector3Keyframe* Vector3Anim::mutable_keyframes(int index) {
-  return keyframes_.Mutable(index);
+inline ::common::protocol::Vector3Keyframe* Vector3Anim::mutable_keyframe(int index) {
+  return keyframe_.Mutable(index);
 }
-inline ::common::protocol::Vector3Keyframe* Vector3Anim::add_keyframes() {
-  return keyframes_.Add();
+inline ::common::protocol::Vector3Keyframe* Vector3Anim::add_keyframe() {
+  return keyframe_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe >&
-Vector3Anim::keyframes() const {
-  return keyframes_;
+Vector3Anim::keyframe() const {
+  return keyframe_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::common::protocol::Vector3Keyframe >*
-Vector3Anim::mutable_keyframes() {
-  return &keyframes_;
+Vector3Anim::mutable_keyframe() {
+  return &keyframe_;
+}
+
+// optional .common.protocol.Vector3 min_value = 3;
+inline bool Vector3Anim::has_min_value() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Vector3Anim::set_has_min_value() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Vector3Anim::clear_has_min_value() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Vector3Anim::clear_min_value() {
+  if (min_value_ != NULL) min_value_->::common::protocol::Vector3::Clear();
+  clear_has_min_value();
+}
+inline const ::common::protocol::Vector3& Vector3Anim::min_value() const {
+  return min_value_ != NULL ? *min_value_ : *default_instance_->min_value_;
+}
+inline ::common::protocol::Vector3* Vector3Anim::mutable_min_value() {
+  set_has_min_value();
+  if (min_value_ == NULL) min_value_ = new ::common::protocol::Vector3;
+  return min_value_;
+}
+inline ::common::protocol::Vector3* Vector3Anim::release_min_value() {
+  clear_has_min_value();
+  ::common::protocol::Vector3* temp = min_value_;
+  min_value_ = NULL;
+  return temp;
+}
+inline void Vector3Anim::set_allocated_min_value(::common::protocol::Vector3* min_value) {
+  delete min_value_;
+  min_value_ = min_value;
+  if (min_value) {
+    set_has_min_value();
+  } else {
+    clear_has_min_value();
+  }
+}
+
+// optional .common.protocol.Vector3 max_value = 4;
+inline bool Vector3Anim::has_max_value() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Vector3Anim::set_has_max_value() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Vector3Anim::clear_has_max_value() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Vector3Anim::clear_max_value() {
+  if (max_value_ != NULL) max_value_->::common::protocol::Vector3::Clear();
+  clear_has_max_value();
+}
+inline const ::common::protocol::Vector3& Vector3Anim::max_value() const {
+  return max_value_ != NULL ? *max_value_ : *default_instance_->max_value_;
+}
+inline ::common::protocol::Vector3* Vector3Anim::mutable_max_value() {
+  set_has_max_value();
+  if (max_value_ == NULL) max_value_ = new ::common::protocol::Vector3;
+  return max_value_;
+}
+inline ::common::protocol::Vector3* Vector3Anim::release_max_value() {
+  clear_has_max_value();
+  ::common::protocol::Vector3* temp = max_value_;
+  max_value_ = NULL;
+  return temp;
+}
+inline void Vector3Anim::set_allocated_max_value(::common::protocol::Vector3* max_value) {
+  delete max_value_;
+  max_value_ = max_value;
+  if (max_value) {
+    set_has_max_value();
+  } else {
+    clear_has_max_value();
+  }
+}
+
+// optional .common.protocol.Vector3 step = 5;
+inline bool Vector3Anim::has_step() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Vector3Anim::set_has_step() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Vector3Anim::clear_has_step() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Vector3Anim::clear_step() {
+  if (step_ != NULL) step_->::common::protocol::Vector3::Clear();
+  clear_has_step();
+}
+inline const ::common::protocol::Vector3& Vector3Anim::step() const {
+  return step_ != NULL ? *step_ : *default_instance_->step_;
+}
+inline ::common::protocol::Vector3* Vector3Anim::mutable_step() {
+  set_has_step();
+  if (step_ == NULL) step_ = new ::common::protocol::Vector3;
+  return step_;
+}
+inline ::common::protocol::Vector3* Vector3Anim::release_step() {
+  clear_has_step();
+  ::common::protocol::Vector3* temp = step_;
+  step_ = NULL;
+  return temp;
+}
+inline void Vector3Anim::set_allocated_step(::common::protocol::Vector3* step) {
+  delete step_;
+  step_ = step;
+  if (step) {
+    set_has_step();
+  } else {
+    clear_has_step();
+  }
 }
 
 

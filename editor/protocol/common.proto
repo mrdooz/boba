@@ -61,7 +61,7 @@ message FloatKeyframe
 
 message FloatAnim
 {
-  optional uint32 type = 1 [default = 2];
+  optional uint32 type = 1 [default = 1];
   repeated FloatKeyframe keyframe = 2;
   optional float min_value = 3;
   optional float max_value = 4;
