@@ -95,6 +95,25 @@ RowVar::RowVar(
 {
   _text.setFont(font);
   _text.setCharacterSize(16);
+
+  _animationText._text.setFont(font);
+  _animationText._text.setCharacterSize(16);
+  _animationText._text.setString("A");
+
+  _animationText.
+      Default(TextStyle().Style(sf::Text::Regular).Color(Color(200, 200, 200))).
+      Predicate([this](){ return _flags.IsSet(VarFlagsF::Animating); }, TextStyle().Style(sf::Text::Bold).Color(Color(200, 200, 0)));
+}
+
+
+//----------------------------------------------------------------------------------
+void RowVar::SetBounds(const FloatRect& bounds)
+{
+  _bounds = bounds;
+  _bgRect.setPosition(_bounds.left, _bounds.top);
+  _bgRect.setSize(Vector2f(_bounds.width, _bounds.height));
+
+  _animationText._text.setPosition(_bounds.left, _bounds.top);
 }
 
 //----------------------------------------------------------------------------------
@@ -108,33 +127,19 @@ void RowVar::Draw(RenderTexture& texture, bool drawKeyframes)
       : settings.effect_view_background_color());
 
   // draw background
-  RectangleShape bgRect;
-  bgRect.setPosition(_bounds.left, _bounds.top);
-  bgRect.setSize(Vector2f(_bounds.width, _bounds.height));
-  bgRect.setFillColor(bgCol);
-  texture.draw(bgRect);
+  _bgRect.setFillColor(bgCol);
+  texture.draw(_bgRect);
 
   // draw animating icon
-  _text.setString("A");
-  if (_flags.IsSet(VarFlagsF::Animating))
-  {
-    _text.setStyle(sf::Text::Bold);
-    _text.setColor(Color(200, 200, 0));
-  }
-  else
-  {
-    _text.setStyle(sf::Text::Regular);
-    _text.setColor(Color(200, 200, 200));
-  }
-  _text.setPosition(_bounds.left, _bounds.top);
-  texture.draw(_text);
+  _animationText.ApplyAndDraw(texture);
 
   // draw value
   const StyleSetting* style = _flags.IsSet(VarFlagsF::Editing)
       ? STYLE_FACTORY.GetStyle("var_text_editing")
       : STYLE_FACTORY.GetStyle("var_text_normal");
 
-  _text.setString(to_string("%s: %.2f", _name.c_str(), _value).c_str());
+  // TODO: if animating, display the temp value here
+  _text.setString(to_string("%s: %.2f", _name.c_str(), Interpolate<float>(*_anim, EDITOR.CurTime())).c_str());
   _text.setColor(style->fillColor);
   _text.setStyle(style->fontStyle);
 
@@ -451,11 +456,7 @@ bool RowVar::OnMouseMoved(const Event &event)
       }
     }
 
-    if (IsControlPoint(_selectedKeyframe))
-    {
-      EDITOR.SendEffectEvent(this, EffectRowEvent(EffectRowEvent::Type::KeyframeUpdated, &_anim->keyframe[_selectedKeyframe]));
-    }
-
+    EDITOR.SendEffectEvent(this, EffectRowEvent(EffectRowEvent::Type::KeyframeUpdated, &_anim->keyframe[_selectedKeyframe]));
     return true;
   }
 
@@ -502,10 +503,7 @@ void RowVar::OnEvent(RowVar* sender, const EffectRowEvent& event)
 {
   if (event.type == EffectRowEvent::Type::VarSelected)
   {
-    _flags.Clear(VarFlagsF::Selected);
-    _flags.Clear(VarFlagsF::Editing);
-    _flags.Clear(VarFlagsF::Animating);
-    _flags.Clear(VarFlagsF::PreEdit);
+    _flags.Reset();
   }
 }
 
@@ -696,7 +694,7 @@ void RowVar::DrawGraph(RenderTexture& texture)
     gridLines.append(Vertex(Vector2f(ofs, y), c));
     gridLines.append(Vertex(Vector2f(size.x, y), c));
 
-    label.setPosition(ofs + 10, y + 25);
+    label.setPosition(ofs + 10, y);
     label.setString(to_string("%.2f", curY).c_str());
     texture.draw(label);
 

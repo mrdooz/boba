@@ -22,7 +22,84 @@ namespace editor
     void* data;
   };
 
-//----------------------------------------------------------------------------------
+  struct TextStyle
+  {
+    struct StyleFlagsF
+    {
+      enum Enum : u8 { HasStyle = 1 << 0, HasColor = 1 << 1 };
+      struct Bits { u8 hasStyle : 1; u8 hasColor : 1; };
+    };
+
+    typedef Flags<StyleFlagsF> StyleFlags;
+
+
+    TextStyle& Style(u32 style)
+    {
+      _flags.Set(StyleFlagsF::HasStyle);
+      _style = style;
+      return *this;
+    }
+
+    TextStyle& Color(const sf::Color& color)
+    {
+      _flags.Set(StyleFlagsF::HasColor);
+      _color = color;
+      return *this;
+    }
+
+    void Apply(Text& text)
+    {
+      if (_flags.IsSet(StyleFlagsF::HasStyle)) text.setStyle(_style);
+      if (_flags.IsSet(StyleFlagsF::HasColor)) text.setColor(_color);
+    }
+
+    StyleFlags _flags;
+    u32 _style;
+    sf::Color _color;
+  };
+
+  struct TextStylePredicate
+  {
+    typedef function<bool()> fnPredicate;
+
+    TextStylePredicate& Default(const TextStyle& defaultStyle)
+    {
+      _defaultStyle = defaultStyle;
+      return *this;
+    }
+
+    TextStylePredicate& Predicate(const fnPredicate& pred, const TextStyle& style)
+    {
+      _styles.push_back(make_pair(pred, style));
+      return *this;
+    }
+
+    void ApplyAndDraw(RenderTexture& texture)
+    {
+      // check if any of the predicates match
+      for (auto& p : _styles)
+      {
+        if (p.first())
+        {
+          p.second.Apply(_text);
+          texture.draw(_text);
+          return;
+        }
+      }
+
+      // nothing matched, so apply default style
+      _defaultStyle.Apply(_text);
+      texture.draw(_text);
+    }
+
+    vector<pair<fnPredicate, TextStyle>> _styles;
+    TextStyle _defaultStyle;
+
+    Text _text;
+  };
+
+
+  //----------------------------------------------------------------------------------
   struct RowVar
   {
     RowVar(const Font& font, const string& name, FloatAnim* anim);
@@ -65,11 +142,15 @@ namespace editor
         bool addOutsidePoints,
         vector<VisibleKeyframe>* keyframes);
 
+    void SetBounds(const FloatRect& bounds);
+
     Text _text;
     Font _font;
+    RectangleShape _bgRect;
     FloatRect _bounds;
 
     string _name;
+    // value is used when changing the keyframe value by dragging on the text field
     float _value;
     FloatAnim* _anim;
     VarFlags _flags;
@@ -77,6 +158,8 @@ namespace editor
     u32 _selectedKeyframe;
     FloatKeyframe _prevKeyframe;
     Vector2f _prevPos;
+
+    TextStylePredicate _animationText;
 
     float _minValue, _maxValue, _step;
   };

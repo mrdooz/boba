@@ -48,7 +48,6 @@ namespace editor
     Font _font;
     int _level;
     FloatRect _expandRect;
-    FloatRect _varEditRect;
     StyledRect _keyframeRect;
     u32 _id;
     vector<RowVar*> _vars;

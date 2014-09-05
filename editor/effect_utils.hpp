@@ -222,7 +222,7 @@ namespace editor
 
     float t = (time_ms - lower.key.time) / (float)(upper.key.time - lower.key.time);
 
-    if (anim.type == 0 || keyframes.size() == 2)
+    if (anim.type == 0 || keyframes.size() <= 2)
     {
       // linear interpolation
       return lower.key.value + t * (upper.key.value - lower.key.value);
@@ -234,10 +234,9 @@ namespace editor
     }
     else if (anim.type == 2)
     {
+      // catmul rom spline
       const Keyframe& p0 = keyframes[max(0, (s32)idxLower-1)];
       const Keyframe& p3 = keyframes[min(lastIdx, idxUpper+1)];
-
-      // catmul rom spline
       return CatmulRom(p0.key.value, lower.key.value, upper.key.value, p3.key.value, t);
     }
 

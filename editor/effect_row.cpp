@@ -91,11 +91,11 @@ void EffectRow::Reposition(float curY, float rowHeight)
     {
       RowVar* var = cur->_vars[i];
       float x = 40 + cur->_level * 15 + shape.getPosition().x;
-      var->_bounds = FloatRect(
+      var->SetBounds(FloatRect(
           x,
           shape.getPosition().y + (i + 1) * rowHeight,
           settings.effect_view_width() - x,
-          rowHeight);
+          rowHeight));
     }
   }
 }
@@ -147,12 +147,6 @@ bool EffectRow::OnMouseButtonPressed(const Event &event)
       return true;
   }
 
-  if (_varEditRect.contains(mousePos))
-  {
-//    BeginEditVars(x, y);
-    return true;
-  }
-
   return false;
 }
 
@@ -198,30 +192,6 @@ bool EffectRow::OnKeyReleased(const Event& event)
     if (var->OnKeyReleased(event))
       return true;
   }
-
-  int a = 10;
-//  Keyboard::Key code = event.key.code;
-
-//  if (_flags.IsSet(RowFlagsF::Editing))
-//  {
-//    // escape aborts the pending operation
-//    if (code == Keyboard::Escape)
-//    {
-//      EndEditVars(false);
-//      EndKeyframeUpdate(false);
-//    }
-//
-//    if (code == Keyboard::Return)
-//    {
-//      EndEditVars(true);
-//    }
-//    else
-//    {
-//      UpdateEditVar(event.key.code);
-//    }
-//
-//    return true;
-//  }
 
   return false;
 }
@@ -398,10 +368,6 @@ EffectRowNoise::EffectRowNoise(
     EffectRow* parent)
     : EffectRow(font, str, parent)
 {
-  _effector.displacement.x.type = 1;
-  _effector.displacement.y.type = 1;
-  _effector.displacement.z.type = 1;
-
   _vars.push_back(new RowVar(_font, "x", &_effector.displacement.x));
   _vars.push_back(new RowVar(_font, "y", &_effector.displacement.y));
   _vars.push_back(new RowVar(_font, "z", &_effector.displacement.z));
