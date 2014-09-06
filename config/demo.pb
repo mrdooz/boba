@@ -1,7 +1,7 @@
 effect_setting
 {
 	name : "scene1"
-	effect_class : "generator_test"
+	effect_class : "plexus_test"
 	config_file : "config/generator2.pb"
 	start_time : 0
 	end_time : 60000000

@@ -6,8 +6,6 @@ shaders/blur_BoxBlurXD.cso	D:/projects/boba/shaders/blur_BoxBlurXD.cso
 shaders/blur_BoxBlurYD.cso	D:/projects/boba/shaders/blur_BoxBlurYD.cso
 shaders/blur_CopyTransposeD.cso	D:/projects/boba/shaders/blur_CopyTransposeD.cso
 shaders/copy_PsMainD.pso	D:/projects/boba/shaders/copy_PsMainD.pso
-shaders/debug_draw_PsMainD.pso	D:/projects/boba/shaders/debug_draw_PsMainD.pso
-shaders/debug_draw_VsMainD.vso	D:/projects/boba/shaders/debug_draw_VsMainD.vso
 shaders/fullscreen_PsMainD.pso	D:/projects/boba/shaders/fullscreen_PsMainD.pso
 shaders/fullscreen_VsMainD.vso	D:/projects/boba/shaders/fullscreen_VsMainD.vso
 shaders/generator_PsMainD.pso	D:/projects/boba/shaders/generator_PsMainD.pso

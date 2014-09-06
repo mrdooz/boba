@@ -18,11 +18,12 @@ namespace boba
   class DeferredContext;
   struct Mesh;
 
-  class GeneratorTest : public Effect
+  class PlexusTest : public Effect
   {
   public:
-    GeneratorTest(const string& name, u32 id);
-    ~GeneratorTest();
+
+    PlexusTest(const string& name, u32 id);
+    ~PlexusTest();
     virtual bool Init(const char* config) override;
     virtual bool Update(const UpdateState& state) override;
     virtual bool Render() override;
@@ -39,9 +40,7 @@ namespace boba
 
     virtual void WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 
-    void RenderSpiky();
-    void RenderPlane();
-    void InitGeneratorScript();
+    void RenderText();
 
     string _configName;
     generator::Spiky _spikyConfig;
@@ -124,6 +123,10 @@ namespace boba
     };
     ConstantBuffer<CBufferBloom> _cbBloom;
     GraphicsObjectHandle _psThreshold;
+
+    GraphicsObjectHandle _psEdgeDetect;
+
+    Plexus _plexus;
   };
 
 }

@@ -494,6 +494,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\particle_test.cpp" />
+    <ClCompile Include="..\plexus_test.cpp" />
     <ClCompile Include="..\post_process.cpp" />
     <ClCompile Include="..\precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -558,6 +559,7 @@
     <ClInclude Include="..\lua\lvm.h" />
     <ClInclude Include="..\lua\lzio.h" />
     <ClInclude Include="..\particle_test.hpp" />
+    <ClInclude Include="..\plexus_test.hpp" />
     <ClInclude Include="..\post_process.hpp" />
     <ClInclude Include="..\precompiled.hpp" />
     <ClInclude Include="..\protocol\anttweak.pb.h" />
