@@ -16,8 +16,8 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
-namespace editor {
 namespace protocol {
+namespace editor {
 
 namespace {
 
@@ -104,17 +104,17 @@ void protobuf_AddDesc_editor_5fstyles_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  ::editor::protocol::protobuf_AddDesc_editor_5fsettings_2eproto();
-  ::common::protocol::protobuf_AddDesc_common_2eproto();
+  ::protocol::editor::protobuf_AddDesc_editor_5fsettings_2eproto();
+  ::protocol::common::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\023editor_styles.proto\022\017editor.protocol\032\025"
+    "\n\023editor_styles.proto\022\017protocol.editor\032\025"
     "editor_settings.proto\032\014common.proto\"\251\001\n\014"
     "StyleSetting\022\n\n\002id\030\001 \001(\t\022+\n\nfill_color\030\002"
-    " \001(\0132\027.common.protocol.Color4\022.\n\routline"
-    "_color\030\003 \001(\0132\027.common.protocol.Color4\022\034\n"
+    " \001(\0132\027.protocol.common.Color4\022.\n\routline"
+    "_color\030\003 \001(\0132\027.protocol.common.Color4\022\034\n"
     "\021outline_thickness\030\004 \001(\002:\0010\022\022\n\nfont_styl"
     "e\030\005 \001(\r\"E\n\rStyleSettings\0224\n\rstyle_settin"
-    "g\030\001 \003(\0132\035.editor.protocol.StyleSetting", 318);
+    "g\030\001 \003(\0132\035.protocol.editor.StyleSetting", 318);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_styles.proto", &protobuf_RegisterTypes);
   StyleSetting::default_instance_ = new StyleSetting();
@@ -147,8 +147,8 @@ StyleSetting::StyleSetting()
 }
 
 void StyleSetting::InitAsDefaultInstance() {
-  fill_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  outline_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
+  fill_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  outline_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
 }
 
 StyleSetting::StyleSetting(const StyleSetting& from)
@@ -210,10 +210,10 @@ void StyleSetting::Clear() {
       }
     }
     if (has_fill_color()) {
-      if (fill_color_ != NULL) fill_color_->::common::protocol::Color4::Clear();
+      if (fill_color_ != NULL) fill_color_->::protocol::common::Color4::Clear();
     }
     if (has_outline_color()) {
-      if (outline_color_ != NULL) outline_color_->::common::protocol::Color4::Clear();
+      if (outline_color_ != NULL) outline_color_->::protocol::common::Color4::Clear();
     }
     outline_thickness_ = 0;
     font_style_ = 0u;
@@ -244,7 +244,7 @@ bool StyleSetting::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 fill_color = 2;
+      // optional .protocol.common.Color4 fill_color = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -258,7 +258,7 @@ bool StyleSetting::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 outline_color = 3;
+      // optional .protocol.common.Color4 outline_color = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -331,13 +331,13 @@ void StyleSetting::SerializeWithCachedSizes(
       1, this->id(), output);
   }
 
-  // optional .common.protocol.Color4 fill_color = 2;
+  // optional .protocol.common.Color4 fill_color = 2;
   if (has_fill_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->fill_color(), output);
   }
 
-  // optional .common.protocol.Color4 outline_color = 3;
+  // optional .protocol.common.Color4 outline_color = 3;
   if (has_outline_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->outline_color(), output);
@@ -371,14 +371,14 @@ void StyleSetting::SerializeWithCachedSizes(
         1, this->id(), target);
   }
 
-  // optional .common.protocol.Color4 fill_color = 2;
+  // optional .protocol.common.Color4 fill_color = 2;
   if (has_fill_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         2, this->fill_color(), target);
   }
 
-  // optional .common.protocol.Color4 outline_color = 3;
+  // optional .protocol.common.Color4 outline_color = 3;
   if (has_outline_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -413,14 +413,14 @@ int StyleSetting::ByteSize() const {
           this->id());
     }
 
-    // optional .common.protocol.Color4 fill_color = 2;
+    // optional .protocol.common.Color4 fill_color = 2;
     if (has_fill_color()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->fill_color());
     }
 
-    // optional .common.protocol.Color4 outline_color = 3;
+    // optional .protocol.common.Color4 outline_color = 3;
     if (has_outline_color()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -470,10 +470,10 @@ void StyleSetting::MergeFrom(const StyleSetting& from) {
       set_id(from.id());
     }
     if (from.has_fill_color()) {
-      mutable_fill_color()->::common::protocol::Color4::MergeFrom(from.fill_color());
+      mutable_fill_color()->::protocol::common::Color4::MergeFrom(from.fill_color());
     }
     if (from.has_outline_color()) {
-      mutable_outline_color()->::common::protocol::Color4::MergeFrom(from.outline_color());
+      mutable_outline_color()->::protocol::common::Color4::MergeFrom(from.outline_color());
     }
     if (from.has_outline_thickness()) {
       set_outline_thickness(from.outline_thickness());
@@ -591,7 +591,7 @@ bool StyleSettings::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .editor.protocol.StyleSetting style_setting = 1;
+      // repeated .protocol.editor.StyleSetting style_setting = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -624,7 +624,7 @@ bool StyleSettings::MergePartialFromCodedStream(
 
 void StyleSettings::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .editor.protocol.StyleSetting style_setting = 1;
+  // repeated .protocol.editor.StyleSetting style_setting = 1;
   for (int i = 0; i < this->style_setting_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->style_setting(i), output);
@@ -638,7 +638,7 @@ void StyleSettings::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* StyleSettings::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .editor.protocol.StyleSetting style_setting = 1;
+  // repeated .protocol.editor.StyleSetting style_setting = 1;
   for (int i = 0; i < this->style_setting_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -655,7 +655,7 @@ void StyleSettings::SerializeWithCachedSizes(
 int StyleSettings::ByteSize() const {
   int total_size = 0;
 
-  // repeated .editor.protocol.StyleSetting style_setting = 1;
+  // repeated .protocol.editor.StyleSetting style_setting = 1;
   total_size += 1 * this->style_setting_size();
   for (int i = 0; i < this->style_setting_size(); i++) {
     total_size +=
@@ -729,7 +729,7 @@ void StyleSettings::Swap(StyleSettings* other) {
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace protocol
 }  // namespace editor
+}  // namespace protocol
 
 // @@protoc_insertion_point(global_scope)

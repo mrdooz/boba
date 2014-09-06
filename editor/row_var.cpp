@@ -2,6 +2,7 @@
 #include "editor.hpp"
 #include "timeline_window.hpp"
 #include "property_window.hpp"
+#include "protocol/proto_helpers.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -63,7 +64,7 @@ namespace
 
   void LooseLabel(float lower, float upper, float* tickSpacing, float* graphMin, float* graphMax)
   {
-    const editor::protocol::Settings& settings = EDITOR.Settings();
+    const protocol::editor::Settings& settings = EDITOR.Settings();
 
     if (lower == upper)
     {
@@ -119,7 +120,7 @@ void RowVar::SetBounds(const FloatRect& bounds)
 //----------------------------------------------------------------------------------
 void RowVar::Draw(RenderTexture& texture, bool drawKeyframes)
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   const Vector2f& windowSize = TimelineWindow::_instance->GetSize();
 
   Color bgCol = ::FromProtocol(_flags.IsSet(VarFlagsF::Selected)
@@ -168,7 +169,7 @@ void RowVar::DrawKeyframes(RenderTexture& texture)
 {
   _flags.Clear(VarFlagsF::GraphMode);
 
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   float h = settings.effect_row_height();
   int s = settings.keyframe_size();
   float ofs = (h - s) / 2;
@@ -199,7 +200,7 @@ void RowVar::DrawKeyframes(RenderTexture& texture)
 bool RowVar::OnMouseButtonPressed(const Event &event)
 {
   TimelineWindow* timeline = TimelineWindow::_instance;
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   Vector2f mousePos = ToLocal(event.mouseButton.x, event.mouseButton.y);
   Vector2f windowSize = timeline->GetSize();
   float x = mousePos.x, y = mousePos.y;
@@ -517,7 +518,7 @@ float RowVar::PixelToValue(float y) const
   // ==> value = (bottom - x) * span / h + minValue
 
   Vector2f size = TimelineWindow::_instance->GetSize();
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   float topY = settings.ticker_height();
   float h = size.y - settings.status_bar_height() - topY;
   float bottom = size.y - 1 - settings.status_bar_height();
@@ -532,7 +533,7 @@ float RowVar::ValueToPixel(float value) const
   // x = bottom - h * (value - minValue) / span
 
   Vector2f size = TimelineWindow::_instance->GetSize();
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   float topY = settings.ticker_height();
   float h = size.y - settings.status_bar_height() - topY;
   float bottom = size.y - 1 - settings.status_bar_height();
@@ -559,7 +560,7 @@ void RowVar::VisibleKeyframes(
     return;
   }
 
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   float ofs = settings.effect_view_width();
 
   TimelineWindow* timeline = TimelineWindow::_instance;
@@ -656,7 +657,7 @@ void RowVar::DrawGraph(RenderTexture& texture)
 {
   _flags.Set(VarFlagsF::GraphMode);
 
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   int ofs = settings.effect_view_width();
   float rw = settings.keyframe_size() / 2.0f;
 

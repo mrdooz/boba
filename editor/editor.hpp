@@ -47,7 +47,7 @@ namespace editor
     bool Run();
     bool Close();
 
-    editor::protocol::Settings& Settings() { return _settings; }
+    protocol::editor::Settings& Settings() { return _settings; }
     string GetAppRoot() const { return _appRoot; }
     time_duration CurTime() const { return _curTime; }
     void SetCurTime(const time_duration& t);
@@ -68,7 +68,7 @@ namespace editor
 
     bool InitWebby();
 
-    void SettingsUpdated(const effect::protocol::EffectSettings& settings);
+    void SettingsUpdated(const protocol::effect::EffectSettings& settings);
 
     void SendEffectEvent(RowVar* sender, const EffectRowEvent& event);
 
@@ -84,7 +84,7 @@ namespace editor
     VirtualWindowManager* _virtualWindowManager;
 
     static Editor* _instance;
-    editor::protocol::Settings _settings;
+    protocol::editor::Settings _settings;
     string _appRoot;
     ptime _lastUpdate;
     time_duration _curTime;

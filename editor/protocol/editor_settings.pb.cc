@@ -16,8 +16,8 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
-namespace editor {
 namespace protocol {
+namespace editor {
 
 namespace {
 
@@ -106,9 +106,9 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  ::common::protocol::protobuf_AddDesc_common_2eproto();
+  ::protocol::common::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\025editor_settings.proto\022\017editor.protocol"
+    "\n\025editor_settings.proto\022\017protocol.editor"
     "\032\014common.proto\"\274\n\n\010Settings\022\031\n\rticker_he"
     "ight\030\001 \001(\r:\00250\022\033\n\017ticker_interval\030\002 \001(\r:"
     "\00220\022\035\n\022ticks_per_interval\030\003 \001(\r:\0014\022\036\n\021ef"
@@ -119,30 +119,30 @@ void protobuf_AddDesc_editor_5fsettings_2eproto() {
     "in\030( \001(\r:\00216\022\037\n\021timeline_zoom_max\030) \001(\r:"
     "\0041024\022\"\n\025timeline_zoom_default\030* \001(\r:\00312"
     "8\022\030\n\rkeyframe_size\0302 \001(\r:\0015\0222\n\021default_r"
-    "ow_color\030d \001(\0132\027.common.protocol.Color4\022"
-    "3\n\022selected_row_color\030e \001(\0132\027.common.pro"
-    "tocol.Color4\0220\n\017hover_row_color\030f \001(\0132\027."
-    "common.protocol.Color4\0228\n\027invalid_hover_"
-    "row_color\030g \001(\0132\027.common.protocol.Color4"
-    "\0223\n\022default_line_color\030h \001(\0132\027.common.pr"
-    "otocol.Color4\022>\n\034effect_view_background_"
-    "color\030\202\001 \001(\0132\027.common.protocol.Color4\022G\n"
+    "ow_color\030d \001(\0132\027.protocol.common.Color4\022"
+    "3\n\022selected_row_color\030e \001(\0132\027.protocol.c"
+    "ommon.Color4\0220\n\017hover_row_color\030f \001(\0132\027."
+    "protocol.common.Color4\0228\n\027invalid_hover_"
+    "row_color\030g \001(\0132\027.protocol.common.Color4"
+    "\0223\n\022default_line_color\030h \001(\0132\027.protocol."
+    "common.Color4\022>\n\034effect_view_background_"
+    "color\030\202\001 \001(\0132\027.protocol.common.Color4\022G\n"
     "%effect_view_background_color_selected\030\203"
-    "\001 \001(\0132\027.common.protocol.Color4\022@\n\036timeli"
-    "ne_view_background_color\030\204\001 \001(\0132\027.common"
-    ".protocol.Color4\0223\n\021effect_line_color\030\205\001"
-    " \001(\0132\027.common.protocol.Color4\0228\n\026keyfram"
-    "e_default_color\030\226\001 \001(\0132\027.common.protocol"
+    "\001 \001(\0132\027.protocol.common.Color4\022@\n\036timeli"
+    "ne_view_background_color\030\204\001 \001(\0132\027.protoc"
+    "ol.common.Color4\0223\n\021effect_line_color\030\205\001"
+    " \001(\0132\027.protocol.common.Color4\0228\n\026keyfram"
+    "e_default_color\030\226\001 \001(\0132\027.protocol.common"
     ".Color4\0229\n\027keyframe_selected_color\030\227\001 \001("
-    "\0132\027.common.protocol.Color4\0228\n\026keyframe_c"
-    "ontrol_color\030\230\001 \001(\0132\027.common.protocol.Co"
-    "lor4\022-\n\013graph_color\030\231\001 \001(\0132\027.common.prot"
-    "ocol.Color4\0220\n\016var_text_color\030\240\001 \001(\0132\027.c"
-    "ommon.protocol.Color4\0221\n\017var_value_color"
-    "\030\241\001 \001(\0132\027.common.protocol.Color4\022<\n\032effe"
-    "ct_icon_expanded_color\030\310\001 \001(\0132\027.common.p"
-    "rotocol.Color4\022=\n\033effect_icon_collapsed_"
-    "color\030\311\001 \001(\0132\027.common.protocol.Color4", 1397);
+    "\0132\027.protocol.common.Color4\0228\n\026keyframe_c"
+    "ontrol_color\030\230\001 \001(\0132\027.protocol.common.Co"
+    "lor4\022-\n\013graph_color\030\231\001 \001(\0132\027.protocol.co"
+    "mmon.Color4\0220\n\016var_text_color\030\240\001 \001(\0132\027.p"
+    "rotocol.common.Color4\0221\n\017var_value_color"
+    "\030\241\001 \001(\0132\027.protocol.common.Color4\022<\n\032effe"
+    "ct_icon_expanded_color\030\310\001 \001(\0132\027.protocol"
+    ".common.Color4\022=\n\033effect_icon_collapsed_"
+    "color\030\311\001 \001(\0132\027.protocol.common.Color4", 1397);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "editor_settings.proto", &protobuf_RegisterTypes);
   Settings::default_instance_ = new Settings();
@@ -197,23 +197,23 @@ Settings::Settings()
 }
 
 void Settings::InitAsDefaultInstance() {
-  default_row_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  selected_row_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  hover_row_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  invalid_hover_row_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  default_line_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  effect_view_background_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  effect_view_background_color_selected_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  timeline_view_background_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  effect_line_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  keyframe_default_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  keyframe_selected_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  keyframe_control_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  graph_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  var_text_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  var_value_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  effect_icon_expanded_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
-  effect_icon_collapsed_color_ = const_cast< ::common::protocol::Color4*>(&::common::protocol::Color4::default_instance());
+  default_row_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  selected_row_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  hover_row_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  invalid_hover_row_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  default_line_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  effect_view_background_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  effect_view_background_color_selected_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  timeline_view_background_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  effect_line_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  keyframe_default_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  keyframe_selected_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  keyframe_control_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  graph_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  var_text_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  var_value_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  effect_icon_expanded_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
+  effect_icon_collapsed_color_ = const_cast< ::protocol::common::Color4*>(&::protocol::common::Color4::default_instance());
 }
 
 Settings::Settings(const Settings& from)
@@ -320,59 +320,59 @@ void Settings::Clear() {
     timeline_zoom_default_ = 128u;
     keyframe_size_ = 5u;
     if (has_default_row_color()) {
-      if (default_row_color_ != NULL) default_row_color_->::common::protocol::Color4::Clear();
+      if (default_row_color_ != NULL) default_row_color_->::protocol::common::Color4::Clear();
     }
     if (has_selected_row_color()) {
-      if (selected_row_color_ != NULL) selected_row_color_->::common::protocol::Color4::Clear();
+      if (selected_row_color_ != NULL) selected_row_color_->::protocol::common::Color4::Clear();
     }
     if (has_hover_row_color()) {
-      if (hover_row_color_ != NULL) hover_row_color_->::common::protocol::Color4::Clear();
+      if (hover_row_color_ != NULL) hover_row_color_->::protocol::common::Color4::Clear();
     }
     if (has_invalid_hover_row_color()) {
-      if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::common::protocol::Color4::Clear();
+      if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::protocol::common::Color4::Clear();
     }
   }
   if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
     if (has_default_line_color()) {
-      if (default_line_color_ != NULL) default_line_color_->::common::protocol::Color4::Clear();
+      if (default_line_color_ != NULL) default_line_color_->::protocol::common::Color4::Clear();
     }
     if (has_effect_view_background_color()) {
-      if (effect_view_background_color_ != NULL) effect_view_background_color_->::common::protocol::Color4::Clear();
+      if (effect_view_background_color_ != NULL) effect_view_background_color_->::protocol::common::Color4::Clear();
     }
     if (has_effect_view_background_color_selected()) {
-      if (effect_view_background_color_selected_ != NULL) effect_view_background_color_selected_->::common::protocol::Color4::Clear();
+      if (effect_view_background_color_selected_ != NULL) effect_view_background_color_selected_->::protocol::common::Color4::Clear();
     }
     if (has_timeline_view_background_color()) {
-      if (timeline_view_background_color_ != NULL) timeline_view_background_color_->::common::protocol::Color4::Clear();
+      if (timeline_view_background_color_ != NULL) timeline_view_background_color_->::protocol::common::Color4::Clear();
     }
     if (has_effect_line_color()) {
-      if (effect_line_color_ != NULL) effect_line_color_->::common::protocol::Color4::Clear();
+      if (effect_line_color_ != NULL) effect_line_color_->::protocol::common::Color4::Clear();
     }
     if (has_keyframe_default_color()) {
-      if (keyframe_default_color_ != NULL) keyframe_default_color_->::common::protocol::Color4::Clear();
+      if (keyframe_default_color_ != NULL) keyframe_default_color_->::protocol::common::Color4::Clear();
     }
     if (has_keyframe_selected_color()) {
-      if (keyframe_selected_color_ != NULL) keyframe_selected_color_->::common::protocol::Color4::Clear();
+      if (keyframe_selected_color_ != NULL) keyframe_selected_color_->::protocol::common::Color4::Clear();
     }
     if (has_keyframe_control_color()) {
-      if (keyframe_control_color_ != NULL) keyframe_control_color_->::common::protocol::Color4::Clear();
+      if (keyframe_control_color_ != NULL) keyframe_control_color_->::protocol::common::Color4::Clear();
     }
   }
   if (_has_bits_[24 / 32] & (0xffu << (24 % 32))) {
     if (has_graph_color()) {
-      if (graph_color_ != NULL) graph_color_->::common::protocol::Color4::Clear();
+      if (graph_color_ != NULL) graph_color_->::protocol::common::Color4::Clear();
     }
     if (has_var_text_color()) {
-      if (var_text_color_ != NULL) var_text_color_->::common::protocol::Color4::Clear();
+      if (var_text_color_ != NULL) var_text_color_->::protocol::common::Color4::Clear();
     }
     if (has_var_value_color()) {
-      if (var_value_color_ != NULL) var_value_color_->::common::protocol::Color4::Clear();
+      if (var_value_color_ != NULL) var_value_color_->::protocol::common::Color4::Clear();
     }
     if (has_effect_icon_expanded_color()) {
-      if (effect_icon_expanded_color_ != NULL) effect_icon_expanded_color_->::common::protocol::Color4::Clear();
+      if (effect_icon_expanded_color_ != NULL) effect_icon_expanded_color_->::protocol::common::Color4::Clear();
     }
     if (has_effect_icon_collapsed_color()) {
-      if (effect_icon_collapsed_color_ != NULL) effect_icon_collapsed_color_->::common::protocol::Color4::Clear();
+      if (effect_icon_collapsed_color_ != NULL) effect_icon_collapsed_color_->::protocol::common::Color4::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -576,7 +576,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 default_row_color = 100;
+      // optional .protocol.common.Color4 default_row_color = 100;
       case 100: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -590,7 +590,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 selected_row_color = 101;
+      // optional .protocol.common.Color4 selected_row_color = 101;
       case 101: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -604,7 +604,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 hover_row_color = 102;
+      // optional .protocol.common.Color4 hover_row_color = 102;
       case 102: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -618,7 +618,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 invalid_hover_row_color = 103;
+      // optional .protocol.common.Color4 invalid_hover_row_color = 103;
       case 103: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -632,7 +632,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 default_line_color = 104;
+      // optional .protocol.common.Color4 default_line_color = 104;
       case 104: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -646,7 +646,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 effect_view_background_color = 130;
+      // optional .protocol.common.Color4 effect_view_background_color = 130;
       case 130: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -660,7 +660,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 effect_view_background_color_selected = 131;
+      // optional .protocol.common.Color4 effect_view_background_color_selected = 131;
       case 131: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -674,7 +674,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 timeline_view_background_color = 132;
+      // optional .protocol.common.Color4 timeline_view_background_color = 132;
       case 132: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -688,7 +688,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 effect_line_color = 133;
+      // optional .protocol.common.Color4 effect_line_color = 133;
       case 133: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -702,7 +702,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 keyframe_default_color = 150;
+      // optional .protocol.common.Color4 keyframe_default_color = 150;
       case 150: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -716,7 +716,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 keyframe_selected_color = 151;
+      // optional .protocol.common.Color4 keyframe_selected_color = 151;
       case 151: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -730,7 +730,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 keyframe_control_color = 152;
+      // optional .protocol.common.Color4 keyframe_control_color = 152;
       case 152: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -744,7 +744,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 graph_color = 153;
+      // optional .protocol.common.Color4 graph_color = 153;
       case 153: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -758,7 +758,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 var_text_color = 160;
+      // optional .protocol.common.Color4 var_text_color = 160;
       case 160: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -772,7 +772,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 var_value_color = 161;
+      // optional .protocol.common.Color4 var_value_color = 161;
       case 161: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -786,7 +786,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 effect_icon_expanded_color = 200;
+      // optional .protocol.common.Color4 effect_icon_expanded_color = 200;
       case 200: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -800,7 +800,7 @@ bool Settings::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.Color4 effect_icon_collapsed_color = 201;
+      // optional .protocol.common.Color4 effect_icon_collapsed_color = 201;
       case 201: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -892,103 +892,103 @@ void Settings::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(50, this->keyframe_size(), output);
   }
 
-  // optional .common.protocol.Color4 default_row_color = 100;
+  // optional .protocol.common.Color4 default_row_color = 100;
   if (has_default_row_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       100, this->default_row_color(), output);
   }
 
-  // optional .common.protocol.Color4 selected_row_color = 101;
+  // optional .protocol.common.Color4 selected_row_color = 101;
   if (has_selected_row_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       101, this->selected_row_color(), output);
   }
 
-  // optional .common.protocol.Color4 hover_row_color = 102;
+  // optional .protocol.common.Color4 hover_row_color = 102;
   if (has_hover_row_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       102, this->hover_row_color(), output);
   }
 
-  // optional .common.protocol.Color4 invalid_hover_row_color = 103;
+  // optional .protocol.common.Color4 invalid_hover_row_color = 103;
   if (has_invalid_hover_row_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       103, this->invalid_hover_row_color(), output);
   }
 
-  // optional .common.protocol.Color4 default_line_color = 104;
+  // optional .protocol.common.Color4 default_line_color = 104;
   if (has_default_line_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       104, this->default_line_color(), output);
   }
 
-  // optional .common.protocol.Color4 effect_view_background_color = 130;
+  // optional .protocol.common.Color4 effect_view_background_color = 130;
   if (has_effect_view_background_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       130, this->effect_view_background_color(), output);
   }
 
-  // optional .common.protocol.Color4 effect_view_background_color_selected = 131;
+  // optional .protocol.common.Color4 effect_view_background_color_selected = 131;
   if (has_effect_view_background_color_selected()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       131, this->effect_view_background_color_selected(), output);
   }
 
-  // optional .common.protocol.Color4 timeline_view_background_color = 132;
+  // optional .protocol.common.Color4 timeline_view_background_color = 132;
   if (has_timeline_view_background_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       132, this->timeline_view_background_color(), output);
   }
 
-  // optional .common.protocol.Color4 effect_line_color = 133;
+  // optional .protocol.common.Color4 effect_line_color = 133;
   if (has_effect_line_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       133, this->effect_line_color(), output);
   }
 
-  // optional .common.protocol.Color4 keyframe_default_color = 150;
+  // optional .protocol.common.Color4 keyframe_default_color = 150;
   if (has_keyframe_default_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       150, this->keyframe_default_color(), output);
   }
 
-  // optional .common.protocol.Color4 keyframe_selected_color = 151;
+  // optional .protocol.common.Color4 keyframe_selected_color = 151;
   if (has_keyframe_selected_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       151, this->keyframe_selected_color(), output);
   }
 
-  // optional .common.protocol.Color4 keyframe_control_color = 152;
+  // optional .protocol.common.Color4 keyframe_control_color = 152;
   if (has_keyframe_control_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       152, this->keyframe_control_color(), output);
   }
 
-  // optional .common.protocol.Color4 graph_color = 153;
+  // optional .protocol.common.Color4 graph_color = 153;
   if (has_graph_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       153, this->graph_color(), output);
   }
 
-  // optional .common.protocol.Color4 var_text_color = 160;
+  // optional .protocol.common.Color4 var_text_color = 160;
   if (has_var_text_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       160, this->var_text_color(), output);
   }
 
-  // optional .common.protocol.Color4 var_value_color = 161;
+  // optional .protocol.common.Color4 var_value_color = 161;
   if (has_var_value_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       161, this->var_value_color(), output);
   }
 
-  // optional .common.protocol.Color4 effect_icon_expanded_color = 200;
+  // optional .protocol.common.Color4 effect_icon_expanded_color = 200;
   if (has_effect_icon_expanded_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       200, this->effect_icon_expanded_color(), output);
   }
 
-  // optional .common.protocol.Color4 effect_icon_collapsed_color = 201;
+  // optional .protocol.common.Color4 effect_icon_collapsed_color = 201;
   if (has_effect_icon_collapsed_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       201, this->effect_icon_collapsed_color(), output);
@@ -1062,119 +1062,119 @@ void Settings::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(50, this->keyframe_size(), target);
   }
 
-  // optional .common.protocol.Color4 default_row_color = 100;
+  // optional .protocol.common.Color4 default_row_color = 100;
   if (has_default_row_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         100, this->default_row_color(), target);
   }
 
-  // optional .common.protocol.Color4 selected_row_color = 101;
+  // optional .protocol.common.Color4 selected_row_color = 101;
   if (has_selected_row_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         101, this->selected_row_color(), target);
   }
 
-  // optional .common.protocol.Color4 hover_row_color = 102;
+  // optional .protocol.common.Color4 hover_row_color = 102;
   if (has_hover_row_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         102, this->hover_row_color(), target);
   }
 
-  // optional .common.protocol.Color4 invalid_hover_row_color = 103;
+  // optional .protocol.common.Color4 invalid_hover_row_color = 103;
   if (has_invalid_hover_row_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         103, this->invalid_hover_row_color(), target);
   }
 
-  // optional .common.protocol.Color4 default_line_color = 104;
+  // optional .protocol.common.Color4 default_line_color = 104;
   if (has_default_line_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         104, this->default_line_color(), target);
   }
 
-  // optional .common.protocol.Color4 effect_view_background_color = 130;
+  // optional .protocol.common.Color4 effect_view_background_color = 130;
   if (has_effect_view_background_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         130, this->effect_view_background_color(), target);
   }
 
-  // optional .common.protocol.Color4 effect_view_background_color_selected = 131;
+  // optional .protocol.common.Color4 effect_view_background_color_selected = 131;
   if (has_effect_view_background_color_selected()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         131, this->effect_view_background_color_selected(), target);
   }
 
-  // optional .common.protocol.Color4 timeline_view_background_color = 132;
+  // optional .protocol.common.Color4 timeline_view_background_color = 132;
   if (has_timeline_view_background_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         132, this->timeline_view_background_color(), target);
   }
 
-  // optional .common.protocol.Color4 effect_line_color = 133;
+  // optional .protocol.common.Color4 effect_line_color = 133;
   if (has_effect_line_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         133, this->effect_line_color(), target);
   }
 
-  // optional .common.protocol.Color4 keyframe_default_color = 150;
+  // optional .protocol.common.Color4 keyframe_default_color = 150;
   if (has_keyframe_default_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         150, this->keyframe_default_color(), target);
   }
 
-  // optional .common.protocol.Color4 keyframe_selected_color = 151;
+  // optional .protocol.common.Color4 keyframe_selected_color = 151;
   if (has_keyframe_selected_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         151, this->keyframe_selected_color(), target);
   }
 
-  // optional .common.protocol.Color4 keyframe_control_color = 152;
+  // optional .protocol.common.Color4 keyframe_control_color = 152;
   if (has_keyframe_control_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         152, this->keyframe_control_color(), target);
   }
 
-  // optional .common.protocol.Color4 graph_color = 153;
+  // optional .protocol.common.Color4 graph_color = 153;
   if (has_graph_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         153, this->graph_color(), target);
   }
 
-  // optional .common.protocol.Color4 var_text_color = 160;
+  // optional .protocol.common.Color4 var_text_color = 160;
   if (has_var_text_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         160, this->var_text_color(), target);
   }
 
-  // optional .common.protocol.Color4 var_value_color = 161;
+  // optional .protocol.common.Color4 var_value_color = 161;
   if (has_var_value_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         161, this->var_value_color(), target);
   }
 
-  // optional .common.protocol.Color4 effect_icon_expanded_color = 200;
+  // optional .protocol.common.Color4 effect_icon_expanded_color = 200;
   if (has_effect_icon_expanded_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         200, this->effect_icon_expanded_color(), target);
   }
 
-  // optional .common.protocol.Color4 effect_icon_collapsed_color = 201;
+  // optional .protocol.common.Color4 effect_icon_collapsed_color = 201;
   if (has_effect_icon_collapsed_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1278,28 +1278,28 @@ int Settings::ByteSize() const {
           this->keyframe_size());
     }
 
-    // optional .common.protocol.Color4 default_row_color = 100;
+    // optional .protocol.common.Color4 default_row_color = 100;
     if (has_default_row_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->default_row_color());
     }
 
-    // optional .common.protocol.Color4 selected_row_color = 101;
+    // optional .protocol.common.Color4 selected_row_color = 101;
     if (has_selected_row_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->selected_row_color());
     }
 
-    // optional .common.protocol.Color4 hover_row_color = 102;
+    // optional .protocol.common.Color4 hover_row_color = 102;
     if (has_hover_row_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->hover_row_color());
     }
 
-    // optional .common.protocol.Color4 invalid_hover_row_color = 103;
+    // optional .protocol.common.Color4 invalid_hover_row_color = 103;
     if (has_invalid_hover_row_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1308,56 +1308,56 @@ int Settings::ByteSize() const {
 
   }
   if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
-    // optional .common.protocol.Color4 default_line_color = 104;
+    // optional .protocol.common.Color4 default_line_color = 104;
     if (has_default_line_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->default_line_color());
     }
 
-    // optional .common.protocol.Color4 effect_view_background_color = 130;
+    // optional .protocol.common.Color4 effect_view_background_color = 130;
     if (has_effect_view_background_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->effect_view_background_color());
     }
 
-    // optional .common.protocol.Color4 effect_view_background_color_selected = 131;
+    // optional .protocol.common.Color4 effect_view_background_color_selected = 131;
     if (has_effect_view_background_color_selected()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->effect_view_background_color_selected());
     }
 
-    // optional .common.protocol.Color4 timeline_view_background_color = 132;
+    // optional .protocol.common.Color4 timeline_view_background_color = 132;
     if (has_timeline_view_background_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->timeline_view_background_color());
     }
 
-    // optional .common.protocol.Color4 effect_line_color = 133;
+    // optional .protocol.common.Color4 effect_line_color = 133;
     if (has_effect_line_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->effect_line_color());
     }
 
-    // optional .common.protocol.Color4 keyframe_default_color = 150;
+    // optional .protocol.common.Color4 keyframe_default_color = 150;
     if (has_keyframe_default_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->keyframe_default_color());
     }
 
-    // optional .common.protocol.Color4 keyframe_selected_color = 151;
+    // optional .protocol.common.Color4 keyframe_selected_color = 151;
     if (has_keyframe_selected_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->keyframe_selected_color());
     }
 
-    // optional .common.protocol.Color4 keyframe_control_color = 152;
+    // optional .protocol.common.Color4 keyframe_control_color = 152;
     if (has_keyframe_control_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1366,35 +1366,35 @@ int Settings::ByteSize() const {
 
   }
   if (_has_bits_[24 / 32] & (0xffu << (24 % 32))) {
-    // optional .common.protocol.Color4 graph_color = 153;
+    // optional .protocol.common.Color4 graph_color = 153;
     if (has_graph_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->graph_color());
     }
 
-    // optional .common.protocol.Color4 var_text_color = 160;
+    // optional .protocol.common.Color4 var_text_color = 160;
     if (has_var_text_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->var_text_color());
     }
 
-    // optional .common.protocol.Color4 var_value_color = 161;
+    // optional .protocol.common.Color4 var_value_color = 161;
     if (has_var_value_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->var_value_color());
     }
 
-    // optional .common.protocol.Color4 effect_icon_expanded_color = 200;
+    // optional .protocol.common.Color4 effect_icon_expanded_color = 200;
     if (has_effect_icon_expanded_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->effect_icon_expanded_color());
     }
 
-    // optional .common.protocol.Color4 effect_icon_collapsed_color = 201;
+    // optional .protocol.common.Color4 effect_icon_collapsed_color = 201;
     if (has_effect_icon_collapsed_color()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1467,59 +1467,59 @@ void Settings::MergeFrom(const Settings& from) {
       set_keyframe_size(from.keyframe_size());
     }
     if (from.has_default_row_color()) {
-      mutable_default_row_color()->::common::protocol::Color4::MergeFrom(from.default_row_color());
+      mutable_default_row_color()->::protocol::common::Color4::MergeFrom(from.default_row_color());
     }
     if (from.has_selected_row_color()) {
-      mutable_selected_row_color()->::common::protocol::Color4::MergeFrom(from.selected_row_color());
+      mutable_selected_row_color()->::protocol::common::Color4::MergeFrom(from.selected_row_color());
     }
     if (from.has_hover_row_color()) {
-      mutable_hover_row_color()->::common::protocol::Color4::MergeFrom(from.hover_row_color());
+      mutable_hover_row_color()->::protocol::common::Color4::MergeFrom(from.hover_row_color());
     }
     if (from.has_invalid_hover_row_color()) {
-      mutable_invalid_hover_row_color()->::common::protocol::Color4::MergeFrom(from.invalid_hover_row_color());
+      mutable_invalid_hover_row_color()->::protocol::common::Color4::MergeFrom(from.invalid_hover_row_color());
     }
   }
   if (from._has_bits_[16 / 32] & (0xffu << (16 % 32))) {
     if (from.has_default_line_color()) {
-      mutable_default_line_color()->::common::protocol::Color4::MergeFrom(from.default_line_color());
+      mutable_default_line_color()->::protocol::common::Color4::MergeFrom(from.default_line_color());
     }
     if (from.has_effect_view_background_color()) {
-      mutable_effect_view_background_color()->::common::protocol::Color4::MergeFrom(from.effect_view_background_color());
+      mutable_effect_view_background_color()->::protocol::common::Color4::MergeFrom(from.effect_view_background_color());
     }
     if (from.has_effect_view_background_color_selected()) {
-      mutable_effect_view_background_color_selected()->::common::protocol::Color4::MergeFrom(from.effect_view_background_color_selected());
+      mutable_effect_view_background_color_selected()->::protocol::common::Color4::MergeFrom(from.effect_view_background_color_selected());
     }
     if (from.has_timeline_view_background_color()) {
-      mutable_timeline_view_background_color()->::common::protocol::Color4::MergeFrom(from.timeline_view_background_color());
+      mutable_timeline_view_background_color()->::protocol::common::Color4::MergeFrom(from.timeline_view_background_color());
     }
     if (from.has_effect_line_color()) {
-      mutable_effect_line_color()->::common::protocol::Color4::MergeFrom(from.effect_line_color());
+      mutable_effect_line_color()->::protocol::common::Color4::MergeFrom(from.effect_line_color());
     }
     if (from.has_keyframe_default_color()) {
-      mutable_keyframe_default_color()->::common::protocol::Color4::MergeFrom(from.keyframe_default_color());
+      mutable_keyframe_default_color()->::protocol::common::Color4::MergeFrom(from.keyframe_default_color());
     }
     if (from.has_keyframe_selected_color()) {
-      mutable_keyframe_selected_color()->::common::protocol::Color4::MergeFrom(from.keyframe_selected_color());
+      mutable_keyframe_selected_color()->::protocol::common::Color4::MergeFrom(from.keyframe_selected_color());
     }
     if (from.has_keyframe_control_color()) {
-      mutable_keyframe_control_color()->::common::protocol::Color4::MergeFrom(from.keyframe_control_color());
+      mutable_keyframe_control_color()->::protocol::common::Color4::MergeFrom(from.keyframe_control_color());
     }
   }
   if (from._has_bits_[24 / 32] & (0xffu << (24 % 32))) {
     if (from.has_graph_color()) {
-      mutable_graph_color()->::common::protocol::Color4::MergeFrom(from.graph_color());
+      mutable_graph_color()->::protocol::common::Color4::MergeFrom(from.graph_color());
     }
     if (from.has_var_text_color()) {
-      mutable_var_text_color()->::common::protocol::Color4::MergeFrom(from.var_text_color());
+      mutable_var_text_color()->::protocol::common::Color4::MergeFrom(from.var_text_color());
     }
     if (from.has_var_value_color()) {
-      mutable_var_value_color()->::common::protocol::Color4::MergeFrom(from.var_value_color());
+      mutable_var_value_color()->::protocol::common::Color4::MergeFrom(from.var_value_color());
     }
     if (from.has_effect_icon_expanded_color()) {
-      mutable_effect_icon_expanded_color()->::common::protocol::Color4::MergeFrom(from.effect_icon_expanded_color());
+      mutable_effect_icon_expanded_color()->::protocol::common::Color4::MergeFrom(from.effect_icon_expanded_color());
     }
     if (from.has_effect_icon_collapsed_color()) {
-      mutable_effect_icon_collapsed_color()->::common::protocol::Color4::MergeFrom(from.effect_icon_collapsed_color());
+      mutable_effect_icon_collapsed_color()->::protocol::common::Color4::MergeFrom(from.effect_icon_collapsed_color());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1590,7 +1590,7 @@ void Settings::Swap(Settings* other) {
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace protocol
 }  // namespace editor
+}  // namespace protocol
 
 // @@protoc_insertion_point(global_scope)

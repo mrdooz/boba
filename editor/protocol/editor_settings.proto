@@ -1,4 +1,4 @@
-package editor.protocol;
+package protocol.editor;
 
 import "common.proto";
 
@@ -21,25 +21,25 @@ message Settings
 
   optional uint32 keyframe_size = 50 [default = 5];
   
-  optional common.protocol.Color4 default_row_color = 100;
-  optional common.protocol.Color4 selected_row_color = 101;
-  optional common.protocol.Color4 hover_row_color = 102;
-  optional common.protocol.Color4 invalid_hover_row_color = 103;
-  optional common.protocol.Color4 default_line_color = 104;
+  optional protocol.common.Color4 default_row_color = 100;
+  optional protocol.common.Color4 selected_row_color = 101;
+  optional protocol.common.Color4 hover_row_color = 102;
+  optional protocol.common.Color4 invalid_hover_row_color = 103;
+  optional protocol.common.Color4 default_line_color = 104;
 
-  optional common.protocol.Color4 effect_view_background_color = 130;
-  optional common.protocol.Color4 effect_view_background_color_selected = 131;
-  optional common.protocol.Color4 timeline_view_background_color = 132;
-  optional common.protocol.Color4 effect_line_color = 133;
+  optional protocol.common.Color4 effect_view_background_color = 130;
+  optional protocol.common.Color4 effect_view_background_color_selected = 131;
+  optional protocol.common.Color4 timeline_view_background_color = 132;
+  optional protocol.common.Color4 effect_line_color = 133;
 
-  optional common.protocol.Color4 keyframe_default_color = 150;
-  optional common.protocol.Color4 keyframe_selected_color = 151;
-  optional common.protocol.Color4 keyframe_control_color = 152;
-  optional common.protocol.Color4 graph_color = 153;
+  optional protocol.common.Color4 keyframe_default_color = 150;
+  optional protocol.common.Color4 keyframe_selected_color = 151;
+  optional protocol.common.Color4 keyframe_control_color = 152;
+  optional protocol.common.Color4 graph_color = 153;
 
-  optional common.protocol.Color4 var_text_color = 160;
-  optional common.protocol.Color4 var_value_color = 161;
+  optional protocol.common.Color4 var_text_color = 160;
+  optional protocol.common.Color4 var_value_color = 161;
 
-  optional common.protocol.Color4 effect_icon_expanded_color = 200;
-  optional common.protocol.Color4 effect_icon_collapsed_color = 201;
+  optional protocol.common.Color4 effect_icon_expanded_color = 200;
+  optional protocol.common.Color4 effect_icon_collapsed_color = 201;
 }

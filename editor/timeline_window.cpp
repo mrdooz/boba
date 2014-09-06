@@ -1,9 +1,9 @@
 #include "timeline_window.hpp"
 #include "editor.hpp"
 
-#include "protocol/effects_proto.hpp"
 #include "effect_row.hpp"
 #include "row_var.hpp"
+#include "protocol/proto_helpers.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -57,7 +57,7 @@ bool TimelineWindow::Init()
   if (!_font.loadFromFile(EDITOR.GetAppRoot() + "gfx/coders_crux.ttf"))
     return false;
 
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   int width = settings.effect_view_width();
 
   const Vector2f& windowSize = GetSize();
@@ -175,7 +175,7 @@ void TimelineWindow::AddDefaultRows(bool addKeyframes)
 //----------------------------------------------------------------------------------
 void TimelineWindow::RecalcEffecRows()
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   float rowHeight = settings.effect_row_height();
 
   float curY = settings.ticker_height();
@@ -231,7 +231,7 @@ bool TimelineWindow::OnKeyReleased(const Event &event)
 //----------------------------------------------------------------------------------
 bool TimelineWindow::OnMouseButtonPressed(const Event& event)
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
 
   int y = (int)(event.mouseButton.y - _pos.y);
 
@@ -359,7 +359,7 @@ bool TimelineWindow::OnMouseWheelMoved(const Event& event)
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawTimeline()
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
 
   float w = settings.effect_view_width();
 
@@ -422,7 +422,7 @@ void TimelineWindow::DrawTimeline()
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawTimelinePost()
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
 
   VertexArray curLine(sf::Lines);
 
@@ -448,7 +448,7 @@ void TimelineWindow::DrawTimelinePost()
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawEffects()
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   float w = settings.effect_view_width();
 
   RectangleShape s;
@@ -481,7 +481,7 @@ void TimelineWindow::DrawEffects()
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawStatusBar()
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
 
   // draw the background
   _statusBar.Apply();
@@ -505,7 +505,7 @@ void TimelineWindow::DrawStatusBar()
 //----------------------------------------------------------------------------------
 int TimelineWindow::TimeToPixel(s64 ms) const
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   int w = settings.effect_view_width();
   return w + (ms - _panelOffset.total_milliseconds()) / (float)_tickIntervals[_curZoom].total_milliseconds() * settings.ticker_interval();
 }
@@ -519,7 +519,7 @@ int TimelineWindow::TimeToPixel(const time_duration& t) const
 //----------------------------------------------------------------------------------
 time_duration TimelineWindow::PixelToTime(int x) const
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   int w = settings.effect_view_width();
   x -= w;
   if (x < 0)
@@ -537,14 +537,14 @@ s64 TimelineWindow::PixelToTimeMs(int x) const
 //----------------------------------------------------------------------------------
 time_duration TimelineWindow::AbsPixelToTime(int x) const
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   return _tickIntervals[_curZoom] * x / (float)settings.ticker_interval();
 }
 
 //----------------------------------------------------------------------------------
 void TimelineWindow::DrawBackground()
 {
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   float w = settings.effect_view_width();
 
   RectangleShape s;
@@ -585,10 +585,10 @@ void TimelineWindow::UpdateStatusBar(int segment, const string& value)
 //----------------------------------------------------------------------------------
 void TimelineWindow::KeyframesModified()
 {
-  effect::protocol::EffectSettings settings;
+  protocol::effect::EffectSettings settings;
   for (const EffectRow* row : _effectRows)
   {
-    effect::protocol::EffectSetting* setting = settings.add_effect_setting();
+    protocol::effect::EffectSetting* setting = settings.add_effect_setting();
     setting->set_id(row->_id);
     row->ToProtocol(setting);
   }
@@ -597,13 +597,13 @@ void TimelineWindow::KeyframesModified()
 }
 
 //----------------------------------------------------------------------------------
-void TimelineWindow::Reset(const effect::protocol::EffectSettings& settings)
+void TimelineWindow::Reset(const protocol::effect::EffectSettings& settings)
 {
   for (EffectRow* e : _effectRows)
     delete e;
   _effectRows.clear();
 
-  for (const effect::protocol::EffectSetting& setting : settings.effect_setting())
+  for (const protocol::effect::EffectSetting& setting : settings.effect_setting())
   {
     switch (setting.type())
     {
@@ -611,7 +611,7 @@ void TimelineWindow::Reset(const effect::protocol::EffectSettings& settings)
         break;
 
       case 1:
-        effect::protocol::plexus::Plexus p;
+        protocol::effect::plexus::Plexus p;
         const string& str = setting.config_msg();
         p.ParseFromArray(str.data(), (int)str.size());
 

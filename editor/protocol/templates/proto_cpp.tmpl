@@ -1,0 +1,52 @@
+#include "{{ out_name }}_proto.hpp"
+
+namespace editor
+{
+  {% for class in classes %}
+  {{ class.name }} FromProtocol(const {{ class.proto_type }}& p)
+  {
+    {{ class.name }} res;
+    {% for member in class.members %}
+    {% if member.is_enum %}
+    res.{{ member.name }} = ({{ member.type}})p.{{ member.proto_name }}();
+    {% elif member.is_native %}
+    if (p.has_{{ member.proto_name}}())
+      res.{{ member.name }} = p.{{ member.proto_name }}();
+    {% elif member.is_bytes %}
+    res.{{ member.name }}.resize(p.{{ member.proto_name }}().size());
+    memcpy(res.{{ member.name }}.data(), p.{{ member.proto_name }}().data(), p.{{ member.proto_name }}().size());
+    {% else %}
+    {% if member.is_repeated %}
+    for (const auto& x : p.{{ member.proto_name}}() )
+      res.{{ member.name }}.push_back(FromProtocol(x));
+    {% else %}
+    if (p.has_{{ member.proto_name}}())
+      res.{{ member.name }} = FromProtocol(p.{{ member.proto_name }}());
+    {% endif %}
+    {% endif %}
+
+    {% endfor %}
+    return res;
+  }
+
+  void ToProtocol(const {{ class.name }}& v, {{ class.proto_type }}* p)
+  {
+    {% for member in class.members %}
+    {% if member.is_enum %}
+    {% elif member.is_native %}
+    p->set_{{ member.proto_name }}(v.{{ member.name }});
+    {% elif member.is_bytes %}
+    {% else %}
+    {% if member.is_repeated %}
+    for (const auto& x : v.{{ member.name }})
+      ToProtocol(x, p->add_{{ member.proto_name}}());
+    {% else %}
+    ToProtocol(v.{{ member.name }}, p->mutable_{{ member.proto_name }}());
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+  }
+
+  {% endfor %}	
+}
+

@@ -1,0 +1,35 @@
+#pragma once
+
+{% for dep in dependencies %}
+#include "{{ dep }}_types.hpp"
+{% endfor %}
+
+namespace {{ namespace }}
+{
+  {% for class in all_classes %}
+  struct {{ class }};
+  {% endfor %}
+    
+  {% for class in classes %}
+  struct {{ class.name }}
+  {
+    {% for enum in class.enums %}
+    enum class {{ enum.name }}
+    {
+    {% for value in enum.vals %}
+      {{ value.name }} = {{ value.number }},
+    {% endfor %}
+    };
+
+    {% endfor %}
+    {% for member in class.members %}
+    {% if member.default_value %}
+    {{ member.type }} {{ member.name }} = {{ member.default_value }};
+    {% else %}
+    {{ member.type }} {{ member.name }};
+    {% endif %}
+    {% endfor %}
+  };
+
+  {% endfor %}  
+}

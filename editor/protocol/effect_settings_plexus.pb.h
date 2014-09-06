@@ -28,8 +28,8 @@
 #include "common.pb.h"
 // @@protoc_insertion_point(includes)
 
-namespace effect {
 namespace protocol {
+namespace effect {
 namespace plexus {
 
 // Internal implementation detail -- do not call these.
@@ -117,37 +117,37 @@ class Plexus : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .effect.protocol.plexus.TextPath text_paths = 1;
+  // repeated .protocol.effect.plexus.TextPath text_paths = 1;
   inline int text_paths_size() const;
   inline void clear_text_paths();
   static const int kTextPathsFieldNumber = 1;
-  inline const ::effect::protocol::plexus::TextPath& text_paths(int index) const;
-  inline ::effect::protocol::plexus::TextPath* mutable_text_paths(int index);
-  inline ::effect::protocol::plexus::TextPath* add_text_paths();
-  inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::TextPath >&
+  inline const ::protocol::effect::plexus::TextPath& text_paths(int index) const;
+  inline ::protocol::effect::plexus::TextPath* mutable_text_paths(int index);
+  inline ::protocol::effect::plexus::TextPath* add_text_paths();
+  inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPath >&
       text_paths() const;
-  inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::TextPath >*
+  inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPath >*
       mutable_text_paths();
 
-  // repeated .effect.protocol.plexus.NoiseEffector noise_effectors = 2;
+  // repeated .protocol.effect.plexus.NoiseEffector noise_effectors = 2;
   inline int noise_effectors_size() const;
   inline void clear_noise_effectors();
   static const int kNoiseEffectorsFieldNumber = 2;
-  inline const ::effect::protocol::plexus::NoiseEffector& noise_effectors(int index) const;
-  inline ::effect::protocol::plexus::NoiseEffector* mutable_noise_effectors(int index);
-  inline ::effect::protocol::plexus::NoiseEffector* add_noise_effectors();
-  inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::NoiseEffector >&
+  inline const ::protocol::effect::plexus::NoiseEffector& noise_effectors(int index) const;
+  inline ::protocol::effect::plexus::NoiseEffector* mutable_noise_effectors(int index);
+  inline ::protocol::effect::plexus::NoiseEffector* add_noise_effectors();
+  inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffector >&
       noise_effectors() const;
-  inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::NoiseEffector >*
+  inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffector >*
       mutable_noise_effectors();
 
-  // @@protoc_insertion_point(class_scope:effect.protocol.plexus.Plexus)
+  // @@protoc_insertion_point(class_scope:protocol.effect.plexus.Plexus)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::TextPath > text_paths_;
-  ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::NoiseEffector > noise_effectors_;
+  ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPath > text_paths_;
+  ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffector > noise_effectors_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -227,7 +227,7 @@ class TextPath : public ::google::protobuf::Message {
   inline ::std::string* release_text();
   inline void set_allocated_text(::std::string* text);
 
-  // @@protoc_insertion_point(class_scope:effect.protocol.plexus.TextPath)
+  // @@protoc_insertion_point(class_scope:protocol.effect.plexus.TextPath)
  private:
   inline void set_has_text();
   inline void clear_has_text();
@@ -302,34 +302,34 @@ class Displacement : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .common.protocol.FloatAnim x = 1;
+  // optional .protocol.common.FloatAnim x = 1;
   inline bool has_x() const;
   inline void clear_x();
   static const int kXFieldNumber = 1;
-  inline const ::common::protocol::FloatAnim& x() const;
-  inline ::common::protocol::FloatAnim* mutable_x();
-  inline ::common::protocol::FloatAnim* release_x();
-  inline void set_allocated_x(::common::protocol::FloatAnim* x);
+  inline const ::protocol::common::FloatAnim& x() const;
+  inline ::protocol::common::FloatAnim* mutable_x();
+  inline ::protocol::common::FloatAnim* release_x();
+  inline void set_allocated_x(::protocol::common::FloatAnim* x);
 
-  // optional .common.protocol.FloatAnim y = 2;
+  // optional .protocol.common.FloatAnim y = 2;
   inline bool has_y() const;
   inline void clear_y();
   static const int kYFieldNumber = 2;
-  inline const ::common::protocol::FloatAnim& y() const;
-  inline ::common::protocol::FloatAnim* mutable_y();
-  inline ::common::protocol::FloatAnim* release_y();
-  inline void set_allocated_y(::common::protocol::FloatAnim* y);
+  inline const ::protocol::common::FloatAnim& y() const;
+  inline ::protocol::common::FloatAnim* mutable_y();
+  inline ::protocol::common::FloatAnim* release_y();
+  inline void set_allocated_y(::protocol::common::FloatAnim* y);
 
-  // optional .common.protocol.FloatAnim z = 3;
+  // optional .protocol.common.FloatAnim z = 3;
   inline bool has_z() const;
   inline void clear_z();
   static const int kZFieldNumber = 3;
-  inline const ::common::protocol::FloatAnim& z() const;
-  inline ::common::protocol::FloatAnim* mutable_z();
-  inline ::common::protocol::FloatAnim* release_z();
-  inline void set_allocated_z(::common::protocol::FloatAnim* z);
+  inline const ::protocol::common::FloatAnim& z() const;
+  inline ::protocol::common::FloatAnim* mutable_z();
+  inline ::protocol::common::FloatAnim* release_z();
+  inline void set_allocated_z(::protocol::common::FloatAnim* z);
 
-  // @@protoc_insertion_point(class_scope:effect.protocol.plexus.Displacement)
+  // @@protoc_insertion_point(class_scope:protocol.effect.plexus.Displacement)
  private:
   inline void set_has_x();
   inline void clear_has_x();
@@ -340,9 +340,9 @@ class Displacement : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::common::protocol::FloatAnim* x_;
-  ::common::protocol::FloatAnim* y_;
-  ::common::protocol::FloatAnim* z_;
+  ::protocol::common::FloatAnim* x_;
+  ::protocol::common::FloatAnim* y_;
+  ::protocol::common::FloatAnim* z_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -434,23 +434,23 @@ class NoiseEffector : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .effect.protocol.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+  // optional .protocol.effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
   inline bool has_apply_to() const;
   inline void clear_apply_to();
   static const int kApplyToFieldNumber = 1;
-  inline ::effect::protocol::plexus::NoiseEffector_ApplyTo apply_to() const;
-  inline void set_apply_to(::effect::protocol::plexus::NoiseEffector_ApplyTo value);
+  inline ::protocol::effect::plexus::NoiseEffector_ApplyTo apply_to() const;
+  inline void set_apply_to(::protocol::effect::plexus::NoiseEffector_ApplyTo value);
 
-  // optional .effect.protocol.plexus.Displacement displacement = 2;
+  // optional .protocol.effect.plexus.Displacement displacement = 2;
   inline bool has_displacement() const;
   inline void clear_displacement();
   static const int kDisplacementFieldNumber = 2;
-  inline const ::effect::protocol::plexus::Displacement& displacement() const;
-  inline ::effect::protocol::plexus::Displacement* mutable_displacement();
-  inline ::effect::protocol::plexus::Displacement* release_displacement();
-  inline void set_allocated_displacement(::effect::protocol::plexus::Displacement* displacement);
+  inline const ::protocol::effect::plexus::Displacement& displacement() const;
+  inline ::protocol::effect::plexus::Displacement* mutable_displacement();
+  inline ::protocol::effect::plexus::Displacement* release_displacement();
+  inline void set_allocated_displacement(::protocol::effect::plexus::Displacement* displacement);
 
-  // @@protoc_insertion_point(class_scope:effect.protocol.plexus.NoiseEffector)
+  // @@protoc_insertion_point(class_scope:protocol.effect.plexus.NoiseEffector)
  private:
   inline void set_has_apply_to();
   inline void clear_has_apply_to();
@@ -459,7 +459,7 @@ class NoiseEffector : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::effect::protocol::plexus::Displacement* displacement_;
+  ::protocol::effect::plexus::Displacement* displacement_;
   int apply_to_;
 
   mutable int _cached_size_;
@@ -479,52 +479,52 @@ class NoiseEffector : public ::google::protobuf::Message {
 
 // Plexus
 
-// repeated .effect.protocol.plexus.TextPath text_paths = 1;
+// repeated .protocol.effect.plexus.TextPath text_paths = 1;
 inline int Plexus::text_paths_size() const {
   return text_paths_.size();
 }
 inline void Plexus::clear_text_paths() {
   text_paths_.Clear();
 }
-inline const ::effect::protocol::plexus::TextPath& Plexus::text_paths(int index) const {
+inline const ::protocol::effect::plexus::TextPath& Plexus::text_paths(int index) const {
   return text_paths_.Get(index);
 }
-inline ::effect::protocol::plexus::TextPath* Plexus::mutable_text_paths(int index) {
+inline ::protocol::effect::plexus::TextPath* Plexus::mutable_text_paths(int index) {
   return text_paths_.Mutable(index);
 }
-inline ::effect::protocol::plexus::TextPath* Plexus::add_text_paths() {
+inline ::protocol::effect::plexus::TextPath* Plexus::add_text_paths() {
   return text_paths_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::TextPath >&
+inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPath >&
 Plexus::text_paths() const {
   return text_paths_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::TextPath >*
+inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPath >*
 Plexus::mutable_text_paths() {
   return &text_paths_;
 }
 
-// repeated .effect.protocol.plexus.NoiseEffector noise_effectors = 2;
+// repeated .protocol.effect.plexus.NoiseEffector noise_effectors = 2;
 inline int Plexus::noise_effectors_size() const {
   return noise_effectors_.size();
 }
 inline void Plexus::clear_noise_effectors() {
   noise_effectors_.Clear();
 }
-inline const ::effect::protocol::plexus::NoiseEffector& Plexus::noise_effectors(int index) const {
+inline const ::protocol::effect::plexus::NoiseEffector& Plexus::noise_effectors(int index) const {
   return noise_effectors_.Get(index);
 }
-inline ::effect::protocol::plexus::NoiseEffector* Plexus::mutable_noise_effectors(int index) {
+inline ::protocol::effect::plexus::NoiseEffector* Plexus::mutable_noise_effectors(int index) {
   return noise_effectors_.Mutable(index);
 }
-inline ::effect::protocol::plexus::NoiseEffector* Plexus::add_noise_effectors() {
+inline ::protocol::effect::plexus::NoiseEffector* Plexus::add_noise_effectors() {
   return noise_effectors_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::NoiseEffector >&
+inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffector >&
 Plexus::noise_effectors() const {
   return noise_effectors_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::plexus::NoiseEffector >*
+inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffector >*
 Plexus::mutable_noise_effectors() {
   return &noise_effectors_;
 }
@@ -607,7 +607,7 @@ inline void TextPath::set_allocated_text(::std::string* text) {
 
 // Displacement
 
-// optional .common.protocol.FloatAnim x = 1;
+// optional .protocol.common.FloatAnim x = 1;
 inline bool Displacement::has_x() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -618,24 +618,24 @@ inline void Displacement::clear_has_x() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void Displacement::clear_x() {
-  if (x_ != NULL) x_->::common::protocol::FloatAnim::Clear();
+  if (x_ != NULL) x_->::protocol::common::FloatAnim::Clear();
   clear_has_x();
 }
-inline const ::common::protocol::FloatAnim& Displacement::x() const {
+inline const ::protocol::common::FloatAnim& Displacement::x() const {
   return x_ != NULL ? *x_ : *default_instance_->x_;
 }
-inline ::common::protocol::FloatAnim* Displacement::mutable_x() {
+inline ::protocol::common::FloatAnim* Displacement::mutable_x() {
   set_has_x();
-  if (x_ == NULL) x_ = new ::common::protocol::FloatAnim;
+  if (x_ == NULL) x_ = new ::protocol::common::FloatAnim;
   return x_;
 }
-inline ::common::protocol::FloatAnim* Displacement::release_x() {
+inline ::protocol::common::FloatAnim* Displacement::release_x() {
   clear_has_x();
-  ::common::protocol::FloatAnim* temp = x_;
+  ::protocol::common::FloatAnim* temp = x_;
   x_ = NULL;
   return temp;
 }
-inline void Displacement::set_allocated_x(::common::protocol::FloatAnim* x) {
+inline void Displacement::set_allocated_x(::protocol::common::FloatAnim* x) {
   delete x_;
   x_ = x;
   if (x) {
@@ -645,7 +645,7 @@ inline void Displacement::set_allocated_x(::common::protocol::FloatAnim* x) {
   }
 }
 
-// optional .common.protocol.FloatAnim y = 2;
+// optional .protocol.common.FloatAnim y = 2;
 inline bool Displacement::has_y() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -656,24 +656,24 @@ inline void Displacement::clear_has_y() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void Displacement::clear_y() {
-  if (y_ != NULL) y_->::common::protocol::FloatAnim::Clear();
+  if (y_ != NULL) y_->::protocol::common::FloatAnim::Clear();
   clear_has_y();
 }
-inline const ::common::protocol::FloatAnim& Displacement::y() const {
+inline const ::protocol::common::FloatAnim& Displacement::y() const {
   return y_ != NULL ? *y_ : *default_instance_->y_;
 }
-inline ::common::protocol::FloatAnim* Displacement::mutable_y() {
+inline ::protocol::common::FloatAnim* Displacement::mutable_y() {
   set_has_y();
-  if (y_ == NULL) y_ = new ::common::protocol::FloatAnim;
+  if (y_ == NULL) y_ = new ::protocol::common::FloatAnim;
   return y_;
 }
-inline ::common::protocol::FloatAnim* Displacement::release_y() {
+inline ::protocol::common::FloatAnim* Displacement::release_y() {
   clear_has_y();
-  ::common::protocol::FloatAnim* temp = y_;
+  ::protocol::common::FloatAnim* temp = y_;
   y_ = NULL;
   return temp;
 }
-inline void Displacement::set_allocated_y(::common::protocol::FloatAnim* y) {
+inline void Displacement::set_allocated_y(::protocol::common::FloatAnim* y) {
   delete y_;
   y_ = y;
   if (y) {
@@ -683,7 +683,7 @@ inline void Displacement::set_allocated_y(::common::protocol::FloatAnim* y) {
   }
 }
 
-// optional .common.protocol.FloatAnim z = 3;
+// optional .protocol.common.FloatAnim z = 3;
 inline bool Displacement::has_z() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -694,24 +694,24 @@ inline void Displacement::clear_has_z() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void Displacement::clear_z() {
-  if (z_ != NULL) z_->::common::protocol::FloatAnim::Clear();
+  if (z_ != NULL) z_->::protocol::common::FloatAnim::Clear();
   clear_has_z();
 }
-inline const ::common::protocol::FloatAnim& Displacement::z() const {
+inline const ::protocol::common::FloatAnim& Displacement::z() const {
   return z_ != NULL ? *z_ : *default_instance_->z_;
 }
-inline ::common::protocol::FloatAnim* Displacement::mutable_z() {
+inline ::protocol::common::FloatAnim* Displacement::mutable_z() {
   set_has_z();
-  if (z_ == NULL) z_ = new ::common::protocol::FloatAnim;
+  if (z_ == NULL) z_ = new ::protocol::common::FloatAnim;
   return z_;
 }
-inline ::common::protocol::FloatAnim* Displacement::release_z() {
+inline ::protocol::common::FloatAnim* Displacement::release_z() {
   clear_has_z();
-  ::common::protocol::FloatAnim* temp = z_;
+  ::protocol::common::FloatAnim* temp = z_;
   z_ = NULL;
   return temp;
 }
-inline void Displacement::set_allocated_z(::common::protocol::FloatAnim* z) {
+inline void Displacement::set_allocated_z(::protocol::common::FloatAnim* z) {
   delete z_;
   z_ = z;
   if (z) {
@@ -725,7 +725,7 @@ inline void Displacement::set_allocated_z(::common::protocol::FloatAnim* z) {
 
 // NoiseEffector
 
-// optional .effect.protocol.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+// optional .protocol.effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
 inline bool NoiseEffector::has_apply_to() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -739,16 +739,16 @@ inline void NoiseEffector::clear_apply_to() {
   apply_to_ = 1;
   clear_has_apply_to();
 }
-inline ::effect::protocol::plexus::NoiseEffector_ApplyTo NoiseEffector::apply_to() const {
-  return static_cast< ::effect::protocol::plexus::NoiseEffector_ApplyTo >(apply_to_);
+inline ::protocol::effect::plexus::NoiseEffector_ApplyTo NoiseEffector::apply_to() const {
+  return static_cast< ::protocol::effect::plexus::NoiseEffector_ApplyTo >(apply_to_);
 }
-inline void NoiseEffector::set_apply_to(::effect::protocol::plexus::NoiseEffector_ApplyTo value) {
-  assert(::effect::protocol::plexus::NoiseEffector_ApplyTo_IsValid(value));
+inline void NoiseEffector::set_apply_to(::protocol::effect::plexus::NoiseEffector_ApplyTo value) {
+  assert(::protocol::effect::plexus::NoiseEffector_ApplyTo_IsValid(value));
   set_has_apply_to();
   apply_to_ = value;
 }
 
-// optional .effect.protocol.plexus.Displacement displacement = 2;
+// optional .protocol.effect.plexus.Displacement displacement = 2;
 inline bool NoiseEffector::has_displacement() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -759,24 +759,24 @@ inline void NoiseEffector::clear_has_displacement() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void NoiseEffector::clear_displacement() {
-  if (displacement_ != NULL) displacement_->::effect::protocol::plexus::Displacement::Clear();
+  if (displacement_ != NULL) displacement_->::protocol::effect::plexus::Displacement::Clear();
   clear_has_displacement();
 }
-inline const ::effect::protocol::plexus::Displacement& NoiseEffector::displacement() const {
+inline const ::protocol::effect::plexus::Displacement& NoiseEffector::displacement() const {
   return displacement_ != NULL ? *displacement_ : *default_instance_->displacement_;
 }
-inline ::effect::protocol::plexus::Displacement* NoiseEffector::mutable_displacement() {
+inline ::protocol::effect::plexus::Displacement* NoiseEffector::mutable_displacement() {
   set_has_displacement();
-  if (displacement_ == NULL) displacement_ = new ::effect::protocol::plexus::Displacement;
+  if (displacement_ == NULL) displacement_ = new ::protocol::effect::plexus::Displacement;
   return displacement_;
 }
-inline ::effect::protocol::plexus::Displacement* NoiseEffector::release_displacement() {
+inline ::protocol::effect::plexus::Displacement* NoiseEffector::release_displacement() {
   clear_has_displacement();
-  ::effect::protocol::plexus::Displacement* temp = displacement_;
+  ::protocol::effect::plexus::Displacement* temp = displacement_;
   displacement_ = NULL;
   return temp;
 }
-inline void NoiseEffector::set_allocated_displacement(::effect::protocol::plexus::Displacement* displacement) {
+inline void NoiseEffector::set_allocated_displacement(::protocol::effect::plexus::Displacement* displacement) {
   delete displacement_;
   displacement_ = displacement;
   if (displacement) {
@@ -790,16 +790,16 @@ inline void NoiseEffector::set_allocated_displacement(::effect::protocol::plexus
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace plexus
-}  // namespace protocol
 }  // namespace effect
+}  // namespace protocol
 
 #ifndef SWIG
 namespace google {
 namespace protobuf {
 
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::effect::protocol::plexus::NoiseEffector_ApplyTo>() {
-  return ::effect::protocol::plexus::NoiseEffector_ApplyTo_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::protocol::effect::plexus::NoiseEffector_ApplyTo>() {
+  return ::protocol::effect::plexus::NoiseEffector_ApplyTo_descriptor();
 }
 
 }  // namespace google

@@ -3,6 +3,7 @@
 #include "row_var.hpp"
 #include "timeline_window.hpp"
 #include "property_window.hpp"
+#include "protocol/effect_plexus_proto.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -58,7 +59,7 @@ void EffectRow::Reposition(float curY, float rowHeight)
   // Set position and size of current and child rows and vars
   // This will depend on scroll position and row's expanded state
 
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   const Vector2f windowSize = TimelineWindow::_instance->GetSize();
 
   deque<EffectRow*> q({this});
@@ -207,7 +208,7 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
       var->DrawKeyframes(texture);
   }
 
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
   Color bgCol = ::FromProtocol(settings.effect_view_background_color());
 
   // draw background
@@ -294,11 +295,11 @@ EffectRowPlexus::EffectRowPlexus(
 //----------------------------------------------------------------------------------
 bool EffectRowPlexus::ToProtocol(google::protobuf::Message* msg) const
 {
-  effect::protocol::EffectSetting* proto = static_cast<effect::protocol::EffectSetting*>(msg);
+  protocol::effect::EffectSetting* proto = static_cast<protocol::effect::EffectSetting*>(msg);
   assert(!_parent);
-  proto->set_type(effect::protocol::EffectSetting_Type_Plexus);
+  proto->set_type(protocol::effect::EffectSetting_Type_Plexus);
 
-  effect::protocol::plexus::Plexus plexus;
+  protocol::effect::plexus::Plexus plexus;
   for (const EffectRow* row : _children)
   {
     row->ToProtocol(&plexus);
@@ -312,10 +313,10 @@ bool EffectRowPlexus::ToProtocol(google::protobuf::Message* msg) const
 //----------------------------------------------------------------------------------
 bool EffectRowPlexus::FromProtocol(const google::protobuf::Message& proto)
 {
-  const effect::protocol::plexus::Plexus& p =
-      static_cast<const effect::protocol::plexus::Plexus&>(proto);
+  const protocol::effect::plexus::Plexus& p =
+      static_cast<const protocol::effect::plexus::Plexus&>(proto);
 
-  for (const effect::protocol::plexus::TextPath& textPath : p.text_paths())
+  for (const protocol::effect::plexus::TextPath& textPath : p.text_paths())
   {
     string str = to_string("TextPath: %s", textPath.text().c_str());
 
@@ -323,10 +324,10 @@ bool EffectRowPlexus::FromProtocol(const google::protobuf::Message& proto)
     _children.back()->FromProtocol(textPath);
   }
 
-  for (const effect::protocol::plexus::NoiseEffector& effector : p.noise_effectors())
+  for (const protocol::effect::plexus::NoiseEffector& effector : p.noise_effectors())
   {
     string str = to_string("Noise (%s)",
-      effector.apply_to() == effect::protocol::plexus::NoiseEffector_ApplyTo_Position
+      effector.apply_to() == protocol::effect::plexus::NoiseEffector_ApplyTo_Position
           ? "POS" : "SCALE");
 
     _children.push_back(new EffectRowNoise(_font, str, this));
@@ -348,7 +349,7 @@ EffectRowTextPath::EffectRowTextPath(
 //----------------------------------------------------------------------------------
 bool EffectRowTextPath::ToProtocol(google::protobuf::Message* msg) const
 {
-  effect::protocol::plexus::Plexus* proto = static_cast<effect::protocol::plexus::Plexus*>(msg);
+  protocol::effect::plexus::Plexus* proto = static_cast<protocol::effect::plexus::Plexus*>(msg);
   proto->add_text_paths()->set_text(_str);
   return true;
 }
@@ -356,7 +357,7 @@ bool EffectRowTextPath::ToProtocol(google::protobuf::Message* msg) const
 //----------------------------------------------------------------------------------
 bool EffectRowTextPath::FromProtocol(const google::protobuf::Message& proto)
 {
-  const effect::protocol::plexus::TextPath& p = static_cast<const effect::protocol::plexus::TextPath&>(proto);
+  const protocol::effect::plexus::TextPath& p = static_cast<const protocol::effect::plexus::TextPath&>(proto);
   _textPath = ::FromProtocol(p);
   return true;
 }
@@ -376,7 +377,7 @@ EffectRowNoise::EffectRowNoise(
 //----------------------------------------------------------------------------------
 bool EffectRowNoise::FromProtocol(const google::protobuf::Message& proto)
 {
-  const effect::protocol::plexus::NoiseEffector& p = static_cast<const effect::protocol::plexus::NoiseEffector&>(proto);
+  const protocol::effect::plexus::NoiseEffector& p = static_cast<const protocol::effect::plexus::NoiseEffector&>(proto);
   _effector = ::FromProtocol(p);
   return true;
 }
@@ -384,7 +385,7 @@ bool EffectRowNoise::FromProtocol(const google::protobuf::Message& proto)
 //----------------------------------------------------------------------------------
 bool EffectRowNoise::ToProtocol(google::protobuf::Message* msg) const
 {
-  effect::protocol::plexus::Plexus* proto = static_cast<effect::protocol::plexus::Plexus*>(msg);
+  protocol::effect::plexus::Plexus* proto = static_cast<protocol::effect::plexus::Plexus*>(msg);
 
   ::ToProtocol(_effector, proto->add_noise_effectors());
   return true;

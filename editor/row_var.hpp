@@ -1,6 +1,7 @@
 #pragma once
 
-#include "protocol/effects_proto.hpp"
+#include "protocol/common_types.hpp"
+#include "protocol/effect_plexus_types.hpp"
 #include "style_factory.hpp"
 
 namespace editor

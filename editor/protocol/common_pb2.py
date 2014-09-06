@@ -12,42 +12,42 @@ from google.protobuf import descriptor_pb2
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='common.proto',
-  package='common.protocol',
-  serialized_pb='\n\x0c\x63ommon.proto\x12\x0f\x63ommon.protocol\"B\n\x06\x43olor4\x12\x0c\n\x01r\x18\x01 \x01(\r:\x01\x30\x12\x0c\n\x01g\x18\x02 \x01(\r:\x01\x30\x12\x0c\n\x01\x62\x18\x03 \x01(\r:\x01\x30\x12\x0e\n\x01\x61\x18\x04 \x01(\r:\x03\x32\x35\x35\"\x1f\n\x07Vector2\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"*\n\x07Vector3\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"5\n\x07Vector4\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"\x86\x01\n\tMatrix3x3\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector3\"\xaf\x01\n\tMatrix4x4\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector4\x12\'\n\x05row_4\x18\x04 \x01(\x0b\x32\x18.common.protocol.Vector4\"\'\n\x08\x46loatKey\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\r\n\x05value\x18\x02 \x01(\x02\"\x8c\x01\n\rFloatKeyframe\x12&\n\x03key\x18\x01 \x01(\x0b\x32\x19.common.protocol.FloatKey\x12(\n\x05\x63p_in\x18\x02 \x01(\x0b\x32\x19.common.protocol.FloatKey\x12)\n\x06\x63p_out\x18\x03 \x01(\x0b\x32\x19.common.protocol.FloatKey\"\x82\x01\n\tFloatAnim\x12\x0f\n\x04type\x18\x01 \x01(\r:\x01\x32\x12\x30\n\x08keyframe\x18\x02 \x03(\x0b\x32\x1e.common.protocol.FloatKeyframe\x12\x11\n\tmin_value\x18\x03 \x01(\x02\x12\x11\n\tmax_value\x18\x04 \x01(\x02\x12\x0c\n\x04step\x18\x05 \x01(\x02\"H\n\x0fVector3Keyframe\x12\x0c\n\x04time\x18\x01 \x01(\x05\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.common.protocol.Vector3\"\xd1\x01\n\x0bVector3Anim\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x32\n\x08keyframe\x18\x02 \x03(\x0b\x32 .common.protocol.Vector3Keyframe\x12+\n\tmin_value\x18\x03 \x01(\x0b\x32\x18.common.protocol.Vector3\x12+\n\tmax_value\x18\x04 \x01(\x0b\x32\x18.common.protocol.Vector3\x12&\n\x04step\x18\x05 \x01(\x0b\x32\x18.common.protocol.Vector3')
+  package='protocol.common',
+  serialized_pb='\n\x0c\x63ommon.proto\x12\x0fprotocol.common\"B\n\x06\x43olor4\x12\x0c\n\x01r\x18\x01 \x01(\r:\x01\x30\x12\x0c\n\x01g\x18\x02 \x01(\r:\x01\x30\x12\x0c\n\x01\x62\x18\x03 \x01(\r:\x01\x30\x12\x0e\n\x01\x61\x18\x04 \x01(\r:\x03\x32\x35\x35\"\x1f\n\x07Vector2\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"*\n\x07Vector3\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"5\n\x07Vector4\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\x12\t\n\x01w\x18\x04 \x01(\x02\"\x86\x01\n\tMatrix3x3\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.protocol.common.Vector3\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.protocol.common.Vector3\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.protocol.common.Vector3\"\xaf\x01\n\tMatrix4x4\x12\'\n\x05row_1\x18\x01 \x01(\x0b\x32\x18.protocol.common.Vector4\x12\'\n\x05row_2\x18\x02 \x01(\x0b\x32\x18.protocol.common.Vector4\x12\'\n\x05row_3\x18\x03 \x01(\x0b\x32\x18.protocol.common.Vector4\x12\'\n\x05row_4\x18\x04 \x01(\x0b\x32\x18.protocol.common.Vector4\"\'\n\x08\x46loatKey\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\r\n\x05value\x18\x02 \x01(\x02\"\x8c\x01\n\rFloatKeyframe\x12&\n\x03key\x18\x01 \x01(\x0b\x32\x19.protocol.common.FloatKey\x12(\n\x05\x63p_in\x18\x02 \x01(\x0b\x32\x19.protocol.common.FloatKey\x12)\n\x06\x63p_out\x18\x03 \x01(\x0b\x32\x19.protocol.common.FloatKey\"N\n\tFloatAnim\x12\x0f\n\x04type\x18\x01 \x01(\r:\x01\x32\x12\x30\n\x08keyframe\x18\x02 \x03(\x0b\x32\x1e.protocol.common.FloatKeyframe\"H\n\x0fVector3Keyframe\x12\x0c\n\x04time\x18\x01 \x01(\x05\x12\'\n\x05value\x18\x02 \x01(\x0b\x32\x18.protocol.common.Vector3\"O\n\x0bVector3Anim\x12\x0c\n\x04type\x18\x01 \x01(\r\x12\x32\n\x08keyframe\x18\x02 \x03(\x0b\x32 .protocol.common.Vector3Keyframe')
 
 
 
 
 _COLOR4 = _descriptor.Descriptor(
   name='Color4',
-  full_name='common.protocol.Color4',
+  full_name='protocol.common.Color4',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='r', full_name='common.protocol.Color4.r', index=0,
+      name='r', full_name='protocol.common.Color4.r', index=0,
       number=1, type=13, cpp_type=3, label=1,
       has_default_value=True, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='g', full_name='common.protocol.Color4.g', index=1,
+      name='g', full_name='protocol.common.Color4.g', index=1,
       number=2, type=13, cpp_type=3, label=1,
       has_default_value=True, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='b', full_name='common.protocol.Color4.b', index=2,
+      name='b', full_name='protocol.common.Color4.b', index=2,
       number=3, type=13, cpp_type=3, label=1,
       has_default_value=True, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='a', full_name='common.protocol.Color4.a', index=3,
+      name='a', full_name='protocol.common.Color4.a', index=3,
       number=4, type=13, cpp_type=3, label=1,
       has_default_value=True, default_value=255,
       message_type=None, enum_type=None, containing_type=None,
@@ -69,20 +69,20 @@ _COLOR4 = _descriptor.Descriptor(
 
 _VECTOR2 = _descriptor.Descriptor(
   name='Vector2',
-  full_name='common.protocol.Vector2',
+  full_name='protocol.common.Vector2',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='x', full_name='common.protocol.Vector2.x', index=0,
+      name='x', full_name='protocol.common.Vector2.x', index=0,
       number=1, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='y', full_name='common.protocol.Vector2.y', index=1,
+      name='y', full_name='protocol.common.Vector2.y', index=1,
       number=2, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -104,27 +104,27 @@ _VECTOR2 = _descriptor.Descriptor(
 
 _VECTOR3 = _descriptor.Descriptor(
   name='Vector3',
-  full_name='common.protocol.Vector3',
+  full_name='protocol.common.Vector3',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='x', full_name='common.protocol.Vector3.x', index=0,
+      name='x', full_name='protocol.common.Vector3.x', index=0,
       number=1, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='y', full_name='common.protocol.Vector3.y', index=1,
+      name='y', full_name='protocol.common.Vector3.y', index=1,
       number=2, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='z', full_name='common.protocol.Vector3.z', index=2,
+      name='z', full_name='protocol.common.Vector3.z', index=2,
       number=3, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -146,34 +146,34 @@ _VECTOR3 = _descriptor.Descriptor(
 
 _VECTOR4 = _descriptor.Descriptor(
   name='Vector4',
-  full_name='common.protocol.Vector4',
+  full_name='protocol.common.Vector4',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='x', full_name='common.protocol.Vector4.x', index=0,
+      name='x', full_name='protocol.common.Vector4.x', index=0,
       number=1, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='y', full_name='common.protocol.Vector4.y', index=1,
+      name='y', full_name='protocol.common.Vector4.y', index=1,
       number=2, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='z', full_name='common.protocol.Vector4.z', index=2,
+      name='z', full_name='protocol.common.Vector4.z', index=2,
       number=3, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='w', full_name='common.protocol.Vector4.w', index=3,
+      name='w', full_name='protocol.common.Vector4.w', index=3,
       number=4, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -195,27 +195,27 @@ _VECTOR4 = _descriptor.Descriptor(
 
 _MATRIX3X3 = _descriptor.Descriptor(
   name='Matrix3x3',
-  full_name='common.protocol.Matrix3x3',
+  full_name='protocol.common.Matrix3x3',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='row_1', full_name='common.protocol.Matrix3x3.row_1', index=0,
+      name='row_1', full_name='protocol.common.Matrix3x3.row_1', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='row_2', full_name='common.protocol.Matrix3x3.row_2', index=1,
+      name='row_2', full_name='protocol.common.Matrix3x3.row_2', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='row_3', full_name='common.protocol.Matrix3x3.row_3', index=2,
+      name='row_3', full_name='protocol.common.Matrix3x3.row_3', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -237,34 +237,34 @@ _MATRIX3X3 = _descriptor.Descriptor(
 
 _MATRIX4X4 = _descriptor.Descriptor(
   name='Matrix4x4',
-  full_name='common.protocol.Matrix4x4',
+  full_name='protocol.common.Matrix4x4',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='row_1', full_name='common.protocol.Matrix4x4.row_1', index=0,
+      name='row_1', full_name='protocol.common.Matrix4x4.row_1', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='row_2', full_name='common.protocol.Matrix4x4.row_2', index=1,
+      name='row_2', full_name='protocol.common.Matrix4x4.row_2', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='row_3', full_name='common.protocol.Matrix4x4.row_3', index=2,
+      name='row_3', full_name='protocol.common.Matrix4x4.row_3', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='row_4', full_name='common.protocol.Matrix4x4.row_4', index=3,
+      name='row_4', full_name='protocol.common.Matrix4x4.row_4', index=3,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -286,20 +286,20 @@ _MATRIX4X4 = _descriptor.Descriptor(
 
 _FLOATKEY = _descriptor.Descriptor(
   name='FloatKey',
-  full_name='common.protocol.FloatKey',
+  full_name='protocol.common.FloatKey',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='time', full_name='common.protocol.FloatKey.time', index=0,
+      name='time', full_name='protocol.common.FloatKey.time', index=0,
       number=1, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='value', full_name='common.protocol.FloatKey.value', index=1,
+      name='value', full_name='protocol.common.FloatKey.value', index=1,
       number=2, type=2, cpp_type=6, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -321,27 +321,27 @@ _FLOATKEY = _descriptor.Descriptor(
 
 _FLOATKEYFRAME = _descriptor.Descriptor(
   name='FloatKeyframe',
-  full_name='common.protocol.FloatKeyframe',
+  full_name='protocol.common.FloatKeyframe',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='key', full_name='common.protocol.FloatKeyframe.key', index=0,
+      name='key', full_name='protocol.common.FloatKeyframe.key', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='cp_in', full_name='common.protocol.FloatKeyframe.cp_in', index=1,
+      name='cp_in', full_name='protocol.common.FloatKeyframe.cp_in', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='cp_out', full_name='common.protocol.FloatKeyframe.cp_out', index=2,
+      name='cp_out', full_name='protocol.common.FloatKeyframe.cp_out', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -363,43 +363,22 @@ _FLOATKEYFRAME = _descriptor.Descriptor(
 
 _FLOATANIM = _descriptor.Descriptor(
   name='FloatAnim',
-  full_name='common.protocol.FloatAnim',
+  full_name='protocol.common.FloatAnim',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='common.protocol.FloatAnim.type', index=0,
+      name='type', full_name='protocol.common.FloatAnim.type', index=0,
       number=1, type=13, cpp_type=3, label=1,
       has_default_value=True, default_value=2,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='keyframe', full_name='common.protocol.FloatAnim.keyframe', index=1,
+      name='keyframe', full_name='protocol.common.FloatAnim.keyframe', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='min_value', full_name='common.protocol.FloatAnim.min_value', index=2,
-      number=3, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='max_value', full_name='common.protocol.FloatAnim.max_value', index=3,
-      number=4, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='step', full_name='common.protocol.FloatAnim.step', index=4,
-      number=5, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -412,27 +391,27 @@ _FLOATANIM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=733,
-  serialized_end=863,
+  serialized_start=732,
+  serialized_end=810,
 )
 
 
 _VECTOR3KEYFRAME = _descriptor.Descriptor(
   name='Vector3Keyframe',
-  full_name='common.protocol.Vector3Keyframe',
+  full_name='protocol.common.Vector3Keyframe',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='time', full_name='common.protocol.Vector3Keyframe.time', index=0,
+      name='time', full_name='protocol.common.Vector3Keyframe.time', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='value', full_name='common.protocol.Vector3Keyframe.value', index=1,
+      name='value', full_name='protocol.common.Vector3Keyframe.value', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -447,50 +426,29 @@ _VECTOR3KEYFRAME = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=865,
-  serialized_end=937,
+  serialized_start=812,
+  serialized_end=884,
 )
 
 
 _VECTOR3ANIM = _descriptor.Descriptor(
   name='Vector3Anim',
-  full_name='common.protocol.Vector3Anim',
+  full_name='protocol.common.Vector3Anim',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='common.protocol.Vector3Anim.type', index=0,
+      name='type', full_name='protocol.common.Vector3Anim.type', index=0,
       number=1, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='keyframe', full_name='common.protocol.Vector3Anim.keyframe', index=1,
+      name='keyframe', full_name='protocol.common.Vector3Anim.keyframe', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='min_value', full_name='common.protocol.Vector3Anim.min_value', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='max_value', full_name='common.protocol.Vector3Anim.max_value', index=3,
-      number=4, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='step', full_name='common.protocol.Vector3Anim.step', index=4,
-      number=5, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -503,8 +461,8 @@ _VECTOR3ANIM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=940,
-  serialized_end=1149,
+  serialized_start=886,
+  serialized_end=965,
 )
 
 _MATRIX3X3.fields_by_name['row_1'].message_type = _VECTOR3
@@ -520,9 +478,6 @@ _FLOATKEYFRAME.fields_by_name['cp_out'].message_type = _FLOATKEY
 _FLOATANIM.fields_by_name['keyframe'].message_type = _FLOATKEYFRAME
 _VECTOR3KEYFRAME.fields_by_name['value'].message_type = _VECTOR3
 _VECTOR3ANIM.fields_by_name['keyframe'].message_type = _VECTOR3KEYFRAME
-_VECTOR3ANIM.fields_by_name['min_value'].message_type = _VECTOR3
-_VECTOR3ANIM.fields_by_name['max_value'].message_type = _VECTOR3
-_VECTOR3ANIM.fields_by_name['step'].message_type = _VECTOR3
 DESCRIPTOR.message_types_by_name['Color4'] = _COLOR4
 DESCRIPTOR.message_types_by_name['Vector2'] = _VECTOR2
 DESCRIPTOR.message_types_by_name['Vector3'] = _VECTOR3
@@ -539,67 +494,67 @@ class Color4(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _COLOR4
 
-  # @@protoc_insertion_point(class_scope:common.protocol.Color4)
+  # @@protoc_insertion_point(class_scope:protocol.common.Color4)
 
 class Vector2(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _VECTOR2
 
-  # @@protoc_insertion_point(class_scope:common.protocol.Vector2)
+  # @@protoc_insertion_point(class_scope:protocol.common.Vector2)
 
 class Vector3(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _VECTOR3
 
-  # @@protoc_insertion_point(class_scope:common.protocol.Vector3)
+  # @@protoc_insertion_point(class_scope:protocol.common.Vector3)
 
 class Vector4(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _VECTOR4
 
-  # @@protoc_insertion_point(class_scope:common.protocol.Vector4)
+  # @@protoc_insertion_point(class_scope:protocol.common.Vector4)
 
 class Matrix3x3(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _MATRIX3X3
 
-  # @@protoc_insertion_point(class_scope:common.protocol.Matrix3x3)
+  # @@protoc_insertion_point(class_scope:protocol.common.Matrix3x3)
 
 class Matrix4x4(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _MATRIX4X4
 
-  # @@protoc_insertion_point(class_scope:common.protocol.Matrix4x4)
+  # @@protoc_insertion_point(class_scope:protocol.common.Matrix4x4)
 
 class FloatKey(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _FLOATKEY
 
-  # @@protoc_insertion_point(class_scope:common.protocol.FloatKey)
+  # @@protoc_insertion_point(class_scope:protocol.common.FloatKey)
 
 class FloatKeyframe(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _FLOATKEYFRAME
 
-  # @@protoc_insertion_point(class_scope:common.protocol.FloatKeyframe)
+  # @@protoc_insertion_point(class_scope:protocol.common.FloatKeyframe)
 
 class FloatAnim(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _FLOATANIM
 
-  # @@protoc_insertion_point(class_scope:common.protocol.FloatAnim)
+  # @@protoc_insertion_point(class_scope:protocol.common.FloatAnim)
 
 class Vector3Keyframe(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _VECTOR3KEYFRAME
 
-  # @@protoc_insertion_point(class_scope:common.protocol.Vector3Keyframe)
+  # @@protoc_insertion_point(class_scope:protocol.common.Vector3Keyframe)
 
 class Vector3Anim(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _VECTOR3ANIM
 
-  # @@protoc_insertion_point(class_scope:common.protocol.Vector3Anim)
+  # @@protoc_insertion_point(class_scope:protocol.common.Vector3Anim)
 
 
 # @@protoc_insertion_point(module_scope)

@@ -27,8 +27,8 @@
 #include "common.pb.h"
 // @@protoc_insertion_point(includes)
 
-namespace editor {
 namespace protocol {
+namespace editor {
 
 // Internal implementation detail -- do not call these.
 void  protobuf_AddDesc_editor_5fsettings_2eproto();
@@ -177,160 +177,160 @@ class Settings : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 keyframe_size() const;
   inline void set_keyframe_size(::google::protobuf::uint32 value);
 
-  // optional .common.protocol.Color4 default_row_color = 100;
+  // optional .protocol.common.Color4 default_row_color = 100;
   inline bool has_default_row_color() const;
   inline void clear_default_row_color();
   static const int kDefaultRowColorFieldNumber = 100;
-  inline const ::common::protocol::Color4& default_row_color() const;
-  inline ::common::protocol::Color4* mutable_default_row_color();
-  inline ::common::protocol::Color4* release_default_row_color();
-  inline void set_allocated_default_row_color(::common::protocol::Color4* default_row_color);
+  inline const ::protocol::common::Color4& default_row_color() const;
+  inline ::protocol::common::Color4* mutable_default_row_color();
+  inline ::protocol::common::Color4* release_default_row_color();
+  inline void set_allocated_default_row_color(::protocol::common::Color4* default_row_color);
 
-  // optional .common.protocol.Color4 selected_row_color = 101;
+  // optional .protocol.common.Color4 selected_row_color = 101;
   inline bool has_selected_row_color() const;
   inline void clear_selected_row_color();
   static const int kSelectedRowColorFieldNumber = 101;
-  inline const ::common::protocol::Color4& selected_row_color() const;
-  inline ::common::protocol::Color4* mutable_selected_row_color();
-  inline ::common::protocol::Color4* release_selected_row_color();
-  inline void set_allocated_selected_row_color(::common::protocol::Color4* selected_row_color);
+  inline const ::protocol::common::Color4& selected_row_color() const;
+  inline ::protocol::common::Color4* mutable_selected_row_color();
+  inline ::protocol::common::Color4* release_selected_row_color();
+  inline void set_allocated_selected_row_color(::protocol::common::Color4* selected_row_color);
 
-  // optional .common.protocol.Color4 hover_row_color = 102;
+  // optional .protocol.common.Color4 hover_row_color = 102;
   inline bool has_hover_row_color() const;
   inline void clear_hover_row_color();
   static const int kHoverRowColorFieldNumber = 102;
-  inline const ::common::protocol::Color4& hover_row_color() const;
-  inline ::common::protocol::Color4* mutable_hover_row_color();
-  inline ::common::protocol::Color4* release_hover_row_color();
-  inline void set_allocated_hover_row_color(::common::protocol::Color4* hover_row_color);
+  inline const ::protocol::common::Color4& hover_row_color() const;
+  inline ::protocol::common::Color4* mutable_hover_row_color();
+  inline ::protocol::common::Color4* release_hover_row_color();
+  inline void set_allocated_hover_row_color(::protocol::common::Color4* hover_row_color);
 
-  // optional .common.protocol.Color4 invalid_hover_row_color = 103;
+  // optional .protocol.common.Color4 invalid_hover_row_color = 103;
   inline bool has_invalid_hover_row_color() const;
   inline void clear_invalid_hover_row_color();
   static const int kInvalidHoverRowColorFieldNumber = 103;
-  inline const ::common::protocol::Color4& invalid_hover_row_color() const;
-  inline ::common::protocol::Color4* mutable_invalid_hover_row_color();
-  inline ::common::protocol::Color4* release_invalid_hover_row_color();
-  inline void set_allocated_invalid_hover_row_color(::common::protocol::Color4* invalid_hover_row_color);
+  inline const ::protocol::common::Color4& invalid_hover_row_color() const;
+  inline ::protocol::common::Color4* mutable_invalid_hover_row_color();
+  inline ::protocol::common::Color4* release_invalid_hover_row_color();
+  inline void set_allocated_invalid_hover_row_color(::protocol::common::Color4* invalid_hover_row_color);
 
-  // optional .common.protocol.Color4 default_line_color = 104;
+  // optional .protocol.common.Color4 default_line_color = 104;
   inline bool has_default_line_color() const;
   inline void clear_default_line_color();
   static const int kDefaultLineColorFieldNumber = 104;
-  inline const ::common::protocol::Color4& default_line_color() const;
-  inline ::common::protocol::Color4* mutable_default_line_color();
-  inline ::common::protocol::Color4* release_default_line_color();
-  inline void set_allocated_default_line_color(::common::protocol::Color4* default_line_color);
+  inline const ::protocol::common::Color4& default_line_color() const;
+  inline ::protocol::common::Color4* mutable_default_line_color();
+  inline ::protocol::common::Color4* release_default_line_color();
+  inline void set_allocated_default_line_color(::protocol::common::Color4* default_line_color);
 
-  // optional .common.protocol.Color4 effect_view_background_color = 130;
+  // optional .protocol.common.Color4 effect_view_background_color = 130;
   inline bool has_effect_view_background_color() const;
   inline void clear_effect_view_background_color();
   static const int kEffectViewBackgroundColorFieldNumber = 130;
-  inline const ::common::protocol::Color4& effect_view_background_color() const;
-  inline ::common::protocol::Color4* mutable_effect_view_background_color();
-  inline ::common::protocol::Color4* release_effect_view_background_color();
-  inline void set_allocated_effect_view_background_color(::common::protocol::Color4* effect_view_background_color);
+  inline const ::protocol::common::Color4& effect_view_background_color() const;
+  inline ::protocol::common::Color4* mutable_effect_view_background_color();
+  inline ::protocol::common::Color4* release_effect_view_background_color();
+  inline void set_allocated_effect_view_background_color(::protocol::common::Color4* effect_view_background_color);
 
-  // optional .common.protocol.Color4 effect_view_background_color_selected = 131;
+  // optional .protocol.common.Color4 effect_view_background_color_selected = 131;
   inline bool has_effect_view_background_color_selected() const;
   inline void clear_effect_view_background_color_selected();
   static const int kEffectViewBackgroundColorSelectedFieldNumber = 131;
-  inline const ::common::protocol::Color4& effect_view_background_color_selected() const;
-  inline ::common::protocol::Color4* mutable_effect_view_background_color_selected();
-  inline ::common::protocol::Color4* release_effect_view_background_color_selected();
-  inline void set_allocated_effect_view_background_color_selected(::common::protocol::Color4* effect_view_background_color_selected);
+  inline const ::protocol::common::Color4& effect_view_background_color_selected() const;
+  inline ::protocol::common::Color4* mutable_effect_view_background_color_selected();
+  inline ::protocol::common::Color4* release_effect_view_background_color_selected();
+  inline void set_allocated_effect_view_background_color_selected(::protocol::common::Color4* effect_view_background_color_selected);
 
-  // optional .common.protocol.Color4 timeline_view_background_color = 132;
+  // optional .protocol.common.Color4 timeline_view_background_color = 132;
   inline bool has_timeline_view_background_color() const;
   inline void clear_timeline_view_background_color();
   static const int kTimelineViewBackgroundColorFieldNumber = 132;
-  inline const ::common::protocol::Color4& timeline_view_background_color() const;
-  inline ::common::protocol::Color4* mutable_timeline_view_background_color();
-  inline ::common::protocol::Color4* release_timeline_view_background_color();
-  inline void set_allocated_timeline_view_background_color(::common::protocol::Color4* timeline_view_background_color);
+  inline const ::protocol::common::Color4& timeline_view_background_color() const;
+  inline ::protocol::common::Color4* mutable_timeline_view_background_color();
+  inline ::protocol::common::Color4* release_timeline_view_background_color();
+  inline void set_allocated_timeline_view_background_color(::protocol::common::Color4* timeline_view_background_color);
 
-  // optional .common.protocol.Color4 effect_line_color = 133;
+  // optional .protocol.common.Color4 effect_line_color = 133;
   inline bool has_effect_line_color() const;
   inline void clear_effect_line_color();
   static const int kEffectLineColorFieldNumber = 133;
-  inline const ::common::protocol::Color4& effect_line_color() const;
-  inline ::common::protocol::Color4* mutable_effect_line_color();
-  inline ::common::protocol::Color4* release_effect_line_color();
-  inline void set_allocated_effect_line_color(::common::protocol::Color4* effect_line_color);
+  inline const ::protocol::common::Color4& effect_line_color() const;
+  inline ::protocol::common::Color4* mutable_effect_line_color();
+  inline ::protocol::common::Color4* release_effect_line_color();
+  inline void set_allocated_effect_line_color(::protocol::common::Color4* effect_line_color);
 
-  // optional .common.protocol.Color4 keyframe_default_color = 150;
+  // optional .protocol.common.Color4 keyframe_default_color = 150;
   inline bool has_keyframe_default_color() const;
   inline void clear_keyframe_default_color();
   static const int kKeyframeDefaultColorFieldNumber = 150;
-  inline const ::common::protocol::Color4& keyframe_default_color() const;
-  inline ::common::protocol::Color4* mutable_keyframe_default_color();
-  inline ::common::protocol::Color4* release_keyframe_default_color();
-  inline void set_allocated_keyframe_default_color(::common::protocol::Color4* keyframe_default_color);
+  inline const ::protocol::common::Color4& keyframe_default_color() const;
+  inline ::protocol::common::Color4* mutable_keyframe_default_color();
+  inline ::protocol::common::Color4* release_keyframe_default_color();
+  inline void set_allocated_keyframe_default_color(::protocol::common::Color4* keyframe_default_color);
 
-  // optional .common.protocol.Color4 keyframe_selected_color = 151;
+  // optional .protocol.common.Color4 keyframe_selected_color = 151;
   inline bool has_keyframe_selected_color() const;
   inline void clear_keyframe_selected_color();
   static const int kKeyframeSelectedColorFieldNumber = 151;
-  inline const ::common::protocol::Color4& keyframe_selected_color() const;
-  inline ::common::protocol::Color4* mutable_keyframe_selected_color();
-  inline ::common::protocol::Color4* release_keyframe_selected_color();
-  inline void set_allocated_keyframe_selected_color(::common::protocol::Color4* keyframe_selected_color);
+  inline const ::protocol::common::Color4& keyframe_selected_color() const;
+  inline ::protocol::common::Color4* mutable_keyframe_selected_color();
+  inline ::protocol::common::Color4* release_keyframe_selected_color();
+  inline void set_allocated_keyframe_selected_color(::protocol::common::Color4* keyframe_selected_color);
 
-  // optional .common.protocol.Color4 keyframe_control_color = 152;
+  // optional .protocol.common.Color4 keyframe_control_color = 152;
   inline bool has_keyframe_control_color() const;
   inline void clear_keyframe_control_color();
   static const int kKeyframeControlColorFieldNumber = 152;
-  inline const ::common::protocol::Color4& keyframe_control_color() const;
-  inline ::common::protocol::Color4* mutable_keyframe_control_color();
-  inline ::common::protocol::Color4* release_keyframe_control_color();
-  inline void set_allocated_keyframe_control_color(::common::protocol::Color4* keyframe_control_color);
+  inline const ::protocol::common::Color4& keyframe_control_color() const;
+  inline ::protocol::common::Color4* mutable_keyframe_control_color();
+  inline ::protocol::common::Color4* release_keyframe_control_color();
+  inline void set_allocated_keyframe_control_color(::protocol::common::Color4* keyframe_control_color);
 
-  // optional .common.protocol.Color4 graph_color = 153;
+  // optional .protocol.common.Color4 graph_color = 153;
   inline bool has_graph_color() const;
   inline void clear_graph_color();
   static const int kGraphColorFieldNumber = 153;
-  inline const ::common::protocol::Color4& graph_color() const;
-  inline ::common::protocol::Color4* mutable_graph_color();
-  inline ::common::protocol::Color4* release_graph_color();
-  inline void set_allocated_graph_color(::common::protocol::Color4* graph_color);
+  inline const ::protocol::common::Color4& graph_color() const;
+  inline ::protocol::common::Color4* mutable_graph_color();
+  inline ::protocol::common::Color4* release_graph_color();
+  inline void set_allocated_graph_color(::protocol::common::Color4* graph_color);
 
-  // optional .common.protocol.Color4 var_text_color = 160;
+  // optional .protocol.common.Color4 var_text_color = 160;
   inline bool has_var_text_color() const;
   inline void clear_var_text_color();
   static const int kVarTextColorFieldNumber = 160;
-  inline const ::common::protocol::Color4& var_text_color() const;
-  inline ::common::protocol::Color4* mutable_var_text_color();
-  inline ::common::protocol::Color4* release_var_text_color();
-  inline void set_allocated_var_text_color(::common::protocol::Color4* var_text_color);
+  inline const ::protocol::common::Color4& var_text_color() const;
+  inline ::protocol::common::Color4* mutable_var_text_color();
+  inline ::protocol::common::Color4* release_var_text_color();
+  inline void set_allocated_var_text_color(::protocol::common::Color4* var_text_color);
 
-  // optional .common.protocol.Color4 var_value_color = 161;
+  // optional .protocol.common.Color4 var_value_color = 161;
   inline bool has_var_value_color() const;
   inline void clear_var_value_color();
   static const int kVarValueColorFieldNumber = 161;
-  inline const ::common::protocol::Color4& var_value_color() const;
-  inline ::common::protocol::Color4* mutable_var_value_color();
-  inline ::common::protocol::Color4* release_var_value_color();
-  inline void set_allocated_var_value_color(::common::protocol::Color4* var_value_color);
+  inline const ::protocol::common::Color4& var_value_color() const;
+  inline ::protocol::common::Color4* mutable_var_value_color();
+  inline ::protocol::common::Color4* release_var_value_color();
+  inline void set_allocated_var_value_color(::protocol::common::Color4* var_value_color);
 
-  // optional .common.protocol.Color4 effect_icon_expanded_color = 200;
+  // optional .protocol.common.Color4 effect_icon_expanded_color = 200;
   inline bool has_effect_icon_expanded_color() const;
   inline void clear_effect_icon_expanded_color();
   static const int kEffectIconExpandedColorFieldNumber = 200;
-  inline const ::common::protocol::Color4& effect_icon_expanded_color() const;
-  inline ::common::protocol::Color4* mutable_effect_icon_expanded_color();
-  inline ::common::protocol::Color4* release_effect_icon_expanded_color();
-  inline void set_allocated_effect_icon_expanded_color(::common::protocol::Color4* effect_icon_expanded_color);
+  inline const ::protocol::common::Color4& effect_icon_expanded_color() const;
+  inline ::protocol::common::Color4* mutable_effect_icon_expanded_color();
+  inline ::protocol::common::Color4* release_effect_icon_expanded_color();
+  inline void set_allocated_effect_icon_expanded_color(::protocol::common::Color4* effect_icon_expanded_color);
 
-  // optional .common.protocol.Color4 effect_icon_collapsed_color = 201;
+  // optional .protocol.common.Color4 effect_icon_collapsed_color = 201;
   inline bool has_effect_icon_collapsed_color() const;
   inline void clear_effect_icon_collapsed_color();
   static const int kEffectIconCollapsedColorFieldNumber = 201;
-  inline const ::common::protocol::Color4& effect_icon_collapsed_color() const;
-  inline ::common::protocol::Color4* mutable_effect_icon_collapsed_color();
-  inline ::common::protocol::Color4* release_effect_icon_collapsed_color();
-  inline void set_allocated_effect_icon_collapsed_color(::common::protocol::Color4* effect_icon_collapsed_color);
+  inline const ::protocol::common::Color4& effect_icon_collapsed_color() const;
+  inline ::protocol::common::Color4* mutable_effect_icon_collapsed_color();
+  inline ::protocol::common::Color4* release_effect_icon_collapsed_color();
+  inline void set_allocated_effect_icon_collapsed_color(::protocol::common::Color4* effect_icon_collapsed_color);
 
-  // @@protoc_insertion_point(class_scope:editor.protocol.Settings)
+  // @@protoc_insertion_point(class_scope:protocol.editor.Settings)
  private:
   inline void set_has_ticker_height();
   inline void clear_has_ticker_height();
@@ -405,23 +405,23 @@ class Settings : public ::google::protobuf::Message {
   ::google::protobuf::uint32 timeline_zoom_max_;
   ::google::protobuf::uint32 timeline_zoom_default_;
   ::google::protobuf::uint32 keyframe_size_;
-  ::common::protocol::Color4* default_row_color_;
-  ::common::protocol::Color4* selected_row_color_;
-  ::common::protocol::Color4* hover_row_color_;
-  ::common::protocol::Color4* invalid_hover_row_color_;
-  ::common::protocol::Color4* default_line_color_;
-  ::common::protocol::Color4* effect_view_background_color_;
-  ::common::protocol::Color4* effect_view_background_color_selected_;
-  ::common::protocol::Color4* timeline_view_background_color_;
-  ::common::protocol::Color4* effect_line_color_;
-  ::common::protocol::Color4* keyframe_default_color_;
-  ::common::protocol::Color4* keyframe_selected_color_;
-  ::common::protocol::Color4* keyframe_control_color_;
-  ::common::protocol::Color4* graph_color_;
-  ::common::protocol::Color4* var_text_color_;
-  ::common::protocol::Color4* var_value_color_;
-  ::common::protocol::Color4* effect_icon_expanded_color_;
-  ::common::protocol::Color4* effect_icon_collapsed_color_;
+  ::protocol::common::Color4* default_row_color_;
+  ::protocol::common::Color4* selected_row_color_;
+  ::protocol::common::Color4* hover_row_color_;
+  ::protocol::common::Color4* invalid_hover_row_color_;
+  ::protocol::common::Color4* default_line_color_;
+  ::protocol::common::Color4* effect_view_background_color_;
+  ::protocol::common::Color4* effect_view_background_color_selected_;
+  ::protocol::common::Color4* timeline_view_background_color_;
+  ::protocol::common::Color4* effect_line_color_;
+  ::protocol::common::Color4* keyframe_default_color_;
+  ::protocol::common::Color4* keyframe_selected_color_;
+  ::protocol::common::Color4* keyframe_control_color_;
+  ::protocol::common::Color4* graph_color_;
+  ::protocol::common::Color4* var_text_color_;
+  ::protocol::common::Color4* var_value_color_;
+  ::protocol::common::Color4* effect_icon_expanded_color_;
+  ::protocol::common::Color4* effect_icon_collapsed_color_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(29 + 31) / 32];
@@ -704,7 +704,7 @@ inline void Settings::set_keyframe_size(::google::protobuf::uint32 value) {
   keyframe_size_ = value;
 }
 
-// optional .common.protocol.Color4 default_row_color = 100;
+// optional .protocol.common.Color4 default_row_color = 100;
 inline bool Settings::has_default_row_color() const {
   return (_has_bits_[0] & 0x00001000u) != 0;
 }
@@ -715,24 +715,24 @@ inline void Settings::clear_has_default_row_color() {
   _has_bits_[0] &= ~0x00001000u;
 }
 inline void Settings::clear_default_row_color() {
-  if (default_row_color_ != NULL) default_row_color_->::common::protocol::Color4::Clear();
+  if (default_row_color_ != NULL) default_row_color_->::protocol::common::Color4::Clear();
   clear_has_default_row_color();
 }
-inline const ::common::protocol::Color4& Settings::default_row_color() const {
+inline const ::protocol::common::Color4& Settings::default_row_color() const {
   return default_row_color_ != NULL ? *default_row_color_ : *default_instance_->default_row_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_default_row_color() {
+inline ::protocol::common::Color4* Settings::mutable_default_row_color() {
   set_has_default_row_color();
-  if (default_row_color_ == NULL) default_row_color_ = new ::common::protocol::Color4;
+  if (default_row_color_ == NULL) default_row_color_ = new ::protocol::common::Color4;
   return default_row_color_;
 }
-inline ::common::protocol::Color4* Settings::release_default_row_color() {
+inline ::protocol::common::Color4* Settings::release_default_row_color() {
   clear_has_default_row_color();
-  ::common::protocol::Color4* temp = default_row_color_;
+  ::protocol::common::Color4* temp = default_row_color_;
   default_row_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_default_row_color(::common::protocol::Color4* default_row_color) {
+inline void Settings::set_allocated_default_row_color(::protocol::common::Color4* default_row_color) {
   delete default_row_color_;
   default_row_color_ = default_row_color;
   if (default_row_color) {
@@ -742,7 +742,7 @@ inline void Settings::set_allocated_default_row_color(::common::protocol::Color4
   }
 }
 
-// optional .common.protocol.Color4 selected_row_color = 101;
+// optional .protocol.common.Color4 selected_row_color = 101;
 inline bool Settings::has_selected_row_color() const {
   return (_has_bits_[0] & 0x00002000u) != 0;
 }
@@ -753,24 +753,24 @@ inline void Settings::clear_has_selected_row_color() {
   _has_bits_[0] &= ~0x00002000u;
 }
 inline void Settings::clear_selected_row_color() {
-  if (selected_row_color_ != NULL) selected_row_color_->::common::protocol::Color4::Clear();
+  if (selected_row_color_ != NULL) selected_row_color_->::protocol::common::Color4::Clear();
   clear_has_selected_row_color();
 }
-inline const ::common::protocol::Color4& Settings::selected_row_color() const {
+inline const ::protocol::common::Color4& Settings::selected_row_color() const {
   return selected_row_color_ != NULL ? *selected_row_color_ : *default_instance_->selected_row_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_selected_row_color() {
+inline ::protocol::common::Color4* Settings::mutable_selected_row_color() {
   set_has_selected_row_color();
-  if (selected_row_color_ == NULL) selected_row_color_ = new ::common::protocol::Color4;
+  if (selected_row_color_ == NULL) selected_row_color_ = new ::protocol::common::Color4;
   return selected_row_color_;
 }
-inline ::common::protocol::Color4* Settings::release_selected_row_color() {
+inline ::protocol::common::Color4* Settings::release_selected_row_color() {
   clear_has_selected_row_color();
-  ::common::protocol::Color4* temp = selected_row_color_;
+  ::protocol::common::Color4* temp = selected_row_color_;
   selected_row_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_selected_row_color(::common::protocol::Color4* selected_row_color) {
+inline void Settings::set_allocated_selected_row_color(::protocol::common::Color4* selected_row_color) {
   delete selected_row_color_;
   selected_row_color_ = selected_row_color;
   if (selected_row_color) {
@@ -780,7 +780,7 @@ inline void Settings::set_allocated_selected_row_color(::common::protocol::Color
   }
 }
 
-// optional .common.protocol.Color4 hover_row_color = 102;
+// optional .protocol.common.Color4 hover_row_color = 102;
 inline bool Settings::has_hover_row_color() const {
   return (_has_bits_[0] & 0x00004000u) != 0;
 }
@@ -791,24 +791,24 @@ inline void Settings::clear_has_hover_row_color() {
   _has_bits_[0] &= ~0x00004000u;
 }
 inline void Settings::clear_hover_row_color() {
-  if (hover_row_color_ != NULL) hover_row_color_->::common::protocol::Color4::Clear();
+  if (hover_row_color_ != NULL) hover_row_color_->::protocol::common::Color4::Clear();
   clear_has_hover_row_color();
 }
-inline const ::common::protocol::Color4& Settings::hover_row_color() const {
+inline const ::protocol::common::Color4& Settings::hover_row_color() const {
   return hover_row_color_ != NULL ? *hover_row_color_ : *default_instance_->hover_row_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_hover_row_color() {
+inline ::protocol::common::Color4* Settings::mutable_hover_row_color() {
   set_has_hover_row_color();
-  if (hover_row_color_ == NULL) hover_row_color_ = new ::common::protocol::Color4;
+  if (hover_row_color_ == NULL) hover_row_color_ = new ::protocol::common::Color4;
   return hover_row_color_;
 }
-inline ::common::protocol::Color4* Settings::release_hover_row_color() {
+inline ::protocol::common::Color4* Settings::release_hover_row_color() {
   clear_has_hover_row_color();
-  ::common::protocol::Color4* temp = hover_row_color_;
+  ::protocol::common::Color4* temp = hover_row_color_;
   hover_row_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_hover_row_color(::common::protocol::Color4* hover_row_color) {
+inline void Settings::set_allocated_hover_row_color(::protocol::common::Color4* hover_row_color) {
   delete hover_row_color_;
   hover_row_color_ = hover_row_color;
   if (hover_row_color) {
@@ -818,7 +818,7 @@ inline void Settings::set_allocated_hover_row_color(::common::protocol::Color4* 
   }
 }
 
-// optional .common.protocol.Color4 invalid_hover_row_color = 103;
+// optional .protocol.common.Color4 invalid_hover_row_color = 103;
 inline bool Settings::has_invalid_hover_row_color() const {
   return (_has_bits_[0] & 0x00008000u) != 0;
 }
@@ -829,24 +829,24 @@ inline void Settings::clear_has_invalid_hover_row_color() {
   _has_bits_[0] &= ~0x00008000u;
 }
 inline void Settings::clear_invalid_hover_row_color() {
-  if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::common::protocol::Color4::Clear();
+  if (invalid_hover_row_color_ != NULL) invalid_hover_row_color_->::protocol::common::Color4::Clear();
   clear_has_invalid_hover_row_color();
 }
-inline const ::common::protocol::Color4& Settings::invalid_hover_row_color() const {
+inline const ::protocol::common::Color4& Settings::invalid_hover_row_color() const {
   return invalid_hover_row_color_ != NULL ? *invalid_hover_row_color_ : *default_instance_->invalid_hover_row_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_invalid_hover_row_color() {
+inline ::protocol::common::Color4* Settings::mutable_invalid_hover_row_color() {
   set_has_invalid_hover_row_color();
-  if (invalid_hover_row_color_ == NULL) invalid_hover_row_color_ = new ::common::protocol::Color4;
+  if (invalid_hover_row_color_ == NULL) invalid_hover_row_color_ = new ::protocol::common::Color4;
   return invalid_hover_row_color_;
 }
-inline ::common::protocol::Color4* Settings::release_invalid_hover_row_color() {
+inline ::protocol::common::Color4* Settings::release_invalid_hover_row_color() {
   clear_has_invalid_hover_row_color();
-  ::common::protocol::Color4* temp = invalid_hover_row_color_;
+  ::protocol::common::Color4* temp = invalid_hover_row_color_;
   invalid_hover_row_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_invalid_hover_row_color(::common::protocol::Color4* invalid_hover_row_color) {
+inline void Settings::set_allocated_invalid_hover_row_color(::protocol::common::Color4* invalid_hover_row_color) {
   delete invalid_hover_row_color_;
   invalid_hover_row_color_ = invalid_hover_row_color;
   if (invalid_hover_row_color) {
@@ -856,7 +856,7 @@ inline void Settings::set_allocated_invalid_hover_row_color(::common::protocol::
   }
 }
 
-// optional .common.protocol.Color4 default_line_color = 104;
+// optional .protocol.common.Color4 default_line_color = 104;
 inline bool Settings::has_default_line_color() const {
   return (_has_bits_[0] & 0x00010000u) != 0;
 }
@@ -867,24 +867,24 @@ inline void Settings::clear_has_default_line_color() {
   _has_bits_[0] &= ~0x00010000u;
 }
 inline void Settings::clear_default_line_color() {
-  if (default_line_color_ != NULL) default_line_color_->::common::protocol::Color4::Clear();
+  if (default_line_color_ != NULL) default_line_color_->::protocol::common::Color4::Clear();
   clear_has_default_line_color();
 }
-inline const ::common::protocol::Color4& Settings::default_line_color() const {
+inline const ::protocol::common::Color4& Settings::default_line_color() const {
   return default_line_color_ != NULL ? *default_line_color_ : *default_instance_->default_line_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_default_line_color() {
+inline ::protocol::common::Color4* Settings::mutable_default_line_color() {
   set_has_default_line_color();
-  if (default_line_color_ == NULL) default_line_color_ = new ::common::protocol::Color4;
+  if (default_line_color_ == NULL) default_line_color_ = new ::protocol::common::Color4;
   return default_line_color_;
 }
-inline ::common::protocol::Color4* Settings::release_default_line_color() {
+inline ::protocol::common::Color4* Settings::release_default_line_color() {
   clear_has_default_line_color();
-  ::common::protocol::Color4* temp = default_line_color_;
+  ::protocol::common::Color4* temp = default_line_color_;
   default_line_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_default_line_color(::common::protocol::Color4* default_line_color) {
+inline void Settings::set_allocated_default_line_color(::protocol::common::Color4* default_line_color) {
   delete default_line_color_;
   default_line_color_ = default_line_color;
   if (default_line_color) {
@@ -894,7 +894,7 @@ inline void Settings::set_allocated_default_line_color(::common::protocol::Color
   }
 }
 
-// optional .common.protocol.Color4 effect_view_background_color = 130;
+// optional .protocol.common.Color4 effect_view_background_color = 130;
 inline bool Settings::has_effect_view_background_color() const {
   return (_has_bits_[0] & 0x00020000u) != 0;
 }
@@ -905,24 +905,24 @@ inline void Settings::clear_has_effect_view_background_color() {
   _has_bits_[0] &= ~0x00020000u;
 }
 inline void Settings::clear_effect_view_background_color() {
-  if (effect_view_background_color_ != NULL) effect_view_background_color_->::common::protocol::Color4::Clear();
+  if (effect_view_background_color_ != NULL) effect_view_background_color_->::protocol::common::Color4::Clear();
   clear_has_effect_view_background_color();
 }
-inline const ::common::protocol::Color4& Settings::effect_view_background_color() const {
+inline const ::protocol::common::Color4& Settings::effect_view_background_color() const {
   return effect_view_background_color_ != NULL ? *effect_view_background_color_ : *default_instance_->effect_view_background_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_effect_view_background_color() {
+inline ::protocol::common::Color4* Settings::mutable_effect_view_background_color() {
   set_has_effect_view_background_color();
-  if (effect_view_background_color_ == NULL) effect_view_background_color_ = new ::common::protocol::Color4;
+  if (effect_view_background_color_ == NULL) effect_view_background_color_ = new ::protocol::common::Color4;
   return effect_view_background_color_;
 }
-inline ::common::protocol::Color4* Settings::release_effect_view_background_color() {
+inline ::protocol::common::Color4* Settings::release_effect_view_background_color() {
   clear_has_effect_view_background_color();
-  ::common::protocol::Color4* temp = effect_view_background_color_;
+  ::protocol::common::Color4* temp = effect_view_background_color_;
   effect_view_background_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_effect_view_background_color(::common::protocol::Color4* effect_view_background_color) {
+inline void Settings::set_allocated_effect_view_background_color(::protocol::common::Color4* effect_view_background_color) {
   delete effect_view_background_color_;
   effect_view_background_color_ = effect_view_background_color;
   if (effect_view_background_color) {
@@ -932,7 +932,7 @@ inline void Settings::set_allocated_effect_view_background_color(::common::proto
   }
 }
 
-// optional .common.protocol.Color4 effect_view_background_color_selected = 131;
+// optional .protocol.common.Color4 effect_view_background_color_selected = 131;
 inline bool Settings::has_effect_view_background_color_selected() const {
   return (_has_bits_[0] & 0x00040000u) != 0;
 }
@@ -943,24 +943,24 @@ inline void Settings::clear_has_effect_view_background_color_selected() {
   _has_bits_[0] &= ~0x00040000u;
 }
 inline void Settings::clear_effect_view_background_color_selected() {
-  if (effect_view_background_color_selected_ != NULL) effect_view_background_color_selected_->::common::protocol::Color4::Clear();
+  if (effect_view_background_color_selected_ != NULL) effect_view_background_color_selected_->::protocol::common::Color4::Clear();
   clear_has_effect_view_background_color_selected();
 }
-inline const ::common::protocol::Color4& Settings::effect_view_background_color_selected() const {
+inline const ::protocol::common::Color4& Settings::effect_view_background_color_selected() const {
   return effect_view_background_color_selected_ != NULL ? *effect_view_background_color_selected_ : *default_instance_->effect_view_background_color_selected_;
 }
-inline ::common::protocol::Color4* Settings::mutable_effect_view_background_color_selected() {
+inline ::protocol::common::Color4* Settings::mutable_effect_view_background_color_selected() {
   set_has_effect_view_background_color_selected();
-  if (effect_view_background_color_selected_ == NULL) effect_view_background_color_selected_ = new ::common::protocol::Color4;
+  if (effect_view_background_color_selected_ == NULL) effect_view_background_color_selected_ = new ::protocol::common::Color4;
   return effect_view_background_color_selected_;
 }
-inline ::common::protocol::Color4* Settings::release_effect_view_background_color_selected() {
+inline ::protocol::common::Color4* Settings::release_effect_view_background_color_selected() {
   clear_has_effect_view_background_color_selected();
-  ::common::protocol::Color4* temp = effect_view_background_color_selected_;
+  ::protocol::common::Color4* temp = effect_view_background_color_selected_;
   effect_view_background_color_selected_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_effect_view_background_color_selected(::common::protocol::Color4* effect_view_background_color_selected) {
+inline void Settings::set_allocated_effect_view_background_color_selected(::protocol::common::Color4* effect_view_background_color_selected) {
   delete effect_view_background_color_selected_;
   effect_view_background_color_selected_ = effect_view_background_color_selected;
   if (effect_view_background_color_selected) {
@@ -970,7 +970,7 @@ inline void Settings::set_allocated_effect_view_background_color_selected(::comm
   }
 }
 
-// optional .common.protocol.Color4 timeline_view_background_color = 132;
+// optional .protocol.common.Color4 timeline_view_background_color = 132;
 inline bool Settings::has_timeline_view_background_color() const {
   return (_has_bits_[0] & 0x00080000u) != 0;
 }
@@ -981,24 +981,24 @@ inline void Settings::clear_has_timeline_view_background_color() {
   _has_bits_[0] &= ~0x00080000u;
 }
 inline void Settings::clear_timeline_view_background_color() {
-  if (timeline_view_background_color_ != NULL) timeline_view_background_color_->::common::protocol::Color4::Clear();
+  if (timeline_view_background_color_ != NULL) timeline_view_background_color_->::protocol::common::Color4::Clear();
   clear_has_timeline_view_background_color();
 }
-inline const ::common::protocol::Color4& Settings::timeline_view_background_color() const {
+inline const ::protocol::common::Color4& Settings::timeline_view_background_color() const {
   return timeline_view_background_color_ != NULL ? *timeline_view_background_color_ : *default_instance_->timeline_view_background_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_timeline_view_background_color() {
+inline ::protocol::common::Color4* Settings::mutable_timeline_view_background_color() {
   set_has_timeline_view_background_color();
-  if (timeline_view_background_color_ == NULL) timeline_view_background_color_ = new ::common::protocol::Color4;
+  if (timeline_view_background_color_ == NULL) timeline_view_background_color_ = new ::protocol::common::Color4;
   return timeline_view_background_color_;
 }
-inline ::common::protocol::Color4* Settings::release_timeline_view_background_color() {
+inline ::protocol::common::Color4* Settings::release_timeline_view_background_color() {
   clear_has_timeline_view_background_color();
-  ::common::protocol::Color4* temp = timeline_view_background_color_;
+  ::protocol::common::Color4* temp = timeline_view_background_color_;
   timeline_view_background_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_timeline_view_background_color(::common::protocol::Color4* timeline_view_background_color) {
+inline void Settings::set_allocated_timeline_view_background_color(::protocol::common::Color4* timeline_view_background_color) {
   delete timeline_view_background_color_;
   timeline_view_background_color_ = timeline_view_background_color;
   if (timeline_view_background_color) {
@@ -1008,7 +1008,7 @@ inline void Settings::set_allocated_timeline_view_background_color(::common::pro
   }
 }
 
-// optional .common.protocol.Color4 effect_line_color = 133;
+// optional .protocol.common.Color4 effect_line_color = 133;
 inline bool Settings::has_effect_line_color() const {
   return (_has_bits_[0] & 0x00100000u) != 0;
 }
@@ -1019,24 +1019,24 @@ inline void Settings::clear_has_effect_line_color() {
   _has_bits_[0] &= ~0x00100000u;
 }
 inline void Settings::clear_effect_line_color() {
-  if (effect_line_color_ != NULL) effect_line_color_->::common::protocol::Color4::Clear();
+  if (effect_line_color_ != NULL) effect_line_color_->::protocol::common::Color4::Clear();
   clear_has_effect_line_color();
 }
-inline const ::common::protocol::Color4& Settings::effect_line_color() const {
+inline const ::protocol::common::Color4& Settings::effect_line_color() const {
   return effect_line_color_ != NULL ? *effect_line_color_ : *default_instance_->effect_line_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_effect_line_color() {
+inline ::protocol::common::Color4* Settings::mutable_effect_line_color() {
   set_has_effect_line_color();
-  if (effect_line_color_ == NULL) effect_line_color_ = new ::common::protocol::Color4;
+  if (effect_line_color_ == NULL) effect_line_color_ = new ::protocol::common::Color4;
   return effect_line_color_;
 }
-inline ::common::protocol::Color4* Settings::release_effect_line_color() {
+inline ::protocol::common::Color4* Settings::release_effect_line_color() {
   clear_has_effect_line_color();
-  ::common::protocol::Color4* temp = effect_line_color_;
+  ::protocol::common::Color4* temp = effect_line_color_;
   effect_line_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_effect_line_color(::common::protocol::Color4* effect_line_color) {
+inline void Settings::set_allocated_effect_line_color(::protocol::common::Color4* effect_line_color) {
   delete effect_line_color_;
   effect_line_color_ = effect_line_color;
   if (effect_line_color) {
@@ -1046,7 +1046,7 @@ inline void Settings::set_allocated_effect_line_color(::common::protocol::Color4
   }
 }
 
-// optional .common.protocol.Color4 keyframe_default_color = 150;
+// optional .protocol.common.Color4 keyframe_default_color = 150;
 inline bool Settings::has_keyframe_default_color() const {
   return (_has_bits_[0] & 0x00200000u) != 0;
 }
@@ -1057,24 +1057,24 @@ inline void Settings::clear_has_keyframe_default_color() {
   _has_bits_[0] &= ~0x00200000u;
 }
 inline void Settings::clear_keyframe_default_color() {
-  if (keyframe_default_color_ != NULL) keyframe_default_color_->::common::protocol::Color4::Clear();
+  if (keyframe_default_color_ != NULL) keyframe_default_color_->::protocol::common::Color4::Clear();
   clear_has_keyframe_default_color();
 }
-inline const ::common::protocol::Color4& Settings::keyframe_default_color() const {
+inline const ::protocol::common::Color4& Settings::keyframe_default_color() const {
   return keyframe_default_color_ != NULL ? *keyframe_default_color_ : *default_instance_->keyframe_default_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_keyframe_default_color() {
+inline ::protocol::common::Color4* Settings::mutable_keyframe_default_color() {
   set_has_keyframe_default_color();
-  if (keyframe_default_color_ == NULL) keyframe_default_color_ = new ::common::protocol::Color4;
+  if (keyframe_default_color_ == NULL) keyframe_default_color_ = new ::protocol::common::Color4;
   return keyframe_default_color_;
 }
-inline ::common::protocol::Color4* Settings::release_keyframe_default_color() {
+inline ::protocol::common::Color4* Settings::release_keyframe_default_color() {
   clear_has_keyframe_default_color();
-  ::common::protocol::Color4* temp = keyframe_default_color_;
+  ::protocol::common::Color4* temp = keyframe_default_color_;
   keyframe_default_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_keyframe_default_color(::common::protocol::Color4* keyframe_default_color) {
+inline void Settings::set_allocated_keyframe_default_color(::protocol::common::Color4* keyframe_default_color) {
   delete keyframe_default_color_;
   keyframe_default_color_ = keyframe_default_color;
   if (keyframe_default_color) {
@@ -1084,7 +1084,7 @@ inline void Settings::set_allocated_keyframe_default_color(::common::protocol::C
   }
 }
 
-// optional .common.protocol.Color4 keyframe_selected_color = 151;
+// optional .protocol.common.Color4 keyframe_selected_color = 151;
 inline bool Settings::has_keyframe_selected_color() const {
   return (_has_bits_[0] & 0x00400000u) != 0;
 }
@@ -1095,24 +1095,24 @@ inline void Settings::clear_has_keyframe_selected_color() {
   _has_bits_[0] &= ~0x00400000u;
 }
 inline void Settings::clear_keyframe_selected_color() {
-  if (keyframe_selected_color_ != NULL) keyframe_selected_color_->::common::protocol::Color4::Clear();
+  if (keyframe_selected_color_ != NULL) keyframe_selected_color_->::protocol::common::Color4::Clear();
   clear_has_keyframe_selected_color();
 }
-inline const ::common::protocol::Color4& Settings::keyframe_selected_color() const {
+inline const ::protocol::common::Color4& Settings::keyframe_selected_color() const {
   return keyframe_selected_color_ != NULL ? *keyframe_selected_color_ : *default_instance_->keyframe_selected_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_keyframe_selected_color() {
+inline ::protocol::common::Color4* Settings::mutable_keyframe_selected_color() {
   set_has_keyframe_selected_color();
-  if (keyframe_selected_color_ == NULL) keyframe_selected_color_ = new ::common::protocol::Color4;
+  if (keyframe_selected_color_ == NULL) keyframe_selected_color_ = new ::protocol::common::Color4;
   return keyframe_selected_color_;
 }
-inline ::common::protocol::Color4* Settings::release_keyframe_selected_color() {
+inline ::protocol::common::Color4* Settings::release_keyframe_selected_color() {
   clear_has_keyframe_selected_color();
-  ::common::protocol::Color4* temp = keyframe_selected_color_;
+  ::protocol::common::Color4* temp = keyframe_selected_color_;
   keyframe_selected_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_keyframe_selected_color(::common::protocol::Color4* keyframe_selected_color) {
+inline void Settings::set_allocated_keyframe_selected_color(::protocol::common::Color4* keyframe_selected_color) {
   delete keyframe_selected_color_;
   keyframe_selected_color_ = keyframe_selected_color;
   if (keyframe_selected_color) {
@@ -1122,7 +1122,7 @@ inline void Settings::set_allocated_keyframe_selected_color(::common::protocol::
   }
 }
 
-// optional .common.protocol.Color4 keyframe_control_color = 152;
+// optional .protocol.common.Color4 keyframe_control_color = 152;
 inline bool Settings::has_keyframe_control_color() const {
   return (_has_bits_[0] & 0x00800000u) != 0;
 }
@@ -1133,24 +1133,24 @@ inline void Settings::clear_has_keyframe_control_color() {
   _has_bits_[0] &= ~0x00800000u;
 }
 inline void Settings::clear_keyframe_control_color() {
-  if (keyframe_control_color_ != NULL) keyframe_control_color_->::common::protocol::Color4::Clear();
+  if (keyframe_control_color_ != NULL) keyframe_control_color_->::protocol::common::Color4::Clear();
   clear_has_keyframe_control_color();
 }
-inline const ::common::protocol::Color4& Settings::keyframe_control_color() const {
+inline const ::protocol::common::Color4& Settings::keyframe_control_color() const {
   return keyframe_control_color_ != NULL ? *keyframe_control_color_ : *default_instance_->keyframe_control_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_keyframe_control_color() {
+inline ::protocol::common::Color4* Settings::mutable_keyframe_control_color() {
   set_has_keyframe_control_color();
-  if (keyframe_control_color_ == NULL) keyframe_control_color_ = new ::common::protocol::Color4;
+  if (keyframe_control_color_ == NULL) keyframe_control_color_ = new ::protocol::common::Color4;
   return keyframe_control_color_;
 }
-inline ::common::protocol::Color4* Settings::release_keyframe_control_color() {
+inline ::protocol::common::Color4* Settings::release_keyframe_control_color() {
   clear_has_keyframe_control_color();
-  ::common::protocol::Color4* temp = keyframe_control_color_;
+  ::protocol::common::Color4* temp = keyframe_control_color_;
   keyframe_control_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_keyframe_control_color(::common::protocol::Color4* keyframe_control_color) {
+inline void Settings::set_allocated_keyframe_control_color(::protocol::common::Color4* keyframe_control_color) {
   delete keyframe_control_color_;
   keyframe_control_color_ = keyframe_control_color;
   if (keyframe_control_color) {
@@ -1160,7 +1160,7 @@ inline void Settings::set_allocated_keyframe_control_color(::common::protocol::C
   }
 }
 
-// optional .common.protocol.Color4 graph_color = 153;
+// optional .protocol.common.Color4 graph_color = 153;
 inline bool Settings::has_graph_color() const {
   return (_has_bits_[0] & 0x01000000u) != 0;
 }
@@ -1171,24 +1171,24 @@ inline void Settings::clear_has_graph_color() {
   _has_bits_[0] &= ~0x01000000u;
 }
 inline void Settings::clear_graph_color() {
-  if (graph_color_ != NULL) graph_color_->::common::protocol::Color4::Clear();
+  if (graph_color_ != NULL) graph_color_->::protocol::common::Color4::Clear();
   clear_has_graph_color();
 }
-inline const ::common::protocol::Color4& Settings::graph_color() const {
+inline const ::protocol::common::Color4& Settings::graph_color() const {
   return graph_color_ != NULL ? *graph_color_ : *default_instance_->graph_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_graph_color() {
+inline ::protocol::common::Color4* Settings::mutable_graph_color() {
   set_has_graph_color();
-  if (graph_color_ == NULL) graph_color_ = new ::common::protocol::Color4;
+  if (graph_color_ == NULL) graph_color_ = new ::protocol::common::Color4;
   return graph_color_;
 }
-inline ::common::protocol::Color4* Settings::release_graph_color() {
+inline ::protocol::common::Color4* Settings::release_graph_color() {
   clear_has_graph_color();
-  ::common::protocol::Color4* temp = graph_color_;
+  ::protocol::common::Color4* temp = graph_color_;
   graph_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_graph_color(::common::protocol::Color4* graph_color) {
+inline void Settings::set_allocated_graph_color(::protocol::common::Color4* graph_color) {
   delete graph_color_;
   graph_color_ = graph_color;
   if (graph_color) {
@@ -1198,7 +1198,7 @@ inline void Settings::set_allocated_graph_color(::common::protocol::Color4* grap
   }
 }
 
-// optional .common.protocol.Color4 var_text_color = 160;
+// optional .protocol.common.Color4 var_text_color = 160;
 inline bool Settings::has_var_text_color() const {
   return (_has_bits_[0] & 0x02000000u) != 0;
 }
@@ -1209,24 +1209,24 @@ inline void Settings::clear_has_var_text_color() {
   _has_bits_[0] &= ~0x02000000u;
 }
 inline void Settings::clear_var_text_color() {
-  if (var_text_color_ != NULL) var_text_color_->::common::protocol::Color4::Clear();
+  if (var_text_color_ != NULL) var_text_color_->::protocol::common::Color4::Clear();
   clear_has_var_text_color();
 }
-inline const ::common::protocol::Color4& Settings::var_text_color() const {
+inline const ::protocol::common::Color4& Settings::var_text_color() const {
   return var_text_color_ != NULL ? *var_text_color_ : *default_instance_->var_text_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_var_text_color() {
+inline ::protocol::common::Color4* Settings::mutable_var_text_color() {
   set_has_var_text_color();
-  if (var_text_color_ == NULL) var_text_color_ = new ::common::protocol::Color4;
+  if (var_text_color_ == NULL) var_text_color_ = new ::protocol::common::Color4;
   return var_text_color_;
 }
-inline ::common::protocol::Color4* Settings::release_var_text_color() {
+inline ::protocol::common::Color4* Settings::release_var_text_color() {
   clear_has_var_text_color();
-  ::common::protocol::Color4* temp = var_text_color_;
+  ::protocol::common::Color4* temp = var_text_color_;
   var_text_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_var_text_color(::common::protocol::Color4* var_text_color) {
+inline void Settings::set_allocated_var_text_color(::protocol::common::Color4* var_text_color) {
   delete var_text_color_;
   var_text_color_ = var_text_color;
   if (var_text_color) {
@@ -1236,7 +1236,7 @@ inline void Settings::set_allocated_var_text_color(::common::protocol::Color4* v
   }
 }
 
-// optional .common.protocol.Color4 var_value_color = 161;
+// optional .protocol.common.Color4 var_value_color = 161;
 inline bool Settings::has_var_value_color() const {
   return (_has_bits_[0] & 0x04000000u) != 0;
 }
@@ -1247,24 +1247,24 @@ inline void Settings::clear_has_var_value_color() {
   _has_bits_[0] &= ~0x04000000u;
 }
 inline void Settings::clear_var_value_color() {
-  if (var_value_color_ != NULL) var_value_color_->::common::protocol::Color4::Clear();
+  if (var_value_color_ != NULL) var_value_color_->::protocol::common::Color4::Clear();
   clear_has_var_value_color();
 }
-inline const ::common::protocol::Color4& Settings::var_value_color() const {
+inline const ::protocol::common::Color4& Settings::var_value_color() const {
   return var_value_color_ != NULL ? *var_value_color_ : *default_instance_->var_value_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_var_value_color() {
+inline ::protocol::common::Color4* Settings::mutable_var_value_color() {
   set_has_var_value_color();
-  if (var_value_color_ == NULL) var_value_color_ = new ::common::protocol::Color4;
+  if (var_value_color_ == NULL) var_value_color_ = new ::protocol::common::Color4;
   return var_value_color_;
 }
-inline ::common::protocol::Color4* Settings::release_var_value_color() {
+inline ::protocol::common::Color4* Settings::release_var_value_color() {
   clear_has_var_value_color();
-  ::common::protocol::Color4* temp = var_value_color_;
+  ::protocol::common::Color4* temp = var_value_color_;
   var_value_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_var_value_color(::common::protocol::Color4* var_value_color) {
+inline void Settings::set_allocated_var_value_color(::protocol::common::Color4* var_value_color) {
   delete var_value_color_;
   var_value_color_ = var_value_color;
   if (var_value_color) {
@@ -1274,7 +1274,7 @@ inline void Settings::set_allocated_var_value_color(::common::protocol::Color4* 
   }
 }
 
-// optional .common.protocol.Color4 effect_icon_expanded_color = 200;
+// optional .protocol.common.Color4 effect_icon_expanded_color = 200;
 inline bool Settings::has_effect_icon_expanded_color() const {
   return (_has_bits_[0] & 0x08000000u) != 0;
 }
@@ -1285,24 +1285,24 @@ inline void Settings::clear_has_effect_icon_expanded_color() {
   _has_bits_[0] &= ~0x08000000u;
 }
 inline void Settings::clear_effect_icon_expanded_color() {
-  if (effect_icon_expanded_color_ != NULL) effect_icon_expanded_color_->::common::protocol::Color4::Clear();
+  if (effect_icon_expanded_color_ != NULL) effect_icon_expanded_color_->::protocol::common::Color4::Clear();
   clear_has_effect_icon_expanded_color();
 }
-inline const ::common::protocol::Color4& Settings::effect_icon_expanded_color() const {
+inline const ::protocol::common::Color4& Settings::effect_icon_expanded_color() const {
   return effect_icon_expanded_color_ != NULL ? *effect_icon_expanded_color_ : *default_instance_->effect_icon_expanded_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_effect_icon_expanded_color() {
+inline ::protocol::common::Color4* Settings::mutable_effect_icon_expanded_color() {
   set_has_effect_icon_expanded_color();
-  if (effect_icon_expanded_color_ == NULL) effect_icon_expanded_color_ = new ::common::protocol::Color4;
+  if (effect_icon_expanded_color_ == NULL) effect_icon_expanded_color_ = new ::protocol::common::Color4;
   return effect_icon_expanded_color_;
 }
-inline ::common::protocol::Color4* Settings::release_effect_icon_expanded_color() {
+inline ::protocol::common::Color4* Settings::release_effect_icon_expanded_color() {
   clear_has_effect_icon_expanded_color();
-  ::common::protocol::Color4* temp = effect_icon_expanded_color_;
+  ::protocol::common::Color4* temp = effect_icon_expanded_color_;
   effect_icon_expanded_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_effect_icon_expanded_color(::common::protocol::Color4* effect_icon_expanded_color) {
+inline void Settings::set_allocated_effect_icon_expanded_color(::protocol::common::Color4* effect_icon_expanded_color) {
   delete effect_icon_expanded_color_;
   effect_icon_expanded_color_ = effect_icon_expanded_color;
   if (effect_icon_expanded_color) {
@@ -1312,7 +1312,7 @@ inline void Settings::set_allocated_effect_icon_expanded_color(::common::protoco
   }
 }
 
-// optional .common.protocol.Color4 effect_icon_collapsed_color = 201;
+// optional .protocol.common.Color4 effect_icon_collapsed_color = 201;
 inline bool Settings::has_effect_icon_collapsed_color() const {
   return (_has_bits_[0] & 0x10000000u) != 0;
 }
@@ -1323,24 +1323,24 @@ inline void Settings::clear_has_effect_icon_collapsed_color() {
   _has_bits_[0] &= ~0x10000000u;
 }
 inline void Settings::clear_effect_icon_collapsed_color() {
-  if (effect_icon_collapsed_color_ != NULL) effect_icon_collapsed_color_->::common::protocol::Color4::Clear();
+  if (effect_icon_collapsed_color_ != NULL) effect_icon_collapsed_color_->::protocol::common::Color4::Clear();
   clear_has_effect_icon_collapsed_color();
 }
-inline const ::common::protocol::Color4& Settings::effect_icon_collapsed_color() const {
+inline const ::protocol::common::Color4& Settings::effect_icon_collapsed_color() const {
   return effect_icon_collapsed_color_ != NULL ? *effect_icon_collapsed_color_ : *default_instance_->effect_icon_collapsed_color_;
 }
-inline ::common::protocol::Color4* Settings::mutable_effect_icon_collapsed_color() {
+inline ::protocol::common::Color4* Settings::mutable_effect_icon_collapsed_color() {
   set_has_effect_icon_collapsed_color();
-  if (effect_icon_collapsed_color_ == NULL) effect_icon_collapsed_color_ = new ::common::protocol::Color4;
+  if (effect_icon_collapsed_color_ == NULL) effect_icon_collapsed_color_ = new ::protocol::common::Color4;
   return effect_icon_collapsed_color_;
 }
-inline ::common::protocol::Color4* Settings::release_effect_icon_collapsed_color() {
+inline ::protocol::common::Color4* Settings::release_effect_icon_collapsed_color() {
   clear_has_effect_icon_collapsed_color();
-  ::common::protocol::Color4* temp = effect_icon_collapsed_color_;
+  ::protocol::common::Color4* temp = effect_icon_collapsed_color_;
   effect_icon_collapsed_color_ = NULL;
   return temp;
 }
-inline void Settings::set_allocated_effect_icon_collapsed_color(::common::protocol::Color4* effect_icon_collapsed_color) {
+inline void Settings::set_allocated_effect_icon_collapsed_color(::protocol::common::Color4* effect_icon_collapsed_color) {
   delete effect_icon_collapsed_color_;
   effect_icon_collapsed_color_ = effect_icon_collapsed_color;
   if (effect_icon_collapsed_color) {
@@ -1353,8 +1353,8 @@ inline void Settings::set_allocated_effect_icon_collapsed_color(::common::protoc
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace protocol
 }  // namespace editor
+}  // namespace protocol
 
 #ifndef SWIG
 namespace google {

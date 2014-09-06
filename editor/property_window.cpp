@@ -1,7 +1,7 @@
 #include "property_window.hpp"
 #include "editor.hpp"
 #include "row_var.hpp"
-#include "protocol/effects_proto.hpp"
+#include "protocol/proto_helpers.hpp"
 
 using namespace editor;
 using namespace bristol;
@@ -45,7 +45,7 @@ void PropertyWindow::Draw()
 {
   _texture.clear();
 
-  const editor::protocol::Settings& settings = EDITOR.Settings();
+  const protocol::editor::Settings& settings = EDITOR.Settings();
 
   _texture.draw(CreateRect(_pos, _size, ::FromProtocol(settings.timeline_view_background_color())));
 

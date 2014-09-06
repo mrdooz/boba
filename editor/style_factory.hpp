@@ -1,6 +1,6 @@
 #pragma once
 
-#include "protocol/effects_proto.hpp"
+#include "protocol/editor_types.hpp"
 #include "effect_utils.hpp"
 
 namespace editor

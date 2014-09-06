@@ -1,6 +1,7 @@
 #pragma once
 
 #include "style_factory.hpp"
+#include "protocol/effect_settings.pb.h"
 
 namespace effect
 {
@@ -40,7 +41,7 @@ namespace editor
     virtual bool Init();
     virtual void Draw();
     virtual void Update();
-    void Reset(const effect::protocol::EffectSettings& settings);
+    void Reset(const protocol::effect::EffectSettings& settings);
     void AddDefaultRows(bool addKeyframes);
 
     int TimeToPixel(const time_duration& t) const;

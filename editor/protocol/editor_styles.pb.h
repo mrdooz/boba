@@ -28,8 +28,8 @@
 #include "common.pb.h"
 // @@protoc_insertion_point(includes)
 
-namespace editor {
 namespace protocol {
+namespace editor {
 
 // Internal implementation detail -- do not call these.
 void  protobuf_AddDesc_editor_5fstyles_2eproto();
@@ -107,23 +107,23 @@ class StyleSetting : public ::google::protobuf::Message {
   inline ::std::string* release_id();
   inline void set_allocated_id(::std::string* id);
 
-  // optional .common.protocol.Color4 fill_color = 2;
+  // optional .protocol.common.Color4 fill_color = 2;
   inline bool has_fill_color() const;
   inline void clear_fill_color();
   static const int kFillColorFieldNumber = 2;
-  inline const ::common::protocol::Color4& fill_color() const;
-  inline ::common::protocol::Color4* mutable_fill_color();
-  inline ::common::protocol::Color4* release_fill_color();
-  inline void set_allocated_fill_color(::common::protocol::Color4* fill_color);
+  inline const ::protocol::common::Color4& fill_color() const;
+  inline ::protocol::common::Color4* mutable_fill_color();
+  inline ::protocol::common::Color4* release_fill_color();
+  inline void set_allocated_fill_color(::protocol::common::Color4* fill_color);
 
-  // optional .common.protocol.Color4 outline_color = 3;
+  // optional .protocol.common.Color4 outline_color = 3;
   inline bool has_outline_color() const;
   inline void clear_outline_color();
   static const int kOutlineColorFieldNumber = 3;
-  inline const ::common::protocol::Color4& outline_color() const;
-  inline ::common::protocol::Color4* mutable_outline_color();
-  inline ::common::protocol::Color4* release_outline_color();
-  inline void set_allocated_outline_color(::common::protocol::Color4* outline_color);
+  inline const ::protocol::common::Color4& outline_color() const;
+  inline ::protocol::common::Color4* mutable_outline_color();
+  inline ::protocol::common::Color4* release_outline_color();
+  inline void set_allocated_outline_color(::protocol::common::Color4* outline_color);
 
   // optional float outline_thickness = 4 [default = 0];
   inline bool has_outline_thickness() const;
@@ -139,7 +139,7 @@ class StyleSetting : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 font_style() const;
   inline void set_font_style(::google::protobuf::uint32 value);
 
-  // @@protoc_insertion_point(class_scope:editor.protocol.StyleSetting)
+  // @@protoc_insertion_point(class_scope:protocol.editor.StyleSetting)
  private:
   inline void set_has_id();
   inline void clear_has_id();
@@ -155,8 +155,8 @@ class StyleSetting : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* id_;
-  ::common::protocol::Color4* fill_color_;
-  ::common::protocol::Color4* outline_color_;
+  ::protocol::common::Color4* fill_color_;
+  ::protocol::common::Color4* outline_color_;
   float outline_thickness_;
   ::google::protobuf::uint32 font_style_;
 
@@ -226,24 +226,24 @@ class StyleSettings : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .editor.protocol.StyleSetting style_setting = 1;
+  // repeated .protocol.editor.StyleSetting style_setting = 1;
   inline int style_setting_size() const;
   inline void clear_style_setting();
   static const int kStyleSettingFieldNumber = 1;
-  inline const ::editor::protocol::StyleSetting& style_setting(int index) const;
-  inline ::editor::protocol::StyleSetting* mutable_style_setting(int index);
-  inline ::editor::protocol::StyleSetting* add_style_setting();
-  inline const ::google::protobuf::RepeatedPtrField< ::editor::protocol::StyleSetting >&
+  inline const ::protocol::editor::StyleSetting& style_setting(int index) const;
+  inline ::protocol::editor::StyleSetting* mutable_style_setting(int index);
+  inline ::protocol::editor::StyleSetting* add_style_setting();
+  inline const ::google::protobuf::RepeatedPtrField< ::protocol::editor::StyleSetting >&
       style_setting() const;
-  inline ::google::protobuf::RepeatedPtrField< ::editor::protocol::StyleSetting >*
+  inline ::google::protobuf::RepeatedPtrField< ::protocol::editor::StyleSetting >*
       mutable_style_setting();
 
-  // @@protoc_insertion_point(class_scope:editor.protocol.StyleSettings)
+  // @@protoc_insertion_point(class_scope:protocol.editor.StyleSettings)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::editor::protocol::StyleSetting > style_setting_;
+  ::google::protobuf::RepeatedPtrField< ::protocol::editor::StyleSetting > style_setting_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -332,7 +332,7 @@ inline void StyleSetting::set_allocated_id(::std::string* id) {
   }
 }
 
-// optional .common.protocol.Color4 fill_color = 2;
+// optional .protocol.common.Color4 fill_color = 2;
 inline bool StyleSetting::has_fill_color() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -343,24 +343,24 @@ inline void StyleSetting::clear_has_fill_color() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void StyleSetting::clear_fill_color() {
-  if (fill_color_ != NULL) fill_color_->::common::protocol::Color4::Clear();
+  if (fill_color_ != NULL) fill_color_->::protocol::common::Color4::Clear();
   clear_has_fill_color();
 }
-inline const ::common::protocol::Color4& StyleSetting::fill_color() const {
+inline const ::protocol::common::Color4& StyleSetting::fill_color() const {
   return fill_color_ != NULL ? *fill_color_ : *default_instance_->fill_color_;
 }
-inline ::common::protocol::Color4* StyleSetting::mutable_fill_color() {
+inline ::protocol::common::Color4* StyleSetting::mutable_fill_color() {
   set_has_fill_color();
-  if (fill_color_ == NULL) fill_color_ = new ::common::protocol::Color4;
+  if (fill_color_ == NULL) fill_color_ = new ::protocol::common::Color4;
   return fill_color_;
 }
-inline ::common::protocol::Color4* StyleSetting::release_fill_color() {
+inline ::protocol::common::Color4* StyleSetting::release_fill_color() {
   clear_has_fill_color();
-  ::common::protocol::Color4* temp = fill_color_;
+  ::protocol::common::Color4* temp = fill_color_;
   fill_color_ = NULL;
   return temp;
 }
-inline void StyleSetting::set_allocated_fill_color(::common::protocol::Color4* fill_color) {
+inline void StyleSetting::set_allocated_fill_color(::protocol::common::Color4* fill_color) {
   delete fill_color_;
   fill_color_ = fill_color;
   if (fill_color) {
@@ -370,7 +370,7 @@ inline void StyleSetting::set_allocated_fill_color(::common::protocol::Color4* f
   }
 }
 
-// optional .common.protocol.Color4 outline_color = 3;
+// optional .protocol.common.Color4 outline_color = 3;
 inline bool StyleSetting::has_outline_color() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -381,24 +381,24 @@ inline void StyleSetting::clear_has_outline_color() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void StyleSetting::clear_outline_color() {
-  if (outline_color_ != NULL) outline_color_->::common::protocol::Color4::Clear();
+  if (outline_color_ != NULL) outline_color_->::protocol::common::Color4::Clear();
   clear_has_outline_color();
 }
-inline const ::common::protocol::Color4& StyleSetting::outline_color() const {
+inline const ::protocol::common::Color4& StyleSetting::outline_color() const {
   return outline_color_ != NULL ? *outline_color_ : *default_instance_->outline_color_;
 }
-inline ::common::protocol::Color4* StyleSetting::mutable_outline_color() {
+inline ::protocol::common::Color4* StyleSetting::mutable_outline_color() {
   set_has_outline_color();
-  if (outline_color_ == NULL) outline_color_ = new ::common::protocol::Color4;
+  if (outline_color_ == NULL) outline_color_ = new ::protocol::common::Color4;
   return outline_color_;
 }
-inline ::common::protocol::Color4* StyleSetting::release_outline_color() {
+inline ::protocol::common::Color4* StyleSetting::release_outline_color() {
   clear_has_outline_color();
-  ::common::protocol::Color4* temp = outline_color_;
+  ::protocol::common::Color4* temp = outline_color_;
   outline_color_ = NULL;
   return temp;
 }
-inline void StyleSetting::set_allocated_outline_color(::common::protocol::Color4* outline_color) {
+inline void StyleSetting::set_allocated_outline_color(::protocol::common::Color4* outline_color) {
   delete outline_color_;
   outline_color_ = outline_color;
   if (outline_color) {
@@ -456,27 +456,27 @@ inline void StyleSetting::set_font_style(::google::protobuf::uint32 value) {
 
 // StyleSettings
 
-// repeated .editor.protocol.StyleSetting style_setting = 1;
+// repeated .protocol.editor.StyleSetting style_setting = 1;
 inline int StyleSettings::style_setting_size() const {
   return style_setting_.size();
 }
 inline void StyleSettings::clear_style_setting() {
   style_setting_.Clear();
 }
-inline const ::editor::protocol::StyleSetting& StyleSettings::style_setting(int index) const {
+inline const ::protocol::editor::StyleSetting& StyleSettings::style_setting(int index) const {
   return style_setting_.Get(index);
 }
-inline ::editor::protocol::StyleSetting* StyleSettings::mutable_style_setting(int index) {
+inline ::protocol::editor::StyleSetting* StyleSettings::mutable_style_setting(int index) {
   return style_setting_.Mutable(index);
 }
-inline ::editor::protocol::StyleSetting* StyleSettings::add_style_setting() {
+inline ::protocol::editor::StyleSetting* StyleSettings::add_style_setting() {
   return style_setting_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::editor::protocol::StyleSetting >&
+inline const ::google::protobuf::RepeatedPtrField< ::protocol::editor::StyleSetting >&
 StyleSettings::style_setting() const {
   return style_setting_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::editor::protocol::StyleSetting >*
+inline ::google::protobuf::RepeatedPtrField< ::protocol::editor::StyleSetting >*
 StyleSettings::mutable_style_setting() {
   return &style_setting_;
 }
@@ -484,8 +484,8 @@ StyleSettings::mutable_style_setting() {
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace protocol
 }  // namespace editor
+}  // namespace protocol
 
 #ifndef SWIG
 namespace google {

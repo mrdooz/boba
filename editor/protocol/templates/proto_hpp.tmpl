@@ -1,0 +1,33 @@
+#pragma once
+
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
+#endif
+
+{% for dep in dependencies %}
+#include "{{ dep }}_proto.hpp"
+{% endfor %}
+#include "{{ hpp_file }}"
+#include "proto_helpers.hpp"
+
+#ifdef _WIN32
+#pragma warning(pop)
+#endif
+
+namespace {{ namespace }}
+{
+  {% for class in all_classes %}
+  struct {{ class }};
+  {% endfor %}
+
+  {% for class in classes %}
+  {{ class.name }} FromProtocol(const {{ class.proto_type }}& p);
+  void ToProtocol(const {{ class.name}}& v, {{ class.proto_type}}* p);
+  {% endfor %}
+  {% for fwd in forward_decls %}
+  {{ fwd }}
+
+  {% endfor %}
+}
+

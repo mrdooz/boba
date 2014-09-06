@@ -1,4 +1,6 @@
 #include "style_factory.hpp"
+#include "protocol/editor_styles.pb.h"
+#include "protocol/editor_proto.hpp"
 
 using namespace editor;
 
@@ -35,7 +37,7 @@ StyleFactory::~StyleFactory()
 //----------------------------------------------------------------------------------
 bool StyleFactory::Init(const char* config)
 {
-  editor::protocol::StyleSettings protoStyles;
+  protocol::editor::StyleSettings protoStyles;
   if (!LoadProto(config, &protoStyles))
   {
     return false;

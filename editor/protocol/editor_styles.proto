@@ -1,4 +1,4 @@
-package editor.protocol;
+package protocol.editor;
 
 import "editor_settings.proto";
 import "common.proto";
@@ -7,8 +7,8 @@ message StyleSetting
 {
 	optional string id = 1;
 
-	optional common.protocol.Color4 fill_color = 2;
-	optional common.protocol.Color4 outline_color = 3;
+	optional protocol.common.Color4 fill_color = 2;
+	optional protocol.common.Color4 outline_color = 3;
 	optional float outline_thickness = 4 [default = 0];
 
     // Regular    = 0,

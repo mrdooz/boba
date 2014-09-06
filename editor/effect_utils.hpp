@@ -1,5 +1,5 @@
 #pragma once
-#include "protocol/effects_proto.hpp"
+#include "protocol/common_types.hpp"
 
 namespace editor
 {

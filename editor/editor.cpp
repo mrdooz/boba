@@ -70,7 +70,7 @@ bool Editor::Init()
   });
 
 
-  effect::protocol::plexus::Plexus plexusSettings;
+  protocol::effect::plexus::Plexus plexusSettings;
   if (!LoadProto("config/plexus1.pb", &plexusSettings, true))
     return false;
 
@@ -191,7 +191,7 @@ int Editor::WebbyOnWsFrame(WebbyConnection* connection, const WebbyWsFrame* fram
   vector<u8>& buf = EDITOR._readBuffer;
   WebbyRead(connection, buf.data(), frame->payload_length);
 
-  effect::protocol::EffectSettings settings;
+  protocol::effect::EffectSettings settings;
   settings.ParseFromArray(buf.data(), frame->payload_length);
 
   EDITOR._timelineWindow->Reset(settings);
@@ -334,7 +334,7 @@ bool Editor::Close()
 }
 
 //----------------------------------------------------------------------------------
-void Editor::SettingsUpdated(const effect::protocol::EffectSettings& settings)
+void Editor::SettingsUpdated(const protocol::effect::EffectSettings& settings)
 {
   for (WebbyConnection* conn : _connections)
   {
