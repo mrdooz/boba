@@ -121,7 +121,7 @@ void protobuf_AddDesc_generator_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::anttweak::protobuf_AddDesc_anttweak_2eproto();
-  ::common::protocol::protobuf_AddDesc_common_2eproto();
+  ::protocol::common::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\017generator.proto\022\tgenerator\032\016anttweak.p"
     "roto\032\014common.proto\"\247\002\n\005Spiky\022\016\n\006radius\030\001"
@@ -182,10 +182,10 @@ Spiky::Spiky()
 }
 
 void Spiky::InitAsDefaultInstance() {
-  camera_pos_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
-  camera_dir_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
-  obj_t_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
-  obj_r_ = const_cast< ::common::protocol::Matrix4x4*>(&::common::protocol::Matrix4x4::default_instance());
+  camera_pos_ = const_cast< ::protocol::common::Vector3*>(&::protocol::common::Vector3::default_instance());
+  camera_dir_ = const_cast< ::protocol::common::Vector3*>(&::protocol::common::Vector3::default_instance());
+  obj_t_ = const_cast< ::protocol::common::Vector3*>(&::protocol::common::Vector3::default_instance());
+  obj_r_ = const_cast< ::protocol::common::Matrix4x4*>(&::protocol::common::Matrix4x4::default_instance());
 }
 
 Spiky::Spiky(const Spiky& from)
@@ -248,16 +248,16 @@ void Spiky::Clear() {
     radial_segments_ = 0u;
     height_segments_ = 0u;
     if (has_camera_pos()) {
-      if (camera_pos_ != NULL) camera_pos_->::common::protocol::Vector3::Clear();
+      if (camera_pos_ != NULL) camera_pos_->::protocol::common::Vector3::Clear();
     }
     if (has_camera_dir()) {
-      if (camera_dir_ != NULL) camera_dir_->::common::protocol::Vector3::Clear();
+      if (camera_dir_ != NULL) camera_dir_->::protocol::common::Vector3::Clear();
     }
     if (has_obj_t()) {
-      if (obj_t_ != NULL) obj_t_->::common::protocol::Vector3::Clear();
+      if (obj_t_ != NULL) obj_t_->::protocol::common::Vector3::Clear();
     }
     if (has_obj_r()) {
-      if (obj_r_ != NULL) obj_r_->::common::protocol::Matrix4x4::Clear();
+      if (obj_r_ != NULL) obj_r_->::protocol::common::Matrix4x4::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -610,16 +610,16 @@ void Spiky::MergeFrom(const Spiky& from) {
       set_height_segments(from.height_segments());
     }
     if (from.has_camera_pos()) {
-      mutable_camera_pos()->::common::protocol::Vector3::MergeFrom(from.camera_pos());
+      mutable_camera_pos()->::protocol::common::Vector3::MergeFrom(from.camera_pos());
     }
     if (from.has_camera_dir()) {
-      mutable_camera_dir()->::common::protocol::Vector3::MergeFrom(from.camera_dir());
+      mutable_camera_dir()->::protocol::common::Vector3::MergeFrom(from.camera_dir());
     }
     if (from.has_obj_t()) {
-      mutable_obj_t()->::common::protocol::Vector3::MergeFrom(from.obj_t());
+      mutable_obj_t()->::protocol::common::Vector3::MergeFrom(from.obj_t());
     }
     if (from.has_obj_r()) {
-      mutable_obj_r()->::common::protocol::Matrix4x4::MergeFrom(from.obj_r());
+      mutable_obj_r()->::protocol::common::Matrix4x4::MergeFrom(from.obj_r());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -693,10 +693,10 @@ Plane::Plane()
 }
 
 void Plane::InitAsDefaultInstance() {
-  camera_pos_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
-  camera_dir_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
-  obj_t_ = const_cast< ::common::protocol::Vector3*>(&::common::protocol::Vector3::default_instance());
-  obj_r_ = const_cast< ::common::protocol::Matrix4x4*>(&::common::protocol::Matrix4x4::default_instance());
+  camera_pos_ = const_cast< ::protocol::common::Vector3*>(&::protocol::common::Vector3::default_instance());
+  camera_dir_ = const_cast< ::protocol::common::Vector3*>(&::protocol::common::Vector3::default_instance());
+  obj_t_ = const_cast< ::protocol::common::Vector3*>(&::protocol::common::Vector3::default_instance());
+  obj_r_ = const_cast< ::protocol::common::Matrix4x4*>(&::protocol::common::Matrix4x4::default_instance());
 }
 
 Plane::Plane(const Plane& from)
@@ -766,16 +766,16 @@ void Plane::Clear() {
     width_segments_ = 0u;
     height_segments_ = 0u;
     if (has_camera_pos()) {
-      if (camera_pos_ != NULL) camera_pos_->::common::protocol::Vector3::Clear();
+      if (camera_pos_ != NULL) camera_pos_->::protocol::common::Vector3::Clear();
     }
     if (has_camera_dir()) {
-      if (camera_dir_ != NULL) camera_dir_->::common::protocol::Vector3::Clear();
+      if (camera_dir_ != NULL) camera_dir_->::protocol::common::Vector3::Clear();
     }
     if (has_obj_t()) {
-      if (obj_t_ != NULL) obj_t_->::common::protocol::Vector3::Clear();
+      if (obj_t_ != NULL) obj_t_->::protocol::common::Vector3::Clear();
     }
     if (has_obj_r()) {
-      if (obj_r_ != NULL) obj_r_->::common::protocol::Matrix4x4::Clear();
+      if (obj_r_ != NULL) obj_r_->::protocol::common::Matrix4x4::Clear();
     }
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
@@ -1356,16 +1356,16 @@ void Plane::MergeFrom(const Plane& from) {
       set_height_segments(from.height_segments());
     }
     if (from.has_camera_pos()) {
-      mutable_camera_pos()->::common::protocol::Vector3::MergeFrom(from.camera_pos());
+      mutable_camera_pos()->::protocol::common::Vector3::MergeFrom(from.camera_pos());
     }
     if (from.has_camera_dir()) {
-      mutable_camera_dir()->::common::protocol::Vector3::MergeFrom(from.camera_dir());
+      mutable_camera_dir()->::protocol::common::Vector3::MergeFrom(from.camera_dir());
     }
     if (from.has_obj_t()) {
-      mutable_obj_t()->::common::protocol::Vector3::MergeFrom(from.obj_t());
+      mutable_obj_t()->::protocol::common::Vector3::MergeFrom(from.obj_t());
     }
     if (from.has_obj_r()) {
-      mutable_obj_r()->::common::protocol::Matrix4x4::MergeFrom(from.obj_r());
+      mutable_obj_r()->::protocol::common::Matrix4x4::MergeFrom(from.obj_r());
     }
   }
   if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {

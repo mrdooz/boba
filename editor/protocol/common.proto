@@ -66,15 +66,15 @@ message FloatAnim
   repeated FloatKeyframe keyframe = 2;
 }
 
-message Vector3Keyframe
-{
+//message Vector3Keyframe
+//{
 //  option (common.protocol.context) = "void* context";
-  optional int32 time = 1;
-  optional Vector3 value = 2;
-}
+//  optional int32 time = 1;
+//  optional Vector3 value = 2;
+//}
 
-message Vector3Anim
-{
-  optional uint32 type = 1;
-  repeated Vector3Keyframe keyframe = 2;
-}
+//message Vector3Anim
+//{
+//  optional uint32 type = 1;
+//  repeated Vector3Keyframe keyframe = 2;
+//}

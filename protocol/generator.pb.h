@@ -126,37 +126,37 @@ class Spiky : public ::google::protobuf::Message {
   inline bool has_camera_pos() const;
   inline void clear_camera_pos();
   static const int kCameraPosFieldNumber = 5;
-  inline const ::common::protocol::Vector3& camera_pos() const;
-  inline ::common::protocol::Vector3* mutable_camera_pos();
-  inline ::common::protocol::Vector3* release_camera_pos();
-  inline void set_allocated_camera_pos(::common::protocol::Vector3* camera_pos);
+  inline const ::protocol::common::Vector3& camera_pos() const;
+  inline ::protocol::common::Vector3* mutable_camera_pos();
+  inline ::protocol::common::Vector3* release_camera_pos();
+  inline void set_allocated_camera_pos(::protocol::common::Vector3* camera_pos);
 
   // optional .common.protocol.Vector3 camera_dir = 6;
   inline bool has_camera_dir() const;
   inline void clear_camera_dir();
   static const int kCameraDirFieldNumber = 6;
-  inline const ::common::protocol::Vector3& camera_dir() const;
-  inline ::common::protocol::Vector3* mutable_camera_dir();
-  inline ::common::protocol::Vector3* release_camera_dir();
-  inline void set_allocated_camera_dir(::common::protocol::Vector3* camera_dir);
+  inline const ::protocol::common::Vector3& camera_dir() const;
+  inline ::protocol::common::Vector3* mutable_camera_dir();
+  inline ::protocol::common::Vector3* release_camera_dir();
+  inline void set_allocated_camera_dir(::protocol::common::Vector3* camera_dir);
 
   // optional .common.protocol.Vector3 obj_t = 7;
   inline bool has_obj_t() const;
   inline void clear_obj_t();
   static const int kObjTFieldNumber = 7;
-  inline const ::common::protocol::Vector3& obj_t() const;
-  inline ::common::protocol::Vector3* mutable_obj_t();
-  inline ::common::protocol::Vector3* release_obj_t();
-  inline void set_allocated_obj_t(::common::protocol::Vector3* obj_t);
+  inline const ::protocol::common::Vector3& obj_t() const;
+  inline ::protocol::common::Vector3* mutable_obj_t();
+  inline ::protocol::common::Vector3* release_obj_t();
+  inline void set_allocated_obj_t(::protocol::common::Vector3* obj_t);
 
   // optional .common.protocol.Matrix4x4 obj_r = 8;
   inline bool has_obj_r() const;
   inline void clear_obj_r();
   static const int kObjRFieldNumber = 8;
-  inline const ::common::protocol::Matrix4x4& obj_r() const;
-  inline ::common::protocol::Matrix4x4* mutable_obj_r();
-  inline ::common::protocol::Matrix4x4* release_obj_r();
-  inline void set_allocated_obj_r(::common::protocol::Matrix4x4* obj_r);
+  inline const ::protocol::common::Matrix4x4& obj_r() const;
+  inline ::protocol::common::Matrix4x4* mutable_obj_r();
+  inline ::protocol::common::Matrix4x4* release_obj_r();
+  inline void set_allocated_obj_r(::protocol::common::Matrix4x4* obj_r);
 
   // @@protoc_insertion_point(class_scope:generator.Spiky)
  private:
@@ -183,10 +183,10 @@ class Spiky : public ::google::protobuf::Message {
   float height_;
   ::google::protobuf::uint32 radial_segments_;
   ::google::protobuf::uint32 height_segments_;
-  ::common::protocol::Vector3* camera_pos_;
-  ::common::protocol::Vector3* camera_dir_;
-  ::common::protocol::Vector3* obj_t_;
-  ::common::protocol::Matrix4x4* obj_r_;
+  ::protocol::common::Vector3* camera_pos_;
+  ::protocol::common::Vector3* camera_dir_;
+  ::protocol::common::Vector3* obj_t_;
+  ::protocol::common::Matrix4x4* obj_r_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
@@ -286,37 +286,37 @@ class Plane : public ::google::protobuf::Message {
   inline bool has_camera_pos() const;
   inline void clear_camera_pos();
   static const int kCameraPosFieldNumber = 5;
-  inline const ::common::protocol::Vector3& camera_pos() const;
-  inline ::common::protocol::Vector3* mutable_camera_pos();
-  inline ::common::protocol::Vector3* release_camera_pos();
-  inline void set_allocated_camera_pos(::common::protocol::Vector3* camera_pos);
+  inline const ::protocol::common::Vector3& camera_pos() const;
+  inline ::protocol::common::Vector3* mutable_camera_pos();
+  inline ::protocol::common::Vector3* release_camera_pos();
+  inline void set_allocated_camera_pos(::protocol::common::Vector3* camera_pos);
 
   // optional .common.protocol.Vector3 camera_dir = 6;
   inline bool has_camera_dir() const;
   inline void clear_camera_dir();
   static const int kCameraDirFieldNumber = 6;
-  inline const ::common::protocol::Vector3& camera_dir() const;
-  inline ::common::protocol::Vector3* mutable_camera_dir();
-  inline ::common::protocol::Vector3* release_camera_dir();
-  inline void set_allocated_camera_dir(::common::protocol::Vector3* camera_dir);
+  inline const ::protocol::common::Vector3& camera_dir() const;
+  inline ::protocol::common::Vector3* mutable_camera_dir();
+  inline ::protocol::common::Vector3* release_camera_dir();
+  inline void set_allocated_camera_dir(::protocol::common::Vector3* camera_dir);
 
   // optional .common.protocol.Vector3 obj_t = 7;
   inline bool has_obj_t() const;
   inline void clear_obj_t();
   static const int kObjTFieldNumber = 7;
-  inline const ::common::protocol::Vector3& obj_t() const;
-  inline ::common::protocol::Vector3* mutable_obj_t();
-  inline ::common::protocol::Vector3* release_obj_t();
-  inline void set_allocated_obj_t(::common::protocol::Vector3* obj_t);
+  inline const ::protocol::common::Vector3& obj_t() const;
+  inline ::protocol::common::Vector3* mutable_obj_t();
+  inline ::protocol::common::Vector3* release_obj_t();
+  inline void set_allocated_obj_t(::protocol::common::Vector3* obj_t);
 
   // optional .common.protocol.Matrix4x4 obj_r = 8;
   inline bool has_obj_r() const;
   inline void clear_obj_r();
   static const int kObjRFieldNumber = 8;
-  inline const ::common::protocol::Matrix4x4& obj_r() const;
-  inline ::common::protocol::Matrix4x4* mutable_obj_r();
-  inline ::common::protocol::Matrix4x4* release_obj_r();
-  inline void set_allocated_obj_r(::common::protocol::Matrix4x4* obj_r);
+  inline const ::protocol::common::Matrix4x4& obj_r() const;
+  inline ::protocol::common::Matrix4x4* mutable_obj_r();
+  inline ::protocol::common::Matrix4x4* release_obj_r();
+  inline void set_allocated_obj_r(::protocol::common::Matrix4x4* obj_r);
 
   // optional float tau = 9 [default = 0.5];
   inline bool has_tau() const;
@@ -406,10 +406,10 @@ class Plane : public ::google::protobuf::Message {
   float height_;
   ::google::protobuf::uint32 width_segments_;
   ::google::protobuf::uint32 height_segments_;
-  ::common::protocol::Vector3* camera_pos_;
-  ::common::protocol::Vector3* camera_dir_;
-  ::common::protocol::Vector3* obj_t_;
-  ::common::protocol::Matrix4x4* obj_r_;
+  ::protocol::common::Vector3* camera_pos_;
+  ::protocol::common::Vector3* camera_dir_;
+  ::protocol::common::Vector3* obj_t_;
+  ::protocol::common::Matrix4x4* obj_r_;
   float tau_;
   float key_;
   float ofs_;
@@ -534,24 +534,24 @@ inline void Spiky::clear_has_camera_pos() {
   _has_bits_[0] &= ~0x00000010u;
 }
 inline void Spiky::clear_camera_pos() {
-  if (camera_pos_ != NULL) camera_pos_->::common::protocol::Vector3::Clear();
+  if (camera_pos_ != NULL) camera_pos_->::protocol::common::Vector3::Clear();
   clear_has_camera_pos();
 }
-inline const ::common::protocol::Vector3& Spiky::camera_pos() const {
+inline const ::protocol::common::Vector3& Spiky::camera_pos() const {
   return camera_pos_ != NULL ? *camera_pos_ : *default_instance_->camera_pos_;
 }
-inline ::common::protocol::Vector3* Spiky::mutable_camera_pos() {
+inline ::protocol::common::Vector3* Spiky::mutable_camera_pos() {
   set_has_camera_pos();
-  if (camera_pos_ == NULL) camera_pos_ = new ::common::protocol::Vector3;
+  if (camera_pos_ == NULL) camera_pos_ = new ::protocol::common::Vector3;
   return camera_pos_;
 }
-inline ::common::protocol::Vector3* Spiky::release_camera_pos() {
+inline ::protocol::common::Vector3* Spiky::release_camera_pos() {
   clear_has_camera_pos();
-  ::common::protocol::Vector3* temp = camera_pos_;
+  ::protocol::common::Vector3* temp = camera_pos_;
   camera_pos_ = NULL;
   return temp;
 }
-inline void Spiky::set_allocated_camera_pos(::common::protocol::Vector3* camera_pos) {
+inline void Spiky::set_allocated_camera_pos(::protocol::common::Vector3* camera_pos) {
   delete camera_pos_;
   camera_pos_ = camera_pos;
   if (camera_pos) {
@@ -572,24 +572,24 @@ inline void Spiky::clear_has_camera_dir() {
   _has_bits_[0] &= ~0x00000020u;
 }
 inline void Spiky::clear_camera_dir() {
-  if (camera_dir_ != NULL) camera_dir_->::common::protocol::Vector3::Clear();
+  if (camera_dir_ != NULL) camera_dir_->::protocol::common::Vector3::Clear();
   clear_has_camera_dir();
 }
-inline const ::common::protocol::Vector3& Spiky::camera_dir() const {
+inline const ::protocol::common::Vector3& Spiky::camera_dir() const {
   return camera_dir_ != NULL ? *camera_dir_ : *default_instance_->camera_dir_;
 }
-inline ::common::protocol::Vector3* Spiky::mutable_camera_dir() {
+inline ::protocol::common::Vector3* Spiky::mutable_camera_dir() {
   set_has_camera_dir();
-  if (camera_dir_ == NULL) camera_dir_ = new ::common::protocol::Vector3;
+  if (camera_dir_ == NULL) camera_dir_ = new ::protocol::common::Vector3;
   return camera_dir_;
 }
-inline ::common::protocol::Vector3* Spiky::release_camera_dir() {
+inline ::protocol::common::Vector3* Spiky::release_camera_dir() {
   clear_has_camera_dir();
-  ::common::protocol::Vector3* temp = camera_dir_;
+  ::protocol::common::Vector3* temp = camera_dir_;
   camera_dir_ = NULL;
   return temp;
 }
-inline void Spiky::set_allocated_camera_dir(::common::protocol::Vector3* camera_dir) {
+inline void Spiky::set_allocated_camera_dir(::protocol::common::Vector3* camera_dir) {
   delete camera_dir_;
   camera_dir_ = camera_dir;
   if (camera_dir) {
@@ -610,24 +610,24 @@ inline void Spiky::clear_has_obj_t() {
   _has_bits_[0] &= ~0x00000040u;
 }
 inline void Spiky::clear_obj_t() {
-  if (obj_t_ != NULL) obj_t_->::common::protocol::Vector3::Clear();
+  if (obj_t_ != NULL) obj_t_->::protocol::common::Vector3::Clear();
   clear_has_obj_t();
 }
-inline const ::common::protocol::Vector3& Spiky::obj_t() const {
+inline const ::protocol::common::Vector3& Spiky::obj_t() const {
   return obj_t_ != NULL ? *obj_t_ : *default_instance_->obj_t_;
 }
-inline ::common::protocol::Vector3* Spiky::mutable_obj_t() {
+inline ::protocol::common::Vector3* Spiky::mutable_obj_t() {
   set_has_obj_t();
-  if (obj_t_ == NULL) obj_t_ = new ::common::protocol::Vector3;
+  if (obj_t_ == NULL) obj_t_ = new ::protocol::common::Vector3;
   return obj_t_;
 }
-inline ::common::protocol::Vector3* Spiky::release_obj_t() {
+inline ::protocol::common::Vector3* Spiky::release_obj_t() {
   clear_has_obj_t();
-  ::common::protocol::Vector3* temp = obj_t_;
+  ::protocol::common::Vector3* temp = obj_t_;
   obj_t_ = NULL;
   return temp;
 }
-inline void Spiky::set_allocated_obj_t(::common::protocol::Vector3* obj_t) {
+inline void Spiky::set_allocated_obj_t(::protocol::common::Vector3* obj_t) {
   delete obj_t_;
   obj_t_ = obj_t;
   if (obj_t) {
@@ -648,24 +648,24 @@ inline void Spiky::clear_has_obj_r() {
   _has_bits_[0] &= ~0x00000080u;
 }
 inline void Spiky::clear_obj_r() {
-  if (obj_r_ != NULL) obj_r_->::common::protocol::Matrix4x4::Clear();
+  if (obj_r_ != NULL) obj_r_->::protocol::common::Matrix4x4::Clear();
   clear_has_obj_r();
 }
-inline const ::common::protocol::Matrix4x4& Spiky::obj_r() const {
+inline const ::protocol::common::Matrix4x4& Spiky::obj_r() const {
   return obj_r_ != NULL ? *obj_r_ : *default_instance_->obj_r_;
 }
-inline ::common::protocol::Matrix4x4* Spiky::mutable_obj_r() {
+inline ::protocol::common::Matrix4x4* Spiky::mutable_obj_r() {
   set_has_obj_r();
-  if (obj_r_ == NULL) obj_r_ = new ::common::protocol::Matrix4x4;
+  if (obj_r_ == NULL) obj_r_ = new ::protocol::common::Matrix4x4;
   return obj_r_;
 }
-inline ::common::protocol::Matrix4x4* Spiky::release_obj_r() {
+inline ::protocol::common::Matrix4x4* Spiky::release_obj_r() {
   clear_has_obj_r();
-  ::common::protocol::Matrix4x4* temp = obj_r_;
+  ::protocol::common::Matrix4x4* temp = obj_r_;
   obj_r_ = NULL;
   return temp;
 }
-inline void Spiky::set_allocated_obj_r(::common::protocol::Matrix4x4* obj_r) {
+inline void Spiky::set_allocated_obj_r(::protocol::common::Matrix4x4* obj_r) {
   delete obj_r_;
   obj_r_ = obj_r;
   if (obj_r) {
@@ -778,24 +778,24 @@ inline void Plane::clear_has_camera_pos() {
   _has_bits_[0] &= ~0x00000010u;
 }
 inline void Plane::clear_camera_pos() {
-  if (camera_pos_ != NULL) camera_pos_->::common::protocol::Vector3::Clear();
+  if (camera_pos_ != NULL) camera_pos_->::protocol::common::Vector3::Clear();
   clear_has_camera_pos();
 }
-inline const ::common::protocol::Vector3& Plane::camera_pos() const {
+inline const ::protocol::common::Vector3& Plane::camera_pos() const {
   return camera_pos_ != NULL ? *camera_pos_ : *default_instance_->camera_pos_;
 }
-inline ::common::protocol::Vector3* Plane::mutable_camera_pos() {
+inline ::protocol::common::Vector3* Plane::mutable_camera_pos() {
   set_has_camera_pos();
-  if (camera_pos_ == NULL) camera_pos_ = new ::common::protocol::Vector3;
+  if (camera_pos_ == NULL) camera_pos_ = new ::protocol::common::Vector3;
   return camera_pos_;
 }
-inline ::common::protocol::Vector3* Plane::release_camera_pos() {
+inline ::protocol::common::Vector3* Plane::release_camera_pos() {
   clear_has_camera_pos();
-  ::common::protocol::Vector3* temp = camera_pos_;
+  ::protocol::common::Vector3* temp = camera_pos_;
   camera_pos_ = NULL;
   return temp;
 }
-inline void Plane::set_allocated_camera_pos(::common::protocol::Vector3* camera_pos) {
+inline void Plane::set_allocated_camera_pos(::protocol::common::Vector3* camera_pos) {
   delete camera_pos_;
   camera_pos_ = camera_pos;
   if (camera_pos) {
@@ -816,24 +816,24 @@ inline void Plane::clear_has_camera_dir() {
   _has_bits_[0] &= ~0x00000020u;
 }
 inline void Plane::clear_camera_dir() {
-  if (camera_dir_ != NULL) camera_dir_->::common::protocol::Vector3::Clear();
+  if (camera_dir_ != NULL) camera_dir_->::protocol::common::Vector3::Clear();
   clear_has_camera_dir();
 }
-inline const ::common::protocol::Vector3& Plane::camera_dir() const {
+inline const ::protocol::common::Vector3& Plane::camera_dir() const {
   return camera_dir_ != NULL ? *camera_dir_ : *default_instance_->camera_dir_;
 }
-inline ::common::protocol::Vector3* Plane::mutable_camera_dir() {
+inline ::protocol::common::Vector3* Plane::mutable_camera_dir() {
   set_has_camera_dir();
-  if (camera_dir_ == NULL) camera_dir_ = new ::common::protocol::Vector3;
+  if (camera_dir_ == NULL) camera_dir_ = new ::protocol::common::Vector3;
   return camera_dir_;
 }
-inline ::common::protocol::Vector3* Plane::release_camera_dir() {
+inline ::protocol::common::Vector3* Plane::release_camera_dir() {
   clear_has_camera_dir();
-  ::common::protocol::Vector3* temp = camera_dir_;
+  ::protocol::common::Vector3* temp = camera_dir_;
   camera_dir_ = NULL;
   return temp;
 }
-inline void Plane::set_allocated_camera_dir(::common::protocol::Vector3* camera_dir) {
+inline void Plane::set_allocated_camera_dir(::protocol::common::Vector3* camera_dir) {
   delete camera_dir_;
   camera_dir_ = camera_dir;
   if (camera_dir) {
@@ -854,24 +854,24 @@ inline void Plane::clear_has_obj_t() {
   _has_bits_[0] &= ~0x00000040u;
 }
 inline void Plane::clear_obj_t() {
-  if (obj_t_ != NULL) obj_t_->::common::protocol::Vector3::Clear();
+  if (obj_t_ != NULL) obj_t_->::protocol::common::Vector3::Clear();
   clear_has_obj_t();
 }
-inline const ::common::protocol::Vector3& Plane::obj_t() const {
+inline const ::protocol::common::Vector3& Plane::obj_t() const {
   return obj_t_ != NULL ? *obj_t_ : *default_instance_->obj_t_;
 }
-inline ::common::protocol::Vector3* Plane::mutable_obj_t() {
+inline ::protocol::common::Vector3* Plane::mutable_obj_t() {
   set_has_obj_t();
-  if (obj_t_ == NULL) obj_t_ = new ::common::protocol::Vector3;
+  if (obj_t_ == NULL) obj_t_ = new ::protocol::common::Vector3;
   return obj_t_;
 }
-inline ::common::protocol::Vector3* Plane::release_obj_t() {
+inline ::protocol::common::Vector3* Plane::release_obj_t() {
   clear_has_obj_t();
-  ::common::protocol::Vector3* temp = obj_t_;
+  ::protocol::common::Vector3* temp = obj_t_;
   obj_t_ = NULL;
   return temp;
 }
-inline void Plane::set_allocated_obj_t(::common::protocol::Vector3* obj_t) {
+inline void Plane::set_allocated_obj_t(::protocol::common::Vector3* obj_t) {
   delete obj_t_;
   obj_t_ = obj_t;
   if (obj_t) {
@@ -892,24 +892,24 @@ inline void Plane::clear_has_obj_r() {
   _has_bits_[0] &= ~0x00000080u;
 }
 inline void Plane::clear_obj_r() {
-  if (obj_r_ != NULL) obj_r_->::common::protocol::Matrix4x4::Clear();
+  if (obj_r_ != NULL) obj_r_->::protocol::common::Matrix4x4::Clear();
   clear_has_obj_r();
 }
-inline const ::common::protocol::Matrix4x4& Plane::obj_r() const {
+inline const ::protocol::common::Matrix4x4& Plane::obj_r() const {
   return obj_r_ != NULL ? *obj_r_ : *default_instance_->obj_r_;
 }
-inline ::common::protocol::Matrix4x4* Plane::mutable_obj_r() {
+inline ::protocol::common::Matrix4x4* Plane::mutable_obj_r() {
   set_has_obj_r();
-  if (obj_r_ == NULL) obj_r_ = new ::common::protocol::Matrix4x4;
+  if (obj_r_ == NULL) obj_r_ = new ::protocol::common::Matrix4x4;
   return obj_r_;
 }
-inline ::common::protocol::Matrix4x4* Plane::release_obj_r() {
+inline ::protocol::common::Matrix4x4* Plane::release_obj_r() {
   clear_has_obj_r();
-  ::common::protocol::Matrix4x4* temp = obj_r_;
+  ::protocol::common::Matrix4x4* temp = obj_r_;
   obj_r_ = NULL;
   return temp;
 }
-inline void Plane::set_allocated_obj_r(::common::protocol::Matrix4x4* obj_r) {
+inline void Plane::set_allocated_obj_r(::protocol::common::Matrix4x4* obj_r) {
   delete obj_r_;
   obj_r_ = obj_r;
   if (obj_r) {

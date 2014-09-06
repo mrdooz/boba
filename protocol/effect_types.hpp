@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace editor
+namespace boba
 {
   struct EffectSetting;
   struct EffectSettings;

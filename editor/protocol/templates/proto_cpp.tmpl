@@ -1,6 +1,6 @@
 #include "{{ out_name }}_proto.hpp"
 
-namespace editor
+namespace {{ namespace }}
 {
   {% for class in classes %}
   {{ class.name }} FromProtocol(const {{ class.proto_type }}& p)

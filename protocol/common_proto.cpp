@@ -1,6 +1,6 @@
 #include "common_proto.hpp"
 
-namespace editor
+namespace boba
 {
   FloatKey FromProtocol(const protocol::common::FloatKey& p)
   {

@@ -15,25 +15,25 @@ namespace boba
   }
 
   //------------------------------------------------------------------------------
-  Vector2 FromProtocol(const common::protocol::Vector2& v)
+  Vector2 FromProtocol(const protocol::common::Vector2& v)
   {
     return Vector2(v.x(), v.y());
   }
 
   //------------------------------------------------------------------------------
-  Vector3 FromProtocol(const common::protocol::Vector3& v)
+  Vector3 FromProtocol(const protocol::common::Vector3& v)
   {
     return Vector3(v.x(), v.y(), v.z());
   }
 
   //------------------------------------------------------------------------------
-  Vector4 FromProtocol(const common::protocol::Vector4& v)
+  Vector4 FromProtocol(const protocol::common::Vector4& v)
   {
     return Vector4(v.x(), v.y(), v.z(), v.w());
   }
 
   //------------------------------------------------------------------------------
-  Matrix FromProtocol(const common::protocol::Matrix4x4& m)
+  Matrix FromProtocol(const protocol::common::Matrix4x4& m)
   {
     if (!m.has_row_1())
       return Matrix::Identity();
@@ -46,14 +46,14 @@ namespace boba
   }
 
   //------------------------------------------------------------------------------
-  void ToProtocol(const Vector2& v, common::protocol::Vector2* out)
+  void ToProtocol(const Vector2& v, protocol::common::Vector2* out)
   {
     out->set_x(v.x);
     out->set_y(v.y);
   }
 
   //------------------------------------------------------------------------------
-  void ToProtocol(const Vector3& v, common::protocol::Vector3* out)
+  void ToProtocol(const Vector3& v, protocol::common::Vector3* out)
   {
     out->set_x(v.x);
     out->set_y(v.y);
@@ -61,7 +61,7 @@ namespace boba
   }
 
   //------------------------------------------------------------------------------
-  void ToProtocol(const Vector4& v, common::protocol::Vector4* out)
+  void ToProtocol(const Vector4& v, protocol::common::Vector4* out)
   {
     out->set_x(v.x);
     out->set_y(v.y);
@@ -70,7 +70,7 @@ namespace boba
   }
 
   //------------------------------------------------------------------------------
-  void ToProtocol(const Matrix& m, common::protocol::Matrix4x4* out)
+  void ToProtocol(const Matrix& m, protocol::common::Matrix4x4* out)
   {
     ToProtocol(Vector4(m._11, m._12, m._13, m._14), out->mutable_row_1());
     ToProtocol(Vector4(m._21, m._22, m._23, m._24), out->mutable_row_2());

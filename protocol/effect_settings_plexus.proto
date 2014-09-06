@@ -1,6 +1,5 @@
-package effect.protocol.plexus;
+package protocol.effect.plexus;
 import "common.proto";
-
 
 message Plexus
 {
@@ -15,9 +14,9 @@ message TextPath
 
 message Displacement
 {
-	optional common.protocol.FloatAnim x = 1;
-	optional common.protocol.FloatAnim y = 2;
-	optional common.protocol.FloatAnim z = 3;
+	optional protocol.common.FloatAnim x = 1;
+	optional protocol.common.FloatAnim y = 2;
+	optional protocol.common.FloatAnim z = 3;
 }
 
 message NoiseEffector

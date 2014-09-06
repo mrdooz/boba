@@ -1,5 +1,4 @@
 config/demo.pb	D:/projects/boba/config/demo.pb
-config/generator2.pb	D:/projects/boba/config/generator2.pb
 config/particles1.pb	D:/projects/boba/config/particles1.pb
 gfx/Abstract_BG_Texture2.jpg	D:/projects/boba/gfx/Abstract_BG_Texture2.jpg
 shaders/blur_BlurTransposeD.cso	D:/projects/boba/shaders/blur_BlurTransposeD.cso

@@ -293,7 +293,7 @@ bool DemoEngine::Init(const char* config, HINSTANCE instance)
   if (!LoadProto(config, &_config))
     return false;
 
-  for (const effect::protocol::EffectSetting& effect : _config.effect_setting())
+  for (const protocol::effect::EffectSetting& effect : _config.effect_setting())
   {
     // Look up the factory
     auto factoryIt = _effectFactories.find(effect.effect_class());
@@ -346,11 +346,11 @@ void DemoEngine::SaveSettings()
 void DemoEngine::Connected()
 {
   // send current config to the editor
-  effect::protocol::EffectSettings settings;
+  protocol::effect::EffectSettings settings;
 
   for (const Effect* effect : _effects)
   {
-    effect::protocol::EffectSetting* setting = settings.add_effect_setting();
+    protocol::effect::EffectSetting* setting = settings.add_effect_setting();
     setting->set_id(effect->GetId());
     effect->ToProtocol(setting);
   }
@@ -362,10 +362,10 @@ void DemoEngine::Connected()
 //------------------------------------------------------------------------------
 void DemoEngine::ProcessPayload(const void* payload, u32 size)
 {
-  effect::protocol::EffectSettings settings;
+  protocol::effect::EffectSettings settings;
   if (settings.ParseFromArray(payload, size))
   {
-    for (const effect::protocol::EffectSetting& setting : settings.effect_setting())
+    for (const protocol::effect::EffectSetting& setting : settings.effect_setting())
     {
       u32 id = setting.id();
 

@@ -4,7 +4,7 @@
 #include "editor_types.hpp"
 #include "common_types.hpp"
 
-namespace editor
+namespace boba
 {
   struct Settings;
   struct StyleSetting;

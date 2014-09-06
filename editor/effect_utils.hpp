@@ -69,7 +69,7 @@ namespace editor
     typedef FloatKeyframe Keyframe;
     typedef vector<Keyframe> Keyframes;
   };
-
+/*
   template<> struct KeyframeTraits<Vector3f>
   {
     typedef Vector3f Value;
@@ -77,7 +77,7 @@ namespace editor
     typedef Vector3Keyframe Keyframe;
     typedef vector<Keyframe> Keyframes;
   };
-
+*/
   //----------------------------------------------------------------------------------
   // find the keyframes that stradle the given time. return false is only a single
   // keyframe is found (ie before the first frame, or after the last one)

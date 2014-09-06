@@ -57,7 +57,8 @@ static int scan_websocket_frame(const struct WebbyBuffer *buf, struct WebbyWsFra
   unsigned char flags = 0;
   unsigned int len = 0;
   unsigned int opcode = 0;
-  unsigned char* data = (u8*)buf->data.data() + buf->readOfs;
+  unsigned char* org = (u8*)buf->data.data() + buf->readOfs;
+  unsigned char* data = org;
   unsigned char* data_max = data + buf->writeOfs;
   int i;
   int len_bytes = 0;
@@ -109,9 +110,9 @@ static int scan_websocket_frame(const struct WebbyBuffer *buf, struct WebbyWsFra
     frame->mask_key[i] = *data++;
   }
 
-  frame->header_size = (unsigned char) (data - buf->data.data());
+  frame->header_size = (unsigned char)(data - org);
   frame->flags = flags;
-  frame->opcode = (unsigned char) opcode;
+  frame->opcode = (unsigned char)opcode;
   frame->payload_length = (int) len;
   return 0;
 }
@@ -192,6 +193,9 @@ bool WebsocketClient::Connect(const char* host, const char* serviceName)
 
   _lastPing = TimeStamp::Now();
 
+  _readState = ReadState::ReadHeader;
+  _readBuffer.Reset();
+
   return true;
 }
 
@@ -249,7 +253,8 @@ void WebsocketClient::Process()
       case ReadState::ReadHeader:
       {
         // check if we've read a full ws header
-        if (scan_websocket_frame(&_readBuffer, &_curFrame) < 0)
+        int frameRes = scan_websocket_frame(&_readBuffer, &_curFrame);
+        if (frameRes < 0)
         {
           if (_readBuffer.BufferFull())
           {
@@ -260,6 +265,7 @@ void WebsocketClient::Process()
           goto DONE;
         }
 
+        assert(_curFrame.payload_length >= 0);
         _readBuffer.readOfs += _curFrame.header_size;
         _payloadStart = _readBuffer.readOfs;
 
@@ -269,6 +275,7 @@ void WebsocketClient::Process()
 
       case ReadState::ReadPayload:
       {
+        assert(_readBuffer.readOfs <= _readBuffer.writeOfs);
         int bytesInBuffer = _readBuffer.writeOfs - _readBuffer.readOfs;
         if (bytesInBuffer < _curFrame.payload_length)
         {
@@ -294,10 +301,9 @@ void WebsocketClient::Process()
         // if we've processed all the bytes in the buffer, reset the buffer pointers
         if (_readBuffer.readOfs == _readBuffer.writeOfs)
         {
-          _readBuffer.readOfs = 0;
-          _readBuffer.writeOfs = 0;
+          _readBuffer.Reset();
+          goto DONE;
         }
-
       }
     }
   }

@@ -81,7 +81,7 @@ namespace boba
     Timer _timer;
 
 
-    effect::protocol::EffectSettings _config;
+    protocol::effect::EffectSettings _config;
     unordered_map<string, EffectFactory> _effectFactories;
     u32 _nextEffectId;
   };

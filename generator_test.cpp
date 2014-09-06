@@ -17,6 +17,8 @@
 #include "protocol/effect_settings_plexus.pb.h"
 #pragma warning(pop)
 
+#include "protocol/effect_plexus_proto.hpp"
+
 
 using namespace boba;
 using namespace bristol;
@@ -206,11 +208,11 @@ bool GeneratorTest::Init(const char* config)
 {
   _configName = config;
 
-  if (!LoadProto(config, &_planeConfig))
-  {
-    LOG_ERROR(ToString("Error loading config: %s", config).c_str());
-    return false;
-  }
+//   if (!LoadProto(config, &_planeConfig))
+//   {
+//     LOG_ERROR(ToString("Error loading config: %s", config).c_str());
+//     return false;
+//   }
 
   if (_planeConfig.has_camera_pos()) _cameraPos = ::FromProtocol(_planeConfig.camera_pos());
   if (_planeConfig.has_camera_dir()) _cameraDir = ::FromProtocol(_planeConfig.camera_dir());
@@ -289,6 +291,9 @@ bool GeneratorTest::Init(const char* config)
 
   g_textWriter.Init("meshes/text1.boba");
   g_textWriter.WriteText("NEUROTICA EFS");
+
+  _plexus.textPaths.push_back({"NEUROTICA EFS"});
+  _plexus.noiseEffectors.push_back(NoiseEffector());
 
   return true;
 }
@@ -777,48 +782,22 @@ const char* GeneratorTest::Name()
 }
 
 //------------------------------------------------------------------------------
-void GeneratorTest::ToProtocol(effect::protocol::EffectSetting* settings) const
+void GeneratorTest::ToProtocol(protocol::effect::EffectSetting* settings) const
 {
-  settings->set_type(effect::protocol::EffectSetting_Type_Plexus);
+  settings->set_type(protocol::effect::EffectSetting_Type_Plexus);
 
-  effect::protocol::plexus::Plexus plexus;
-  effect::protocol::plexus::TextPath* textPath = plexus.add_text_paths();
-  textPath->set_text("neurotica");
-
-  effect::protocol::plexus::NoiseEffector* effector = plexus.add_noise_effectors();
-  effector->set_apply_to(effect::protocol::plexus::NoiseEffector_ApplyTo_Position);
-
+  protocol::effect::plexus::Plexus plexus;
+  ::ToProtocol(_plexus, &plexus);
   settings->set_config_msg(plexus.SerializeAsString());
 }
 
 //------------------------------------------------------------------------------
 void GeneratorTest::FromProtocol(const std::string& str)
 {
-  effect::protocol::plexus::Plexus p;
+  protocol::effect::plexus::Plexus p;
   p.ParseFromString(str);
 
-  for (const auto& textPath : p.text_paths())
-  {
-
-  }
-
-  for (const auto& effector : p.noise_effectors())
-  {
-    const common::protocol::FloatAnim& xAnim = effector.displacement().x();
-    AnimationType xAnimType = (AnimationType)xAnim.type();
-    for (const auto& keyframe : xAnim.keyframe())
-    {
-      int a = 10;
-    }
-
-    const common::protocol::FloatAnim& yAnim = effector.displacement().y();
-    const common::protocol::FloatAnim& zAnim = effector.displacement().z();
-
-  }
-
-
-
-  int a = 10;
+  _plexus = ::FromProtocol(p);
 }
 
 //------------------------------------------------------------------------------

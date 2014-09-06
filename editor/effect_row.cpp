@@ -36,6 +36,11 @@ EffectRow::~EffectRow()
     delete e;
 
   _children.clear();
+
+  for (RowVar* r : _vars)
+    delete r;
+
+  _vars.clear();
 }
 
 //----------------------------------------------------------------------------------

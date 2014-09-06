@@ -16,8 +16,8 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
-namespace effect {
 namespace protocol {
+namespace effect {
 namespace plexus {
 
 namespace {
@@ -151,21 +151,21 @@ void protobuf_AddDesc_effect_5fsettings_5fplexus_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  ::common::protocol::protobuf_AddDesc_common_2eproto();
+  ::protocol::common::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\034effect_settings_plexus.proto\022\026effect.p"
-    "rotocol.plexus\032\014common.proto\"~\n\006Plexus\0224"
-    "\n\ntext_paths\030\001 \003(\0132 .effect.protocol.ple"
+    "\n\034effect_settings_plexus.proto\022\026protocol"
+    ".effect.plexus\032\014common.proto\"~\n\006Plexus\0224"
+    "\n\ntext_paths\030\001 \003(\0132 .protocol.effect.ple"
     "xus.TextPath\022>\n\017noise_effectors\030\002 \003(\0132%."
-    "effect.protocol.plexus.NoiseEffector\"\030\n\010"
+    "protocol.effect.plexus.NoiseEffector\"\030\n\010"
     "TextPath\022\014\n\004text\030\001 \001(\t\"\203\001\n\014Displacement\022"
-    "%\n\001x\030\001 \001(\0132\032.common.protocol.FloatAnim\022%"
-    "\n\001y\030\002 \001(\0132\032.common.protocol.FloatAnim\022%\n"
-    "\001z\030\003 \001(\0132\032.common.protocol.FloatAnim\"\272\001\n"
-    "\rNoiseEffector\022I\n\010apply_to\030\001 \001(\0162-.effec"
-    "t.protocol.plexus.NoiseEffector.ApplyTo:"
-    "\010Position\022:\n\014displacement\030\002 \001(\0132$.effect"
-    ".protocol.plexus.Displacement\"\"\n\007ApplyTo"
+    "%\n\001x\030\001 \001(\0132\032.protocol.common.FloatAnim\022%"
+    "\n\001y\030\002 \001(\0132\032.protocol.common.FloatAnim\022%\n"
+    "\001z\030\003 \001(\0132\032.protocol.common.FloatAnim\"\272\001\n"
+    "\rNoiseEffector\022I\n\010apply_to\030\001 \001(\0162-.proto"
+    "col.effect.plexus.NoiseEffector.ApplyTo:"
+    "\010Position\022:\n\014displacement\030\002 \001(\0132$.protoc"
+    "ol.effect.plexus.Displacement\"\"\n\007ApplyTo"
     "\022\014\n\010Position\020\001\022\t\n\005Scale\020\002", 545);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "effect_settings_plexus.proto", &protobuf_RegisterTypes);
@@ -256,7 +256,7 @@ bool Plexus::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .effect.protocol.plexus.TextPath text_paths = 1;
+      // repeated .protocol.effect.plexus.TextPath text_paths = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -271,7 +271,7 @@ bool Plexus::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .effect.protocol.plexus.NoiseEffector noise_effectors = 2;
+      // repeated .protocol.effect.plexus.NoiseEffector noise_effectors = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -304,13 +304,13 @@ bool Plexus::MergePartialFromCodedStream(
 
 void Plexus::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .effect.protocol.plexus.TextPath text_paths = 1;
+  // repeated .protocol.effect.plexus.TextPath text_paths = 1;
   for (int i = 0; i < this->text_paths_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->text_paths(i), output);
   }
 
-  // repeated .effect.protocol.plexus.NoiseEffector noise_effectors = 2;
+  // repeated .protocol.effect.plexus.NoiseEffector noise_effectors = 2;
   for (int i = 0; i < this->noise_effectors_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->noise_effectors(i), output);
@@ -324,14 +324,14 @@ void Plexus::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Plexus::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .effect.protocol.plexus.TextPath text_paths = 1;
+  // repeated .protocol.effect.plexus.TextPath text_paths = 1;
   for (int i = 0; i < this->text_paths_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         1, this->text_paths(i), target);
   }
 
-  // repeated .effect.protocol.plexus.NoiseEffector noise_effectors = 2;
+  // repeated .protocol.effect.plexus.NoiseEffector noise_effectors = 2;
   for (int i = 0; i < this->noise_effectors_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -348,7 +348,7 @@ void Plexus::SerializeWithCachedSizes(
 int Plexus::ByteSize() const {
   int total_size = 0;
 
-  // repeated .effect.protocol.plexus.TextPath text_paths = 1;
+  // repeated .protocol.effect.plexus.TextPath text_paths = 1;
   total_size += 1 * this->text_paths_size();
   for (int i = 0; i < this->text_paths_size(); i++) {
     total_size +=
@@ -356,7 +356,7 @@ int Plexus::ByteSize() const {
         this->text_paths(i));
   }
 
-  // repeated .effect.protocol.plexus.NoiseEffector noise_effectors = 2;
+  // repeated .protocol.effect.plexus.NoiseEffector noise_effectors = 2;
   total_size += 1 * this->noise_effectors_size();
   for (int i = 0; i < this->noise_effectors_size(); i++) {
     total_size +=
@@ -669,9 +669,9 @@ Displacement::Displacement()
 }
 
 void Displacement::InitAsDefaultInstance() {
-  x_ = const_cast< ::common::protocol::FloatAnim*>(&::common::protocol::FloatAnim::default_instance());
-  y_ = const_cast< ::common::protocol::FloatAnim*>(&::common::protocol::FloatAnim::default_instance());
-  z_ = const_cast< ::common::protocol::FloatAnim*>(&::common::protocol::FloatAnim::default_instance());
+  x_ = const_cast< ::protocol::common::FloatAnim*>(&::protocol::common::FloatAnim::default_instance());
+  y_ = const_cast< ::protocol::common::FloatAnim*>(&::protocol::common::FloatAnim::default_instance());
+  z_ = const_cast< ::protocol::common::FloatAnim*>(&::protocol::common::FloatAnim::default_instance());
 }
 
 Displacement::Displacement(const Displacement& from)
@@ -724,13 +724,13 @@ Displacement* Displacement::New() const {
 void Displacement::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_x()) {
-      if (x_ != NULL) x_->::common::protocol::FloatAnim::Clear();
+      if (x_ != NULL) x_->::protocol::common::FloatAnim::Clear();
     }
     if (has_y()) {
-      if (y_ != NULL) y_->::common::protocol::FloatAnim::Clear();
+      if (y_ != NULL) y_->::protocol::common::FloatAnim::Clear();
     }
     if (has_z()) {
-      if (z_ != NULL) z_->::common::protocol::FloatAnim::Clear();
+      if (z_ != NULL) z_->::protocol::common::FloatAnim::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -743,7 +743,7 @@ bool Displacement::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .common.protocol.FloatAnim x = 1;
+      // optional .protocol.common.FloatAnim x = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -756,7 +756,7 @@ bool Displacement::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.FloatAnim y = 2;
+      // optional .protocol.common.FloatAnim y = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -770,7 +770,7 @@ bool Displacement::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .common.protocol.FloatAnim z = 3;
+      // optional .protocol.common.FloatAnim z = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -802,19 +802,19 @@ bool Displacement::MergePartialFromCodedStream(
 
 void Displacement::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .common.protocol.FloatAnim x = 1;
+  // optional .protocol.common.FloatAnim x = 1;
   if (has_x()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->x(), output);
   }
 
-  // optional .common.protocol.FloatAnim y = 2;
+  // optional .protocol.common.FloatAnim y = 2;
   if (has_y()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->y(), output);
   }
 
-  // optional .common.protocol.FloatAnim z = 3;
+  // optional .protocol.common.FloatAnim z = 3;
   if (has_z()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->z(), output);
@@ -828,21 +828,21 @@ void Displacement::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Displacement::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .common.protocol.FloatAnim x = 1;
+  // optional .protocol.common.FloatAnim x = 1;
   if (has_x()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         1, this->x(), target);
   }
 
-  // optional .common.protocol.FloatAnim y = 2;
+  // optional .protocol.common.FloatAnim y = 2;
   if (has_y()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         2, this->y(), target);
   }
 
-  // optional .common.protocol.FloatAnim z = 3;
+  // optional .protocol.common.FloatAnim z = 3;
   if (has_z()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -860,21 +860,21 @@ int Displacement::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .common.protocol.FloatAnim x = 1;
+    // optional .protocol.common.FloatAnim x = 1;
     if (has_x()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->x());
     }
 
-    // optional .common.protocol.FloatAnim y = 2;
+    // optional .protocol.common.FloatAnim y = 2;
     if (has_y()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->y());
     }
 
-    // optional .common.protocol.FloatAnim z = 3;
+    // optional .protocol.common.FloatAnim z = 3;
     if (has_z()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -909,13 +909,13 @@ void Displacement::MergeFrom(const Displacement& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_x()) {
-      mutable_x()->::common::protocol::FloatAnim::MergeFrom(from.x());
+      mutable_x()->::protocol::common::FloatAnim::MergeFrom(from.x());
     }
     if (from.has_y()) {
-      mutable_y()->::common::protocol::FloatAnim::MergeFrom(from.y());
+      mutable_y()->::protocol::common::FloatAnim::MergeFrom(from.y());
     }
     if (from.has_z()) {
-      mutable_z()->::common::protocol::FloatAnim::MergeFrom(from.z());
+      mutable_z()->::protocol::common::FloatAnim::MergeFrom(from.z());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -992,7 +992,7 @@ NoiseEffector::NoiseEffector()
 }
 
 void NoiseEffector::InitAsDefaultInstance() {
-  displacement_ = const_cast< ::effect::protocol::plexus::Displacement*>(&::effect::protocol::plexus::Displacement::default_instance());
+  displacement_ = const_cast< ::protocol::effect::plexus::Displacement*>(&::protocol::effect::plexus::Displacement::default_instance());
 }
 
 NoiseEffector::NoiseEffector(const NoiseEffector& from)
@@ -1043,7 +1043,7 @@ void NoiseEffector::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     apply_to_ = 1;
     if (has_displacement()) {
-      if (displacement_ != NULL) displacement_->::effect::protocol::plexus::Displacement::Clear();
+      if (displacement_ != NULL) displacement_->::protocol::effect::plexus::Displacement::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1056,7 +1056,7 @@ bool NoiseEffector::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .effect.protocol.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+      // optional .protocol.effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -1064,8 +1064,8 @@ bool NoiseEffector::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::effect::protocol::plexus::NoiseEffector_ApplyTo_IsValid(value)) {
-            set_apply_to(static_cast< ::effect::protocol::plexus::NoiseEffector_ApplyTo >(value));
+          if (::protocol::effect::plexus::NoiseEffector_ApplyTo_IsValid(value)) {
+            set_apply_to(static_cast< ::protocol::effect::plexus::NoiseEffector_ApplyTo >(value));
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
@@ -1076,7 +1076,7 @@ bool NoiseEffector::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .effect.protocol.plexus.Displacement displacement = 2;
+      // optional .protocol.effect.plexus.Displacement displacement = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1108,13 +1108,13 @@ bool NoiseEffector::MergePartialFromCodedStream(
 
 void NoiseEffector::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .effect.protocol.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+  // optional .protocol.effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
   if (has_apply_to()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       1, this->apply_to(), output);
   }
 
-  // optional .effect.protocol.plexus.Displacement displacement = 2;
+  // optional .protocol.effect.plexus.Displacement displacement = 2;
   if (has_displacement()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->displacement(), output);
@@ -1128,13 +1128,13 @@ void NoiseEffector::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* NoiseEffector::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .effect.protocol.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+  // optional .protocol.effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
   if (has_apply_to()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->apply_to(), target);
   }
 
-  // optional .effect.protocol.plexus.Displacement displacement = 2;
+  // optional .protocol.effect.plexus.Displacement displacement = 2;
   if (has_displacement()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1152,13 +1152,13 @@ int NoiseEffector::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .effect.protocol.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+    // optional .protocol.effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
     if (has_apply_to()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->apply_to());
     }
 
-    // optional .effect.protocol.plexus.Displacement displacement = 2;
+    // optional .protocol.effect.plexus.Displacement displacement = 2;
     if (has_displacement()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -1196,7 +1196,7 @@ void NoiseEffector::MergeFrom(const NoiseEffector& from) {
       set_apply_to(from.apply_to());
     }
     if (from.has_displacement()) {
-      mutable_displacement()->::effect::protocol::plexus::Displacement::MergeFrom(from.displacement());
+      mutable_displacement()->::protocol::effect::plexus::Displacement::MergeFrom(from.displacement());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1241,7 +1241,7 @@ void NoiseEffector::Swap(NoiseEffector* other) {
 // @@protoc_insertion_point(namespace_scope)
 
 }  // namespace plexus
-}  // namespace protocol
 }  // namespace effect
+}  // namespace protocol
 
 // @@protoc_insertion_point(global_scope)

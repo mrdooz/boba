@@ -1,6 +1,7 @@
 import common_pb2
 import descriptor_pb2
 import argparse
+import os
 from collections import defaultdict
 from jinja2 import Environment, PackageLoader, Template
 
@@ -11,10 +12,17 @@ EXCLUDE_MESSAGES = set([
     'Matrix4x4',
     ])
 
-NATIVE_MESSAGE_TYPES = {
+EDITOR_NATIVE_MESSAGE_TYPES = {
     'Vector2'   : 'Vector2f',
     'Vector3'   : 'Vector3f',
     'Vector4'   : 'Vector4f', 
+    'Color4'    : 'Color', 
+}
+
+ENGINE_NATIVE_MESSAGE_TYPES = {
+    'Vector2'   : 'Vector2',
+    'Vector3'   : 'Vector3',
+    'Vector4'   : 'Vector4', 
     'Color4'    : 'Color', 
 }
 
@@ -25,18 +33,18 @@ FORWARD_DECL = {
 NATIVE_TYPES = {
     1   : 'double',
     2   : 'float',
-    3   : 'int64_t',
-    4   : 'uint64_t',
-    5   : 'int32_t',
-    6   : 'int64_t',
-    7   : 'int32_t',
+    3   : 's64',
+    4   : 'u64',
+    5   : 's32',
+    6   : 's64',
+    7   : 's32',
     8   : 'bool',
     9   : 'string',
-    13  : 'uint32_t',
-    15  : 'int32_t',
-    16  : 'int64_t',
-    17  : 'int32_t',
-    18  : 'int64_t',
+    13  : 'u32',
+    15  : 's32',
+    16  : 's64',
+    17  : 's32',
+    18  : 's64',
 }
 
 def underscore_to_camel_case(str):
@@ -54,6 +62,14 @@ def package_to_filename(package):
 
 
 def parse_descriptor_set(cmdargs):
+
+    try: 
+        os.makedirs(cmdargs.outdir); 
+    except: 
+        pass
+
+    NATIVE_MESSAGE_TYPES = ENGINE_NATIVE_MESSAGE_TYPES if cmdargs.engine else EDITOR_NATIVE_MESSAGE_TYPES
+
     # todo: this is causing everything to be run twice!
     env = Environment(
         loader=PackageLoader('codegen', 'templates'),
@@ -197,20 +213,22 @@ def parse_descriptor_set(cmdargs):
                     # print '  ', field_desc.name
 
         template = env.get_template('types.tmpl')
-        f = open(out_name + '_types.hpp', 'wt')
+        f = open(os.path.join(cmdargs.outdir, out_name + '_types.hpp'), 'wt')
         f.write(template.render(args))
 
         template = env.get_template('proto_hpp.tmpl')
-        f = open(out_name + '_proto.hpp', 'wt')
+        f = open(os.path.join(cmdargs.outdir, out_name + '_proto.hpp'), 'wt')
         f.write(template.render(args))
 
         template = env.get_template('proto_cpp.tmpl')
-        f = open(out_name + '_proto.cpp', 'wt')
+        f = open(os.path.join(cmdargs.outdir, out_name + '_proto.cpp'), 'wt')
         f.write(template.render(args))
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--namespace', dest='namespace', action='store', default='editor')
+parser.add_argument('--namespace', action='store', default='editor')
+parser.add_argument('--outdir', action='store', default='.')
+parser.add_argument('--engine', action='store_true')
 args = parser.parse_args()
 
 parse_descriptor_set(args)

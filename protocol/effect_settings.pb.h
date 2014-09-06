@@ -27,8 +27,8 @@
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 
-namespace effect {
 namespace protocol {
+namespace effect {
 
 // Internal implementation detail -- do not call these.
 void  protobuf_AddDesc_effect_5fsettings_2eproto();
@@ -137,12 +137,12 @@ class EffectSetting : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .effect.protocol.EffectSetting.Type type = 1;
+  // optional .protocol.effect.EffectSetting.Type type = 1;
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 1;
-  inline ::effect::protocol::EffectSetting_Type type() const;
-  inline void set_type(::effect::protocol::EffectSetting_Type value);
+  inline ::protocol::effect::EffectSetting_Type type() const;
+  inline void set_type(::protocol::effect::EffectSetting_Type value);
 
   // optional string effect_class = 2;
   inline bool has_effect_class() const;
@@ -213,7 +213,7 @@ class EffectSetting : public ::google::protobuf::Message {
   inline ::std::string* release_config_file();
   inline void set_allocated_config_file(::std::string* config_file);
 
-  // @@protoc_insertion_point(class_scope:effect.protocol.EffectSetting)
+  // @@protoc_insertion_point(class_scope:protocol.effect.EffectSetting)
  private:
   inline void set_has_type();
   inline void clear_has_type();
@@ -309,16 +309,16 @@ class EffectSettings : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .effect.protocol.EffectSetting effect_setting = 1;
+  // repeated .protocol.effect.EffectSetting effect_setting = 1;
   inline int effect_setting_size() const;
   inline void clear_effect_setting();
   static const int kEffectSettingFieldNumber = 1;
-  inline const ::effect::protocol::EffectSetting& effect_setting(int index) const;
-  inline ::effect::protocol::EffectSetting* mutable_effect_setting(int index);
-  inline ::effect::protocol::EffectSetting* add_effect_setting();
-  inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting >&
+  inline const ::protocol::effect::EffectSetting& effect_setting(int index) const;
+  inline ::protocol::effect::EffectSetting* mutable_effect_setting(int index);
+  inline ::protocol::effect::EffectSetting* add_effect_setting();
+  inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::EffectSetting >&
       effect_setting() const;
-  inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting >*
+  inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::EffectSetting >*
       mutable_effect_setting();
 
   // optional string soundtrack = 2;
@@ -333,14 +333,14 @@ class EffectSettings : public ::google::protobuf::Message {
   inline ::std::string* release_soundtrack();
   inline void set_allocated_soundtrack(::std::string* soundtrack);
 
-  // @@protoc_insertion_point(class_scope:effect.protocol.EffectSettings)
+  // @@protoc_insertion_point(class_scope:protocol.effect.EffectSettings)
  private:
   inline void set_has_soundtrack();
   inline void clear_has_soundtrack();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting > effect_setting_;
+  ::google::protobuf::RepeatedPtrField< ::protocol::effect::EffectSetting > effect_setting_;
   ::std::string* soundtrack_;
 
   mutable int _cached_size_;
@@ -360,7 +360,7 @@ class EffectSettings : public ::google::protobuf::Message {
 
 // EffectSetting
 
-// optional .effect.protocol.EffectSetting.Type type = 1;
+// optional .protocol.effect.EffectSetting.Type type = 1;
 inline bool EffectSetting::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -374,11 +374,11 @@ inline void EffectSetting::clear_type() {
   type_ = 0;
   clear_has_type();
 }
-inline ::effect::protocol::EffectSetting_Type EffectSetting::type() const {
-  return static_cast< ::effect::protocol::EffectSetting_Type >(type_);
+inline ::protocol::effect::EffectSetting_Type EffectSetting::type() const {
+  return static_cast< ::protocol::effect::EffectSetting_Type >(type_);
 }
-inline void EffectSetting::set_type(::effect::protocol::EffectSetting_Type value) {
-  assert(::effect::protocol::EffectSetting_Type_IsValid(value));
+inline void EffectSetting::set_type(::protocol::effect::EffectSetting_Type value) {
+  assert(::protocol::effect::EffectSetting_Type_IsValid(value));
   set_has_type();
   type_ = value;
 }
@@ -733,27 +733,27 @@ inline void EffectSetting::set_allocated_config_file(::std::string* config_file)
 
 // EffectSettings
 
-// repeated .effect.protocol.EffectSetting effect_setting = 1;
+// repeated .protocol.effect.EffectSetting effect_setting = 1;
 inline int EffectSettings::effect_setting_size() const {
   return effect_setting_.size();
 }
 inline void EffectSettings::clear_effect_setting() {
   effect_setting_.Clear();
 }
-inline const ::effect::protocol::EffectSetting& EffectSettings::effect_setting(int index) const {
+inline const ::protocol::effect::EffectSetting& EffectSettings::effect_setting(int index) const {
   return effect_setting_.Get(index);
 }
-inline ::effect::protocol::EffectSetting* EffectSettings::mutable_effect_setting(int index) {
+inline ::protocol::effect::EffectSetting* EffectSettings::mutable_effect_setting(int index) {
   return effect_setting_.Mutable(index);
 }
-inline ::effect::protocol::EffectSetting* EffectSettings::add_effect_setting() {
+inline ::protocol::effect::EffectSetting* EffectSettings::add_effect_setting() {
   return effect_setting_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting >&
+inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::EffectSetting >&
 EffectSettings::effect_setting() const {
   return effect_setting_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::effect::protocol::EffectSetting >*
+inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::EffectSetting >*
 EffectSettings::mutable_effect_setting() {
   return &effect_setting_;
 }
@@ -831,16 +831,16 @@ inline void EffectSettings::set_allocated_soundtrack(::std::string* soundtrack) 
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace protocol
 }  // namespace effect
+}  // namespace protocol
 
 #ifndef SWIG
 namespace google {
 namespace protobuf {
 
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::effect::protocol::EffectSetting_Type>() {
-  return ::effect::protocol::EffectSetting_Type_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::protocol::effect::EffectSetting_Type>() {
+  return ::protocol::effect::EffectSetting_Type_descriptor();
 }
 
 }  // namespace google

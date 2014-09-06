@@ -8,6 +8,8 @@
 #include "protocol/generator.pb.h"
 #pragma warning(pop)
 
+#include "protocol/effect_plexus_types.hpp"
+
 #include "gpu_objects.hpp"
 #include "post_process.hpp"
 
@@ -15,7 +17,6 @@ namespace boba
 {
   class DeferredContext;
   struct Mesh;
-
 
   class GeneratorTest : public Effect
   {
@@ -29,7 +30,7 @@ namespace boba
     virtual bool Close() override;
 
     virtual bool SaveSettings() override;
-    virtual void ToProtocol(effect::protocol::EffectSetting* settings) const;
+    virtual void ToProtocol(protocol::effect::EffectSetting* settings) const;
     virtual void FromProtocol(const std::string& str);
 
     static const char* Name();
@@ -127,6 +128,8 @@ namespace boba
     GraphicsObjectHandle _psThreshold;
 
     GraphicsObjectHandle _psEdgeDetect;
+
+    Plexus _plexus;
   };
 
 }

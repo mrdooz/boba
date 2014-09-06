@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace editor
+namespace boba
 {
   struct Vector2;
   struct Vector3;

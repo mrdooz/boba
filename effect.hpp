@@ -2,9 +2,9 @@
 
 #include "graphics_object_handle.hpp"
 
-namespace effect
+namespace protocol
 {
-  namespace protocol
+  namespace effect
   {
     class EffectSetting;
   }
@@ -39,7 +39,7 @@ namespace boba
     virtual bool Render();
     virtual bool Close();
     virtual bool Reset();
-    virtual void ToProtocol(effect::protocol::EffectSetting* settings) const {}
+    virtual void ToProtocol(protocol::effect::EffectSetting* settings) const {}
     virtual void FromProtocol(const string& str) {}
 
     virtual void WndProc(UINT message, WPARAM wParam, LPARAM lParam);

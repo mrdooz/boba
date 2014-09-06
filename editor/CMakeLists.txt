@@ -47,7 +47,7 @@ if (APPLE)
 else()
   if (MSVC)
     # global all the root level .cpp files
-    file(GLOB ROOT_SRC "*.cpp")
+    file(GLOB ROOT_SRC "*.cpp" "protocol/*.cpp")
 
     # add precompiled header, and force include it on all the root level .cpp files
     foreach( src_file ${ROOT_SRC} )

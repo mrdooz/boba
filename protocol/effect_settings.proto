@@ -1,4 +1,4 @@
-package effect.protocol;
+package protocol.effect;
 
 message EffectSetting
 {

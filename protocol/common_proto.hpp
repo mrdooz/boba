@@ -12,7 +12,7 @@
 #pragma warning(pop)
 #endif
 
-namespace editor
+namespace boba
 {
   struct Vector2;
   struct Vector3;

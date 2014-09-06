@@ -16,8 +16,8 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
-namespace effect {
 namespace protocol {
+namespace effect {
 
 namespace {
 
@@ -111,15 +111,15 @@ void protobuf_AddDesc_effect_5fsettings_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\025effect_settings.proto\022\017effect.protocol"
-    "\"\342\001\n\rEffectSetting\0221\n\004type\030\001 \001(\0162#.effec"
-    "t.protocol.EffectSetting.Type\022\024\n\014effect_"
+    "\n\025effect_settings.proto\022\017protocol.effect"
+    "\"\342\001\n\rEffectSetting\0221\n\004type\030\001 \001(\0162#.proto"
+    "col.effect.EffectSetting.Type\022\024\n\014effect_"
     "class\030\002 \001(\t\022\n\n\002id\030\003 \001(\r\022\014\n\004name\030\004 \001(\t\022\022\n"
     "\nstart_time\030\005 \001(\r\022\020\n\010end_time\030\006 \001(\r\022\022\n\nc"
     "onfig_msg\030\007 \001(\014\022\023\n\013config_file\030\010 \001(\t\"\037\n\004"
     "Type\022\013\n\007Unknown\020\000\022\n\n\006Plexus\020\001\"\\\n\016EffectS"
-    "ettings\0226\n\016effect_setting\030\001 \003(\0132\036.effect"
-    ".protocol.EffectSetting\022\022\n\nsoundtrack\030\002 "
+    "ettings\0226\n\016effect_setting\030\001 \003(\0132\036.protoc"
+    "ol.effect.EffectSetting\022\022\n\nsoundtrack\030\002 "
     "\001(\t", 363);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "effect_settings.proto", &protobuf_RegisterTypes);
@@ -277,7 +277,7 @@ bool EffectSetting::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .effect.protocol.EffectSetting.Type type = 1;
+      // optional .protocol.effect.EffectSetting.Type type = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -285,8 +285,8 @@ bool EffectSetting::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::effect::protocol::EffectSetting_Type_IsValid(value)) {
-            set_type(static_cast< ::effect::protocol::EffectSetting_Type >(value));
+          if (::protocol::effect::EffectSetting_Type_IsValid(value)) {
+            set_type(static_cast< ::protocol::effect::EffectSetting_Type >(value));
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
@@ -428,7 +428,7 @@ bool EffectSetting::MergePartialFromCodedStream(
 
 void EffectSetting::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .effect.protocol.EffectSetting.Type type = 1;
+  // optional .protocol.effect.EffectSetting.Type type = 1;
   if (has_type()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       1, this->type(), output);
@@ -490,7 +490,7 @@ void EffectSetting::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* EffectSetting::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .effect.protocol.EffectSetting.Type type = 1;
+  // optional .protocol.effect.EffectSetting.Type type = 1;
   if (has_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->type(), target);
@@ -559,7 +559,7 @@ int EffectSetting::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .effect.protocol.EffectSetting.Type type = 1;
+    // optional .protocol.effect.EffectSetting.Type type = 1;
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
@@ -790,7 +790,7 @@ bool EffectSettings::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .effect.protocol.EffectSetting effect_setting = 1;
+      // repeated .protocol.effect.EffectSetting effect_setting = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -840,7 +840,7 @@ bool EffectSettings::MergePartialFromCodedStream(
 
 void EffectSettings::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .effect.protocol.EffectSetting effect_setting = 1;
+  // repeated .protocol.effect.EffectSetting effect_setting = 1;
   for (int i = 0; i < this->effect_setting_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->effect_setting(i), output);
@@ -863,7 +863,7 @@ void EffectSettings::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* EffectSettings::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .effect.protocol.EffectSetting effect_setting = 1;
+  // repeated .protocol.effect.EffectSetting effect_setting = 1;
   for (int i = 0; i < this->effect_setting_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -899,7 +899,7 @@ int EffectSettings::ByteSize() const {
     }
 
   }
-  // repeated .effect.protocol.EffectSetting effect_setting = 1;
+  // repeated .protocol.effect.EffectSetting effect_setting = 1;
   total_size += 1 * this->effect_setting_size();
   for (int i = 0; i < this->effect_setting_size(); i++) {
     total_size +=
@@ -979,7 +979,7 @@ void EffectSettings::Swap(EffectSettings* other) {
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace protocol
 }  // namespace effect
+}  // namespace protocol
 
 // @@protoc_insertion_point(global_scope)

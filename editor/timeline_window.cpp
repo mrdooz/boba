@@ -602,7 +602,8 @@ void TimelineWindow::Reset(const protocol::effect::EffectSettings& settings)
   for (EffectRow* e : _effectRows)
     delete e;
   _effectRows.clear();
-
+  _selectedVar = nullptr;
+  
   for (const protocol::effect::EffectSetting& setting : settings.effect_setting())
   {
     switch (setting.type())
