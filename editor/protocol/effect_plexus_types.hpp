@@ -4,18 +4,18 @@
 
 namespace editor
 {
-  struct Plexus;
-  struct TextPath;
+  struct PlexusConfig;
+  struct TextPathConfig;
   struct Displacement;
-  struct NoiseEffector;
+  struct NoiseEffectorConfig;
     
-  struct Plexus
+  struct PlexusConfig
   {
-    vector<TextPath> textPaths;
-    vector<NoiseEffector> noiseEffectors;
+    vector<TextPathConfig> textPaths;
+    vector<NoiseEffectorConfig> noiseEffectors;
   };
 
-  struct TextPath
+  struct TextPathConfig
   {
     string text;
   };
@@ -27,7 +27,7 @@ namespace editor
     FloatAnim z;
   };
 
-  struct NoiseEffector
+  struct NoiseEffectorConfig
   {
     enum class ApplyTo
     {
@@ -35,7 +35,7 @@ namespace editor
       Scale = 2,
     };
 
-    NoiseEffector::ApplyTo applyTo = ApplyTo::Position;
+    NoiseEffectorConfig::ApplyTo applyTo = ApplyTo::Position;
     Displacement displacement;
   };
 

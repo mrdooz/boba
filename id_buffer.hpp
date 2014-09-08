@@ -13,6 +13,9 @@ namespace boba
 
   public:
 
+    static const u32 INVALID_INDEX  = ~0;
+    static const u32 FREE_MASK      = 0x3;
+
     //------------------------------------------------------------------------------
     IdBuffer(const Deleter& deleter)
       : _deleter(deleter)
@@ -23,7 +26,7 @@ namespace boba
       {
         u32* ptr = (u32*)&_elems[i];
         // Note, we set the lower 2 bits to indicate that the element is free
-        *ptr = i != Size-1 ? (((i+1) << 2) | 0x3) : ~0;
+        *ptr = i != Size-1 ? (((i+1) << 2) | FREE_MASK) : INVALID_INDEX;
       }
     }
 
@@ -100,7 +103,7 @@ namespace boba
     u32 IndexFromKey(const string& key)
     {
       auto it = _nameToIdx.find(key);
-      return it == _nameToIdx.end() ? ~0 : it->second;
+      return it == _nameToIdx.end() ? INVALID_INDEX : it->second;
     }
 
     //------------------------------------------------------------------------------
@@ -112,15 +115,16 @@ namespace boba
           return i;
       }
 
-      return ~0;
+      return INVALID_INDEX;
     }
 
   private:
 
-    bool IsFree(int idx) const
+    int IsFree(int idx) const
     {
       u32* ptr = (u32*)&_elems[idx];
-      return !!((*ptr) & 0x3);
+      u32 val = *ptr;
+      return val & FREE_MASK;
     }
 
     Deleter _deleter;

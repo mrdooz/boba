@@ -1,13 +1,13 @@
 package protocol.effect.plexus;
 import "common.proto";
 
-message Plexus
+message PlexusConfig
 {
-  repeated TextPath text_paths = 1;
-  repeated NoiseEffector noise_effectors = 2;
+  repeated TextPathConfig text_paths = 1;
+  repeated NoiseEffectorConfig noise_effectors = 2;
 }
 
-message TextPath
+message TextPathConfig
 {
   optional string text = 1;
 }
@@ -19,7 +19,7 @@ message Displacement
 	optional protocol.common.FloatAnim z = 3;
 }
 
-message NoiseEffector
+message NoiseEffectorConfig
 {
   enum ApplyTo {
     Position = 1;

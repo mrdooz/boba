@@ -138,7 +138,7 @@ namespace boba
     struct SwapChain
     {
       SwapChain(const char* name) : _name(name) {}
-      bool CreateBackBuffers(size_t width, size_t height, DXGI_FORMAT format);
+      bool CreateBackBuffers(u32 width, u32 height, DXGI_FORMAT format);
       void Present();
 
       string _name;
@@ -168,7 +168,7 @@ namespace boba
 
     GraphicsObjectHandle LoadTextureFromMemory(
         const void* buf,
-        size_t len,
+        u32 len,
         const char* friendlyName = nullptr,
         bool srgb = false,
         D3DX11_IMAGE_INFO* info = nullptr);
@@ -210,8 +210,8 @@ namespace boba
     GraphicsObjectHandle CreateSamplerState(const D3D11_SAMPLER_DESC &desc, const char *name = nullptr);
     GraphicsObjectHandle CreateSwapChain(
         const TCHAR* name,
-        size_t width,
-        size_t height,
+        u32 width,
+        u32 height,
         DXGI_FORMAT format,
         WNDPROC wndProc,
         HINSTANCE instance);
@@ -278,8 +278,8 @@ namespace boba
     ID3D11Device* Device() { return _device.p; }
 
     void CreateDefaultSwapChain(
-        size_t width,
-        size_t height,
+        u32 width,
+        u32 height,
         DXGI_FORMAT format,
         WNDPROC wndProc,
         HINSTANCE instance);

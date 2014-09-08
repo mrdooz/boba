@@ -15,17 +15,17 @@
 
 namespace editor
 {
-  struct Plexus;
-  struct TextPath;
+  struct PlexusConfig;
+  struct TextPathConfig;
   struct Displacement;
-  struct NoiseEffector;
+  struct NoiseEffectorConfig;
 
-  Plexus FromProtocol(const protocol::effect::plexus::Plexus& p);
-  void ToProtocol(const Plexus& v, protocol::effect::plexus::Plexus* p);
-  TextPath FromProtocol(const protocol::effect::plexus::TextPath& p);
-  void ToProtocol(const TextPath& v, protocol::effect::plexus::TextPath* p);
+  PlexusConfig FromProtocol(const protocol::effect::plexus::PlexusConfig& p);
+  void ToProtocol(const PlexusConfig& v, protocol::effect::plexus::PlexusConfig* p);
+  TextPathConfig FromProtocol(const protocol::effect::plexus::TextPathConfig& p);
+  void ToProtocol(const TextPathConfig& v, protocol::effect::plexus::TextPathConfig* p);
   Displacement FromProtocol(const protocol::effect::plexus::Displacement& p);
   void ToProtocol(const Displacement& v, protocol::effect::plexus::Displacement* p);
-  NoiseEffector FromProtocol(const protocol::effect::plexus::NoiseEffector& p);
-  void ToProtocol(const NoiseEffector& v, protocol::effect::plexus::NoiseEffector* p);
+  NoiseEffectorConfig FromProtocol(const protocol::effect::plexus::NoiseEffectorConfig& p);
+  void ToProtocol(const NoiseEffectorConfig& v, protocol::effect::plexus::NoiseEffectorConfig* p);
 }

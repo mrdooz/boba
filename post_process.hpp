@@ -29,14 +29,7 @@ namespace boba
     };
     ConstantBuffer<CBufferPS> _cb;
 
-    GraphicsObjectHandle _depthStencilState;
-    GraphicsObjectHandle _blendState;
-    GraphicsObjectHandle _rasterizerState;
-
-    GraphicsObjectHandle _linearSamplerState;
-    GraphicsObjectHandle _linearWrapSamplerState;
-    GraphicsObjectHandle _linearBorderSamplerState;
-    GraphicsObjectHandle _pointSamplerState;
+    GpuState _gpuState;
 
     GraphicsObjectHandle _vsQuad;
   };

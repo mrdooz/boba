@@ -84,7 +84,8 @@ bool ParticleTest::Update(const UpdateState& state)
 //------------------------------------------------------------------------------
 bool ParticleTest::Render()
 {
-  _ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), true);
+  float black[] ={ 0, 0, 0, 0 };
+  _ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), black);
   _ctx->BeginFrame();
 
   CBufferPerFrame cb;

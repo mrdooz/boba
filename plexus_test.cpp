@@ -5,6 +5,7 @@
 #include "demo_engine.hpp"
 #include "proto_helpers.hpp"
 #include "resource_manager.hpp"
+#include "init_sequence.hpp"
 
 #include "boba_loader.hpp"
 #include "protocol/generator_bindings.hpp"
@@ -23,12 +24,352 @@ using namespace bristol;
 
 static DynamicMesh g_mesh;
 
-enum class AnimationType
+namespace boba
 {
-  Linear = 0,
-  Bezier = 1,
-  CatmullRom = 2,
-};
+  struct PathGenerator
+  {
+    virtual ~PathGenerator() {}
+    virtual void GeneratePoints(vector<Vector3>* verts) = 0;
+  };
+
+  struct TextPathGenerator : public PathGenerator
+  {
+    TextPathGenerator()
+      : _stride(3)
+    {
+      Init("meshes/text1.boba");
+      WriteText("NEUROTICA EFS");
+    }
+
+    bool Init(const char* filename)
+    {
+      // Extract all the letters from the given file
+      if (!_loader.Load(filename))
+      {
+        return false;
+      }
+
+      u32 numLetters = 'Z' - 'A' + 1;
+      _letters.resize(numLetters);
+
+      Letter* curLetter = nullptr;
+
+      for (u32 i = 0; i < _loader.meshes.size(); ++i)
+      {
+        // Letter mesh names are ['A'..'Z']
+        BobaLoader::MeshElement* e = _loader.meshes[i];
+        int t = (int)e->name[0] - 'A';
+        if (strlen(e->name) == 1 && t >= 0 && t < (int)numLetters)
+        {
+          curLetter = &_letters[t];
+          curLetter->outline = e;
+        }
+        else if (strcmp(e->name, "Cap 1") == 0)
+        {
+          if (curLetter)
+            curLetter->cap1 = e;
+          else
+            LOG_WARN("Cap found without matching letter!");
+        }
+        else if (strcmp(e->name, "Cap 2") == 0)
+        {
+          if (curLetter)
+            curLetter->cap2 = e;
+          else
+            LOG_WARN("Cap found without matching letter!");
+        }
+      }
+
+      return true;
+    }
+
+    void AddVerts(
+      const BobaLoader::MeshElement* e,
+      float xOfs, float yOfs, float zOfs,
+      vector<float>* verts,
+      vector<u32>* indices,
+      float* minX,
+      float* maxX)
+    {
+      u32 numVerts = (u32)verts->size();
+      u32 numIndices = (u32)indices->size();
+
+      u32 v = e->numVerts / 3;
+      u32 stride = _stride;
+      verts->resize(verts->size() + v * stride);
+      indices->resize(indices->size() + e->numIndices);
+
+      *minX = *maxX = e->verts[0];
+      for (u32 i = 0; i < e->numVerts/3; ++i) {
+        float x = e->verts[i*3+0];
+        float y = e->verts[i*3+1];
+        float z = e->verts[i*3+2];
+
+        (*verts)[numVerts+i*stride+0] = x + xOfs;
+        (*verts)[numVerts+i*stride+1] = y + yOfs;
+        (*verts)[numVerts+i*stride+2] = z + zOfs;
+
+        *minX = min(*minX, x);
+        *maxX = max(*maxX, x);
+      }
+
+      // update indices to point to the correct spot in the combined VB
+      u32 ofs = numVerts / stride;
+      for (u32 i = 0; i < e->numIndices; ++i)
+      {
+        (*indices)[numIndices+i] = e->indices[i] + ofs;
+      }
+    }
+
+    void WriteText(const char* text)
+    {
+      _verts.clear();
+      _indices.clear();
+
+      u32 len = (u32)strlen(text);
+
+      float xOfs = -1000;
+      float yOfs = -80;
+      float zOfs = 1000;
+
+      for (u32 i = 0; i < len; ++i)
+      {
+        if (text[i] == ' ')
+        {
+          xOfs += 50;
+          continue;
+        }
+
+        int t = toupper(text[i]) - 'A';
+        Letter* letter = &_letters[t];
+        BobaLoader::MeshElement* e = letter->outline;
+
+        float minX, maxX;
+        AddVerts(e, xOfs, yOfs, zOfs, &_verts, &_indices, &minX, &maxX);
+        AddVerts(letter->cap1, xOfs, yOfs, zOfs, &_verts, &_indices, &minX, &maxX);
+
+        xOfs += 1.05f * (maxX - minX);
+      }
+
+      _numVerts = (u32)_verts.size() / _stride;
+      _numIndices = (u32)_indices.size();
+    }
+
+    void GeneratePoints(vector<Vector3>* verts)
+    {
+      verts->clear();
+      verts->resize(_numVerts * 6);
+
+      // 1 2
+      // 0 3
+
+      float s = 10;
+      Vector3 ofs0(-s, -s, 0);
+      Vector3 ofs1(-s, +s, 0);
+      Vector3 ofs2(+s, +s, 0);
+      Vector3 ofs3(+s, -s, 0);
+
+      for (u32 i = 0; i < _numVerts; ++i)
+      {
+        Vector3 b = Vector3(_verts[i*3+0], _verts[i*3+1], _verts[i*3+2]);
+        Vector3 v0 = b + ofs0;
+        Vector3 v1 = b + ofs1;
+        Vector3 v2 = b + ofs2;
+        Vector3 v3 = b + ofs3;
+
+        (*verts)[i*6+0] = v0;
+        (*verts)[i*6+1] = v1;
+        (*verts)[i*6+2] = v2;
+        (*verts)[i*6+3] = v0;
+        (*verts)[i*6+4] = v2;
+        (*verts)[i*6+5] = v3;
+      }
+    }
+
+    struct Letter
+    {
+      Letter() { memset(this, 0, sizeof(Letter)); }
+      BobaLoader::MeshElement* outline;
+      BobaLoader::MeshElement* cap1;
+      BobaLoader::MeshElement* cap2;
+    };
+
+    u32 _stride;
+    u32 _numVerts;
+    u32 _numIndices;
+    vector<float> _verts;
+    vector<u32> _indices;
+
+    vector<Letter> _letters;
+    BobaLoader _loader;
+
+    TextPathConfig _config;
+  };
+
+  struct Renderer
+  {
+    Renderer(DeferredContext* ctx) : _ctx(ctx) {}
+
+    virtual bool Init() { return true; }
+    virtual void Render(const Matrix& viewProj, const vector<Vector3>& verts) = 0;
+
+    DeferredContext* _ctx;
+  };
+
+  struct PointRenderer : public Renderer
+  {
+    PointRenderer(DeferredContext* ctx) : Renderer(ctx) {}
+
+    bool Init()
+    {
+      BEGIN_INIT_SEQUENCE();
+
+      CD3D11_BLEND_DESC blendDesc = CD3D11_BLEND_DESC(CD3D11_DEFAULT());
+      blendDesc.RenderTarget[0].BlendEnable = TRUE;
+      blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+      blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+      blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+
+      CD3D11_DEPTH_STENCIL_DESC depthDesc = CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT());
+      depthDesc.DepthEnable = FALSE;
+
+      INIT(_gpuState.Create(depthDesc, blendDesc, CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT())));
+      INIT(_gpuObjects.CreateDynamicVb(1024 * 1024, sizeof(Vector3)));
+      INIT(_cb.Create());
+      INIT_ASSIGN(_particleTexture, GRAPHICS.LoadTexture("gfx/particle1.png"));
+      INIT(_gpuObjects.LoadShadersFromFile("shaders/particle", "VsMain", "PsMain", VF_POS));
+
+      END_INIT_SEQUENCE();
+    }
+
+    void Render(const Matrix& viewProj, const vector<Vector3>& verts)
+    {
+      GPU_BeginEvent(0xffffffff, L"PointRenderer");
+
+      float black[] ={ 0, 0, 0, 0 };
+      _ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), black);
+
+      _ctx->BeginFrame();
+
+      _ctx->CopyToBuffer(_gpuObjects._vb, verts.data(), (u32)verts.size() * sizeof(Vector3));
+
+      _cb.data.viewProj = viewProj.Transpose();
+      _ctx->SetCBuffer(_cb, ShaderType::VertexShader, 0);
+
+      _ctx->SetGpuState(_gpuState);
+      _ctx->SetGpuStateSamplers(_gpuState, ShaderType::PixelShader);
+      _ctx->SetGpuObjects(_gpuObjects);
+
+      _ctx->SetCBuffer(_cb, ShaderType::VertexShader, 0);
+      _ctx->SetShaderResource(_particleTexture, ShaderType::PixelShader);
+      _ctx->Draw((u32)verts.size(), 0);
+
+      _ctx->EndFrame();
+
+      _ctx->UnsetSRVs(0, 1, ShaderType::PixelShader);
+
+      GPU_EndEvent();
+    }
+
+    struct CBufferPerFrame
+    {
+      Matrix viewProj;
+    };
+    ConstantBuffer<CBufferPerFrame> _cb;
+
+    GpuObjects _gpuObjects;
+    GpuState _gpuState;
+    GraphicsObjectHandle _particleTexture;
+  };
+
+  struct LineRenderer : public Renderer
+  {
+
+  };
+
+  struct PolygonRenderer : public Renderer
+  {
+
+  };
+
+  struct Effector
+  {
+    virtual void Apply(vector<Vector3>* verts) = 0;
+  };
+
+  struct NoiseEffector : public Effector
+  {
+    void Apply(vector<Vector3>* verts)
+    {
+
+    }
+
+    NoiseEffectorConfig _config;
+  };
+
+  struct Plexus
+  {
+    Plexus(DeferredContext* ctx);
+    ~Plexus();
+
+    bool Init();
+    void Update(const UpdateState& state);
+    void Render(const Matrix& viewProj);
+
+    vector<Vector3> _verts;
+    vector<PathGenerator*> _paths;
+    vector<Effector*> _effectors;
+    vector<Renderer*> _renderers;
+  };
+
+  Plexus::Plexus(DeferredContext* ctx)
+  {
+    _paths.push_back(new TextPathGenerator());
+    _effectors.push_back(new NoiseEffector());
+    _renderers.push_back(new PointRenderer(ctx));
+  }
+
+  Plexus::~Plexus()
+  {
+    SeqDelete(&_paths);
+    SeqDelete(&_effectors);
+    SeqDelete(&_renderers);
+  }
+
+  bool Plexus::Init()
+  {
+    BEGIN_INIT_SEQUENCE();
+    for (Renderer* r : _renderers)
+    {
+      INIT(r->Init());
+    }
+    END_INIT_SEQUENCE();
+  }
+
+  void Plexus::Update(const UpdateState& state)
+  {
+    _verts.clear();
+    for (PathGenerator* path : _paths)
+    {
+      path->GeneratePoints(&_verts);
+    }
+
+    for (Effector* e : _effectors)
+    {
+      e->Apply(&_verts);
+    }
+
+  }
+
+  void Plexus::Render(const Matrix& viewProj)
+  {
+    for (Renderer* r : _renderers)
+    {
+      r->Render(viewProj, _verts);
+    }
+  }
+
+}
 
 struct TextWriter
 {
@@ -192,6 +533,8 @@ PlexusTest::PlexusTest(const string& name, u32 id)
     , _numIndices(0)
     , _cameraDir(0,0,1)
     , _curAdaption(0)
+    , _postProcess(nullptr)
+    , _plexus(nullptr)
 {
   _renderFlags.Set(PlexusTest::RenderFlags::Luminance);
 }
@@ -199,18 +542,16 @@ PlexusTest::PlexusTest(const string& name, u32 id)
 //------------------------------------------------------------------------------
 PlexusTest::~PlexusTest()
 {
+  SAFE_DELETE(_plexus);
+  SAFE_DELETE(_postProcess);
 }
 
 //------------------------------------------------------------------------------
 bool PlexusTest::Init(const char* config)
 {
-  _configName = config;
+  BEGIN_INIT_SEQUENCE();
 
-//   if (!LoadProto(config, &_planeConfig))
-//   {
-//     LOG_ERROR(ToString("Error loading config: %s", config).c_str());
-//     return false;
-//   }
+  _configName = config;
 
   if (_planeConfig.has_camera_pos()) _cameraPos = ::FromProtocol(_planeConfig.camera_pos());
   if (_planeConfig.has_camera_dir()) _cameraDir = ::FromProtocol(_planeConfig.camera_dir());
@@ -219,75 +560,57 @@ bool PlexusTest::Init(const char* config)
   static bool tmp;
   BindPlane(&_planeConfig, &tmp);
 
-  _meshObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosNormal));
-  _cb.Create();
+  INIT(_meshObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosNormal)));
+  INIT(_cb.Create());
 
-  _cbToneMapping.Create();
-  _luminanceAdaption[0] = GRAPHICS.CreateRenderTarget(1, 1, DXGI_FORMAT_R16_FLOAT, BufferFlags(BufferFlag::CreateSrv));
-  _luminanceAdaption[1] = GRAPHICS.CreateRenderTarget(1, 1, DXGI_FORMAT_R16_FLOAT, BufferFlags(BufferFlag::CreateSrv));
+  INIT(_cbToneMapping.Create());
+  INIT_ASSIGN(_luminanceAdaption[0], GRAPHICS.CreateRenderTarget(1, 1, DXGI_FORMAT_R16_FLOAT, BufferFlags(BufferFlag::CreateSrv)));
+  INIT_ASSIGN(_luminanceAdaption[1], GRAPHICS.CreateRenderTarget(1, 1, DXGI_FORMAT_R16_FLOAT, BufferFlags(BufferFlag::CreateSrv)));
 
-  GRAPHICS.LoadShadersFromFile("shaders/generator",
-      &_meshObjects._vs, &_meshObjects._ps, &_meshObjects._layout, VF_POS | VF_NORMAL);
+  INIT(_meshObjects.LoadShadersFromFile("shaders/generator", "VsMain", "PsMain", VF_POS | VF_NORMAL));
 
-  _postProcess = make_unique<PostProcess>(_ctx);
-  if (!_postProcess->Init())
-    return false;
+  _postProcess = new PostProcess(_ctx);
+  INIT(_postProcess->Init());
 
   int w, h;
   GRAPHICS.GetBackBufferSize(&w, &h);
-  _renderTarget = GRAPHICS.CreateRenderTarget(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT,
-      BufferFlags(BufferFlag::CreateDepthBuffer) | BufferFlag::CreateSrv);
+  INIT_ASSIGN(_renderTarget,
+    GRAPHICS.CreateRenderTarget(w, h, DXGI_FORMAT_R16G16B16A16_FLOAT, BufferFlags(BufferFlag::CreateDepthBuffer) | BufferFlag::CreateSrv));
   
-  if (!GRAPHICS.LoadShadersFromFile("shaders/copy", nullptr, &_psCopy, nullptr, 0))
-    return false;
+  INIT(GRAPHICS.LoadShadersFromFile("shaders/copy", nullptr, &_psCopy, nullptr, 0));
+  INIT(GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psLuminance, nullptr, 0, nullptr, "LuminanceMap"));
+  INIT(GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psComposite, nullptr, 0, nullptr, "Composite"));
+  INIT(GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psAdaption, nullptr, 0, nullptr, "AdaptLuminance"));
+  INIT(GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psThreshold, nullptr, 0, nullptr, "BloomThreshold"));
+  INIT(GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csBlurX, "BoxBlurX"));
+  INIT(GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csBlurY, "BoxBlurY"));
+  INIT(GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csCopyTranspose, "CopyTranspose"));
+  INIT(GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csBlurTranspose, "BlurTranspose"));
+  INIT(GRAPHICS.LoadShadersFromFile("shaders/text_shader", nullptr, &_psEdgeDetect, nullptr, 0, nullptr, "EdgeDetect"));
 
-  if (!GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psLuminance, nullptr, 0, nullptr, "LuminanceMap"))
-    return false;
+  INIT(_cbBlur.Create());
+  INIT(_cbBloom.Create());
+  INIT(_cbComposite.Create());
 
-  if (!GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psComposite, nullptr, 0, nullptr, "Composite"))
-    return false;
+  INIT(_gpuState.Create());
 
-  if (!GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psAdaption, nullptr, 0, nullptr, "AdaptLuminance"))
-    return false;
+  INIT(g_textWriter.Init("meshes/text1.boba"));
 
-  if (!GRAPHICS.LoadShadersFromFile("shaders/tonemap", nullptr, &_psThreshold, nullptr, 0, nullptr, "BloomThreshold"))
-    return false;
+  _plexus = new Plexus(_ctx);
+  _plexusConfig.textPaths.push_back({"NEUROTICA EFS"});
+  _plexusConfig.noiseEffectors.push_back(NoiseEffectorConfig());
 
-  if (!GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csBlurX, "BoxBlurX"))
-    return false;
+  INIT(_plexus->Init());
 
-  if (!GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csBlurY, "BoxBlurY"))
-    return false;
+  g_textWriter.WriteText(_plexusConfig.textPaths.front().text.c_str());
 
-  if (!GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csCopyTranspose, "CopyTranspose"))
-    return false;
-
-  if (!GRAPHICS.LoadComputeShadersFromFile("shaders/blur", &_csBlurTranspose, "BlurTranspose"))
-    return false;
-
-  if (!GRAPHICS.LoadShadersFromFile("shaders/text_shader", nullptr, &_psEdgeDetect, nullptr, 0, nullptr, "EdgeDetect"))
-    return false;
-
-
-  _cbBlur.Create();
-  _cbBloom.Create();
-  _cbComposite.Create();
-
-  _depthStencilState = GRAPHICS.CreateDepthStencilState(CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT()));
-  _blendState = GRAPHICS.CreateBlendState(CD3D11_BLEND_DESC(CD3D11_DEFAULT()));
-  _rasterizerState = GRAPHICS.CreateRasterizerState(CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT()));
-
-  g_textWriter.Init("meshes/text1.boba");
-
-  _plexus.textPaths.push_back({"NEUROTICA EFS"});
-  _plexus.noiseEffectors.push_back(NoiseEffector());
-
-  g_textWriter.WriteText(_plexus.textPaths.front().text.c_str());
-  return true;
+  END_INIT_SEQUENCE();
 }
+
 //------------------------------------------------------------------------------
 bool PlexusTest::Update(const UpdateState& state)
 {
+  _plexus->Update(state);
   _updateState = state;
   return true;
 }
@@ -296,10 +619,7 @@ bool PlexusTest::Update(const UpdateState& state)
 void PlexusTest::RenderText()
 {
   Color black(0.1f, 0.1f, 0.1f, 0);
-  float blendFactor[4] ={ 1, 1, 1, 1 };
-  _ctx->SetRasterizerState(_rasterizerState);
-  _ctx->SetBlendState(_blendState, blendFactor, 0xffffffff);
-  _ctx->SetDepthStencilState(_depthStencilState, 0);
+  _ctx->SetGpuState(_gpuState);
 
   int w, h;
   GRAPHICS.GetBackBufferSize(&w, &h);
@@ -324,7 +644,7 @@ void PlexusTest::RenderText()
 
   _ctx->SetCBuffer(_cb, ShaderType::VertexShader, 0);
 
-  _ctx->SetRenderObjects(g_textWriter._meshObjects);
+  _ctx->SetGpuObjects(g_textWriter._meshObjects);
   _ctx->DrawIndexed(g_textWriter._numIndices, 0, 0);
   GPU_EndEvent();
 
@@ -339,13 +659,15 @@ void PlexusTest::RenderText()
 
   _ctx->EndFrame();
   _ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), false);
-
 }
 
 //------------------------------------------------------------------------------
 bool PlexusTest::Render()
 {
-  RenderText();
+  _proj = Matrix::CreatePerspectiveFieldOfView(45.0f / 180 * 3.1415f, 16.0f / 10, 1, 10000);
+  _view = Matrix::CreateLookAt(_cameraPos, _cameraPos + 100 * _cameraDir, Vector3(0, 1, 0));
+  _plexus->Render(_view * _proj);
+  //RenderText();
   return true;
 }
 
@@ -389,18 +711,18 @@ void PlexusTest::ToProtocol(protocol::effect::EffectSetting* settings) const
 {
   settings->set_type(protocol::effect::EffectSetting_Type_Plexus);
 
-  protocol::effect::plexus::Plexus plexus;
-  ::ToProtocol(_plexus, &plexus);
-  settings->set_config_msg(plexus.SerializeAsString());
+  protocol::effect::plexus::PlexusConfig plexusConfig;
+  ::ToProtocol(_plexusConfig, &plexusConfig);
+  settings->set_config_msg(plexusConfig.SerializeAsString());
 }
 
 //------------------------------------------------------------------------------
 void PlexusTest::FromProtocol(const std::string& str)
 {
-  protocol::effect::plexus::Plexus p;
+  protocol::effect::plexus::PlexusConfig p;
   p.ParseFromString(str);
 
-  _plexus = ::FromProtocol(p);
+  _plexusConfig = ::FromProtocol(p);
 }
 
 //------------------------------------------------------------------------------

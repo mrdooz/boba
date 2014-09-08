@@ -10,6 +10,8 @@ shaders/fullscreen_PsMainD.pso	D:/projects/boba/shaders/fullscreen_PsMainD.pso
 shaders/fullscreen_VsMainD.vso	D:/projects/boba/shaders/fullscreen_VsMainD.vso
 shaders/generator_PsMainD.pso	D:/projects/boba/shaders/generator_PsMainD.pso
 shaders/generator_VsMainD.vso	D:/projects/boba/shaders/generator_VsMainD.vso
+shaders/particle_PsMainD.pso	D:/projects/boba/shaders/particle_PsMainD.pso
+shaders/particle_VsMainD.vso	D:/projects/boba/shaders/particle_VsMainD.vso
 shaders/quad_VsMainD.vso	D:/projects/boba/shaders/quad_VsMainD.vso
 shaders/text_shader_EdgeDetectD.pso	D:/projects/boba/shaders/text_shader_EdgeDetectD.pso
 shaders/text_shader_PsMainD.pso	D:/projects/boba/shaders/text_shader_PsMainD.pso

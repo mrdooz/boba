@@ -3,6 +3,14 @@
 namespace boba
 {
   //----------------------------------------------------------------------------------
+  enum class AnimationType
+  {
+    Linear = 0,
+    Bezier = 1,
+    CatmullRom = 2,
+  };
+
+  //----------------------------------------------------------------------------------
   template <typename T>
   T Bezier(const T& p0, const T& p1, const T& p2, const T& p3, float t)
   {

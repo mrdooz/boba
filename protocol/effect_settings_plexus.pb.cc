@@ -22,19 +22,19 @@ namespace plexus {
 
 namespace {
 
-const ::google::protobuf::Descriptor* Plexus_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* PlexusConfig_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  Plexus_reflection_ = NULL;
-const ::google::protobuf::Descriptor* TextPath_descriptor_ = NULL;
+  PlexusConfig_reflection_ = NULL;
+const ::google::protobuf::Descriptor* TextPathConfig_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  TextPath_reflection_ = NULL;
+  TextPathConfig_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Displacement_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Displacement_reflection_ = NULL;
-const ::google::protobuf::Descriptor* NoiseEffector_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* NoiseEffectorConfig_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  NoiseEffector_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* NoiseEffector_ApplyTo_descriptor_ = NULL;
+  NoiseEffectorConfig_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* NoiseEffectorConfig_ApplyTo_descriptor_ = NULL;
 
 }  // namespace
 
@@ -45,37 +45,37 @@ void protobuf_AssignDesc_effect_5fsettings_5fplexus_2eproto() {
     ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
       "effect_settings_plexus.proto");
   GOOGLE_CHECK(file != NULL);
-  Plexus_descriptor_ = file->message_type(0);
-  static const int Plexus_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plexus, text_paths_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plexus, noise_effectors_),
+  PlexusConfig_descriptor_ = file->message_type(0);
+  static const int PlexusConfig_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlexusConfig, text_paths_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlexusConfig, noise_effectors_),
   };
-  Plexus_reflection_ =
+  PlexusConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      Plexus_descriptor_,
-      Plexus::default_instance_,
-      Plexus_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plexus, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Plexus, _unknown_fields_),
+      PlexusConfig_descriptor_,
+      PlexusConfig::default_instance_,
+      PlexusConfig_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlexusConfig, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlexusConfig, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(Plexus));
-  TextPath_descriptor_ = file->message_type(1);
-  static const int TextPath_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TextPath, text_),
+      sizeof(PlexusConfig));
+  TextPathConfig_descriptor_ = file->message_type(1);
+  static const int TextPathConfig_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TextPathConfig, text_),
   };
-  TextPath_reflection_ =
+  TextPathConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      TextPath_descriptor_,
-      TextPath::default_instance_,
-      TextPath_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TextPath, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TextPath, _unknown_fields_),
+      TextPathConfig_descriptor_,
+      TextPathConfig::default_instance_,
+      TextPathConfig_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TextPathConfig, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TextPathConfig, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(TextPath));
+      sizeof(TextPathConfig));
   Displacement_descriptor_ = file->message_type(2);
   static const int Displacement_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Displacement, x_),
@@ -93,23 +93,23 @@ void protobuf_AssignDesc_effect_5fsettings_5fplexus_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Displacement));
-  NoiseEffector_descriptor_ = file->message_type(3);
-  static const int NoiseEffector_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NoiseEffector, apply_to_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NoiseEffector, displacement_),
+  NoiseEffectorConfig_descriptor_ = file->message_type(3);
+  static const int NoiseEffectorConfig_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NoiseEffectorConfig, apply_to_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NoiseEffectorConfig, displacement_),
   };
-  NoiseEffector_reflection_ =
+  NoiseEffectorConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      NoiseEffector_descriptor_,
-      NoiseEffector::default_instance_,
-      NoiseEffector_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NoiseEffector, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NoiseEffector, _unknown_fields_),
+      NoiseEffectorConfig_descriptor_,
+      NoiseEffectorConfig::default_instance_,
+      NoiseEffectorConfig_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NoiseEffectorConfig, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NoiseEffectorConfig, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(NoiseEffector));
-  NoiseEffector_ApplyTo_descriptor_ = NoiseEffector_descriptor_->enum_type(0);
+      sizeof(NoiseEffectorConfig));
+  NoiseEffectorConfig_ApplyTo_descriptor_ = NoiseEffectorConfig_descriptor_->enum_type(0);
 }
 
 namespace {
@@ -123,26 +123,26 @@ inline void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    Plexus_descriptor_, &Plexus::default_instance());
+    PlexusConfig_descriptor_, &PlexusConfig::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    TextPath_descriptor_, &TextPath::default_instance());
+    TextPathConfig_descriptor_, &TextPathConfig::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Displacement_descriptor_, &Displacement::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    NoiseEffector_descriptor_, &NoiseEffector::default_instance());
+    NoiseEffectorConfig_descriptor_, &NoiseEffectorConfig::default_instance());
 }
 
 }  // namespace
 
 void protobuf_ShutdownFile_effect_5fsettings_5fplexus_2eproto() {
-  delete Plexus::default_instance_;
-  delete Plexus_reflection_;
-  delete TextPath::default_instance_;
-  delete TextPath_reflection_;
+  delete PlexusConfig::default_instance_;
+  delete PlexusConfig_reflection_;
+  delete TextPathConfig::default_instance_;
+  delete TextPathConfig_reflection_;
   delete Displacement::default_instance_;
   delete Displacement_reflection_;
-  delete NoiseEffector::default_instance_;
-  delete NoiseEffector_reflection_;
+  delete NoiseEffectorConfig::default_instance_;
+  delete NoiseEffectorConfig_reflection_;
 }
 
 void protobuf_AddDesc_effect_5fsettings_5fplexus_2eproto() {
@@ -154,29 +154,30 @@ void protobuf_AddDesc_effect_5fsettings_5fplexus_2eproto() {
   ::protocol::common::protobuf_AddDesc_common_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\034effect_settings_plexus.proto\022\026protocol"
-    ".effect.plexus\032\014common.proto\"~\n\006Plexus\0224"
-    "\n\ntext_paths\030\001 \003(\0132 .protocol.effect.ple"
-    "xus.TextPath\022>\n\017noise_effectors\030\002 \003(\0132%."
-    "protocol.effect.plexus.NoiseEffector\"\030\n\010"
-    "TextPath\022\014\n\004text\030\001 \001(\t\"\203\001\n\014Displacement\022"
-    "%\n\001x\030\001 \001(\0132\032.protocol.common.FloatAnim\022%"
-    "\n\001y\030\002 \001(\0132\032.protocol.common.FloatAnim\022%\n"
-    "\001z\030\003 \001(\0132\032.protocol.common.FloatAnim\"\272\001\n"
-    "\rNoiseEffector\022I\n\010apply_to\030\001 \001(\0162-.proto"
-    "col.effect.plexus.NoiseEffector.ApplyTo:"
-    "\010Position\022:\n\014displacement\030\002 \001(\0132$.protoc"
-    "ol.effect.plexus.Displacement\"\"\n\007ApplyTo"
-    "\022\014\n\010Position\020\001\022\t\n\005Scale\020\002", 545);
+    ".effect.plexus\032\014common.proto\"\220\001\n\014PlexusC"
+    "onfig\022:\n\ntext_paths\030\001 \003(\0132&.protocol.eff"
+    "ect.plexus.TextPathConfig\022D\n\017noise_effec"
+    "tors\030\002 \003(\0132+.protocol.effect.plexus.Nois"
+    "eEffectorConfig\"\036\n\016TextPathConfig\022\014\n\004tex"
+    "t\030\001 \001(\t\"\203\001\n\014Displacement\022%\n\001x\030\001 \001(\0132\032.pr"
+    "otocol.common.FloatAnim\022%\n\001y\030\002 \001(\0132\032.pro"
+    "tocol.common.FloatAnim\022%\n\001z\030\003 \001(\0132\032.prot"
+    "ocol.common.FloatAnim\"\306\001\n\023NoiseEffectorC"
+    "onfig\022O\n\010apply_to\030\001 \001(\01623.protocol.effec"
+    "t.plexus.NoiseEffectorConfig.ApplyTo:\010Po"
+    "sition\022:\n\014displacement\030\002 \001(\0132$.protocol."
+    "effect.plexus.Displacement\"\"\n\007ApplyTo\022\014\n"
+    "\010Position\020\001\022\t\n\005Scale\020\002", 582);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "effect_settings_plexus.proto", &protobuf_RegisterTypes);
-  Plexus::default_instance_ = new Plexus();
-  TextPath::default_instance_ = new TextPath();
+  PlexusConfig::default_instance_ = new PlexusConfig();
+  TextPathConfig::default_instance_ = new TextPathConfig();
   Displacement::default_instance_ = new Displacement();
-  NoiseEffector::default_instance_ = new NoiseEffector();
-  Plexus::default_instance_->InitAsDefaultInstance();
-  TextPath::default_instance_->InitAsDefaultInstance();
+  NoiseEffectorConfig::default_instance_ = new NoiseEffectorConfig();
+  PlexusConfig::default_instance_->InitAsDefaultInstance();
+  TextPathConfig::default_instance_->InitAsDefaultInstance();
   Displacement::default_instance_->InitAsDefaultInstance();
-  NoiseEffector::default_instance_->InitAsDefaultInstance();
+  NoiseEffectorConfig::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_effect_5fsettings_5fplexus_2eproto);
 }
 
@@ -190,73 +191,73 @@ struct StaticDescriptorInitializer_effect_5fsettings_5fplexus_2eproto {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Plexus::kTextPathsFieldNumber;
-const int Plexus::kNoiseEffectorsFieldNumber;
+const int PlexusConfig::kTextPathsFieldNumber;
+const int PlexusConfig::kNoiseEffectorsFieldNumber;
 #endif  // !_MSC_VER
 
-Plexus::Plexus()
+PlexusConfig::PlexusConfig()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void Plexus::InitAsDefaultInstance() {
+void PlexusConfig::InitAsDefaultInstance() {
 }
 
-Plexus::Plexus(const Plexus& from)
+PlexusConfig::PlexusConfig(const PlexusConfig& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void Plexus::SharedCtor() {
+void PlexusConfig::SharedCtor() {
   _cached_size_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-Plexus::~Plexus() {
+PlexusConfig::~PlexusConfig() {
   SharedDtor();
 }
 
-void Plexus::SharedDtor() {
+void PlexusConfig::SharedDtor() {
   if (this != default_instance_) {
   }
 }
 
-void Plexus::SetCachedSize(int size) const {
+void PlexusConfig::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* Plexus::descriptor() {
+const ::google::protobuf::Descriptor* PlexusConfig::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return Plexus_descriptor_;
+  return PlexusConfig_descriptor_;
 }
 
-const Plexus& Plexus::default_instance() {
+const PlexusConfig& PlexusConfig::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_effect_5fsettings_5fplexus_2eproto();
   return *default_instance_;
 }
 
-Plexus* Plexus::default_instance_ = NULL;
+PlexusConfig* PlexusConfig::default_instance_ = NULL;
 
-Plexus* Plexus::New() const {
-  return new Plexus;
+PlexusConfig* PlexusConfig::New() const {
+  return new PlexusConfig;
 }
 
-void Plexus::Clear() {
+void PlexusConfig::Clear() {
   text_paths_.Clear();
   noise_effectors_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
-bool Plexus::MergePartialFromCodedStream(
+bool PlexusConfig::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .protocol.effect.plexus.TextPath text_paths = 1;
+      // repeated .protocol.effect.plexus.TextPathConfig text_paths = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -271,7 +272,7 @@ bool Plexus::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .protocol.effect.plexus.NoiseEffector noise_effectors = 2;
+      // repeated .protocol.effect.plexus.NoiseEffectorConfig noise_effectors = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -302,15 +303,15 @@ bool Plexus::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void Plexus::SerializeWithCachedSizes(
+void PlexusConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .protocol.effect.plexus.TextPath text_paths = 1;
+  // repeated .protocol.effect.plexus.TextPathConfig text_paths = 1;
   for (int i = 0; i < this->text_paths_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->text_paths(i), output);
   }
 
-  // repeated .protocol.effect.plexus.NoiseEffector noise_effectors = 2;
+  // repeated .protocol.effect.plexus.NoiseEffectorConfig noise_effectors = 2;
   for (int i = 0; i < this->noise_effectors_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->noise_effectors(i), output);
@@ -322,16 +323,16 @@ void Plexus::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* Plexus::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* PlexusConfig::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .protocol.effect.plexus.TextPath text_paths = 1;
+  // repeated .protocol.effect.plexus.TextPathConfig text_paths = 1;
   for (int i = 0; i < this->text_paths_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         1, this->text_paths(i), target);
   }
 
-  // repeated .protocol.effect.plexus.NoiseEffector noise_effectors = 2;
+  // repeated .protocol.effect.plexus.NoiseEffectorConfig noise_effectors = 2;
   for (int i = 0; i < this->noise_effectors_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -345,10 +346,10 @@ void Plexus::SerializeWithCachedSizes(
   return target;
 }
 
-int Plexus::ByteSize() const {
+int PlexusConfig::ByteSize() const {
   int total_size = 0;
 
-  // repeated .protocol.effect.plexus.TextPath text_paths = 1;
+  // repeated .protocol.effect.plexus.TextPathConfig text_paths = 1;
   total_size += 1 * this->text_paths_size();
   for (int i = 0; i < this->text_paths_size(); i++) {
     total_size +=
@@ -356,7 +357,7 @@ int Plexus::ByteSize() const {
         this->text_paths(i));
   }
 
-  // repeated .protocol.effect.plexus.NoiseEffector noise_effectors = 2;
+  // repeated .protocol.effect.plexus.NoiseEffectorConfig noise_effectors = 2;
   total_size += 1 * this->noise_effectors_size();
   for (int i = 0; i < this->noise_effectors_size(); i++) {
     total_size +=
@@ -375,10 +376,10 @@ int Plexus::ByteSize() const {
   return total_size;
 }
 
-void Plexus::MergeFrom(const ::google::protobuf::Message& from) {
+void PlexusConfig::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const Plexus* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const Plexus*>(
+  const PlexusConfig* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const PlexusConfig*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -387,31 +388,31 @@ void Plexus::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void Plexus::MergeFrom(const Plexus& from) {
+void PlexusConfig::MergeFrom(const PlexusConfig& from) {
   GOOGLE_CHECK_NE(&from, this);
   text_paths_.MergeFrom(from.text_paths_);
   noise_effectors_.MergeFrom(from.noise_effectors_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void Plexus::CopyFrom(const ::google::protobuf::Message& from) {
+void PlexusConfig::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Plexus::CopyFrom(const Plexus& from) {
+void PlexusConfig::CopyFrom(const PlexusConfig& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Plexus::IsInitialized() const {
+bool PlexusConfig::IsInitialized() const {
 
   return true;
 }
 
-void Plexus::Swap(Plexus* other) {
+void PlexusConfig::Swap(PlexusConfig* other) {
   if (other != this) {
     text_paths_.Swap(&other->text_paths_);
     noise_effectors_.Swap(&other->noise_effectors_);
@@ -421,11 +422,11 @@ void Plexus::Swap(Plexus* other) {
   }
 }
 
-::google::protobuf::Metadata Plexus::GetMetadata() const {
+::google::protobuf::Metadata PlexusConfig::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = Plexus_descriptor_;
-  metadata.reflection = Plexus_reflection_;
+  metadata.descriptor = PlexusConfig_descriptor_;
+  metadata.reflection = PlexusConfig_reflection_;
   return metadata;
 }
 
@@ -433,34 +434,34 @@ void Plexus::Swap(Plexus* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int TextPath::kTextFieldNumber;
+const int TextPathConfig::kTextFieldNumber;
 #endif  // !_MSC_VER
 
-TextPath::TextPath()
+TextPathConfig::TextPathConfig()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void TextPath::InitAsDefaultInstance() {
+void TextPathConfig::InitAsDefaultInstance() {
 }
 
-TextPath::TextPath(const TextPath& from)
+TextPathConfig::TextPathConfig(const TextPathConfig& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void TextPath::SharedCtor() {
+void TextPathConfig::SharedCtor() {
   _cached_size_ = 0;
   text_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-TextPath::~TextPath() {
+TextPathConfig::~TextPathConfig() {
   SharedDtor();
 }
 
-void TextPath::SharedDtor() {
+void TextPathConfig::SharedDtor() {
   if (text_ != &::google::protobuf::internal::kEmptyString) {
     delete text_;
   }
@@ -468,28 +469,28 @@ void TextPath::SharedDtor() {
   }
 }
 
-void TextPath::SetCachedSize(int size) const {
+void TextPathConfig::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* TextPath::descriptor() {
+const ::google::protobuf::Descriptor* TextPathConfig::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return TextPath_descriptor_;
+  return TextPathConfig_descriptor_;
 }
 
-const TextPath& TextPath::default_instance() {
+const TextPathConfig& TextPathConfig::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_effect_5fsettings_5fplexus_2eproto();
   return *default_instance_;
 }
 
-TextPath* TextPath::default_instance_ = NULL;
+TextPathConfig* TextPathConfig::default_instance_ = NULL;
 
-TextPath* TextPath::New() const {
-  return new TextPath;
+TextPathConfig* TextPathConfig::New() const {
+  return new TextPathConfig;
 }
 
-void TextPath::Clear() {
+void TextPathConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_text()) {
       if (text_ != &::google::protobuf::internal::kEmptyString) {
@@ -501,7 +502,7 @@ void TextPath::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool TextPath::MergePartialFromCodedStream(
+bool TextPathConfig::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
@@ -539,7 +540,7 @@ bool TextPath::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void TextPath::SerializeWithCachedSizes(
+void TextPathConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // optional string text = 1;
   if (has_text()) {
@@ -556,7 +557,7 @@ void TextPath::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* TextPath::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* TextPathConfig::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // optional string text = 1;
   if (has_text()) {
@@ -575,7 +576,7 @@ void TextPath::SerializeWithCachedSizes(
   return target;
 }
 
-int TextPath::ByteSize() const {
+int TextPathConfig::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
@@ -598,10 +599,10 @@ int TextPath::ByteSize() const {
   return total_size;
 }
 
-void TextPath::MergeFrom(const ::google::protobuf::Message& from) {
+void TextPathConfig::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const TextPath* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const TextPath*>(
+  const TextPathConfig* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const TextPathConfig*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -610,7 +611,7 @@ void TextPath::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void TextPath::MergeFrom(const TextPath& from) {
+void TextPathConfig::MergeFrom(const TextPathConfig& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_text()) {
@@ -620,24 +621,24 @@ void TextPath::MergeFrom(const TextPath& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void TextPath::CopyFrom(const ::google::protobuf::Message& from) {
+void TextPathConfig::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void TextPath::CopyFrom(const TextPath& from) {
+void TextPathConfig::CopyFrom(const TextPathConfig& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool TextPath::IsInitialized() const {
+bool TextPathConfig::IsInitialized() const {
 
   return true;
 }
 
-void TextPath::Swap(TextPath* other) {
+void TextPathConfig::Swap(TextPathConfig* other) {
   if (other != this) {
     std::swap(text_, other->text_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -646,11 +647,11 @@ void TextPath::Swap(TextPath* other) {
   }
 }
 
-::google::protobuf::Metadata TextPath::GetMetadata() const {
+::google::protobuf::Metadata TextPathConfig::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = TextPath_descriptor_;
-  metadata.reflection = TextPath_reflection_;
+  metadata.descriptor = TextPathConfig_descriptor_;
+  metadata.reflection = TextPathConfig_reflection_;
   return metadata;
 }
 
@@ -960,11 +961,11 @@ void Displacement::Swap(Displacement* other) {
 
 // ===================================================================
 
-const ::google::protobuf::EnumDescriptor* NoiseEffector_ApplyTo_descriptor() {
+const ::google::protobuf::EnumDescriptor* NoiseEffectorConfig_ApplyTo_descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return NoiseEffector_ApplyTo_descriptor_;
+  return NoiseEffectorConfig_ApplyTo_descriptor_;
 }
-bool NoiseEffector_ApplyTo_IsValid(int value) {
+bool NoiseEffectorConfig_ApplyTo_IsValid(int value) {
   switch(value) {
     case 1:
     case 2:
@@ -975,71 +976,71 @@ bool NoiseEffector_ApplyTo_IsValid(int value) {
 }
 
 #ifndef _MSC_VER
-const NoiseEffector_ApplyTo NoiseEffector::Position;
-const NoiseEffector_ApplyTo NoiseEffector::Scale;
-const NoiseEffector_ApplyTo NoiseEffector::ApplyTo_MIN;
-const NoiseEffector_ApplyTo NoiseEffector::ApplyTo_MAX;
-const int NoiseEffector::ApplyTo_ARRAYSIZE;
+const NoiseEffectorConfig_ApplyTo NoiseEffectorConfig::Position;
+const NoiseEffectorConfig_ApplyTo NoiseEffectorConfig::Scale;
+const NoiseEffectorConfig_ApplyTo NoiseEffectorConfig::ApplyTo_MIN;
+const NoiseEffectorConfig_ApplyTo NoiseEffectorConfig::ApplyTo_MAX;
+const int NoiseEffectorConfig::ApplyTo_ARRAYSIZE;
 #endif  // _MSC_VER
 #ifndef _MSC_VER
-const int NoiseEffector::kApplyToFieldNumber;
-const int NoiseEffector::kDisplacementFieldNumber;
+const int NoiseEffectorConfig::kApplyToFieldNumber;
+const int NoiseEffectorConfig::kDisplacementFieldNumber;
 #endif  // !_MSC_VER
 
-NoiseEffector::NoiseEffector()
+NoiseEffectorConfig::NoiseEffectorConfig()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void NoiseEffector::InitAsDefaultInstance() {
+void NoiseEffectorConfig::InitAsDefaultInstance() {
   displacement_ = const_cast< ::protocol::effect::plexus::Displacement*>(&::protocol::effect::plexus::Displacement::default_instance());
 }
 
-NoiseEffector::NoiseEffector(const NoiseEffector& from)
+NoiseEffectorConfig::NoiseEffectorConfig(const NoiseEffectorConfig& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void NoiseEffector::SharedCtor() {
+void NoiseEffectorConfig::SharedCtor() {
   _cached_size_ = 0;
   apply_to_ = 1;
   displacement_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-NoiseEffector::~NoiseEffector() {
+NoiseEffectorConfig::~NoiseEffectorConfig() {
   SharedDtor();
 }
 
-void NoiseEffector::SharedDtor() {
+void NoiseEffectorConfig::SharedDtor() {
   if (this != default_instance_) {
     delete displacement_;
   }
 }
 
-void NoiseEffector::SetCachedSize(int size) const {
+void NoiseEffectorConfig::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* NoiseEffector::descriptor() {
+const ::google::protobuf::Descriptor* NoiseEffectorConfig::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return NoiseEffector_descriptor_;
+  return NoiseEffectorConfig_descriptor_;
 }
 
-const NoiseEffector& NoiseEffector::default_instance() {
+const NoiseEffectorConfig& NoiseEffectorConfig::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_effect_5fsettings_5fplexus_2eproto();
   return *default_instance_;
 }
 
-NoiseEffector* NoiseEffector::default_instance_ = NULL;
+NoiseEffectorConfig* NoiseEffectorConfig::default_instance_ = NULL;
 
-NoiseEffector* NoiseEffector::New() const {
-  return new NoiseEffector;
+NoiseEffectorConfig* NoiseEffectorConfig::New() const {
+  return new NoiseEffectorConfig;
 }
 
-void NoiseEffector::Clear() {
+void NoiseEffectorConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     apply_to_ = 1;
     if (has_displacement()) {
@@ -1050,13 +1051,13 @@ void NoiseEffector::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool NoiseEffector::MergePartialFromCodedStream(
+bool NoiseEffectorConfig::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional .protocol.effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+      // optional .protocol.effect.plexus.NoiseEffectorConfig.ApplyTo apply_to = 1 [default = Position];
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -1064,8 +1065,8 @@ bool NoiseEffector::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::protocol::effect::plexus::NoiseEffector_ApplyTo_IsValid(value)) {
-            set_apply_to(static_cast< ::protocol::effect::plexus::NoiseEffector_ApplyTo >(value));
+          if (::protocol::effect::plexus::NoiseEffectorConfig_ApplyTo_IsValid(value)) {
+            set_apply_to(static_cast< ::protocol::effect::plexus::NoiseEffectorConfig_ApplyTo >(value));
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
@@ -1106,9 +1107,9 @@ bool NoiseEffector::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void NoiseEffector::SerializeWithCachedSizes(
+void NoiseEffectorConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional .protocol.effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+  // optional .protocol.effect.plexus.NoiseEffectorConfig.ApplyTo apply_to = 1 [default = Position];
   if (has_apply_to()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       1, this->apply_to(), output);
@@ -1126,9 +1127,9 @@ void NoiseEffector::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* NoiseEffector::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* NoiseEffectorConfig::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional .protocol.effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+  // optional .protocol.effect.plexus.NoiseEffectorConfig.ApplyTo apply_to = 1 [default = Position];
   if (has_apply_to()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->apply_to(), target);
@@ -1148,11 +1149,11 @@ void NoiseEffector::SerializeWithCachedSizes(
   return target;
 }
 
-int NoiseEffector::ByteSize() const {
+int NoiseEffectorConfig::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional .protocol.effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+    // optional .protocol.effect.plexus.NoiseEffectorConfig.ApplyTo apply_to = 1 [default = Position];
     if (has_apply_to()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->apply_to());
@@ -1177,10 +1178,10 @@ int NoiseEffector::ByteSize() const {
   return total_size;
 }
 
-void NoiseEffector::MergeFrom(const ::google::protobuf::Message& from) {
+void NoiseEffectorConfig::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const NoiseEffector* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const NoiseEffector*>(
+  const NoiseEffectorConfig* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const NoiseEffectorConfig*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -1189,7 +1190,7 @@ void NoiseEffector::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void NoiseEffector::MergeFrom(const NoiseEffector& from) {
+void NoiseEffectorConfig::MergeFrom(const NoiseEffectorConfig& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_apply_to()) {
@@ -1202,24 +1203,24 @@ void NoiseEffector::MergeFrom(const NoiseEffector& from) {
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void NoiseEffector::CopyFrom(const ::google::protobuf::Message& from) {
+void NoiseEffectorConfig::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void NoiseEffector::CopyFrom(const NoiseEffector& from) {
+void NoiseEffectorConfig::CopyFrom(const NoiseEffectorConfig& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool NoiseEffector::IsInitialized() const {
+bool NoiseEffectorConfig::IsInitialized() const {
 
   return true;
 }
 
-void NoiseEffector::Swap(NoiseEffector* other) {
+void NoiseEffectorConfig::Swap(NoiseEffectorConfig* other) {
   if (other != this) {
     std::swap(apply_to_, other->apply_to_);
     std::swap(displacement_, other->displacement_);
@@ -1229,11 +1230,11 @@ void NoiseEffector::Swap(NoiseEffector* other) {
   }
 }
 
-::google::protobuf::Metadata NoiseEffector::GetMetadata() const {
+::google::protobuf::Metadata NoiseEffectorConfig::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = NoiseEffector_descriptor_;
-  metadata.reflection = NoiseEffector_reflection_;
+  metadata.descriptor = NoiseEffectorConfig_descriptor_;
+  metadata.reflection = NoiseEffectorConfig_reflection_;
   return metadata;
 }
 

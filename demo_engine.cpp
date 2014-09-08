@@ -225,7 +225,7 @@ bool DemoEngine::Tick()
   const int intNumTicks = (int)numTicks;
   const float fracNumTicks = numTicks - intNumTicks;
 
-  Effect::UpdateState curState;
+  UpdateState curState;
   curState.globalTime = current;
   curState.delta = delta;
   curState.paused = paused;
@@ -233,7 +233,7 @@ bool DemoEngine::Tick()
   curState.numTicks = intNumTicks;
   curState.ticksFraction = fracNumTicks;
 
-  Effect::UpdateState initialState;
+  UpdateState initialState;
   initialState.globalTime = current;
   initialState.localTime = TimeDuration::Seconds(0);
   initialState.delta = TimeDuration::Seconds(0);
@@ -356,7 +356,7 @@ void DemoEngine::Connected()
   }
 
   string str = settings.SerializeAsString();
-  APP.SendWebsocketFrame((const u8*)str.data(), str.size());
+  APP.SendWebsocketFrame((const u8*)str.data(), (int)str.size());
 }
 
 //------------------------------------------------------------------------------

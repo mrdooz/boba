@@ -37,40 +37,40 @@ void  protobuf_AddDesc_effect_5fsettings_5fplexus_2eproto();
 void protobuf_AssignDesc_effect_5fsettings_5fplexus_2eproto();
 void protobuf_ShutdownFile_effect_5fsettings_5fplexus_2eproto();
 
-class Plexus;
-class TextPath;
+class PlexusConfig;
+class TextPathConfig;
 class Displacement;
-class NoiseEffector;
+class NoiseEffectorConfig;
 
-enum NoiseEffector_ApplyTo {
-  NoiseEffector_ApplyTo_Position = 1,
-  NoiseEffector_ApplyTo_Scale = 2
+enum NoiseEffectorConfig_ApplyTo {
+  NoiseEffectorConfig_ApplyTo_Position = 1,
+  NoiseEffectorConfig_ApplyTo_Scale = 2
 };
-bool NoiseEffector_ApplyTo_IsValid(int value);
-const NoiseEffector_ApplyTo NoiseEffector_ApplyTo_ApplyTo_MIN = NoiseEffector_ApplyTo_Position;
-const NoiseEffector_ApplyTo NoiseEffector_ApplyTo_ApplyTo_MAX = NoiseEffector_ApplyTo_Scale;
-const int NoiseEffector_ApplyTo_ApplyTo_ARRAYSIZE = NoiseEffector_ApplyTo_ApplyTo_MAX + 1;
+bool NoiseEffectorConfig_ApplyTo_IsValid(int value);
+const NoiseEffectorConfig_ApplyTo NoiseEffectorConfig_ApplyTo_ApplyTo_MIN = NoiseEffectorConfig_ApplyTo_Position;
+const NoiseEffectorConfig_ApplyTo NoiseEffectorConfig_ApplyTo_ApplyTo_MAX = NoiseEffectorConfig_ApplyTo_Scale;
+const int NoiseEffectorConfig_ApplyTo_ApplyTo_ARRAYSIZE = NoiseEffectorConfig_ApplyTo_ApplyTo_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* NoiseEffector_ApplyTo_descriptor();
-inline const ::std::string& NoiseEffector_ApplyTo_Name(NoiseEffector_ApplyTo value) {
+const ::google::protobuf::EnumDescriptor* NoiseEffectorConfig_ApplyTo_descriptor();
+inline const ::std::string& NoiseEffectorConfig_ApplyTo_Name(NoiseEffectorConfig_ApplyTo value) {
   return ::google::protobuf::internal::NameOfEnum(
-    NoiseEffector_ApplyTo_descriptor(), value);
+    NoiseEffectorConfig_ApplyTo_descriptor(), value);
 }
-inline bool NoiseEffector_ApplyTo_Parse(
-    const ::std::string& name, NoiseEffector_ApplyTo* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<NoiseEffector_ApplyTo>(
-    NoiseEffector_ApplyTo_descriptor(), name, value);
+inline bool NoiseEffectorConfig_ApplyTo_Parse(
+    const ::std::string& name, NoiseEffectorConfig_ApplyTo* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<NoiseEffectorConfig_ApplyTo>(
+    NoiseEffectorConfig_ApplyTo_descriptor(), name, value);
 }
 // ===================================================================
 
-class Plexus : public ::google::protobuf::Message {
+class PlexusConfig : public ::google::protobuf::Message {
  public:
-  Plexus();
-  virtual ~Plexus();
+  PlexusConfig();
+  virtual ~PlexusConfig();
 
-  Plexus(const Plexus& from);
+  PlexusConfig(const PlexusConfig& from);
 
-  inline Plexus& operator=(const Plexus& from) {
+  inline PlexusConfig& operator=(const PlexusConfig& from) {
     CopyFrom(from);
     return *this;
   }
@@ -84,17 +84,17 @@ class Plexus : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Plexus& default_instance();
+  static const PlexusConfig& default_instance();
 
-  void Swap(Plexus* other);
+  void Swap(PlexusConfig* other);
 
   // implements Message ----------------------------------------------
 
-  Plexus* New() const;
+  PlexusConfig* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Plexus& from);
-  void MergeFrom(const Plexus& from);
+  void CopyFrom(const PlexusConfig& from);
+  void MergeFrom(const PlexusConfig& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -117,37 +117,37 @@ class Plexus : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .protocol.effect.plexus.TextPath text_paths = 1;
+  // repeated .protocol.effect.plexus.TextPathConfig text_paths = 1;
   inline int text_paths_size() const;
   inline void clear_text_paths();
   static const int kTextPathsFieldNumber = 1;
-  inline const ::protocol::effect::plexus::TextPath& text_paths(int index) const;
-  inline ::protocol::effect::plexus::TextPath* mutable_text_paths(int index);
-  inline ::protocol::effect::plexus::TextPath* add_text_paths();
-  inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPath >&
+  inline const ::protocol::effect::plexus::TextPathConfig& text_paths(int index) const;
+  inline ::protocol::effect::plexus::TextPathConfig* mutable_text_paths(int index);
+  inline ::protocol::effect::plexus::TextPathConfig* add_text_paths();
+  inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPathConfig >&
       text_paths() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPath >*
+  inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPathConfig >*
       mutable_text_paths();
 
-  // repeated .protocol.effect.plexus.NoiseEffector noise_effectors = 2;
+  // repeated .protocol.effect.plexus.NoiseEffectorConfig noise_effectors = 2;
   inline int noise_effectors_size() const;
   inline void clear_noise_effectors();
   static const int kNoiseEffectorsFieldNumber = 2;
-  inline const ::protocol::effect::plexus::NoiseEffector& noise_effectors(int index) const;
-  inline ::protocol::effect::plexus::NoiseEffector* mutable_noise_effectors(int index);
-  inline ::protocol::effect::plexus::NoiseEffector* add_noise_effectors();
-  inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffector >&
+  inline const ::protocol::effect::plexus::NoiseEffectorConfig& noise_effectors(int index) const;
+  inline ::protocol::effect::plexus::NoiseEffectorConfig* mutable_noise_effectors(int index);
+  inline ::protocol::effect::plexus::NoiseEffectorConfig* add_noise_effectors();
+  inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffectorConfig >&
       noise_effectors() const;
-  inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffector >*
+  inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffectorConfig >*
       mutable_noise_effectors();
 
-  // @@protoc_insertion_point(class_scope:protocol.effect.plexus.Plexus)
+  // @@protoc_insertion_point(class_scope:protocol.effect.plexus.PlexusConfig)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPath > text_paths_;
-  ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffector > noise_effectors_;
+  ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPathConfig > text_paths_;
+  ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffectorConfig > noise_effectors_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -157,18 +157,18 @@ class Plexus : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_effect_5fsettings_5fplexus_2eproto();
 
   void InitAsDefaultInstance();
-  static Plexus* default_instance_;
+  static PlexusConfig* default_instance_;
 };
 // -------------------------------------------------------------------
 
-class TextPath : public ::google::protobuf::Message {
+class TextPathConfig : public ::google::protobuf::Message {
  public:
-  TextPath();
-  virtual ~TextPath();
+  TextPathConfig();
+  virtual ~TextPathConfig();
 
-  TextPath(const TextPath& from);
+  TextPathConfig(const TextPathConfig& from);
 
-  inline TextPath& operator=(const TextPath& from) {
+  inline TextPathConfig& operator=(const TextPathConfig& from) {
     CopyFrom(from);
     return *this;
   }
@@ -182,17 +182,17 @@ class TextPath : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const TextPath& default_instance();
+  static const TextPathConfig& default_instance();
 
-  void Swap(TextPath* other);
+  void Swap(TextPathConfig* other);
 
   // implements Message ----------------------------------------------
 
-  TextPath* New() const;
+  TextPathConfig* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const TextPath& from);
-  void MergeFrom(const TextPath& from);
+  void CopyFrom(const TextPathConfig& from);
+  void MergeFrom(const TextPathConfig& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -227,7 +227,7 @@ class TextPath : public ::google::protobuf::Message {
   inline ::std::string* release_text();
   inline void set_allocated_text(::std::string* text);
 
-  // @@protoc_insertion_point(class_scope:protocol.effect.plexus.TextPath)
+  // @@protoc_insertion_point(class_scope:protocol.effect.plexus.TextPathConfig)
  private:
   inline void set_has_text();
   inline void clear_has_text();
@@ -244,7 +244,7 @@ class TextPath : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_effect_5fsettings_5fplexus_2eproto();
 
   void InitAsDefaultInstance();
-  static TextPath* default_instance_;
+  static TextPathConfig* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -356,14 +356,14 @@ class Displacement : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class NoiseEffector : public ::google::protobuf::Message {
+class NoiseEffectorConfig : public ::google::protobuf::Message {
  public:
-  NoiseEffector();
-  virtual ~NoiseEffector();
+  NoiseEffectorConfig();
+  virtual ~NoiseEffectorConfig();
 
-  NoiseEffector(const NoiseEffector& from);
+  NoiseEffectorConfig(const NoiseEffectorConfig& from);
 
-  inline NoiseEffector& operator=(const NoiseEffector& from) {
+  inline NoiseEffectorConfig& operator=(const NoiseEffectorConfig& from) {
     CopyFrom(from);
     return *this;
   }
@@ -377,17 +377,17 @@ class NoiseEffector : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const NoiseEffector& default_instance();
+  static const NoiseEffectorConfig& default_instance();
 
-  void Swap(NoiseEffector* other);
+  void Swap(NoiseEffectorConfig* other);
 
   // implements Message ----------------------------------------------
 
-  NoiseEffector* New() const;
+  NoiseEffectorConfig* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const NoiseEffector& from);
-  void MergeFrom(const NoiseEffector& from);
+  void CopyFrom(const NoiseEffectorConfig& from);
+  void MergeFrom(const NoiseEffectorConfig& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -408,38 +408,38 @@ class NoiseEffector : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef NoiseEffector_ApplyTo ApplyTo;
-  static const ApplyTo Position = NoiseEffector_ApplyTo_Position;
-  static const ApplyTo Scale = NoiseEffector_ApplyTo_Scale;
+  typedef NoiseEffectorConfig_ApplyTo ApplyTo;
+  static const ApplyTo Position = NoiseEffectorConfig_ApplyTo_Position;
+  static const ApplyTo Scale = NoiseEffectorConfig_ApplyTo_Scale;
   static inline bool ApplyTo_IsValid(int value) {
-    return NoiseEffector_ApplyTo_IsValid(value);
+    return NoiseEffectorConfig_ApplyTo_IsValid(value);
   }
   static const ApplyTo ApplyTo_MIN =
-    NoiseEffector_ApplyTo_ApplyTo_MIN;
+    NoiseEffectorConfig_ApplyTo_ApplyTo_MIN;
   static const ApplyTo ApplyTo_MAX =
-    NoiseEffector_ApplyTo_ApplyTo_MAX;
+    NoiseEffectorConfig_ApplyTo_ApplyTo_MAX;
   static const int ApplyTo_ARRAYSIZE =
-    NoiseEffector_ApplyTo_ApplyTo_ARRAYSIZE;
+    NoiseEffectorConfig_ApplyTo_ApplyTo_ARRAYSIZE;
   static inline const ::google::protobuf::EnumDescriptor*
   ApplyTo_descriptor() {
-    return NoiseEffector_ApplyTo_descriptor();
+    return NoiseEffectorConfig_ApplyTo_descriptor();
   }
   static inline const ::std::string& ApplyTo_Name(ApplyTo value) {
-    return NoiseEffector_ApplyTo_Name(value);
+    return NoiseEffectorConfig_ApplyTo_Name(value);
   }
   static inline bool ApplyTo_Parse(const ::std::string& name,
       ApplyTo* value) {
-    return NoiseEffector_ApplyTo_Parse(name, value);
+    return NoiseEffectorConfig_ApplyTo_Parse(name, value);
   }
 
   // accessors -------------------------------------------------------
 
-  // optional .protocol.effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
+  // optional .protocol.effect.plexus.NoiseEffectorConfig.ApplyTo apply_to = 1 [default = Position];
   inline bool has_apply_to() const;
   inline void clear_apply_to();
   static const int kApplyToFieldNumber = 1;
-  inline ::protocol::effect::plexus::NoiseEffector_ApplyTo apply_to() const;
-  inline void set_apply_to(::protocol::effect::plexus::NoiseEffector_ApplyTo value);
+  inline ::protocol::effect::plexus::NoiseEffectorConfig_ApplyTo apply_to() const;
+  inline void set_apply_to(::protocol::effect::plexus::NoiseEffectorConfig_ApplyTo value);
 
   // optional .protocol.effect.plexus.Displacement displacement = 2;
   inline bool has_displacement() const;
@@ -450,7 +450,7 @@ class NoiseEffector : public ::google::protobuf::Message {
   inline ::protocol::effect::plexus::Displacement* release_displacement();
   inline void set_allocated_displacement(::protocol::effect::plexus::Displacement* displacement);
 
-  // @@protoc_insertion_point(class_scope:protocol.effect.plexus.NoiseEffector)
+  // @@protoc_insertion_point(class_scope:protocol.effect.plexus.NoiseEffectorConfig)
  private:
   inline void set_has_apply_to();
   inline void clear_has_apply_to();
@@ -470,117 +470,117 @@ class NoiseEffector : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_effect_5fsettings_5fplexus_2eproto();
 
   void InitAsDefaultInstance();
-  static NoiseEffector* default_instance_;
+  static NoiseEffectorConfig* default_instance_;
 };
 // ===================================================================
 
 
 // ===================================================================
 
-// Plexus
+// PlexusConfig
 
-// repeated .protocol.effect.plexus.TextPath text_paths = 1;
-inline int Plexus::text_paths_size() const {
+// repeated .protocol.effect.plexus.TextPathConfig text_paths = 1;
+inline int PlexusConfig::text_paths_size() const {
   return text_paths_.size();
 }
-inline void Plexus::clear_text_paths() {
+inline void PlexusConfig::clear_text_paths() {
   text_paths_.Clear();
 }
-inline const ::protocol::effect::plexus::TextPath& Plexus::text_paths(int index) const {
+inline const ::protocol::effect::plexus::TextPathConfig& PlexusConfig::text_paths(int index) const {
   return text_paths_.Get(index);
 }
-inline ::protocol::effect::plexus::TextPath* Plexus::mutable_text_paths(int index) {
+inline ::protocol::effect::plexus::TextPathConfig* PlexusConfig::mutable_text_paths(int index) {
   return text_paths_.Mutable(index);
 }
-inline ::protocol::effect::plexus::TextPath* Plexus::add_text_paths() {
+inline ::protocol::effect::plexus::TextPathConfig* PlexusConfig::add_text_paths() {
   return text_paths_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPath >&
-Plexus::text_paths() const {
+inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPathConfig >&
+PlexusConfig::text_paths() const {
   return text_paths_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPath >*
-Plexus::mutable_text_paths() {
+inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::TextPathConfig >*
+PlexusConfig::mutable_text_paths() {
   return &text_paths_;
 }
 
-// repeated .protocol.effect.plexus.NoiseEffector noise_effectors = 2;
-inline int Plexus::noise_effectors_size() const {
+// repeated .protocol.effect.plexus.NoiseEffectorConfig noise_effectors = 2;
+inline int PlexusConfig::noise_effectors_size() const {
   return noise_effectors_.size();
 }
-inline void Plexus::clear_noise_effectors() {
+inline void PlexusConfig::clear_noise_effectors() {
   noise_effectors_.Clear();
 }
-inline const ::protocol::effect::plexus::NoiseEffector& Plexus::noise_effectors(int index) const {
+inline const ::protocol::effect::plexus::NoiseEffectorConfig& PlexusConfig::noise_effectors(int index) const {
   return noise_effectors_.Get(index);
 }
-inline ::protocol::effect::plexus::NoiseEffector* Plexus::mutable_noise_effectors(int index) {
+inline ::protocol::effect::plexus::NoiseEffectorConfig* PlexusConfig::mutable_noise_effectors(int index) {
   return noise_effectors_.Mutable(index);
 }
-inline ::protocol::effect::plexus::NoiseEffector* Plexus::add_noise_effectors() {
+inline ::protocol::effect::plexus::NoiseEffectorConfig* PlexusConfig::add_noise_effectors() {
   return noise_effectors_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffector >&
-Plexus::noise_effectors() const {
+inline const ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffectorConfig >&
+PlexusConfig::noise_effectors() const {
   return noise_effectors_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffector >*
-Plexus::mutable_noise_effectors() {
+inline ::google::protobuf::RepeatedPtrField< ::protocol::effect::plexus::NoiseEffectorConfig >*
+PlexusConfig::mutable_noise_effectors() {
   return &noise_effectors_;
 }
 
 // -------------------------------------------------------------------
 
-// TextPath
+// TextPathConfig
 
 // optional string text = 1;
-inline bool TextPath::has_text() const {
+inline bool TextPathConfig::has_text() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void TextPath::set_has_text() {
+inline void TextPathConfig::set_has_text() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void TextPath::clear_has_text() {
+inline void TextPathConfig::clear_has_text() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void TextPath::clear_text() {
+inline void TextPathConfig::clear_text() {
   if (text_ != &::google::protobuf::internal::kEmptyString) {
     text_->clear();
   }
   clear_has_text();
 }
-inline const ::std::string& TextPath::text() const {
+inline const ::std::string& TextPathConfig::text() const {
   return *text_;
 }
-inline void TextPath::set_text(const ::std::string& value) {
+inline void TextPathConfig::set_text(const ::std::string& value) {
   set_has_text();
   if (text_ == &::google::protobuf::internal::kEmptyString) {
     text_ = new ::std::string;
   }
   text_->assign(value);
 }
-inline void TextPath::set_text(const char* value) {
+inline void TextPathConfig::set_text(const char* value) {
   set_has_text();
   if (text_ == &::google::protobuf::internal::kEmptyString) {
     text_ = new ::std::string;
   }
   text_->assign(value);
 }
-inline void TextPath::set_text(const char* value, size_t size) {
+inline void TextPathConfig::set_text(const char* value, size_t size) {
   set_has_text();
   if (text_ == &::google::protobuf::internal::kEmptyString) {
     text_ = new ::std::string;
   }
   text_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* TextPath::mutable_text() {
+inline ::std::string* TextPathConfig::mutable_text() {
   set_has_text();
   if (text_ == &::google::protobuf::internal::kEmptyString) {
     text_ = new ::std::string;
   }
   return text_;
 }
-inline ::std::string* TextPath::release_text() {
+inline ::std::string* TextPathConfig::release_text() {
   clear_has_text();
   if (text_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
@@ -590,7 +590,7 @@ inline ::std::string* TextPath::release_text() {
     return temp;
   }
 }
-inline void TextPath::set_allocated_text(::std::string* text) {
+inline void TextPathConfig::set_allocated_text(::std::string* text) {
   if (text_ != &::google::protobuf::internal::kEmptyString) {
     delete text_;
   }
@@ -723,60 +723,60 @@ inline void Displacement::set_allocated_z(::protocol::common::FloatAnim* z) {
 
 // -------------------------------------------------------------------
 
-// NoiseEffector
+// NoiseEffectorConfig
 
-// optional .protocol.effect.plexus.NoiseEffector.ApplyTo apply_to = 1 [default = Position];
-inline bool NoiseEffector::has_apply_to() const {
+// optional .protocol.effect.plexus.NoiseEffectorConfig.ApplyTo apply_to = 1 [default = Position];
+inline bool NoiseEffectorConfig::has_apply_to() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void NoiseEffector::set_has_apply_to() {
+inline void NoiseEffectorConfig::set_has_apply_to() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void NoiseEffector::clear_has_apply_to() {
+inline void NoiseEffectorConfig::clear_has_apply_to() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void NoiseEffector::clear_apply_to() {
+inline void NoiseEffectorConfig::clear_apply_to() {
   apply_to_ = 1;
   clear_has_apply_to();
 }
-inline ::protocol::effect::plexus::NoiseEffector_ApplyTo NoiseEffector::apply_to() const {
-  return static_cast< ::protocol::effect::plexus::NoiseEffector_ApplyTo >(apply_to_);
+inline ::protocol::effect::plexus::NoiseEffectorConfig_ApplyTo NoiseEffectorConfig::apply_to() const {
+  return static_cast< ::protocol::effect::plexus::NoiseEffectorConfig_ApplyTo >(apply_to_);
 }
-inline void NoiseEffector::set_apply_to(::protocol::effect::plexus::NoiseEffector_ApplyTo value) {
-  assert(::protocol::effect::plexus::NoiseEffector_ApplyTo_IsValid(value));
+inline void NoiseEffectorConfig::set_apply_to(::protocol::effect::plexus::NoiseEffectorConfig_ApplyTo value) {
+  assert(::protocol::effect::plexus::NoiseEffectorConfig_ApplyTo_IsValid(value));
   set_has_apply_to();
   apply_to_ = value;
 }
 
 // optional .protocol.effect.plexus.Displacement displacement = 2;
-inline bool NoiseEffector::has_displacement() const {
+inline bool NoiseEffectorConfig::has_displacement() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void NoiseEffector::set_has_displacement() {
+inline void NoiseEffectorConfig::set_has_displacement() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void NoiseEffector::clear_has_displacement() {
+inline void NoiseEffectorConfig::clear_has_displacement() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void NoiseEffector::clear_displacement() {
+inline void NoiseEffectorConfig::clear_displacement() {
   if (displacement_ != NULL) displacement_->::protocol::effect::plexus::Displacement::Clear();
   clear_has_displacement();
 }
-inline const ::protocol::effect::plexus::Displacement& NoiseEffector::displacement() const {
+inline const ::protocol::effect::plexus::Displacement& NoiseEffectorConfig::displacement() const {
   return displacement_ != NULL ? *displacement_ : *default_instance_->displacement_;
 }
-inline ::protocol::effect::plexus::Displacement* NoiseEffector::mutable_displacement() {
+inline ::protocol::effect::plexus::Displacement* NoiseEffectorConfig::mutable_displacement() {
   set_has_displacement();
   if (displacement_ == NULL) displacement_ = new ::protocol::effect::plexus::Displacement;
   return displacement_;
 }
-inline ::protocol::effect::plexus::Displacement* NoiseEffector::release_displacement() {
+inline ::protocol::effect::plexus::Displacement* NoiseEffectorConfig::release_displacement() {
   clear_has_displacement();
   ::protocol::effect::plexus::Displacement* temp = displacement_;
   displacement_ = NULL;
   return temp;
 }
-inline void NoiseEffector::set_allocated_displacement(::protocol::effect::plexus::Displacement* displacement) {
+inline void NoiseEffectorConfig::set_allocated_displacement(::protocol::effect::plexus::Displacement* displacement) {
   delete displacement_;
   displacement_ = displacement;
   if (displacement) {
@@ -798,8 +798,8 @@ namespace google {
 namespace protobuf {
 
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::protocol::effect::plexus::NoiseEffector_ApplyTo>() {
-  return ::protocol::effect::plexus::NoiseEffector_ApplyTo_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::protocol::effect::plexus::NoiseEffectorConfig_ApplyTo>() {
+  return ::protocol::effect::plexus::NoiseEffectorConfig_ApplyTo_descriptor();
 }
 
 }  // namespace google

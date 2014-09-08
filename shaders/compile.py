@@ -3,28 +3,26 @@ import os
 import time
 import glob
 import subprocess
+import collections
 
-vs = {
-    'quad' : ['VsMain'], 
-    'debug_draw' : ['VsMain'],
-    'fullscreen' : ['VsMain'],
-    'generator' : ['VsMain'],
-    'text_shader' : ['VsMain'],
-}
+vs = collections.defaultdict(list)
 
-ps = {
-    'debug_draw' : ['PsMain'],
-    'fullscreen' : ['PsMain'],
-    'generator' : ['PsMain'],
-    'text_shader' : ['PsMain', 'EdgeDetect'],
-    'tonemap' : ['LuminanceMap', 'Composite', 'AdaptLuminance', 'BloomThreshold'],
-    'copy' : ['PsMain'],
-}
+ps = collections.defaultdict(list)
+ps['text_shader'] = ['EdgeDetect']
+ps['tonemap'] = ['LuminanceMap', 'Composite', 'AdaptLuminance', 'BloomThreshold']
+
+default_vs = ['quad', 'debug_draw', 'fullscreen', 'generator', 'text_shader', 'particle']
+default_ps = ['debug_draw', 'fullscreen', 'generator', 'text_shader', 'copy', 'particle']
 
 cs = {
-#    'blur' : ['BoxBlurX', 'BoxBlurY', 'BlurTranspose'],
     'blur' : ['CopyTranspose', 'BlurTranspose'],
 }
+
+for x in default_vs:
+    vs[x].append('VsMain')
+
+for x in default_ps:
+    ps[x].append('PsMain')
 
 first_run = True
 

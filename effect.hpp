@@ -14,20 +14,20 @@ namespace boba
 {
   class DeferredContext;
 
+  struct UpdateState
+  {
+    TimeDuration globalTime;
+    TimeDuration localTime;
+    TimeDuration delta;
+    s64 frequency;
+    s32 numTicks;
+    float ticksFraction;
+    bool paused;
+  };
+
   class Effect
   {
   public:
-
-    struct UpdateState
-    {
-      TimeDuration globalTime;
-      TimeDuration localTime;
-      TimeDuration delta;
-      s64 frequency;
-      s32 numTicks;
-      float ticksFraction;
-      bool paused;
-    };
 
     Effect(const string& name, u32 id);
     virtual ~Effect();
@@ -69,7 +69,7 @@ namespace boba
     TimeDuration _startTime, _endTime;
     bool _running;
 
-    DeferredContext *_ctx;
+    DeferredContext* _ctx;
     bool _first_tick;
   };
 }

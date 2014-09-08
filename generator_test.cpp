@@ -310,7 +310,7 @@ bool GeneratorTest::Render()
     _ctx->SetRasterizerState(_renderFlags.IsSet(RenderFlags::Wireframe) ? g_mesh._wireframe : g_mesh._solid);
     _ctx->SetCBuffer(_cb, ShaderType::VertexShader, 0);
 
-    _ctx->SetRenderObjects(_meshObjects);
+    _ctx->SetGpuObjects(_meshObjects);
     _ctx->DrawIndexed(_numIndices, 0, 0);
 
     GPU_EndEvent();

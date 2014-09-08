@@ -148,7 +148,9 @@ bool App::Init(HINSTANCE hinstance)
   if (!DEMO_ENGINE.Init("config/demo.pb", hinstance))
   {
     DeferredContext* ctx = GRAPHICS.CreateDeferredContext(true);
-    ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), true);
+
+    float black[] ={ 0, 0, 0, 0 };
+    ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), black);
     // If we get this far, then the graphics are initialized, so just spin displaying an
     // error message
     while (true)

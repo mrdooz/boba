@@ -31,6 +31,7 @@
     <ClCompile Include="..\generator_test.cpp" />
     <ClCompile Include="..\gpu_objects.cpp" />
     <ClCompile Include="..\graphics.cpp" />
+    <ClCompile Include="..\init_sequence.cpp" />
     <ClCompile Include="..\lua\lapi.c">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </ForcedIncludeFiles>
@@ -533,6 +534,7 @@
     <ClInclude Include="..\graphics.hpp" />
     <ClInclude Include="..\graphics_object_handle.hpp" />
     <ClInclude Include="..\id_buffer.hpp" />
+    <ClInclude Include="..\init_sequence.hpp" />
     <ClInclude Include="..\lua\lapi.h" />
     <ClInclude Include="..\lua\lauxlib.h" />
     <ClInclude Include="..\lua\lcode.h" />

@@ -82,15 +82,15 @@ void DeferredContext::GetRenderTargetTextureDesc(
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetSwapChain(GraphicsObjectHandle h, bool clear)
+void DeferredContext::SetSwapChain(GraphicsObjectHandle h, const float* clearColor)
 {
   auto swapChain  = GRAPHICS._swapChains.Get(h);
   auto rt         = GRAPHICS._renderTargets.Get(swapChain->_renderTarget);
   _ctx->OMSetRenderTargets(1, &rt->rtv.resource.p, rt->dsv.resource);
-  if (clear)
+
+  if (clearColor)
   {
-    static float color[4] = {0,0,0,0};
-    _ctx->ClearRenderTargetView(rt->rtv.resource, color);
+    _ctx->ClearRenderTargetView(rt->rtv.resource, clearColor);
     _ctx->ClearDepthStencilView(rt->dsv.resource, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
   }
   _ctx->RSSetViewports(1, &swapChain->_viewport);
@@ -265,6 +265,17 @@ void DeferredContext::Unmap(GraphicsObjectHandle h, UINT sub)
 }
 
 //------------------------------------------------------------------------------
+void DeferredContext::CopyToBuffer(GraphicsObjectHandle h, const void* data, u32 len)
+{
+  D3D11_MAPPED_SUBRESOURCE res;
+  if (Map(h, 0, D3D11_MAP_WRITE_DISCARD, 0, &res))
+  {
+    memcpy(res.pData, data, len);
+    Unmap(h, 0);
+  }
+}
+
+//------------------------------------------------------------------------------
 void DeferredContext::CopyToBuffer(
     GraphicsObjectHandle h,
     UINT sub,
@@ -416,7 +427,7 @@ void DeferredContext::SetSamplerState(GraphicsObjectHandle h, u32 slot, ShaderTy
 
 //------------------------------------------------------------------------------
 void DeferredContext::SetSamplers(
-     GraphicsObjectHandle* h,
+    const GraphicsObjectHandle* h,
     u32 slot,
     u32 numSamplers,
     ShaderType shaderType)
@@ -462,14 +473,31 @@ void DeferredContext::SetCBuffer(
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetRenderObjects(const GpuObjects& obj)
+void DeferredContext::SetGpuObjects(const GpuObjects& obj)
 {
-  SetVS(obj._vs);
-  SetPS(obj._ps);
-  SetLayout(obj._layout);
-  SetVB(obj._vb);
-  SetIB(obj._ib);
+  if (obj._vs.IsValid()) SetVS(obj._vs);
+  if (obj._ps.IsValid()) SetPS(obj._ps);
+
+  if (obj._layout.IsValid()) SetLayout(obj._layout);
+  if (obj._vb.IsValid()) SetVB(obj._vb);
+  if (obj._ib.IsValid()) SetIB(obj._ib);
+
   SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+//------------------------------------------------------------------------------
+void DeferredContext::SetGpuState(const GpuState& state)
+{
+  float blendFactor[4] ={ 1, 1, 1, 1 };
+  SetRasterizerState(state._rasterizerState);
+  SetBlendState(state._blendState, blendFactor, 0xffffffff);
+  SetDepthStencilState(state._depthStencilState, 0);
+}
+
+//------------------------------------------------------------------------------
+void DeferredContext::SetGpuStateSamplers(const GpuState& state, ShaderType shaderType)
+{
+  SetSamplers(state._samplers, 0, 4, shaderType);
 }
 
 //------------------------------------------------------------------------------
@@ -478,275 +506,3 @@ void DeferredContext::SetViewports(const D3D11_VIEWPORT& viewport, u32 numViewpo
   vector<D3D11_VIEWPORT> viewports(numViewports, viewport);
   _ctx->RSSetViewports(numViewports, viewports.data());
 }
-
-//------------------------------------------------------------------------------
-/*
-void DeferredContext::set_samplers(const SamplerArray &samplers)
-{
-  int size = samplers.size() * sizeof(GraphicsObjectHandle);
-  int first_sampler = MAX_SAMPLERS, num_samplers = 0;
-  ID3D11SamplerState *d3dsamplers[MAX_SAMPLERS];
-  for (int i = 0; i < MAX_SAMPLERS; ++i)
-  {
-    if (samplers[i].is_valid())
-    {
-      d3dsamplers[i] = GRAPHICS._sampler_states.Get(samplers[i], BufferType::FrontBuffer);
-      first_sampler = min(first_sampler, i);
-      num_samplers++;
-    }
-  }
-
-  if (num_samplers)
-  {
-    _ctx->PSSetSamplers(first_sampler, num_samplers, &d3dsamplers[first_sampler]);
-  }
-}
-*/
-
-/*
-void DeferredContext::set_uavs(const TextureArray &uavs)
-{
-
-  int size = uavs.size() * sizeof(GraphicsObjectHandle);
-  ID3D11UnorderedAccessView *d3dUavs[MAX_TEXTURES];
-  int first_resource = MAX_TEXTURES, num_resources = 0;
-
-  for (int i = 0; i < MAX_TEXTURES; ++i)
-  {
-
-    if (uavs[i].is_valid())
-    {
-      GraphicsObjectHandle h = uavs[i];
-      auto type = h.type();
-
-      if (type == GraphicsObjectHandle::kStructuredBuffer)
-      {
-        auto *data = GRAPHICS._structured_buffers.Get(h, BufferType::FrontBuffer);
-        d3dUavs[i] = data->uav.resource;
-      } 
-      else if (type == GraphicsObjectHandle::kRenderTarget)
-      {
-        auto *data = GRAPHICS._render_targets.Get(h, BufferType::FrontBuffer);
-        d3dUavs[i] = data->uav.resource;
-      }
-      else
-      {
-        LOG_ERROR_LN("Trying to set an unsupported UAV type!");
-      }
-      num_resources++;
-      first_resource = min(first_resource, i);
-    }
-  }
-
-  if (num_resources) {
-    int ofs = first_resource;
-    int num_resources_set = 0;
-    while (ofs < MAX_TEXTURES && num_resources_set < num_resources) {
-      // handle non sequential resources
-      int cur = 0;
-      int tmp = ofs;
-      while (uavs[ofs].is_valid()) {
-        ofs++;
-        cur++;
-        if (ofs == MAX_TEXTURES)
-          break;
-      }
-      UINT initialCount = 0;
-      _ctx->CSSetUnorderedAccessViews(tmp, cur, &d3dUavs[tmp], &initialCount);
-      num_resources_set += cur;
-      while (ofs < MAX_TEXTURES && !uavs[ofs].is_valid())
-        ofs++;
-    }
-  }
-}
-
-void DeferredContext::SetShaderResource(GraphicsObjectHandle resource, ShaderType type) {
-  TextureArray arr = { resource };
-  return SetShaderResources(arr, type);
-}
-
-void DeferredContext::SetShaderResources(const TextureArray &resources, ShaderType type)
-{
-  int size = resources.size() * sizeof(GraphicsObjectHandle);
-  ID3D11ShaderResourceView *d3dresources[MAX_TEXTURES];
-  int first_resource = MAX_TEXTURES, num_resources = 0;
-
-  for (int i = 0; i < MAX_TEXTURES; ++i)
-  {
-    if (resources[i].is_valid())
-    {
-      GraphicsObjectHandle h = resources[i];
-      auto type = h.type();
-      if (type == GraphicsObjectHandle::kTexture)
-      {
-        auto *data = GRAPHICS._textures.Get(h, BufferType::FrontBuffer);
-        d3dresources[i] = data->view.resource;
-      }
-      else if (type == GraphicsObjectHandle::kResource)
-      {
-        auto *data = GRAPHICS._resources.Get(h, BufferType::FrontBuffer);
-        d3dresources[i] = data->view.resource;
-      }
-      else if (type == GraphicsObjectHandle::kRenderTarget)
-      {
-        auto *data = GRAPHICS._render_targets.Get(h, BufferType::FrontBuffer);
-        d3dresources[i] = data->srv.resource;
-      }
-      else if (type == GraphicsObjectHandle::kStructuredBuffer)
-      {
-        auto *data = GRAPHICS._structured_buffers.Get(h, BufferType::FrontBuffer);
-        d3dresources[i] = data->srv.resource;
-      }
-      else
-      {
-        LOG_ERROR_LN("Trying to set invalid resource type!");
-      }
-      num_resources++;
-      first_resource = min(first_resource, i);
-    }
-  }
-
-  if (num_resources) {
-    int ofs = first_resource;
-    int num_resources_set = 0;
-    while (ofs < MAX_TEXTURES && num_resources_set < num_resources) {
-      // handle non sequential resources
-      int cur = 0;
-      int tmp = ofs;
-      while (resources[ofs].is_valid()) {
-        ofs++;
-        cur++;
-        if (ofs == MAX_TEXTURES)
-          break;
-      }
-
-      if (type == ShaderType::kVertexShader)
-        _ctx->VSSetShaderResources(tmp, cur, &d3dresources[tmp]);
-      else if (type == ShaderType::kPixelShader)
-        _ctx->PSSetShaderResources(tmp, cur, &d3dresources[tmp]);
-      else if (type == ShaderType::kComputeShader)
-        _ctx->CSSetShaderResources(tmp, cur, &d3dresources[tmp]);
-      else if (type == ShaderType::kGeometryShader)
-        _ctx->GSSetShaderResources(tmp, cur, &d3dresources[tmp]);
-      else
-        LOG_ERROR_LN("Implement me!");
-
-      num_resources_set += cur;
-      while (ofs < MAX_TEXTURES && !resources[ofs].is_valid())
-        ofs++;
-    }
-  }
-}
-*/
-/*
-void DeferredContext::unset_shader_resource(int first_view, int num_views, ShaderType type)
-{
-  if (!num_views)
-    return;
-  static ID3D11ShaderResourceView *null_views[MAX_SAMPLERS] = {0, 0, 0, 0, 0, 0, 0, 0};
-  if (type == ShaderType::kVertexShader)
-    _ctx->VSSetShaderResources(first_view, num_views, null_views);
-  else if (type == ShaderType::kPixelShader)
-    _ctx->PSSetShaderResources(first_view, num_views, null_views);
-  else if (type == ShaderType::kComputeShader)
-    _ctx->CSSetShaderResources(first_view, num_views, null_views);
-  else if (type == ShaderType::kGeometryShader)
-    _ctx->GSSetShaderResources(first_view, num_views, null_views);
-  else
-    LOG_ERROR_LN("Implement me!");
-
-}
-
-void DeferredContext::SetCBuffer(const CBuffer &vs, const CBuffer &ps) {
-
-  if (vs.staging.size() > 0) {
-    ID3D11Buffer *buffer = GRAPHICS._constant_buffers.Get(vs.handle, BufferType::FrontBuffer);
-    D3D11_MAPPED_SUBRESOURCE sub;
-    _ctx->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub);
-    memcpy(sub.pData, vs.staging.data(), vs.staging.size());
-    _ctx->Unmap(buffer, 0);
-
-    _ctx->VSSetConstantBuffers(vs.slot, 1, &buffer);
-  }
-
-  if (ps.staging.size() > 0) {
-    ID3D11Buffer *buffer = GRAPHICS._constant_buffers.Get(ps.handle, BufferType::FrontBuffer);
-    D3D11_MAPPED_SUBRESOURCE sub;
-    _ctx->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub);
-    memcpy(sub.pData, ps.staging.data(), ps.staging.size());
-    _ctx->Unmap(buffer, 0);
-
-    _ctx->PSSetConstantBuffers(ps.slot, 1, &buffer);
-  }
-}
-
-void DeferredContext::SetCBuffers(const vector<CBuffer *> &vs, const vector<CBuffer *> &ps)
-{
-  ID3D11Buffer **vs_cb = (ID3D11Buffer **)_alloca(vs.size() * sizeof(ID3D11Buffer *));
-  ID3D11Buffer **ps_cb = (ID3D11Buffer **)_alloca(ps.size() * sizeof(ID3D11Buffer *));
-
-  // Copy the vs cbuffers
-  int firstVsSlot = D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
-  for (size_t i = 0; i < vs.size(); ++i) {
-    if (auto *cur = vs[i]) {
-      int slot = cur->slot;
-      firstVsSlot = min(firstVsSlot, slot);
-      ID3D11Buffer *buffer = GRAPHICS._constant_buffers.Get(cur->handle, BufferType::FrontBuffer);
-      D3D11_MAPPED_SUBRESOURCE sub;
-      _ctx->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub);
-      memcpy(sub.pData, cur->staging.data(), cur->staging.size());
-      _ctx->Unmap(buffer, 0);
-      vs_cb[slot] = buffer;
-    }
-  }
-
-  // Copy the ps cbuffers
-  int firstPsSlot = D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
-  for (size_t i = 0; i < ps.size(); ++i) {
-    if (auto *cur = ps[i]) {
-      int slot = cur->slot;
-      firstPsSlot = min(firstPsSlot, slot);
-      ID3D11Buffer *buffer = GRAPHICS._constant_buffers.Get(cur->handle, BufferType::FrontBuffer);
-      D3D11_MAPPED_SUBRESOURCE sub;
-      _ctx->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub);
-      memcpy(sub.pData, cur->staging.data(), cur->staging.size());
-      _ctx->Unmap(buffer, 0);
-      ps_cb[slot] = buffer;
-    }
-  }
-
-  if (!vs.empty())
-    _ctx->VSSetConstantBuffers(firstVsSlot, vs.size() - firstVsSlot, &vs_cb[firstVsSlot]);
-
-  if (!ps.empty())
-      _ctx->PSSetConstantBuffers(firstPsSlot, ps.size() - firstPsSlot, &ps_cb[firstPsSlot]);
-}
-
-void DeferredContext::SetCBuffer(
-    GraphicsObjectHandle cb,
-    int slot,
-    ShaderType type,
-    const void *data,
-    int dataLen)
-{
-  KASSERT(dataLen == cb.data());
-  ID3D11Buffer *buffer = GRAPHICS._constant_buffers.Get(cb, BufferType::FrontBuffer);
-  if (!buffer)
-    return;
-  D3D11_MAPPED_SUBRESOURCE sub;
-  _ctx->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub);
-  memcpy(sub.pData, data, dataLen);
-  _ctx->Unmap(buffer, 0);
-
-  if (type == ShaderType::kVertexShader)
-    _ctx->VSSetConstantBuffers(slot, 1, &buffer);
-  else if (type == ShaderType::kPixelShader)
-    _ctx->PSSetConstantBuffers(slot, 1, &buffer);
-  else if (type == ShaderType::kComputeShader)
-    _ctx->CSSetConstantBuffers(slot, 1, &buffer);
-  else if (type == ShaderType::kGeometryShader)
-    _ctx->GSSetConstantBuffers(slot, 1, &buffer);
-  else
-    LOG_ERROR_LN("Implement me!");
-}
-*/

@@ -2,9 +2,9 @@
 
 namespace editor
 {
-  Plexus FromProtocol(const protocol::effect::plexus::Plexus& p)
+  PlexusConfig FromProtocol(const protocol::effect::plexus::PlexusConfig& p)
   {
-    Plexus res;
+    PlexusConfig res;
     for (const auto& x : p.text_paths() )
       res.textPaths.push_back(FromProtocol(x));
 
@@ -14,7 +14,7 @@ namespace editor
     return res;
   }
 
-  void ToProtocol(const Plexus& v, protocol::effect::plexus::Plexus* p)
+  void ToProtocol(const PlexusConfig& v, protocol::effect::plexus::PlexusConfig* p)
   {
     for (const auto& x : v.textPaths)
       ToProtocol(x, p->add_text_paths());
@@ -22,16 +22,16 @@ namespace editor
       ToProtocol(x, p->add_noise_effectors());
   }
 
-  TextPath FromProtocol(const protocol::effect::plexus::TextPath& p)
+  TextPathConfig FromProtocol(const protocol::effect::plexus::TextPathConfig& p)
   {
-    TextPath res;
+    TextPathConfig res;
     if (p.has_text())
       res.text = p.text();
 
     return res;
   }
 
-  void ToProtocol(const TextPath& v, protocol::effect::plexus::TextPath* p)
+  void ToProtocol(const TextPathConfig& v, protocol::effect::plexus::TextPathConfig* p)
   {
     p->set_text(v.text);
   }
@@ -58,10 +58,10 @@ namespace editor
     ToProtocol(v.z, p->mutable_z());
   }
 
-  NoiseEffector FromProtocol(const protocol::effect::plexus::NoiseEffector& p)
+  NoiseEffectorConfig FromProtocol(const protocol::effect::plexus::NoiseEffectorConfig& p)
   {
-    NoiseEffector res;
-    res.applyTo = (NoiseEffector::ApplyTo)p.apply_to();
+    NoiseEffectorConfig res;
+    res.applyTo = (NoiseEffectorConfig::ApplyTo)p.apply_to();
 
     if (p.has_displacement())
       res.displacement = FromProtocol(p.displacement());
@@ -69,7 +69,7 @@ namespace editor
     return res;
   }
 
-  void ToProtocol(const NoiseEffector& v, protocol::effect::plexus::NoiseEffector* p)
+  void ToProtocol(const NoiseEffectorConfig& v, protocol::effect::plexus::NoiseEffectorConfig* p)
   {
     ToProtocol(v.displacement, p->mutable_displacement());
   }

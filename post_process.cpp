@@ -1,5 +1,6 @@
 #include "post_process.hpp"
 #include "deferred_context.hpp"
+#include "init_sequence.hpp"
 
 using namespace boba;
 
@@ -12,50 +13,31 @@ PostProcess::PostProcess(DeferredContext* ctx)
 //------------------------------------------------------------------------------
 bool PostProcess::Init()
 {
-  _cb.Create();
+  BEGIN_INIT_SEQUENCE();
+
+  INIT(_cb.Create());
 
   CD3D11_DEPTH_STENCIL_DESC dsDesc = CD3D11_DEPTH_STENCIL_DESC(CD3D11_DEFAULT());
   dsDesc.DepthEnable = FALSE;
   dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
   dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-  _depthStencilState = GRAPHICS.CreateDepthStencilState(dsDesc);
-
-  _blendState = GRAPHICS.CreateBlendState(CD3D11_BLEND_DESC(CD3D11_DEFAULT()));
 
   CD3D11_RASTERIZER_DESC rsDesc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT());
   rsDesc.CullMode = D3D11_CULL_NONE;
-  _rasterizerState = GRAPHICS.CreateRasterizerState(rsDesc);
 
-  CD3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC(CD3D11_DEFAULT());
-  _linearSamplerState = GRAPHICS.CreateSamplerState(samplerDesc);
+  INIT(_gpuState.Create(dsDesc, CD3D11_BLEND_DESC(CD3D11_DEFAULT()), rsDesc));
 
-  samplerDesc.AddressU = samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-  _linearWrapSamplerState = GRAPHICS.CreateSamplerState(samplerDesc);
+  INIT(GRAPHICS.LoadShadersFromFile("shaders/quad", &_vsQuad, nullptr, nullptr, 0));
 
-  samplerDesc.AddressU = samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
-  _linearBorderSamplerState = GRAPHICS.CreateSamplerState(samplerDesc);
-
-  samplerDesc.AddressU = samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-  samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-  _pointSamplerState = GRAPHICS.CreateSamplerState(samplerDesc);
-
-  GRAPHICS.LoadShadersFromFile("shaders/quad", &_vsQuad, nullptr, nullptr, 0);
-
-  return true;
+  END_INIT_SEQUENCE();
 }
 
 //------------------------------------------------------------------------------
 void PostProcess::Setup()
 {
-  float blendFactor[4] ={ 1, 1, 1, 1 };
-  _ctx->SetRasterizerState(_rasterizerState);
-  _ctx->SetBlendState(_blendState, blendFactor, 0xffffffff);
-  _ctx->SetDepthStencilState(_depthStencilState, 0);
-
-  GraphicsObjectHandle samplers[] ={ _pointSamplerState, _linearSamplerState,
-    _linearWrapSamplerState, _linearBorderSamplerState };
-  _ctx->SetSamplers(samplers, 0, 4, ShaderType::PixelShader);
-  _ctx->SetSamplers(samplers, 0, 4, ShaderType::ComputeShader);
+  _ctx->SetGpuState(_gpuState);
+  _ctx->SetGpuStateSamplers(_gpuState, ShaderType::PixelShader);
+  _ctx->SetGpuStateSamplers(_gpuState, ShaderType::ComputeShader);
 
   _ctx->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   _ctx->SetVS(_vsQuad);

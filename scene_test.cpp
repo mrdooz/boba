@@ -79,7 +79,8 @@ bool SceneTest::Update(const UpdateState& state)
 //------------------------------------------------------------------------------
 bool SceneTest::Render()
 {
-  _ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), true);
+  float black[] = {0, 0, 0, 0};
+  _ctx->SetSwapChain(GRAPHICS.DefaultSwapChain(), black);
   _ctx->BeginFrame();
 
   CBufferPerFrame cb;

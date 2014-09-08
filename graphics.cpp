@@ -39,7 +39,7 @@ namespace
 }
 
 //------------------------------------------------------------------------------
-bool Graphics::SwapChain::CreateBackBuffers(size_t width, size_t height, DXGI_FORMAT format)
+bool Graphics::SwapChain::CreateBackBuffers(u32 width, u32 height, DXGI_FORMAT format)
 {
   Graphics& g = GRAPHICS;
 
@@ -276,11 +276,11 @@ INT_PTR CALLBACK Graphics::dialogWndProc(HWND hWnd, UINT message, WPARAM wParam,
       cur.selectedDisplayMode = ComboBox_GetCurSel(GetDlgItem(hWnd, IDC_DISPLAY_MODES));
 
       HWND hMultisample = GetDlgItem(hWnd, IDC_MULTISAMPLE);
-      cur.multisampleCount = ComboBox_GetItemData(hMultisample, ComboBox_GetCurSel(hMultisample));
+      cur.multisampleCount = (int)ComboBox_GetItemData(hMultisample, ComboBox_GetCurSel(hMultisample));
 
       HWND hDisplayModes = GetDlgItem(hWnd, IDC_DISPLAY_MODES);
       int sel = ComboBox_GetCurSel(hDisplayModes);
-      int data = ComboBox_GetItemData(hDisplayModes, sel);
+      int data = (int)ComboBox_GetItemData(hDisplayModes, sel);
       cur.width = HIWORD(data);
       cur.height = LOWORD(data);
       break;
@@ -348,7 +348,7 @@ bool Graphics::Create(HINSTANCE hInstance)
 bool Graphics::Init(HINSTANCE hInstance)
 {
   _hInstance = hInstance;
-  int res = DialogBox(hInstance, MAKEINTRESOURCE(IDD_SETUP_DLG), NULL, dialogWndProc);
+  int res = (int)DialogBox(hInstance, MAKEINTRESOURCE(IDD_SETUP_DLG), NULL, dialogWndProc);
   if (res != IDOK)
   {
     return false;
@@ -806,7 +806,7 @@ GraphicsObjectHandle Graphics::LoadTexture(
 //------------------------------------------------------------------------------
 GraphicsObjectHandle Graphics::LoadTextureFromMemory(
     const void *buf,
-    size_t len,
+    u32 len,
     const char *friendlyName,
     bool srgb,
     D3DX11_IMAGE_INFO *info)
@@ -976,7 +976,7 @@ GraphicsObjectHandle Graphics::CreateInputLayout(
     const vector<char> &shader_bytecode)
 {
   ID3D11InputLayout* layout = nullptr;
-  if (FAILED(_device->CreateInputLayout(&desc[0], desc.size(), &shader_bytecode[0], shader_bytecode.size(), &layout)))
+  if (FAILED(_device->CreateInputLayout(&desc[0], (u32)desc.size(), &shader_bytecode[0], shader_bytecode.size(), &layout)))
   {
     LOG_WARN("Error creating input layout");
     return emptyGoh;
@@ -1115,8 +1115,8 @@ GraphicsObjectHandle Graphics::CreateSamplerState(
 //------------------------------------------------------------------------------
 GraphicsObjectHandle Graphics::CreateSwapChain(
     const TCHAR* name,
-    size_t width,
-    size_t height,
+    u32 width,
+    u32 height,
     DXGI_FORMAT format,
     WNDPROC wndProc,
     HINSTANCE instance)
@@ -1299,11 +1299,11 @@ void Graphics::AddCommandList(ID3D11CommandList *cmd_list)
 
 //------------------------------------------------------------------------------
 void Graphics::CreateDefaultSwapChain(
-  size_t width,
-  size_t height,
-  DXGI_FORMAT format,
-  WNDPROC wndProc,
-  HINSTANCE instance)
+    u32 width,
+    u32 height,
+    DXGI_FORMAT format,
+    WNDPROC wndProc,
+    HINSTANCE instance)
 {
   _swapChain = CreateSwapChain(_T("default"), width, height, format, wndProc, instance);
 }

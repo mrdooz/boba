@@ -11,7 +11,7 @@ namespace boba
   public:
 
     void GetRenderTargetTextureDesc(GraphicsObjectHandle handle, D3D11_TEXTURE2D_DESC* desc);
-    void SetSwapChain(GraphicsObjectHandle h, bool clear);
+    void SetSwapChain(GraphicsObjectHandle h, const float* clearColor);
     void SetRenderTarget(GraphicsObjectHandle render_target, const Color* clearTarget);
     void SetRenderTargets(GraphicsObjectHandle *render_targets, const Color* clearTarget, int num_render_targets);
     void GenerateMips(GraphicsObjectHandle h);
@@ -36,7 +36,7 @@ namespace boba
     void SetShaderResources(const vector<GraphicsObjectHandle>& handles, ShaderType shaderType);
     void SetUav(GraphicsObjectHandle h, Color* clearColor);
     void SetSamplerState(GraphicsObjectHandle h, u32 slot, ShaderType shaderType);
-    void SetSamplers(GraphicsObjectHandle* h, u32 slot, u32 numSamplers, ShaderType shaderType);
+    void SetSamplers(const GraphicsObjectHandle* h, u32 slot, u32 numSamplers, ShaderType shaderType);
     template <typename T>
     void SetCBuffer(const ConstantBuffer<T>& buffer, ShaderType shaderType, u32 slot)
     {
@@ -44,7 +44,9 @@ namespace boba
     }
 
     void SetCBuffer(GraphicsObjectHandle h, const void* buf, size_t len, ShaderType shaderType, u32 slot);
-    void SetRenderObjects(const GpuObjects& obj);
+    void SetGpuObjects(const GpuObjects& obj);
+    void SetGpuState(const GpuState& state);
+    void SetGpuStateSamplers(const GpuState& state, ShaderType shaderType);
     void SetViewports(const D3D11_VIEWPORT& viewport, u32 numViewports);
 
     void UnsetSRVs(u32 first, u32 count, ShaderType shaderType);
@@ -57,18 +59,9 @@ namespace boba
     bool Map(GraphicsObjectHandle h, UINT sub, D3D11_MAP type, UINT flags, D3D11_MAPPED_SUBRESOURCE *res);
     void Unmap(GraphicsObjectHandle h, UINT sub);
     void CopyToBuffer(GraphicsObjectHandle h, UINT sub, D3D11_MAP type, UINT flags, const void* data, u32 len);
+    void CopyToBuffer(GraphicsObjectHandle h, const void* data, u32 len);
 
     void Flush();
-
-    //void set_samplers(const SamplerArray &samplers);
-    //void SetShaderResources(const TextureArray &resources, ShaderType type);
-    //void SetShaderResource(GraphicsObjectHandle resource, ShaderType type);
-    //void set_uavs(const TextureArray &uavs);
-    //void unset_shader_resource(int first_view, int num_views, ShaderType type);
-    //void SetCBuffers(const vector<CBuffer *> &vs, const vector<CBuffer *> &ps);
-    //void SetCBuffer(const CBuffer &vs, const CBuffer &ps);
-    //void SetCBuffer(GraphicsObjectHandle cb, int slot, ShaderType type, const void *data, int dataLen);
-    //void FillSystemResourceViews(const ResourceViewArray &views, TextureArray *out) const;
 
   private:
     DeferredContext();

@@ -5,7 +5,7 @@
 #define WITH_MEMORY_TRACKING 0
 #define WITH_GPU_PERF 1
 
-#define WITH_DXGI_DEBUG 1
+#define WITH_DXGI_DEBUG 0
 #define WITH_DEBUG_SHADERS 1
 
 #define WITH_CONFIG_DLG 0

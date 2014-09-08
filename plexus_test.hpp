@@ -17,6 +17,7 @@ namespace boba
 {
   class DeferredContext;
   struct Mesh;
+  struct Plexus;
 
   class PlexusTest : public Effect
   {
@@ -71,7 +72,7 @@ namespace boba
     Flags<RenderFlags> _renderFlags;
 
     Vector3 _cameraPos, _cameraDir;
-    unique_ptr<PostProcess> _postProcess;
+    PostProcess* _postProcess;
 
     lua_State* _lua;
 
@@ -89,9 +90,7 @@ namespace boba
     GraphicsObjectHandle _psComposite;
 
     // default states
-    GraphicsObjectHandle _depthStencilState;
-    GraphicsObjectHandle _blendState;
-    GraphicsObjectHandle _rasterizerState;
+    GpuState _gpuState;
 
     struct CBufferToneMapping
     {
@@ -126,7 +125,8 @@ namespace boba
 
     GraphicsObjectHandle _psEdgeDetect;
 
-    Plexus _plexus;
+    PlexusConfig _plexusConfig;
+    Plexus* _plexus;
   };
 
 }

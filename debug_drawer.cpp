@@ -182,7 +182,7 @@ void DebugDrawer::DrawSphere(const Vector3& center, float radius)
 
     _ctx->Unmap(_gpuObjects._vb, 0);
 
-    numVerts = vtx - org;
+    numVerts = (int)(vtx - org);
   }
 
   if (numVerts > 0)
@@ -193,10 +193,9 @@ void DebugDrawer::DrawSphere(const Vector3& center, float radius)
 
     _ctx->SetRasterizerState(_rasterizerState);
     _ctx->SetCBuffer(_cb, ShaderType::VertexShader, 0);
-    _ctx->SetRenderObjects(_gpuObjects);
+    _ctx->SetGpuObjects(_gpuObjects);
     _ctx->Draw(numVerts, 0);
   }
-
 }
 
 //------------------------------------------------------------------------------
