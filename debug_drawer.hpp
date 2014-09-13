@@ -50,7 +50,7 @@ namespace boba
     ConstantBuffer<CBufferPerFrame> _cb;
     GpuObjects _gpuObjects;
 
-    GraphicsObjectHandle _rasterizerState;
+    ObjectHandle _rasterizerState;
     DeferredContext* _ctx;
 
     // TODO: these should be grouped into state objects, and the draw calls

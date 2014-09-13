@@ -1,5 +1,13 @@
 #include "style_factory.hpp"
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
+#endif
 #include "protocol/editor_styles.pb.h"
+#ifdef _WIN32
+#pragma warning(pop)
+#endif
+
 #include "protocol/editor_proto.hpp"
 
 using namespace editor;

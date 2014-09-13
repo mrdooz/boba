@@ -32,11 +32,11 @@ namespace boba
   private:
     string _configName;
     particle::Config _config;
-    GraphicsObjectHandle _texture;
-    GraphicsObjectHandle _vs;
-    GraphicsObjectHandle _ps;
-    GraphicsObjectHandle _samplerState;
-    GraphicsObjectHandle _cbuffer;
+    ObjectHandle _texture;
+    ObjectHandle _vs;
+    ObjectHandle _ps;
+    ObjectHandle _samplerState;
+    ObjectHandle _cbuffer;
   };
 
 }

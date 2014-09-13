@@ -1,5 +1,5 @@
 #pragma once
-#include "graphics_object_handle.hpp"
+#include "object_handle.hpp"
 #include "id_buffer.hpp"
 
 namespace boba
@@ -145,7 +145,7 @@ namespace boba
       HWND _hwnd;
       CComPtr<IDXGISwapChain> _swapChain;
       DXGI_SWAP_CHAIN_DESC _desc;
-      GraphicsObjectHandle _renderTarget;
+      ObjectHandle _renderTarget;
       CD3D11_VIEWPORT _viewport;
     };
 
@@ -160,13 +160,13 @@ namespace boba
       return *_instance;
     }
 
-    GraphicsObjectHandle LoadTexture(
+    ObjectHandle LoadTexture(
         const char* filename,
         const char* friendlyName = nullptr,
         bool srgb = false,
         D3DX11_IMAGE_INFO* info = nullptr);
 
-    GraphicsObjectHandle LoadTextureFromMemory(
+    ObjectHandle LoadTextureFromMemory(
         const void* buf,
         u32 len,
         const char* friendlyName = nullptr,
@@ -182,82 +182,82 @@ namespace boba
 
     void GetPredefinedGeometry(
         PredefinedGeometry geom,
-        GraphicsObjectHandle *vb,
+        ObjectHandle *vb,
         int *vertex_size,
-        GraphicsObjectHandle *ib,
+        ObjectHandle *ib,
         DXGI_FORMAT *index_format,
         int *index_count);
 
-    GraphicsObjectHandle CreateInputLayout(
+    ObjectHandle CreateInputLayout(
         const vector<D3D11_INPUT_ELEMENT_DESC> &desc,
         const vector<char> &shader_bytecode);
 
-    GraphicsObjectHandle CreateBuffer(
+    ObjectHandle CreateBuffer(
         D3D11_BIND_FLAG bind,
         int size,
         bool dynamic,
         const void* buf = nullptr,
         int userData = 0);
 
-    GraphicsObjectHandle CreateVertexShader(const vector<char> &shader_bytecode, const string& id);
-    GraphicsObjectHandle CreatePixelShader(const vector<char> &shader_bytecode, const string& id);
-    GraphicsObjectHandle CreateComputeShader(const vector<char> &shader_bytecode, const string &id);
-    GraphicsObjectHandle CreateGeometryShader(const vector<char> &shader_bytecode, const string &id);
+    ObjectHandle CreateVertexShader(const vector<char> &shader_bytecode, const string& id);
+    ObjectHandle CreatePixelShader(const vector<char> &shader_bytecode, const string& id);
+    ObjectHandle CreateComputeShader(const vector<char> &shader_bytecode, const string &id);
+    ObjectHandle CreateGeometryShader(const vector<char> &shader_bytecode, const string &id);
 
-    GraphicsObjectHandle CreateRasterizerState(const D3D11_RASTERIZER_DESC &desc, const char *name = nullptr);
-    GraphicsObjectHandle CreateBlendState(const D3D11_BLEND_DESC &desc, const char *name = nullptr);
-    GraphicsObjectHandle CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC &desc, const char *name = nullptr);
-    GraphicsObjectHandle CreateSamplerState(const D3D11_SAMPLER_DESC &desc, const char *name = nullptr);
-    GraphicsObjectHandle CreateSwapChain(
+    ObjectHandle CreateRasterizerState(const D3D11_RASTERIZER_DESC &desc, const char *name = nullptr);
+    ObjectHandle CreateBlendState(const D3D11_BLEND_DESC &desc, const char *name = nullptr);
+    ObjectHandle CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC &desc, const char *name = nullptr);
+    ObjectHandle CreateSamplerState(const D3D11_SAMPLER_DESC &desc, const char *name = nullptr);
+    ObjectHandle CreateSwapChain(
         const TCHAR* name,
         u32 width,
         u32 height,
         DXGI_FORMAT format,
         WNDPROC wndProc,
         HINSTANCE instance);
-    GraphicsObjectHandle RenderTargetForSwapChain(GraphicsObjectHandle h);
+    ObjectHandle RenderTargetForSwapChain(ObjectHandle h);
 
     D3D_FEATURE_LEVEL FeatureLevel() const { return _featureLevel; }
 
-    bool GetTextureSize(GraphicsObjectHandle h, u32* x, u32* y);
-    GraphicsObjectHandle GetTempRenderTarget(
+    bool GetTextureSize(ObjectHandle h, u32* x, u32* y);
+    ObjectHandle GetTempRenderTarget(
         int width,
         int height,
         DXGI_FORMAT format,
         const BufferFlags& bufferFlags);
 
-    void ReleaseTempRenderTarget(GraphicsObjectHandle h);
+    void ReleaseTempRenderTarget(ObjectHandle h);
 
-    GraphicsObjectHandle CreateRenderTarget(
+    ObjectHandle CreateRenderTarget(
         int width,
         int height,
         DXGI_FORMAT format,
         const BufferFlags& bufferFlags,
         const string& name = "");
 
-    GraphicsObjectHandle CreateStructuredBuffer(int elemSize, int numElems, bool createSrv);
-    GraphicsObjectHandle CreateTexture(const D3D11_TEXTURE2D_DESC &desc, const char *name);
-    GraphicsObjectHandle GetTexture(const char *filename);
+    ObjectHandle CreateStructuredBuffer(int elemSize, int numElems, bool createSrv);
+    ObjectHandle CreateTexture(const D3D11_TEXTURE2D_DESC &desc, const char *name);
+    ObjectHandle GetTexture(const char *filename);
 
     bool ReadTexture(const char *filename, D3DX11_IMAGE_INFO *info, u32 *pitch, vector<u8> *bits);
 
     // Create a texture, and fill it with data
     bool CreateTexture(int width, int height, DXGI_FORMAT fmt, void *data, int data_width, int data_height, int data_pitch, TextureResource *out);
-    GraphicsObjectHandle CreateTexture(int width, int height, DXGI_FORMAT fmt, void *data, int data_width, int data_height, int data_pitch, const char *friendlyName);
+    ObjectHandle CreateTexture(int width, int height, DXGI_FORMAT fmt, void *data, int data_width, int data_height, int data_pitch, const char *friendlyName);
 
-    SwapChain* GetSwapChain(GraphicsObjectHandle h);
+    SwapChain* GetSwapChain(ObjectHandle h);
 
-    GraphicsObjectHandle FindTechnique(const string &name);
-    GraphicsObjectHandle FindResource(const string &name);
-    GraphicsObjectHandle FindSampler(const string &name);
-    GraphicsObjectHandle FindBlendState(const string &name);
-    GraphicsObjectHandle FindRasterizerState(const string &name);
-    GraphicsObjectHandle FindDepthStencilState(const string &name);
+    ObjectHandle FindTechnique(const string &name);
+    ObjectHandle FindResource(const string &name);
+    ObjectHandle FindSampler(const string &name);
+    ObjectHandle FindBlendState(const string &name);
+    ObjectHandle FindRasterizerState(const string &name);
+    ObjectHandle FindDepthStencilState(const string &name);
 
-    GraphicsObjectHandle DefaultRasterizerState() const { return _defaultRasterizerState; }
-    GraphicsObjectHandle DefaultDepthStencilState() const { return _defaultDepthStencilState; }
+    ObjectHandle DefaultRasterizerState() const { return _defaultRasterizerState; }
+    ObjectHandle DefaultDepthStencilState() const { return _defaultDepthStencilState; }
     uint32_t DefaultStencilRef() const { return 0; }
-    GraphicsObjectHandle  DefaultBlendState() const { return _defaultBlendState; }
+    ObjectHandle  DefaultBlendState() const { return _defaultBlendState; }
     const float *DefaultBlendFactors() const { return _defaultBlendFactors; }
     uint32_t DefaultSampleMask() const { return 0xffffffff; }
 
@@ -268,7 +268,7 @@ namespace boba
     bool VSync() const { return _vsync; }
     void SetVSync(bool value) { _vsync = value; }
 
-    static GraphicsObjectHandle MakeObjectHandle(GraphicsObjectHandle::Type type, int idx, int data = 0);
+    static ObjectHandle MakeObjectHandle(ObjectHandle::Type type, int idx, int data = 0);
 
     void SetDisplayAllModes(bool value) { _displayAllModes = value; }
     bool DisplayAllModes() const { return _displayAllModes; }
@@ -284,24 +284,24 @@ namespace boba
         WNDPROC wndProc,
         HINSTANCE instance);
 
-    void ClearRenderTarget(GraphicsObjectHandle h);
+    void ClearRenderTarget(ObjectHandle h);
     void Present();
     
     void GetBackBufferSize(int* width, int* height);
-    GraphicsObjectHandle DefaultSwapChain();
+    ObjectHandle DefaultSwapChain();
 
     bool LoadShadersFromFile(
         const string& filenameBase,
-        GraphicsObjectHandle* vs,
-        GraphicsObjectHandle* ps,
-        GraphicsObjectHandle* inputLayout,
+        ObjectHandle* vs,
+        ObjectHandle* ps,
+        ObjectHandle* inputLayout,
         u32 vertexFlags,
         const char* vsEntry = "VsMain",
         const char* psEntry = "PsMain");
 
     bool LoadComputeShadersFromFile(
         const string& filenameBase,
-        GraphicsObjectHandle* shader,
+        ObjectHandle* shader,
         const char* entry = "CsMain");
 
     void AddText(const char* text, const char* font, float size, float x, float y, u32 color);
@@ -325,10 +325,10 @@ namespace boba
 
     bool CreateDefaultGeometry();
 
-    ID3D11ShaderResourceView* GetShaderResourceView(GraphicsObjectHandle h);
+    ID3D11ShaderResourceView* GetShaderResourceView(ObjectHandle h);
 
     // given texture data and a name, insert it into the GOH chain
-    GraphicsObjectHandle InsertTexture(TextureResource *data, const char *friendlyName);
+    ObjectHandle InsertTexture(TextureResource *data, const char *friendlyName);
 
     static INT_PTR CALLBACK dialogWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     static bool EnumerateDisplayModes(HWND hWnd);
@@ -364,7 +364,7 @@ namespace boba
 #endif
 
     // resources
-    enum { IdCount = 1 << GraphicsObjectHandle::cIdBits };
+    enum { IdCount = 1 << ObjectHandle::cIdBits };
     IdBuffer<ID3D11VertexShader*, IdCount> _vertexShaders;
     IdBuffer<ID3D11PixelShader*, IdCount> _pixelShaders;
     IdBuffer<ID3D11ComputeShader*, IdCount> _computeShaders;
@@ -392,14 +392,14 @@ namespace boba
 
     D3D_FEATURE_LEVEL _featureLevel;
 
-    GraphicsObjectHandle _defaultRenderTarget;
-    GraphicsObjectHandle _dummyTexture;
+    ObjectHandle _defaultRenderTarget;
+    ObjectHandle _dummyTexture;
 
-    GraphicsObjectHandle _defaultRasterizerState;
-    GraphicsObjectHandle _defaultDepthStencilState;
+    ObjectHandle _defaultRasterizerState;
+    ObjectHandle _defaultDepthStencilState;
     CComPtr<ID3D11SamplerState> _defaultSamplerState;
     float _defaultBlendFactors[4];
-    GraphicsObjectHandle _defaultBlendState;
+    ObjectHandle _defaultBlendState;
 
     const char *_vsProfile;
     const char *_psProfile;
@@ -409,9 +409,9 @@ namespace boba
     bool _vsync;
     int _totalBytesAllocated;
 
-    map<PredefinedGeometry, pair<GraphicsObjectHandle, GraphicsObjectHandle> > _predefinedGeometry;
+    map<PredefinedGeometry, pair<ObjectHandle, ObjectHandle> > _predefinedGeometry;
 
-    GraphicsObjectHandle _swapChain;
+    ObjectHandle _swapChain;
 
     HWND _hwnd;
     HINSTANCE _hInstance;
@@ -444,7 +444,7 @@ namespace boba
       }
     }
 
-    GraphicsObjectHandle h;
+    ObjectHandle h;
   };
 
 

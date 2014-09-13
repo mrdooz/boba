@@ -2,12 +2,14 @@
 
 namespace boba
 {
-  class GraphicsObjectHandle
+  class ObjectHandle
   {
   public:
     enum Type
     {
       kInvalid = -1,    // NB: You have to compare _raw against kInvalid to test
+
+      // Graphics
       kContext,
       kVertexBuffer,
       kIndexBuffer,
@@ -30,11 +32,15 @@ namespace boba
       kMaterial,
       kStructuredBuffer,
       kSwapChain,
+
+      // Animation
+      kAnimation,
       cNumTypes
     };
 
   private:
     friend class Graphics;
+    friend struct AnimationManager;
     enum
     { 
       cTypeBits = 8,
@@ -42,10 +48,10 @@ namespace boba
       cDataBits = 32 - (cTypeBits + cIdBits),
     };
 
-    static_assert(1 << GraphicsObjectHandle::cTypeBits > GraphicsObjectHandle::cNumTypes, "Not enough type bits");
+    static_assert(1 << ObjectHandle::cTypeBits > ObjectHandle::cNumTypes, "Not enough type bits");
 
-    GraphicsObjectHandle(u32 type, u32 id) : _type(type), _id(id), _data(0) {}
-    GraphicsObjectHandle(u32 type, u32 id, u32 data) : _type(type), _id(id), _data(data) 
+    ObjectHandle(u32 type, u32 id) : _type(type), _id(id), _data(0) {}
+    ObjectHandle(u32 type, u32 id, u32 data) : _type(type), _id(id), _data(data) 
     {
     }
 
@@ -60,7 +66,7 @@ namespace boba
       u32 _raw;
     };
   public:
-    GraphicsObjectHandle() : _raw(kInvalid) {}
+    ObjectHandle() : _raw(kInvalid) {}
     bool IsValid() const { return _raw != kInvalid; }
     u32 ToInt() const { return _raw; }
     u32 id() const { return _id; }
@@ -68,5 +74,5 @@ namespace boba
     Type type() const { return (Type)_type; }
   };
 
-  static_assert(sizeof(GraphicsObjectHandle) <= sizeof(uint32_t), "GraphicsObjectHandle too large");
+  static_assert(sizeof(ObjectHandle) <= sizeof(uint32_t), "GraphicsObjectHandle too large");
 }

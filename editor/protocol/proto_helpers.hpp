@@ -1,6 +1,14 @@
 #pragma once
 
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable: 4244 4267)
+#endif
 #include "editor_styles.pb.h"
+#ifdef _WIN32
+#pragma warning(pop)
+#endif
+
 #include "editor_types.hpp"
 #include "effect_types.hpp"
 #include "effect_plexus_types.hpp"

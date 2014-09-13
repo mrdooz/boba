@@ -1,6 +1,6 @@
 #pragma once
 #include "graphics.hpp"
-#include "graphics_object_handle.hpp"
+#include "object_handle.hpp"
 
 namespace boba
 {
@@ -25,12 +25,12 @@ namespace boba
 
     bool LoadShadersFromFile(const char* filename, const char* vsEntry, const char* psEntry, u32 flags);
 
-    GraphicsObjectHandle _vs;
-    GraphicsObjectHandle _ps;
-    GraphicsObjectHandle _layout;
+    ObjectHandle _vs;
+    ObjectHandle _ps;
+    ObjectHandle _layout;
 
-    GraphicsObjectHandle _vb;
-    GraphicsObjectHandle _ib;
+    ObjectHandle _vb;
+    ObjectHandle _ib;
 
     u32 _vbSize;
     u32 _ibSize;
@@ -49,7 +49,7 @@ namespace boba
     }
 
     T data;
-    GraphicsObjectHandle handle;
+    ObjectHandle handle;
   };
 
   //------------------------------------------------------------------------------
@@ -61,9 +61,9 @@ namespace boba
         const D3D11_BLEND_DESC& blendDesc,
         const D3D11_RASTERIZER_DESC& rasterizerDesc);
 
-    GraphicsObjectHandle _depthStencilState;
-    GraphicsObjectHandle _blendState;
-    GraphicsObjectHandle _rasterizerState;
+    ObjectHandle _depthStencilState;
+    ObjectHandle _blendState;
+    ObjectHandle _rasterizerState;
 
     enum Samplers 
     {
@@ -73,6 +73,6 @@ namespace boba
       Point,
     };
 
-    GraphicsObjectHandle _samplers[4];
+    ObjectHandle _samplers[4];
   };
 }

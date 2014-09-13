@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics_object_handle.hpp"
+#include "object_handle.hpp"
 
 namespace boba
 {
@@ -11,9 +11,9 @@ namespace boba
     Mesh();
 
     string _name;
-    GraphicsObjectHandle _vb;
-    GraphicsObjectHandle _ib;
-    GraphicsObjectHandle _layout;
+    ObjectHandle _vb;
+    ObjectHandle _ib;
+    ObjectHandle _layout;
     u32 _numVerts;
     u32 _numIndices;
     BoundingSphere _boundingSphere;

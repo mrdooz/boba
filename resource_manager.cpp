@@ -235,7 +235,7 @@ void ResourceManager::Tick()
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle ResourceManager::LoadTexture(
+ObjectHandle ResourceManager::LoadTexture(
     const char* filename,
     const char* friendlyName,
     bool srgb,
@@ -248,7 +248,7 @@ GraphicsObjectHandle ResourceManager::LoadTexture(
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle ResourceManager::LoadTextureFromMemory(
+ObjectHandle ResourceManager::LoadTextureFromMemory(
     const char* buf,
     size_t len,
     const char* friendlyName,
@@ -373,13 +373,13 @@ bool PackedResourceManager::load_inplace(const char *filename, size_t ofs, size_
   return loadPackedInplace(filename, ofs, len, buf);
 }
 
-GraphicsObjectHandle PackedResourceManager::LoadTexture(const char *filename, const char *friendly_name, bool srgb, D3DX11_IMAGE_INFO *info) {
+ObjectHandle PackedResourceManager::LoadTexture(const char *filename, const char *friendly_name, bool srgb, D3DX11_IMAGE_INFO *info) {
   vector<char> tmp;
   loadPackedFile(filename, &tmp);
   return GRAPHICS.LoadTextureFromMemory(tmp.data(), tmp.size(), friendly_name, srgb, info);
 }
 
-GraphicsObjectHandle PackedResourceManager::LoadTextureFromMemory(
+ObjectHandle PackedResourceManager::LoadTextureFromMemory(
   const char *buf, size_t len, const char *friendly_name, bool srgb, D3DX11_IMAGE_INFO *info)
 {
   return GRAPHICS.LoadTextureFromMemory(buf, len, friendly_name, srgb, info);

@@ -8,6 +8,7 @@
 #include "resource_manager.hpp"
 #include "graphics.hpp"
 #include "websocket_client.hpp"
+#include "animation.hpp"
 
 static const int WM_LOG_NEW_MSG = WM_APP + 1;
 static const int WM_APP_CLOSE = WM_APP + 2;
@@ -131,6 +132,9 @@ bool App::Init(HINSTANCE hinstance)
   GRAPHICS.CreateDefaultSwapChain(3 * width / 4, 3 * height / 4, DXGI_FORMAT_R16G16B16A16_FLOAT, WndProc, hinstance);
 
   if (!DemoEngine::Create())
+    return false;
+
+  if (!AnimationManager::Create())
     return false;
 
   DEMO_ENGINE.RegisterFactory(ParticleTest::Name(), ParticleTest::Create);

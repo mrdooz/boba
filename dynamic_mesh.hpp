@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics_object_handle.hpp"
+#include "object_handle.hpp"
 
 
 namespace boba
@@ -34,8 +34,8 @@ namespace boba
     Matrix rotation;
     Vector3 translation;
 
-    GraphicsObjectHandle _wireframe;
-    GraphicsObjectHandle _solid;
+    ObjectHandle _wireframe;
+    ObjectHandle _solid;
   };
 
   void SetDynamicMesh(DynamicMesh* mesh);

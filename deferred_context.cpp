@@ -18,21 +18,21 @@ DeferredContext::DeferredContext()
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::GenerateMips(GraphicsObjectHandle h)
+void DeferredContext::GenerateMips(ObjectHandle h)
 {
   auto r = GRAPHICS._renderTargets.Get(h)->srv.resource;
   _ctx->GenerateMips(r);
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetRenderTarget(GraphicsObjectHandle render_target, const Color* clearColor)
+void DeferredContext::SetRenderTarget(ObjectHandle render_target, const Color* clearColor)
 {
   SetRenderTargets(&render_target, clearColor, 1);
 }
 
 //------------------------------------------------------------------------------
 void DeferredContext::SetRenderTargets(
-    GraphicsObjectHandle* renderTargets,
+    ObjectHandle* renderTargets,
     const Color* clearTargets,
     int numRenderTargets)
 {
@@ -47,7 +47,7 @@ void DeferredContext::SetRenderTargets(
   // and clear targets if specified
   for (int i = 0; i < numRenderTargets; ++i)
   {
-    GraphicsObjectHandle h = renderTargets[i];
+    ObjectHandle h = renderTargets[i];
     assert(h.IsValid());
     Graphics::RenderTargetResource* rt = GRAPHICS._renderTargets.Get(h);
     texture_desc = rt->texture.desc;
@@ -73,7 +73,7 @@ void DeferredContext::SetRenderTargets(
 
 //------------------------------------------------------------------------------
 void DeferredContext::GetRenderTargetTextureDesc(
-    GraphicsObjectHandle handle,
+    ObjectHandle handle,
     D3D11_TEXTURE2D_DESC* desc)
 {
   auto rt = GRAPHICS._renderTargets.Get(
@@ -82,7 +82,7 @@ void DeferredContext::GetRenderTargetTextureDesc(
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetSwapChain(GraphicsObjectHandle h, const float* clearColor)
+void DeferredContext::SetSwapChain(ObjectHandle h, const float* clearColor)
 {
   auto swapChain  = GRAPHICS._swapChains.Get(h);
   auto rt         = GRAPHICS._renderTargets.Get(swapChain->_renderTarget);
@@ -97,37 +97,37 @@ void DeferredContext::SetSwapChain(GraphicsObjectHandle h, const float* clearCol
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetVS(GraphicsObjectHandle vs)
+void DeferredContext::SetVS(ObjectHandle vs)
 {
-  assert(vs.type() == GraphicsObjectHandle::kVertexShader || !vs.IsValid());
+  assert(vs.type() == ObjectHandle::kVertexShader || !vs.IsValid());
   assert(GRAPHICS._vertexShaders.Get(vs));
   _ctx->VSSetShader(GRAPHICS._vertexShaders.Get(vs), NULL, 0);
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetCS(GraphicsObjectHandle cs)
+void DeferredContext::SetCS(ObjectHandle cs)
 {
-  assert(cs.type() == GraphicsObjectHandle::kComputeShader || !cs.IsValid());
+  assert(cs.type() == ObjectHandle::kComputeShader || !cs.IsValid());
   _ctx->CSSetShader(cs.IsValid() ? GRAPHICS._computeShaders.Get(cs) : NULL, NULL, 0);
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetGS(GraphicsObjectHandle gs)
+void DeferredContext::SetGS(ObjectHandle gs)
 {
-  assert(gs.type() == GraphicsObjectHandle::kGeometryShader || !gs.IsValid());
+  assert(gs.type() == ObjectHandle::kGeometryShader || !gs.IsValid());
   _ctx->GSSetShader(gs.IsValid() ? GRAPHICS._geometryShaders.Get(gs) : NULL, NULL, 0);
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetPS(GraphicsObjectHandle ps)
+void DeferredContext::SetPS(ObjectHandle ps)
 {
-  assert(ps.type() == GraphicsObjectHandle::kPixelShader || !ps.IsValid());
+  assert(ps.type() == ObjectHandle::kPixelShader || !ps.IsValid());
   assert(GRAPHICS._pixelShaders.Get(ps));
   _ctx->PSSetShader(ps.IsValid() ? GRAPHICS._pixelShaders.Get(ps) : NULL, NULL, 0);
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetLayout(GraphicsObjectHandle layout)
+void DeferredContext::SetLayout(ObjectHandle layout)
 {
   if (layout.IsValid())
     _ctx->IASetInputLayout(GRAPHICS._inputLayouts.Get(layout));
@@ -136,7 +136,7 @@ void DeferredContext::SetLayout(GraphicsObjectHandle layout)
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetIB(GraphicsObjectHandle ib)
+void DeferredContext::SetIB(ObjectHandle ib)
 {
   _ctx->IASetIndexBuffer(GRAPHICS._indexBuffers.Get(ib), (DXGI_FORMAT)ib.data(), 0);
 }
@@ -157,7 +157,7 @@ void DeferredContext::SetVB(ID3D11Buffer *buf, u32 stride)
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetVB(GraphicsObjectHandle vb) 
+void DeferredContext::SetVB(ObjectHandle vb) 
 {
   SetVB(GRAPHICS._vertexBuffers.Get(vb), vb.data());
 }
@@ -169,19 +169,19 @@ void DeferredContext::SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY top)
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetRasterizerState(GraphicsObjectHandle rs)
+void DeferredContext::SetRasterizerState(ObjectHandle rs)
 {
   _ctx->RSSetState(GRAPHICS._rasterizerStates.Get(rs));
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetDepthStencilState(GraphicsObjectHandle dss, UINT stencil_ref)
+void DeferredContext::SetDepthStencilState(ObjectHandle dss, UINT stencil_ref)
 {
   _ctx->OMSetDepthStencilState(GRAPHICS._depthStencilStates.Get(dss), stencil_ref);
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetBlendState(GraphicsObjectHandle bs, const float* blendFactors, UINT sampleMask)
+void DeferredContext::SetBlendState(ObjectHandle bs, const float* blendFactors, UINT sampleMask)
 {
   _ctx->OMSetBlendState(GRAPHICS._blendStates.Get(bs), blendFactors, sampleMask);
 }
@@ -218,7 +218,7 @@ void DeferredContext::UnsetRenderTargets(int first, int count)
 
 //------------------------------------------------------------------------------
 bool DeferredContext::Map(
-  GraphicsObjectHandle h,
+  ObjectHandle h,
   UINT sub,
   D3D11_MAP type,
   UINT flags,
@@ -226,13 +226,13 @@ bool DeferredContext::Map(
 {
   switch (h.type())
   {
-  case GraphicsObjectHandle::kTexture:
+  case ObjectHandle::kTexture:
     return SUCCEEDED(_ctx->Map(GRAPHICS._textures.Get(h)->texture.resource, sub, type, flags, res));
 
-  case GraphicsObjectHandle::kVertexBuffer:
+  case ObjectHandle::kVertexBuffer:
     return SUCCEEDED(_ctx->Map(GRAPHICS._vertexBuffers.Get(h), sub, type, flags, res));
 
-  case GraphicsObjectHandle::kIndexBuffer:
+  case ObjectHandle::kIndexBuffer:
     return SUCCEEDED(_ctx->Map(GRAPHICS._indexBuffers.Get(h), sub, type, flags, res));
 
   default:
@@ -242,19 +242,19 @@ bool DeferredContext::Map(
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::Unmap(GraphicsObjectHandle h, UINT sub)
+void DeferredContext::Unmap(ObjectHandle h, UINT sub)
 {
   switch (h.type())
   {
-  case GraphicsObjectHandle::kTexture:
+  case ObjectHandle::kTexture:
     _ctx->Unmap(GRAPHICS._textures.Get(h)->texture.resource, sub);
     break;
 
-  case GraphicsObjectHandle::kVertexBuffer:
+  case ObjectHandle::kVertexBuffer:
     _ctx->Unmap(GRAPHICS._vertexBuffers.Get(h), sub);
     break;
 
-  case GraphicsObjectHandle::kIndexBuffer:
+  case ObjectHandle::kIndexBuffer:
     _ctx->Unmap(GRAPHICS._indexBuffers.Get(h), sub);
     break;
 
@@ -265,7 +265,7 @@ void DeferredContext::Unmap(GraphicsObjectHandle h, UINT sub)
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::CopyToBuffer(GraphicsObjectHandle h, const void* data, u32 len)
+void DeferredContext::CopyToBuffer(ObjectHandle h, const void* data, u32 len)
 {
   D3D11_MAPPED_SUBRESOURCE res;
   if (Map(h, 0, D3D11_MAP_WRITE_DISCARD, 0, &res))
@@ -277,7 +277,7 @@ void DeferredContext::CopyToBuffer(GraphicsObjectHandle h, const void* data, u32
 
 //------------------------------------------------------------------------------
 void DeferredContext::CopyToBuffer(
-    GraphicsObjectHandle h,
+    ObjectHandle h,
     UINT sub,
     D3D11_MAP type,
     UINT flags,
@@ -334,7 +334,7 @@ void DeferredContext::Flush()
 
 //------------------------------------------------------------------------------
 void DeferredContext::SetShaderResources(
-    const vector<GraphicsObjectHandle>& handles,
+    const vector<ObjectHandle>& handles,
     ShaderType shaderType)
 {
   ID3D11ShaderResourceView** v = (ID3D11ShaderResourceView**)_alloca(sizeof(ID3D11ShaderResourceView*) * handles.size());
@@ -359,7 +359,7 @@ void DeferredContext::SetShaderResources(
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetShaderResource(GraphicsObjectHandle h, ShaderType shaderType)
+void DeferredContext::SetShaderResource(ObjectHandle h, ShaderType shaderType)
 {
   ID3D11ShaderResourceView* view = view = GRAPHICS.GetShaderResourceView(h);
   view = GRAPHICS.GetShaderResourceView(h);
@@ -380,17 +380,17 @@ void DeferredContext::SetShaderResource(GraphicsObjectHandle h, ShaderType shade
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetUav(GraphicsObjectHandle h, Color* clearColor)
+void DeferredContext::SetUav(ObjectHandle h, Color* clearColor)
 {
   auto type = h.type();
 
   ID3D11UnorderedAccessView* view = nullptr;
-  if (type == GraphicsObjectHandle::kStructuredBuffer)
+  if (type == ObjectHandle::kStructuredBuffer)
   {
     Graphics::StructuredBuffer* buf = GRAPHICS._structuredBuffers.Get(h);
     view = buf->uav.resource;
   }
-  else if (type == GraphicsObjectHandle::kRenderTarget)
+  else if (type == ObjectHandle::kRenderTarget)
   {
     Graphics::RenderTargetResource* res = GRAPHICS._renderTargets.Get(h);
     view = res->uav.resource;
@@ -411,7 +411,7 @@ void DeferredContext::SetUav(GraphicsObjectHandle h, Color* clearColor)
 }
 
 //------------------------------------------------------------------------------
-void DeferredContext::SetSamplerState(GraphicsObjectHandle h, u32 slot, ShaderType shaderType)
+void DeferredContext::SetSamplerState(ObjectHandle h, u32 slot, ShaderType shaderType)
 {
   ID3D11SamplerState* samplerState = GRAPHICS._sampler_states.Get(h);
 
@@ -427,7 +427,7 @@ void DeferredContext::SetSamplerState(GraphicsObjectHandle h, u32 slot, ShaderTy
 
 //------------------------------------------------------------------------------
 void DeferredContext::SetSamplers(
-    const GraphicsObjectHandle* h,
+    const ObjectHandle* h,
     u32 slot,
     u32 numSamplers,
     ShaderType shaderType)
@@ -448,7 +448,7 @@ void DeferredContext::SetSamplers(
 
 //------------------------------------------------------------------------------
 void DeferredContext::SetCBuffer(
-    GraphicsObjectHandle h,
+    ObjectHandle h,
     const void* buf,
     size_t len,
     ShaderType shaderType,

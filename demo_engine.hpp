@@ -1,6 +1,8 @@
 #pragma once
 
 #include "graphics.hpp"
+#include "timer.hpp"
+
 #pragma warning(push)
 #pragma warning(disable: 4244 4267)
 #include "protocol/effect_settings.pb.h"
@@ -9,26 +11,9 @@
 namespace boba
 {
   class Effect;
+  struct AnimationManager;
 
   typedef function<Effect*(const char*, u32)> EffectFactory;
-
-  class Timer
-  {
-  public:
-    Timer();
-
-    void Start();
-    void Stop();
-    void SetElapsed(TimeDuration us);
-    TimeDuration Elapsed(TimeDuration* delta) const;
-    bool IsRunning() const;
-
-  private:
-    bool _running;
-    s64 _frequency;
-    s64 _startTime;
-    mutable s64 _curTime;
-  };
 
   class DemoEngine
   {
@@ -50,6 +35,7 @@ namespace boba
     TimeDuration Pos();
 
     TimeDuration Duration() const;
+    void SetDuration(const TimeDuration& duration);
     bool Tick();
 
     void WndProc(UINT message, WPARAM wParam, LPARAM lParam);
@@ -59,7 +45,7 @@ namespace boba
     void ProcessPayload(const void* payload, u32 size);
     void Connected();
 
-  private:
+//  private:
     DemoEngine();
     ~DemoEngine();
     static DemoEngine* _instance;
@@ -79,7 +65,6 @@ namespace boba
     TimeDuration _duration;
 
     Timer _timer;
-
 
     protocol::effect::EffectSettings _config;
     unordered_map<string, EffectFactory> _effectFactories;

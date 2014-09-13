@@ -20,63 +20,6 @@ float TimeDurationToFloat(TimeDuration t)
 }
 
 //------------------------------------------------------------------------------
-Timer::Timer()
-  : _running(false)
-  , _startTime(0)
-  , _curTime(0)
-{
-  QueryPerformanceFrequency((LARGE_INTEGER *)&_frequency);
-}
-
-//------------------------------------------------------------------------------
-void Timer::Start()
-{
-  if (_running)
-    return;
-
-  _running = true;
-  QueryPerformanceCounter((LARGE_INTEGER*)&_startTime);
-}
-
-//------------------------------------------------------------------------------
-void Timer::Stop()
-{
-  if (!_running)
-    return;
-
-  _running = false;
-  QueryPerformanceCounter((LARGE_INTEGER*)&_curTime);
-}
-
-//------------------------------------------------------------------------------
-void Timer::SetElapsed(TimeDuration us)
-{
-  s64 ticks = us.TotalMicroseconds() * _frequency / 1000000;
-  _startTime = max((s64)0, _curTime - ticks);
-}
-
-//------------------------------------------------------------------------------
-TimeDuration Timer::Elapsed(TimeDuration* delta) const
-{
-  s64 prev = _curTime;
-  if (_running)
-    QueryPerformanceCounter((LARGE_INTEGER*)&_curTime);
-
-  if (delta)
-    *delta = TimeDuration::Microseconds(1000000 * (_curTime - prev) / _frequency);
-
-  // return elapsed time in us
-  s64 elapsed = _curTime - _startTime;
-  return TimeDuration::Microseconds(1000000 * elapsed / _frequency);
-}
-
-//------------------------------------------------------------------------------
-bool Timer::IsRunning() const
-{
-  return _running;
-}
-
-//------------------------------------------------------------------------------
 namespace
 {
   Effect* Transfer(deque<Effect*>& src, deque<Effect*>& dst)
@@ -171,6 +114,13 @@ TimeDuration DemoEngine::Duration() const
 }
 
 //------------------------------------------------------------------------------
+void DemoEngine::SetDuration(const TimeDuration& duration)
+{
+  _duration = duration;
+  _timer.SetCycle(duration);
+}
+
+//------------------------------------------------------------------------------
 void DemoEngine::ReclassifyEffects()
 {
   TimeDuration currentTime = _timer.Elapsed(nullptr);
@@ -199,7 +149,8 @@ void DemoEngine::ReclassifyEffects()
 //------------------------------------------------------------------------------
 bool DemoEngine::Tick()
 {
-  TimeDuration delta, current = _timer.Elapsed(&delta);
+  TimeDuration delta, current;
+  current = _timer.Elapsed(&delta);
 
   // check for any effects that have ended
   while (!_activeEffects.empty() && _activeEffects.front()->EndTime() <= current)

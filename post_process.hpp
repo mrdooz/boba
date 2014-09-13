@@ -1,5 +1,5 @@
 #pragma once
-#include "graphics_object_handle.hpp"
+#include "object_handle.hpp"
 #include "gpu_objects.hpp"
 
 namespace boba
@@ -14,9 +14,9 @@ namespace boba
     void Setup();
 
     void Execute(
-      const vector<GraphicsObjectHandle>& input,
-      GraphicsObjectHandle output,
-      GraphicsObjectHandle shader,
+      const vector<ObjectHandle>& input,
+      ObjectHandle output,
+      ObjectHandle shader,
       const Color* clearColor,
       WCHAR* name);
 
@@ -31,6 +31,6 @@ namespace boba
 
     GpuState _gpuState;
 
-    GraphicsObjectHandle _vsQuad;
+    ObjectHandle _vsQuad;
   };
 }

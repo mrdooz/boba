@@ -363,7 +363,7 @@ bool GeneratorTest::Render()
     if (_planeConfig.transpose())
     {
       // set constant buffers
-      GraphicsObjectHandle srcDst[] =
+      ObjectHandle srcDst[] =
       {
         // horiz
         threshold.h, scratch0.h, scratch0.h, scratch1.h, scratch1.h, scratch0.h,
@@ -438,7 +438,7 @@ bool GeneratorTest::Render()
     }
     else
     {
-      GraphicsObjectHandle srcDst[] =
+      ObjectHandle srcDst[] =
       {
         threshold.h, blur0.h, blur0.h, blur1.h,
         blur1.h, blur0.h, blur0.h, blur1.h,
@@ -475,7 +475,7 @@ bool GeneratorTest::Render()
     }
 
     // apply tone mapping and bloom
-    GraphicsObjectHandle rtDest = GRAPHICS.RenderTargetForSwapChain(GRAPHICS.DefaultSwapChain());
+    ObjectHandle rtDest = GRAPHICS.RenderTargetForSwapChain(GRAPHICS.DefaultSwapChain());
 
     if (_renderFlags.IsSet(GeneratorTest::RenderFlags::Luminance))
     {

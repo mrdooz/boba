@@ -87,7 +87,7 @@ bool Graphics::SwapChain::CreateBackBuffers(u32 width, u32 height, DXGI_FORMAT f
 
   // Register the buffer with GRAPHICS
   u32 idx = g._renderTargets.Insert(_name, rt);
-  _renderTarget = GraphicsObjectHandle(GraphicsObjectHandle::kRenderTarget, idx);
+  _renderTarget = ObjectHandle(ObjectHandle::kRenderTarget, idx);
 
   _viewport = CD3D11_VIEWPORT (0.0f, 0.0f, (float)width, (float)height);
   return true;
@@ -100,7 +100,7 @@ void Graphics::SwapChain::Present()
 }
 
 //------------------------------------------------------------------------------
-static GraphicsObjectHandle emptyGoh;
+static ObjectHandle emptyGoh;
 Graphics* Graphics::_instance;
 
 #if WITH_DXGI_DEBUG
@@ -431,7 +431,7 @@ bool Graphics::CreateDevice()
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateBuffer(
+ObjectHandle Graphics::CreateBuffer(
     D3D11_BIND_FLAG bind,
     int size,
     bool dynamic,
@@ -445,19 +445,19 @@ GraphicsObjectHandle Graphics::CreateBuffer(
     {
       const int idx = _indexBuffers.Insert(buffer);
       assert(userData == DXGI_FORMAT_R16_UINT || userData == DXGI_FORMAT_R32_UINT);
-      return MakeObjectHandle(GraphicsObjectHandle::kIndexBuffer, idx, userData);
+      return MakeObjectHandle(ObjectHandle::kIndexBuffer, idx, userData);
     } 
     else if (bind == D3D11_BIND_VERTEX_BUFFER)
     {
       const int idx = _vertexBuffers.Insert(buffer);
       // userdata is vertex size
       assert(userData > 0);
-      return MakeObjectHandle(GraphicsObjectHandle::kVertexBuffer, idx, userData);
+      return MakeObjectHandle(ObjectHandle::kVertexBuffer, idx, userData);
     } 
     else if (bind == D3D11_BIND_CONSTANT_BUFFER)
     {
       const int idx = _constantBuffers.Insert(buffer);
-      return MakeObjectHandle(GraphicsObjectHandle::kConstantBuffer, idx, size);
+      return MakeObjectHandle(ObjectHandle::kConstantBuffer, idx, size);
     }
     else
     {
@@ -491,23 +491,23 @@ bool Graphics::CreateBufferInner(
 }
 
 //------------------------------------------------------------------------------
-ID3D11ShaderResourceView* Graphics::GetShaderResourceView(GraphicsObjectHandle h)
+ID3D11ShaderResourceView* Graphics::GetShaderResourceView(ObjectHandle h)
 {
-  GraphicsObjectHandle::Type type = h.type();
+  ObjectHandle::Type type = h.type();
 
-  if (type == GraphicsObjectHandle::kTexture)
+  if (type == ObjectHandle::kTexture)
   {
     return _textures.Get(h)->view.resource;
   }
-  else if (type == GraphicsObjectHandle::kResource)
+  else if (type == ObjectHandle::kResource)
   {
     return _resources.Get(h)->view.resource;
   }
-  else if (type == GraphicsObjectHandle::kRenderTarget)
+  else if (type == ObjectHandle::kRenderTarget)
   {
     return _renderTargets.Get(h)->srv.resource;
   }
-  else if (type == GraphicsObjectHandle::kStructuredBuffer)
+  else if (type == ObjectHandle::kStructuredBuffer)
   {
     return _structuredBuffers.Get(h)->srv.resource;
   }
@@ -515,17 +515,17 @@ ID3D11ShaderResourceView* Graphics::GetShaderResourceView(GraphicsObjectHandle h
 }
 
 //------------------------------------------------------------------------------
-bool Graphics::GetTextureSize(GraphicsObjectHandle h, u32* x, u32* y)
+bool Graphics::GetTextureSize(ObjectHandle h, u32* x, u32* y)
 {
-  GraphicsObjectHandle::Type type = h.type();
+  ObjectHandle::Type type = h.type();
 
-  if (type == GraphicsObjectHandle::kTexture)
+  if (type == ObjectHandle::kTexture)
   {
     *x = _textures.Get(h)->texture.desc.Width;
     *y = _textures.Get(h)->texture.desc.Height;
     return true;
   }
-  else if (type == GraphicsObjectHandle::kResource)
+  else if (type == ObjectHandle::kResource)
   {
     u32 mipLevel = _resources.Get(h)->view.desc.Texture2D.MostDetailedMip;
 
@@ -538,7 +538,7 @@ bool Graphics::GetTextureSize(GraphicsObjectHandle h, u32* x, u32* y)
     *y = max(desc.Height / (1 << mipLevel), 1u);
     return true;
   }
-  else if (type == GraphicsObjectHandle::kRenderTarget)
+  else if (type == ObjectHandle::kRenderTarget)
   {
     const D3D11_RENDER_TARGET_VIEW_DESC& rtDesc = _renderTargets.Get(h)->rtv.desc;
     const D3D11_TEXTURE2D_DESC& desc = _renderTargets.Get(h)->texture.desc;
@@ -547,7 +547,7 @@ bool Graphics::GetTextureSize(GraphicsObjectHandle h, u32* x, u32* y)
     *y = max(desc.Height / (1 << mipLevel), 1u);
     return true;
   }
-  else if (type == GraphicsObjectHandle::kStructuredBuffer)
+  else if (type == ObjectHandle::kStructuredBuffer)
   {
     assert(false);
     return true;
@@ -558,7 +558,7 @@ bool Graphics::GetTextureSize(GraphicsObjectHandle h, u32* x, u32* y)
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::GetTempRenderTarget(
+ObjectHandle Graphics::GetTempRenderTarget(
   int width,
   int height,
   DXGI_FORMAT format,
@@ -584,7 +584,7 @@ GraphicsObjectHandle Graphics::GetTempRenderTarget(
   {
     RenderTargetResource* rt = _renderTargets.Get(idx);
     rt->in_use = true;
-    return MakeObjectHandle(GraphicsObjectHandle::kRenderTarget, idx);
+    return MakeObjectHandle(ObjectHandle::kRenderTarget, idx);
   }
 
   // nothing suitable found, so we create a render target
@@ -592,7 +592,7 @@ GraphicsObjectHandle Graphics::GetTempRenderTarget(
 }
 
 //------------------------------------------------------------------------------
-void Graphics::ReleaseTempRenderTarget(GraphicsObjectHandle h)
+void Graphics::ReleaseTempRenderTarget(ObjectHandle h)
 {
   RenderTargetResource* rt = _renderTargets.Get(h);
   assert(rt->in_use);
@@ -600,7 +600,7 @@ void Graphics::ReleaseTempRenderTarget(GraphicsObjectHandle h)
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateStructuredBuffer(
+ObjectHandle Graphics::CreateStructuredBuffer(
     int elemSize,
     int numElems,
     bool createSrv)
@@ -645,25 +645,25 @@ GraphicsObjectHandle Graphics::CreateStructuredBuffer(
   }
 
   return MakeObjectHandle(
-      GraphicsObjectHandle::kStructuredBuffer, _structuredBuffers.Insert(sb.release()));
+      ObjectHandle::kStructuredBuffer, _structuredBuffers.Insert(sb.release()));
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateRenderTarget(
+ObjectHandle Graphics::CreateRenderTarget(
     int width,
     int height,
     DXGI_FORMAT format,
     const BufferFlags& bufferFlags,
     const string& name)
 {
-  GraphicsObjectHandle goh;
+  ObjectHandle goh;
   unique_ptr<RenderTargetResource> data(new RenderTargetResource);
   if (CreateRenderTarget(width, height, format, bufferFlags, data.get()))
   {
     int idx = name.empty()
       ? _renderTargets.Insert(data.release())
       : _renderTargets.Insert(name, data.release());
-    return MakeObjectHandle(GraphicsObjectHandle::kRenderTarget, idx);
+    return MakeObjectHandle(ObjectHandle::kRenderTarget, idx);
   }
   return emptyGoh;
 }
@@ -768,13 +768,13 @@ bool Graphics::ReadTexture(
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::GetTexture(const char *filename)
+ObjectHandle Graphics::GetTexture(const char *filename)
 {
-  return MakeObjectHandle(GraphicsObjectHandle::kResource, _resources.IndexFromKey(filename));
+  return MakeObjectHandle(ObjectHandle::kResource, _resources.IndexFromKey(filename));
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::LoadTexture(
+ObjectHandle Graphics::LoadTexture(
     const char* filename,
     const char* friendlyName,
     bool srgb,
@@ -799,12 +799,12 @@ GraphicsObjectHandle Graphics::LoadTexture(
   if (FAILED(_device->CreateShaderResourceView(data->resource, &desc, &data->view.resource)))
     return emptyGoh;
 
-  return MakeObjectHandle(GraphicsObjectHandle::kResource, 
+  return MakeObjectHandle(ObjectHandle::kResource, 
     _resources.Insert(friendlyName ? friendlyName : filename, data.release()));
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::LoadTextureFromMemory(
+ObjectHandle Graphics::LoadTextureFromMemory(
     const void *buf,
     u32 len,
     const char *friendlyName,
@@ -827,20 +827,20 @@ GraphicsObjectHandle Graphics::LoadTextureFromMemory(
     return emptyGoh;
 
   return MakeObjectHandle(
-      GraphicsObjectHandle::kResource, _resources.Insert(friendlyName, data.release()));
+      ObjectHandle::kResource, _resources.Insert(friendlyName, data.release()));
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::InsertTexture(
+ObjectHandle Graphics::InsertTexture(
     TextureResource *data,
     const char *friendlyName)
 {
   return MakeObjectHandle(
-      GraphicsObjectHandle::kTexture, _textures.Insert(friendlyName, data));
+      ObjectHandle::kTexture, _textures.Insert(friendlyName, data));
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateTexture(
+ObjectHandle Graphics::CreateTexture(
     const D3D11_TEXTURE2D_DESC &desc,
     const char *name)
 {
@@ -877,7 +877,7 @@ bool Graphics::CreateTexture(
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateTexture(
+ObjectHandle Graphics::CreateTexture(
     int width,
     int height,
     DXGI_FORMAT fmt, 
@@ -971,7 +971,7 @@ bool Graphics::CreateDefaultGeometry()
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateInputLayout(
+ObjectHandle Graphics::CreateInputLayout(
     const vector<D3D11_INPUT_ELEMENT_DESC> &desc,
     const vector<char> &shader_bytecode)
 {
@@ -982,81 +982,81 @@ GraphicsObjectHandle Graphics::CreateInputLayout(
     return emptyGoh;
   }
 
-  return GraphicsObjectHandle(GraphicsObjectHandle::kInputLayout, _inputLayouts.Insert(layout));
+  return ObjectHandle(ObjectHandle::kInputLayout, _inputLayouts.Insert(layout));
 }
 
 //------------------------------------------------------------------------------
 template<typename T, class Cont>
-GraphicsObjectHandle AddShader(
+ObjectHandle AddShader(
     Cont &cont,
     T *shader,
     const string &id,
-    GraphicsObjectHandle::Type type)
+    ObjectHandle::Type type)
 {
   return Graphics::MakeObjectHandle(type, cont.Insert(id, shader));
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateVertexShader(
+ObjectHandle Graphics::CreateVertexShader(
     const vector<char> &shader_bytecode,
     const string &id)
 {
   ID3D11VertexShader *vs = nullptr;
   if (SUCCEEDED(_device->CreateVertexShader(&shader_bytecode[0], shader_bytecode.size(), NULL, &vs)))
   {
-    return AddShader(_vertexShaders, vs, id, GraphicsObjectHandle::kVertexShader);
+    return AddShader(_vertexShaders, vs, id, ObjectHandle::kVertexShader);
   }
   return emptyGoh;
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreatePixelShader(
+ObjectHandle Graphics::CreatePixelShader(
     const vector<char> &shader_bytecode,
     const string &id)
 {
   ID3D11PixelShader *ps = nullptr;
   if (SUCCEEDED(_device->CreatePixelShader(&shader_bytecode[0], shader_bytecode.size(), NULL, &ps)))
   {
-    return AddShader(_pixelShaders, ps, id, GraphicsObjectHandle::kPixelShader);
+    return AddShader(_pixelShaders, ps, id, ObjectHandle::kPixelShader);
   }
   return emptyGoh;
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateComputeShader(
+ObjectHandle Graphics::CreateComputeShader(
     const vector<char> &shader_bytecode,
     const string &id)
 {
   ID3D11ComputeShader *cs = nullptr;
   if (SUCCEEDED(_device->CreateComputeShader(&shader_bytecode[0], shader_bytecode.size(), NULL, &cs)))
   {
-    return AddShader(_computeShaders, cs, id, GraphicsObjectHandle::kComputeShader);
+    return AddShader(_computeShaders, cs, id, ObjectHandle::kComputeShader);
   }
   return emptyGoh;
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateGeometryShader(
+ObjectHandle Graphics::CreateGeometryShader(
     const vector<char> &shader_bytecode,
     const string &id)
 {
   ID3D11GeometryShader *cs = nullptr;
   if (SUCCEEDED(_device->CreateGeometryShader(&shader_bytecode[0], shader_bytecode.size(), NULL, &cs)))
   {
-    return AddShader(_geometryShaders, cs, id, GraphicsObjectHandle::kGeometryShader);
+    return AddShader(_geometryShaders, cs, id, ObjectHandle::kGeometryShader);
   }
   return emptyGoh;
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateRasterizerState(
+ObjectHandle Graphics::CreateRasterizerState(
     const D3D11_RASTERIZER_DESC &desc,
     const char *name)
 {
   ID3D11RasterizerState *rs;
   if (SUCCEEDED(_device->CreateRasterizerState(&desc, &rs)))
   {
-    return MakeObjectHandle(GraphicsObjectHandle::kRasterizerState,
+    return MakeObjectHandle(ObjectHandle::kRasterizerState,
         name 
           ? _rasterizerStates.Insert(name, rs)
           : _rasterizerStates.Insert(rs));
@@ -1065,14 +1065,14 @@ GraphicsObjectHandle Graphics::CreateRasterizerState(
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateBlendState(
+ObjectHandle Graphics::CreateBlendState(
     const D3D11_BLEND_DESC &desc,
     const char *name)
 {
   ID3D11BlendState *bs;
   if (SUCCEEDED(_device->CreateBlendState(&desc, &bs)))
   {
-    return MakeObjectHandle(GraphicsObjectHandle::kBlendState,
+    return MakeObjectHandle(ObjectHandle::kBlendState,
         name 
           ? _blendStates.Insert(name, bs)
           : _blendStates.Insert(bs));
@@ -1081,14 +1081,14 @@ GraphicsObjectHandle Graphics::CreateBlendState(
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateDepthStencilState(
+ObjectHandle Graphics::CreateDepthStencilState(
     const D3D11_DEPTH_STENCIL_DESC &desc,
     const char *name)
 {
   ID3D11DepthStencilState *dss;
   if (SUCCEEDED(_device->CreateDepthStencilState(&desc, &dss)))
   {
-    return MakeObjectHandle(GraphicsObjectHandle::kDepthStencilState,
+    return MakeObjectHandle(ObjectHandle::kDepthStencilState,
         name 
           ? _depthStencilStates.Insert(name, dss)
           : _depthStencilStates.Insert(dss));
@@ -1097,14 +1097,14 @@ GraphicsObjectHandle Graphics::CreateDepthStencilState(
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateSamplerState(
+ObjectHandle Graphics::CreateSamplerState(
     const D3D11_SAMPLER_DESC &desc,
     const char *name)
 {
   ID3D11SamplerState *ss;
   if (SUCCEEDED(_device->CreateSamplerState(&desc, &ss)))
   {
-    return MakeObjectHandle(GraphicsObjectHandle::kSamplerState,
+    return MakeObjectHandle(ObjectHandle::kSamplerState,
       name 
         ? _sampler_states.Insert(name, ss)
         : _sampler_states.Insert(ss));
@@ -1113,7 +1113,7 @@ GraphicsObjectHandle Graphics::CreateSamplerState(
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::CreateSwapChain(
+ObjectHandle Graphics::CreateSwapChain(
     const TCHAR* name,
     u32 width,
     u32 height,
@@ -1172,14 +1172,14 @@ GraphicsObjectHandle Graphics::CreateSwapChain(
   swapChain->_swapChain = sc;
   if (swapChain->CreateBackBuffers(width, height, format))
   {
-    return GraphicsObjectHandle(
-      GraphicsObjectHandle::kSwapChain, _swapChains.Insert(swapChain));
+    return ObjectHandle(
+      ObjectHandle::kSwapChain, _swapChains.Insert(swapChain));
   }
   return emptyGoh;
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::FindResource(const string &name)
+ObjectHandle Graphics::FindResource(const string &name)
 {
   if (name.empty())
     return _dummyTexture;
@@ -1187,53 +1187,53 @@ GraphicsObjectHandle Graphics::FindResource(const string &name)
   // check textures, then resources, then render targets
   int idx = _textures.IndexFromKey(name);
   if (idx != -1)
-    return GraphicsObjectHandle(GraphicsObjectHandle::kTexture, idx);
+    return ObjectHandle(ObjectHandle::kTexture, idx);
 
   idx = _resources.IndexFromKey(name);
   if (idx != -1)
-    return GraphicsObjectHandle(GraphicsObjectHandle::kResource, idx);
+    return ObjectHandle(ObjectHandle::kResource, idx);
 
   idx = _renderTargets.IndexFromKey(name);
-  return MakeObjectHandle(GraphicsObjectHandle::kRenderTarget, idx);
+  return MakeObjectHandle(ObjectHandle::kRenderTarget, idx);
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::FindSampler(const string &name)
+ObjectHandle Graphics::FindSampler(const string &name)
 {
-  return MakeObjectHandle(GraphicsObjectHandle::kSamplerState, _sampler_states.IndexFromKey(name));
+  return MakeObjectHandle(ObjectHandle::kSamplerState, _sampler_states.IndexFromKey(name));
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::FindBlendState(const string &name)
+ObjectHandle Graphics::FindBlendState(const string &name)
 {
-  return MakeObjectHandle(GraphicsObjectHandle::kBlendState, _blendStates.IndexFromKey(name));
+  return MakeObjectHandle(ObjectHandle::kBlendState, _blendStates.IndexFromKey(name));
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::FindRasterizerState(const string &name)
+ObjectHandle Graphics::FindRasterizerState(const string &name)
 {
-  return MakeObjectHandle(GraphicsObjectHandle::kRasterizerState, _rasterizerStates.IndexFromKey(name));
+  return MakeObjectHandle(ObjectHandle::kRasterizerState, _rasterizerStates.IndexFromKey(name));
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::FindDepthStencilState(const string &name)
+ObjectHandle Graphics::FindDepthStencilState(const string &name)
 {
-  return MakeObjectHandle(GraphicsObjectHandle::kDepthStencilState, _depthStencilStates.IndexFromKey(name));
+  return MakeObjectHandle(ObjectHandle::kDepthStencilState, _depthStencilStates.IndexFromKey(name));
 }
 
 //------------------------------------------------------------------------------
-Graphics::SwapChain* Graphics::GetSwapChain(GraphicsObjectHandle h)
+Graphics::SwapChain* Graphics::GetSwapChain(ObjectHandle h)
 {
   return _swapChains.Get(h);
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::MakeObjectHandle(
-    GraphicsObjectHandle::Type type,
+ObjectHandle Graphics::MakeObjectHandle(
+    ObjectHandle::Type type,
     int idx,
     int data)
 {
-  return idx != -1 ? GraphicsObjectHandle(type, idx, data) : emptyGoh;
+  return idx != -1 ? ObjectHandle(type, idx, data) : emptyGoh;
 }
 
 //------------------------------------------------------------------------------
@@ -1263,9 +1263,9 @@ DeferredContext* Graphics::CreateDeferredContext(bool canUseImmediate)
 //------------------------------------------------------------------------------
 void Graphics::GetPredefinedGeometry(
     PredefinedGeometry geom,
-    GraphicsObjectHandle *vb,
+    ObjectHandle *vb,
     int *vertex_size,
-    GraphicsObjectHandle *ib, 
+    ObjectHandle *ib, 
     DXGI_FORMAT *index_format,
     int *index_count)
 {
@@ -1333,7 +1333,7 @@ void Graphics::GetBackBufferSize(int* width, int* height)
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::DefaultSwapChain()
+ObjectHandle Graphics::DefaultSwapChain()
 {
   return _swapChain;
 }
@@ -1367,10 +1367,10 @@ void Graphics::AddText(
 }
 
 //------------------------------------------------------------------------------
-GraphicsObjectHandle Graphics::RenderTargetForSwapChain(GraphicsObjectHandle h)
+ObjectHandle Graphics::RenderTargetForSwapChain(ObjectHandle h)
 {
   if (!h.IsValid())
-    return GraphicsObjectHandle();
+    return ObjectHandle();
 
   auto swapChain = GRAPHICS._swapChains.Get(h);
   return swapChain->_renderTarget;
@@ -1379,7 +1379,7 @@ GraphicsObjectHandle Graphics::RenderTargetForSwapChain(GraphicsObjectHandle h)
 //------------------------------------------------------------------------------
 bool Graphics::LoadComputeShadersFromFile(
     const string& filenameBase,
-    GraphicsObjectHandle* shader,
+    ObjectHandle* shader,
     const char* entry)
 {
 #if WITH_DEBUG_SHADERS
@@ -1418,9 +1418,9 @@ bool Graphics::LoadComputeShadersFromFile(
 //------------------------------------------------------------------------------
 bool Graphics::LoadShadersFromFile(
     const string& filenameBase,
-    GraphicsObjectHandle* vs,
-    GraphicsObjectHandle* ps,
-    GraphicsObjectHandle* inputLayout,
+    ObjectHandle* vs,
+    ObjectHandle* ps,
+    ObjectHandle* inputLayout,
     u32 vertexFlags,
     const char* vsEntry,
     const char* psEntry)
@@ -1448,7 +1448,7 @@ bool Graphics::LoadShadersFromFile(
           return false;
         }
 
-        GraphicsObjectHandle h = GRAPHICS.CreateVertexShader(buf, vsEntry);
+        ObjectHandle h = GRAPHICS.CreateVertexShader(buf, vsEntry);
         if (!h.IsValid())
         {
           LOG_WARN("Unable to create vertex shader" << LogKeyValue("filename", filename));

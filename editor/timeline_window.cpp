@@ -90,10 +90,10 @@ void TimelineWindow::AddDefaultRows(bool addKeyframes)
     str = to_string("TextPath: %s", "test");
     parent->_children.push_back(new EffectRowTextPath(_font, str, parent));
 
-    NoiseEffector e;
-    e.applyTo = NoiseEffector::ApplyTo::Position;
+    NoiseEffectorConfig e;
+    e.applyTo = NoiseEffectorConfig::ApplyTo::Position;
 
-    str = to_string("Noise (%s)", e.applyTo == NoiseEffector::ApplyTo::Position ? "POS" : "SCALE");
+    str = to_string("Noise (%s)", e.applyTo == NoiseEffectorConfig::ApplyTo::Position ? "POS" : "SCALE");
     EffectRowNoise* n = new EffectRowNoise(_font, str, parent);
 
     if (addKeyframes)
@@ -612,7 +612,7 @@ void TimelineWindow::Reset(const protocol::effect::EffectSettings& settings)
         break;
 
       case 1:
-        protocol::effect::plexus::Plexus p;
+        protocol::effect::plexus::PlexusConfig p;
         const string& str = setting.config_msg();
         p.ParseFromArray(str.data(), (int)str.size());
 

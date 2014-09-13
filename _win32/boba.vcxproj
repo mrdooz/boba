@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\anim_utils.cpp" />
+    <ClCompile Include="..\animation.cpp" />
     <ClCompile Include="..\app.cpp" />
     <ClCompile Include="..\boba.cpp" />
     <ClCompile Include="..\boba_loader.cpp" />
@@ -518,10 +518,11 @@
     <ClCompile Include="..\resource_manager.cpp" />
     <ClCompile Include="..\scene.cpp" />
     <ClCompile Include="..\scene_test.cpp" />
+    <ClCompile Include="..\timer.cpp" />
     <ClCompile Include="..\websocket_client.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\anim_utils.hpp" />
+    <ClInclude Include="..\animation.hpp" />
     <ClInclude Include="..\app.hpp" />
     <ClInclude Include="..\boba_loader.hpp" />
     <ClInclude Include="..\debug_drawer.hpp" />
@@ -560,6 +561,7 @@
     <ClInclude Include="..\lua\lundump.h" />
     <ClInclude Include="..\lua\lvm.h" />
     <ClInclude Include="..\lua\lzio.h" />
+    <ClInclude Include="..\object_handle.hpp" />
     <ClInclude Include="..\particle_test.hpp" />
     <ClInclude Include="..\plexus_test.hpp" />
     <ClInclude Include="..\post_process.hpp" />
@@ -582,6 +584,7 @@
     <ClInclude Include="..\resource_manager.hpp" />
     <ClInclude Include="..\scene.hpp" />
     <ClInclude Include="..\scene_test.hpp" />
+    <ClInclude Include="..\timer.hpp" />
     <ClInclude Include="..\websocket_client.hpp" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics_object_handle.hpp"
+#include "object_handle.hpp"
 
 namespace boba
 {
@@ -41,13 +41,13 @@ namespace boba
     }
 
     //------------------------------------------------------------------------------
-    T Get(GraphicsObjectHandle h)
+    T Get(ObjectHandle h)
     {
       return _elems[h.id()];
     }
 
     //------------------------------------------------------------------------------
-    void Update(GraphicsObjectHandle h, T res)
+    void Update(ObjectHandle h, T res)
     {
       _elems[h.id()] = res;
     }

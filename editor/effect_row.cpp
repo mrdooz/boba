@@ -226,7 +226,7 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
 
   // draw text
   _text.setString(_str);
-  _text.setPosition(_rect._rect.getPosition() + Vector2f(20 + _level * 15, 0) );
+  _text.setPosition(_rect._rect.getPosition() + Vector2f(20.f + _level * 15.f, 0.f) );
   _text.setColor(::FromProtocol(settings.var_text_color()));
   texture.draw(_text);
 
@@ -304,7 +304,7 @@ bool EffectRowPlexus::ToProtocol(google::protobuf::Message* msg) const
   assert(!_parent);
   proto->set_type(protocol::effect::EffectSetting_Type_Plexus);
 
-  protocol::effect::plexus::Plexus plexus;
+  protocol::effect::plexus::PlexusConfig plexus;
   for (const EffectRow* row : _children)
   {
     row->ToProtocol(&plexus);
@@ -318,10 +318,10 @@ bool EffectRowPlexus::ToProtocol(google::protobuf::Message* msg) const
 //----------------------------------------------------------------------------------
 bool EffectRowPlexus::FromProtocol(const google::protobuf::Message& proto)
 {
-  const protocol::effect::plexus::Plexus& p =
-      static_cast<const protocol::effect::plexus::Plexus&>(proto);
+  const protocol::effect::plexus::PlexusConfig& p =
+      static_cast<const protocol::effect::plexus::PlexusConfig&>(proto);
 
-  for (const protocol::effect::plexus::TextPath& textPath : p.text_paths())
+  for (const protocol::effect::plexus::TextPathConfig& textPath : p.text_paths())
   {
     string str = to_string("TextPath: %s", textPath.text().c_str());
 
@@ -329,10 +329,10 @@ bool EffectRowPlexus::FromProtocol(const google::protobuf::Message& proto)
     _children.back()->FromProtocol(textPath);
   }
 
-  for (const protocol::effect::plexus::NoiseEffector& effector : p.noise_effectors())
+  for (const protocol::effect::plexus::NoiseEffectorConfig& effector : p.noise_effectors())
   {
     string str = to_string("Noise (%s)",
-      effector.apply_to() == protocol::effect::plexus::NoiseEffector_ApplyTo_Position
+      effector.apply_to() == protocol::effect::plexus::NoiseEffectorConfig_ApplyTo_Position
           ? "POS" : "SCALE");
 
     _children.push_back(new EffectRowNoise(_font, str, this));
@@ -354,7 +354,7 @@ EffectRowTextPath::EffectRowTextPath(
 //----------------------------------------------------------------------------------
 bool EffectRowTextPath::ToProtocol(google::protobuf::Message* msg) const
 {
-  protocol::effect::plexus::Plexus* proto = static_cast<protocol::effect::plexus::Plexus*>(msg);
+  protocol::effect::plexus::PlexusConfig* proto = static_cast<protocol::effect::plexus::PlexusConfig*>(msg);
   proto->add_text_paths()->set_text(_str);
   return true;
 }
@@ -362,7 +362,8 @@ bool EffectRowTextPath::ToProtocol(google::protobuf::Message* msg) const
 //----------------------------------------------------------------------------------
 bool EffectRowTextPath::FromProtocol(const google::protobuf::Message& proto)
 {
-  const protocol::effect::plexus::TextPath& p = static_cast<const protocol::effect::plexus::TextPath&>(proto);
+  const protocol::effect::plexus::TextPathConfig& p 
+    = static_cast<const protocol::effect::plexus::TextPathConfig&>(proto);
   _textPath = ::FromProtocol(p);
   return true;
 }
@@ -382,7 +383,8 @@ EffectRowNoise::EffectRowNoise(
 //----------------------------------------------------------------------------------
 bool EffectRowNoise::FromProtocol(const google::protobuf::Message& proto)
 {
-  const protocol::effect::plexus::NoiseEffector& p = static_cast<const protocol::effect::plexus::NoiseEffector&>(proto);
+  const protocol::effect::plexus::NoiseEffectorConfig& p 
+    = static_cast<const protocol::effect::plexus::NoiseEffectorConfig&>(proto);
   _effector = ::FromProtocol(p);
   return true;
 }
@@ -390,7 +392,8 @@ bool EffectRowNoise::FromProtocol(const google::protobuf::Message& proto)
 //----------------------------------------------------------------------------------
 bool EffectRowNoise::ToProtocol(google::protobuf::Message* msg) const
 {
-  protocol::effect::plexus::Plexus* proto = static_cast<protocol::effect::plexus::Plexus*>(msg);
+  protocol::effect::plexus::PlexusConfig* proto 
+    = static_cast<protocol::effect::plexus::PlexusConfig*>(msg);
 
   ::ToProtocol(_effector, proto->add_noise_effectors());
   return true;

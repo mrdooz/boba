@@ -76,10 +76,10 @@ namespace boba
 
     lua_State* _lua;
 
-    GraphicsObjectHandle _renderTarget;
-    GraphicsObjectHandle _psCopy;
-    GraphicsObjectHandle _psLuminance;
-    GraphicsObjectHandle _psAdaption;
+    ObjectHandle _renderTarget;
+    ObjectHandle _psCopy;
+    ObjectHandle _psLuminance;
+    ObjectHandle _psAdaption;
 
     struct CBuffeComposite
     {
@@ -87,12 +87,12 @@ namespace boba
     };
     ConstantBuffer<CBuffeComposite> _cbComposite;
 
-    GraphicsObjectHandle _psComposite;
+    ObjectHandle _psComposite;
 
     // default states
-    GraphicsObjectHandle _depthStencilState;
-    GraphicsObjectHandle _blendState;
-    GraphicsObjectHandle _rasterizerState;
+    ObjectHandle _depthStencilState;
+    ObjectHandle _blendState;
+    ObjectHandle _rasterizerState;
 
     struct CBufferToneMapping
     {
@@ -103,7 +103,7 @@ namespace boba
     };
     ConstantBuffer<CBufferToneMapping> _cbToneMapping;
 
-    GraphicsObjectHandle _luminanceAdaption[2];
+    ObjectHandle _luminanceAdaption[2];
     u32 _curAdaption;
     UpdateState _updateState;
 
@@ -113,17 +113,17 @@ namespace boba
       float radius;
     };
     ConstantBuffer<CBufferBlur> _cbBlur;
-    GraphicsObjectHandle _csBlurTranspose;
-    GraphicsObjectHandle _csBlurX;
-    GraphicsObjectHandle _csBlurY;
-    GraphicsObjectHandle _csCopyTranspose;
+    ObjectHandle _csBlurTranspose;
+    ObjectHandle _csBlurX;
+    ObjectHandle _csBlurY;
+    ObjectHandle _csCopyTranspose;
 
     struct CBufferBloom
     {
       float threshold;
     };
     ConstantBuffer<CBufferBloom> _cbBloom;
-    GraphicsObjectHandle _psThreshold;
+    ObjectHandle _psThreshold;
   };
 
 }

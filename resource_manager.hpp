@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics_object_handle.hpp"
+#include "object_handle.hpp"
 
 namespace boba
 {
@@ -23,12 +23,12 @@ namespace boba
     bool LoadFile(const char *filename, vector<char> *buf);
     bool LoadPartial(const char *filename, size_t ofs, size_t len, vector<char> *buf);
     bool LoadInplace(const char *filename, size_t ofs, size_t len, void *buf);
-    GraphicsObjectHandle LoadTexture(
+    ObjectHandle LoadTexture(
         const char* filename,
         const char* friendlyName = nullptr,
         bool srgb = false,
         D3DX11_IMAGE_INFO *info = nullptr);
-    GraphicsObjectHandle LoadTextureFromMemory(
+    ObjectHandle LoadTextureFromMemory(
         const char* buf,
         size_t len,
         const char* friendlyName,
@@ -91,8 +91,8 @@ namespace boba
     bool load_file(const char *filename, vector<char> *buf);
     bool load_partial(const char *filename, size_t ofs, size_t len, vector<char> *buf);
     bool load_inplace(const char *filename, size_t ofs, size_t len, void *buf);
-    GraphicsObjectHandle LoadTexture(const char *filename, const char *friendly_name, bool srgb, D3DX11_IMAGE_INFO *info);
-    GraphicsObjectHandle LoadTextureFromMemory(const char *buf, size_t len, const char *friendly_name, bool srgb, D3DX11_IMAGE_INFO *info);
+    ObjectHandle LoadTexture(const char *filename, const char *friendly_name, bool srgb, D3DX11_IMAGE_INFO *info);
+    ObjectHandle LoadTextureFromMemory(const char *buf, size_t len, const char *friendly_name, bool srgb, D3DX11_IMAGE_INFO *info);
 
   private:
 

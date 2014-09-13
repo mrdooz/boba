@@ -11,6 +11,7 @@
 #include "protocol/generator_bindings.hpp"
 #include "scene.hpp"
 #include "dynamic_mesh.hpp"
+#include "animation.hpp"
 
 #pragma warning(push)
 #pragma warning(disable: 4244 4267)
@@ -29,7 +30,8 @@ namespace boba
   struct PathGenerator
   {
     virtual ~PathGenerator() {}
-    virtual void GeneratePoints(vector<Vector3>* verts) = 0;
+    virtual void GeneratePoints(const UpdateState& state, vector<Vector3>* verts) = 0;
+    virtual void ApplyConfig(const TextPathConfig& config) {}
   };
 
   struct TextPathGenerator : public PathGenerator
@@ -39,6 +41,11 @@ namespace boba
     {
       Init("meshes/text1.boba");
       WriteText("NEUROTICA EFS");
+    }
+
+    void ApplyConfig(const TextPathConfig& config)
+    {
+      _config = config;
     }
 
     bool Init(const char* filename)
@@ -155,7 +162,7 @@ namespace boba
       _numIndices = (u32)_indices.size();
     }
 
-    void GeneratePoints(vector<Vector3>* verts)
+    void GeneratePoints(const UpdateState& state, vector<Vector3>* verts)
     {
       verts->clear();
       verts->resize(_numVerts * 6);
@@ -279,7 +286,7 @@ namespace boba
 
     GpuObjects _gpuObjects;
     GpuState _gpuState;
-    GraphicsObjectHandle _particleTexture;
+    ObjectHandle _particleTexture;
   };
 
   struct LineRenderer : public Renderer
@@ -294,19 +301,55 @@ namespace boba
 
   struct Effector
   {
-    virtual void Apply(vector<Vector3>* verts) = 0;
+    virtual void Apply(const UpdateState& state, vector<Vector3>* verts) = 0;
+    virtual void ApplyConfig(const NoiseEffectorConfig& config) {}
   };
 
   struct NoiseEffector : public Effector
   {
-    void Apply(vector<Vector3>* verts)
+    virtual void ApplyConfig(const NoiseEffectorConfig& config)
     {
-
+      _config = config;
+      _displacementX = ANIMATION.AddAnimation(config.displacement.x, _displacementX);
+      _displacementY = ANIMATION.AddAnimation(config.displacement.y, _displacementY);
+      _displacementZ = ANIMATION.AddAnimation(config.displacement.z, _displacementZ);
     }
 
+    void Apply(const UpdateState& state, vector<Vector3>* verts)
+    {
+      if (_offsets.size() != verts->size())
+      {
+        _offsets.resize(verts->size());
+
+        for (size_t i = 0, e = verts->size(); i < e; ++i)
+        {
+          _offsets[i] = Vector3(randf(-1.f, 1.f), randf(-1.f, 1.f), randf(-1.f, 1.f));
+        }
+      }
+
+      s64 ms = state.globalTime.TotalMilliseconds();
+
+      float x = ANIMATION.Interpolate(_displacementX, (u32)ms);
+      float y = ANIMATION.Interpolate(_displacementY, (u32)ms);
+      float z = ANIMATION.Interpolate(_displacementZ, (u32)ms);
+
+      for (size_t i = 0, e = verts->size(); i < e; ++i)
+      {
+        Vector3& v = (*verts)[i];
+        v.x += x * _offsets[i].x;
+        v.y += y * _offsets[i].y;
+        v.z += z * _offsets[i].z;
+      }
+    }
+
+    vector<Vector3> _offsets;
+    ObjectHandle _displacementX;
+    ObjectHandle _displacementY;
+    ObjectHandle _displacementZ;
     NoiseEffectorConfig _config;
   };
 
+  //------------------------------------------------------------------------------
   struct Plexus
   {
     Plexus(DeferredContext* ctx);
@@ -315,13 +358,16 @@ namespace boba
     bool Init();
     void Update(const UpdateState& state);
     void Render(const Matrix& viewProj);
+    void ApplyConfig(const PlexusConfig& config);
 
     vector<Vector3> _verts;
     vector<PathGenerator*> _paths;
     vector<Effector*> _effectors;
     vector<Renderer*> _renderers;
+    PlexusConfig _config;
   };
 
+  //------------------------------------------------------------------------------
   Plexus::Plexus(DeferredContext* ctx)
   {
     _paths.push_back(new TextPathGenerator());
@@ -329,6 +375,7 @@ namespace boba
     _renderers.push_back(new PointRenderer(ctx));
   }
 
+  //------------------------------------------------------------------------------
   Plexus::~Plexus()
   {
     SeqDelete(&_paths);
@@ -336,6 +383,7 @@ namespace boba
     SeqDelete(&_renderers);
   }
 
+  //------------------------------------------------------------------------------
   bool Plexus::Init()
   {
     BEGIN_INIT_SEQUENCE();
@@ -346,17 +394,33 @@ namespace boba
     END_INIT_SEQUENCE();
   }
 
+  //------------------------------------------------------------------------------
+  void Plexus::ApplyConfig(const PlexusConfig& config)
+  {
+    _config = config;
+    for (size_t i = 0; i < config.textPaths.size(); ++i)
+    {
+      _paths[i]->ApplyConfig(config.textPaths[i]);
+    }
+
+    for (size_t i = 0; i < config.noiseEffectors.size(); ++i)
+    {
+      _effectors[i]->ApplyConfig(config.noiseEffectors[i]);
+    }
+  }
+
+//------------------------------------------------------------------------------
   void Plexus::Update(const UpdateState& state)
   {
     _verts.clear();
     for (PathGenerator* path : _paths)
     {
-      path->GeneratePoints(&_verts);
+      path->GeneratePoints(state, &_verts);
     }
 
     for (Effector* e : _effectors)
     {
-      e->Apply(&_verts);
+      e->Apply(state, &_verts);
     }
 
   }
@@ -652,7 +716,7 @@ void PlexusTest::RenderText()
   _ctx->SetIB(nullptr, DXGI_FORMAT_R32_UINT);
   _ctx->UnsetSRVs(0, 1, ShaderType::PixelShader);
 
-  GraphicsObjectHandle rtDest = GRAPHICS.RenderTargetForSwapChain(GRAPHICS.DefaultSwapChain());
+  ObjectHandle rtDest = GRAPHICS.RenderTargetForSwapChain(GRAPHICS.DefaultSwapChain());
 
   _postProcess->Setup();
   _postProcess->Execute({ scratch.h }, rtDest, _psEdgeDetect, &black, L"EdgeDetect");
@@ -723,6 +787,7 @@ void PlexusTest::FromProtocol(const std::string& str)
   p.ParseFromString(str);
 
   _plexusConfig = ::FromProtocol(p);
+  _plexus->ApplyConfig(_plexusConfig);
 }
 
 //------------------------------------------------------------------------------
