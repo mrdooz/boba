@@ -20,7 +20,14 @@ namespace {{ namespace }}
       {{ value.name }} = {{ value.number }},
     {% endfor %}
     };
+    {% endfor %}
 
+    {% for flag in class.flags %}
+    struct {{ flag.name }}FlagsF {
+      enum Enum { {% for val in flag.vals %}{{ val.name }} = 1 << {{ val.value }}, {% endfor %}};
+      struct Bits { {% for val in flag.vals %}u32 {{ val.name }} : 1; {% endfor %}};
+    };
+    typedef Flags<{{ flag.name }}FlagsF> {{ flag.name }}Flags;
     {% endfor %}
     {% for member in class.members %}
     {% if member.default_value %}

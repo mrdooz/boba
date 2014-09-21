@@ -1,5 +1,4 @@
 #pragma once
-#include "imgui.hpp"
 
 namespace editor
 {

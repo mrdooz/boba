@@ -58,6 +58,15 @@ void PropertyWindow::Draw()
 
     static const char* loopTypes[] = { "Clamp", "Loop", "Loop Smooth" };
     ImGui::Combo("Loop", (int*)&_anim->header.loop, loopTypes, 3);
+
+    bool useMinValue = _anim->valueFlags.IsSet(FloatAnim::ValueFlagsF::UseMinValue);
+    bool useMaxValue = _anim->valueFlags.IsSet(FloatAnim::ValueFlagsF::UseMaxValue);
+    if (ImGui::Checkbox("Use Min Value", &useMinValue)) _anim->valueFlags.Toggle(FloatAnim::ValueFlagsF::UseMinValue);
+    if (useMinValue) ImGui::InputFloat("Min Value", &_anim->minValue);
+
+    if (ImGui::Checkbox("Use Max Value", &useMaxValue)) _anim->valueFlags.Toggle(FloatAnim::ValueFlagsF::UseMaxValue);
+    if (useMaxValue) ImGui::InputFloat("Max Value", &_anim->maxValue);
+
   }
   else if (_keyframe)
   {

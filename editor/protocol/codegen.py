@@ -52,6 +52,11 @@ def underscore_to_camel_case(str):
     x = str.split('_')
     return x[0] + ''.join(map(lambda x : x.title(), x[1:]))
 
+def underscore_to_title(str):
+    # 'under_score_hej' -> 'UnderScoreHej'
+    x = str.split('_')
+    return ''.join(map(lambda x : x.title(), x[:]))
+
 def underscore_to_title_case(str):
     # 'under_score_hej' -> 'underScoreHej'
     x = str.split('_')
@@ -110,6 +115,8 @@ def parse_descriptor_set(cmdargs):
                 pkg = file_to_package[dep]
                 args['dependencies'].append(package_to_filename(pkg))
 
+            flag_vars = set()
+
             # iterator over Descriptor (messages)
             for msg_desc in file_desc.message_type:
 
@@ -126,6 +133,7 @@ def parse_descriptor_set(cmdargs):
                 cur_class = { 
                     'members' : [], 
                     'enums' : [],
+                    'flags' : [],
                     'proto_type' : package_namespace + '::' + msg_desc.name,
                     }
 
@@ -134,10 +142,20 @@ def parse_descriptor_set(cmdargs):
 
                 # extract any enums
                 for enum in msg_desc.enum_type:
-                    e = { 'name' : enum.name, 'vals' : []}
-                    cur_class['enums'].append(e)
-                    for value in enum.value:
-                        e['vals'].append({'name' : value.name, 'number' : value.number})
+                    # if the enum is named 'Flags', treat it as a flag bitfield
+                    flag = enum.name.split('Flags')
+                    if len(flag) == 2:
+                        f = { 'name' : flag[0], 'vals' : []}
+                        cur_class['flags'].append(f)
+                        flag_vars.add(flag[0].lower() + '_flags')
+                        for i, value in enumerate(enum.value):
+                            f['vals'].append({'name' : value.name, 'value' : i})
+                    else:
+                        # normal enum
+                        e = { 'name' : enum.name, 'vals' : []}
+                        cur_class['enums'].append(e)
+                        for value in enum.value:
+                            e['vals'].append({'name' : value.name, 'number' : value.number})
 
                 # process fields
                 idx = 0
@@ -153,8 +171,14 @@ def parse_descriptor_set(cmdargs):
                     is_optional = field_desc.label == 1
                     is_required = field_desc.label == 2
                     is_repeated = field_desc.label == 3
+                    is_flag = False
 
                     proto_type = field_desc.type_name
+
+                    proto_field_name = field_desc.name
+                    field_name = underscore_to_camel_case(field_desc.name)
+                    name_title = underscore_to_title_case(field_desc.name)
+
                     default_value = None
                     if len(field_desc.default_value) > 0:
                         # handle special cases for default value
@@ -164,8 +188,15 @@ def parse_descriptor_set(cmdargs):
                             default_value = field_desc.default_value
 
                     if type_number in NATIVE_TYPES:
-                        field_type = NATIVE_TYPES[type_number]
-                        base_type = field_type
+                        # check if the var is a flag, instead of a normal type
+                        if field_desc.name in flag_vars:
+                            field_type = underscore_to_title(field_desc.name)
+                            base_type = field_type
+                            default_value = None
+                            is_flag = True
+                        else:
+                            field_type = NATIVE_TYPES[type_number]
+                            base_type = field_type
                     elif is_msg:
                         s = field_desc.type_name.split('.')
                         proto_type = ''.join(s[1:])
@@ -189,9 +220,6 @@ def parse_descriptor_set(cmdargs):
                         base_type = field_type
                         field_type = 'vector<%s>' % field_type
 
-                    proto_field_name = field_desc.name
-                    field_name = underscore_to_camel_case(field_desc.name)
-                    name_title = underscore_to_title_case(field_desc.name)
 
                     cur_member = { 
                         'name' : field_name,
@@ -203,6 +231,7 @@ def parse_descriptor_set(cmdargs):
                         'is_native' : is_native,
                         'is_enum' : is_enum,
                         'is_bytes' : is_bytes,
+                        'is_flag' : is_flag,
                         'proto_name' : proto_field_name, 
                         'proto_type' : proto_type,
                         'idx' : idx,

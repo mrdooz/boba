@@ -67,12 +67,12 @@ inline bool AnimHeader_AnimType_Parse(
     AnimHeader_AnimType_descriptor(), name, value);
 }
 enum AnimHeader_LoopType {
-  AnimHeader_LoopType_STOP = 0,
+  AnimHeader_LoopType_CLAMP = 0,
   AnimHeader_LoopType_LOOP = 1,
   AnimHeader_LoopType_LOOP_SMOOTH = 2
 };
 bool AnimHeader_LoopType_IsValid(int value);
-const AnimHeader_LoopType AnimHeader_LoopType_LoopType_MIN = AnimHeader_LoopType_STOP;
+const AnimHeader_LoopType AnimHeader_LoopType_LoopType_MIN = AnimHeader_LoopType_CLAMP;
 const AnimHeader_LoopType AnimHeader_LoopType_LoopType_MAX = AnimHeader_LoopType_LOOP_SMOOTH;
 const int AnimHeader_LoopType_LoopType_ARRAYSIZE = AnimHeader_LoopType_LoopType_MAX + 1;
 
@@ -85,6 +85,25 @@ inline bool AnimHeader_LoopType_Parse(
     const ::std::string& name, AnimHeader_LoopType* value) {
   return ::google::protobuf::internal::ParseNamedEnum<AnimHeader_LoopType>(
     AnimHeader_LoopType_descriptor(), name, value);
+}
+enum FloatAnim_ValueFlags {
+  FloatAnim_ValueFlags_UseMinValue = 0,
+  FloatAnim_ValueFlags_UseMaxValue = 1
+};
+bool FloatAnim_ValueFlags_IsValid(int value);
+const FloatAnim_ValueFlags FloatAnim_ValueFlags_ValueFlags_MIN = FloatAnim_ValueFlags_UseMinValue;
+const FloatAnim_ValueFlags FloatAnim_ValueFlags_ValueFlags_MAX = FloatAnim_ValueFlags_UseMaxValue;
+const int FloatAnim_ValueFlags_ValueFlags_ARRAYSIZE = FloatAnim_ValueFlags_ValueFlags_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* FloatAnim_ValueFlags_descriptor();
+inline const ::std::string& FloatAnim_ValueFlags_Name(FloatAnim_ValueFlags value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    FloatAnim_ValueFlags_descriptor(), value);
+}
+inline bool FloatAnim_ValueFlags_Parse(
+    const ::std::string& name, FloatAnim_ValueFlags* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<FloatAnim_ValueFlags>(
+    FloatAnim_ValueFlags_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -1012,7 +1031,7 @@ class AnimHeader : public ::google::protobuf::Message {
   }
 
   typedef AnimHeader_LoopType LoopType;
-  static const LoopType STOP = AnimHeader_LoopType_STOP;
+  static const LoopType CLAMP = AnimHeader_LoopType_CLAMP;
   static const LoopType LOOP = AnimHeader_LoopType_LOOP;
   static const LoopType LOOP_SMOOTH = AnimHeader_LoopType_LOOP_SMOOTH;
   static inline bool LoopType_IsValid(int value) {
@@ -1128,6 +1147,30 @@ class FloatAnim : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
+  typedef FloatAnim_ValueFlags ValueFlags;
+  static const ValueFlags UseMinValue = FloatAnim_ValueFlags_UseMinValue;
+  static const ValueFlags UseMaxValue = FloatAnim_ValueFlags_UseMaxValue;
+  static inline bool ValueFlags_IsValid(int value) {
+    return FloatAnim_ValueFlags_IsValid(value);
+  }
+  static const ValueFlags ValueFlags_MIN =
+    FloatAnim_ValueFlags_ValueFlags_MIN;
+  static const ValueFlags ValueFlags_MAX =
+    FloatAnim_ValueFlags_ValueFlags_MAX;
+  static const int ValueFlags_ARRAYSIZE =
+    FloatAnim_ValueFlags_ValueFlags_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  ValueFlags_descriptor() {
+    return FloatAnim_ValueFlags_descriptor();
+  }
+  static inline const ::std::string& ValueFlags_Name(ValueFlags value) {
+    return FloatAnim_ValueFlags_Name(value);
+  }
+  static inline bool ValueFlags_Parse(const ::std::string& name,
+      ValueFlags* value) {
+    return FloatAnim_ValueFlags_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
   // optional .protocol.common.AnimHeader header = 1;
@@ -1151,18 +1194,48 @@ class FloatAnim : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::protocol::common::FloatKeyframe >*
       mutable_keyframe();
 
+  // optional uint32 value_flags = 3 [default = 0];
+  inline bool has_value_flags() const;
+  inline void clear_value_flags();
+  static const int kValueFlagsFieldNumber = 3;
+  inline ::google::protobuf::uint32 value_flags() const;
+  inline void set_value_flags(::google::protobuf::uint32 value);
+
+  // optional float min_value = 4;
+  inline bool has_min_value() const;
+  inline void clear_min_value();
+  static const int kMinValueFieldNumber = 4;
+  inline float min_value() const;
+  inline void set_min_value(float value);
+
+  // optional float max_value = 5;
+  inline bool has_max_value() const;
+  inline void clear_max_value();
+  static const int kMaxValueFieldNumber = 5;
+  inline float max_value() const;
+  inline void set_max_value(float value);
+
   // @@protoc_insertion_point(class_scope:protocol.common.FloatAnim)
  private:
   inline void set_has_header();
   inline void clear_has_header();
+  inline void set_has_value_flags();
+  inline void clear_has_value_flags();
+  inline void set_has_min_value();
+  inline void clear_has_min_value();
+  inline void set_has_max_value();
+  inline void clear_has_max_value();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::protocol::common::AnimHeader* header_;
   ::google::protobuf::RepeatedPtrField< ::protocol::common::FloatKeyframe > keyframe_;
+  ::google::protobuf::uint32 value_flags_;
+  float min_value_;
+  float max_value_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_common_2eproto();
   friend void protobuf_AssignDesc_common_2eproto();
@@ -2033,6 +2106,72 @@ FloatAnim::mutable_keyframe() {
   return &keyframe_;
 }
 
+// optional uint32 value_flags = 3 [default = 0];
+inline bool FloatAnim::has_value_flags() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void FloatAnim::set_has_value_flags() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void FloatAnim::clear_has_value_flags() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void FloatAnim::clear_value_flags() {
+  value_flags_ = 0u;
+  clear_has_value_flags();
+}
+inline ::google::protobuf::uint32 FloatAnim::value_flags() const {
+  return value_flags_;
+}
+inline void FloatAnim::set_value_flags(::google::protobuf::uint32 value) {
+  set_has_value_flags();
+  value_flags_ = value;
+}
+
+// optional float min_value = 4;
+inline bool FloatAnim::has_min_value() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void FloatAnim::set_has_min_value() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void FloatAnim::clear_has_min_value() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void FloatAnim::clear_min_value() {
+  min_value_ = 0;
+  clear_has_min_value();
+}
+inline float FloatAnim::min_value() const {
+  return min_value_;
+}
+inline void FloatAnim::set_min_value(float value) {
+  set_has_min_value();
+  min_value_ = value;
+}
+
+// optional float max_value = 5;
+inline bool FloatAnim::has_max_value() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void FloatAnim::set_has_max_value() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void FloatAnim::clear_has_max_value() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void FloatAnim::clear_max_value() {
+  max_value_ = 0;
+  clear_has_max_value();
+}
+inline float FloatAnim::max_value() const {
+  return max_value_;
+}
+inline void FloatAnim::set_max_value(float value) {
+  set_has_max_value();
+  max_value_ = value;
+}
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -2050,6 +2189,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::protocol::common::AnimHeader_A
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::protocol::common::AnimHeader_LoopType>() {
   return ::protocol::common::AnimHeader_LoopType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protocol::common::FloatAnim_ValueFlags>() {
+  return ::protocol::common::FloatAnim_ValueFlags_descriptor();
 }
 
 }  // namespace google

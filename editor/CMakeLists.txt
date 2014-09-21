@@ -19,7 +19,7 @@ include_directories(${SFML_INCLUDE_DIR})
 include_directories(${PROTOBUF_INCLUDE_DIR})
 include_directories(${BRISTOL_INCLUDE_DIR})
 
-file(GLOB SRC "*.cpp" "*.hpp" "protocol/*.pb.cc" "protocol/*.h" "protocol/*.hpp" "protocol/*.cpp" "webby/webby.*")
+file(GLOB SRC "*.cpp" "*.hpp" "protocol/*.pb.cc" "protocol/*.h" "protocol/*.hpp" "protocol/*.cpp" "webby/webby.*" "imgui/*")
 
 add_executable(${PROJECT_NAME} ${SRC})
 
@@ -28,6 +28,8 @@ if (APPLE)
   set(COMMON_FLAGS "-Wno-switch-enum")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -v -std=c++11 -stdlib=libc++")
   find_library(APP_SERVICES ApplicationServices)
+  find_library(OPEN_GL OpenGL)
+
   set_target_properties(
     ${PROJECT_NAME}
     PROPERTIES
@@ -43,6 +45,7 @@ if (APPLE)
     "/Users/dooz//Library/Caches/appCode30/DerivedData/bristol-e7802bc5/Build/Products/Debug/libbristol_sfml.a"
     "/opt/local/boost/lib/libboost_date_time.a"
     "/opt/local/protobuf/lib/libprotobuf.a"
+    ${OPEN_GL}
     ${APP_SERVICES} )
 else()
   if (MSVC)

@@ -65,6 +65,13 @@ namespace editor
     for (const auto& x : p.keyframe() )
       res.keyframe.push_back(FromProtocol(x));
 
+
+    if (p.has_min_value())
+      res.minValue = p.min_value();
+
+    if (p.has_max_value())
+      res.maxValue = p.max_value();
+
     return res;
   }
 
@@ -73,6 +80,8 @@ namespace editor
     ToProtocol(v.header, p->mutable_header());
     for (const auto& x : v.keyframe)
       ToProtocol(x, p->add_keyframe());
+    p->set_min_value(v.minValue);
+    p->set_max_value(v.maxValue);
   }
 
 	

@@ -12,6 +12,7 @@ namespace editor
     
   struct Settings
   {
+
     u32 tickerHeight = 50;
     u32 tickerInterval = 20;
     u32 ticksPerInterval = 4;
@@ -45,6 +46,7 @@ namespace editor
 
   struct StyleSetting
   {
+
     string id;
     Color fillColor;
     Color outlineColor;
@@ -54,6 +56,7 @@ namespace editor
 
   struct StyleSettings
   {
+
     vector<StyleSetting> styleSetting;
   };
 

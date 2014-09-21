@@ -11,17 +11,20 @@ namespace editor
     
   struct PlexusConfig
   {
+
     vector<TextPathConfig> textPaths;
     vector<NoiseEffectorConfig> noiseEffectors;
   };
 
   struct TextPathConfig
   {
+
     string text;
   };
 
   struct Displacement
   {
+
     FloatAnim x;
     FloatAnim y;
     FloatAnim z;

@@ -9,6 +9,7 @@ namespace {{ namespace }}
     {% for member in class.members %}
     {% if member.is_enum %}
     res.{{ member.name }} = ({{ member.type}})p.{{ member.proto_name }}();
+    {% elif member.is_flag %}
     {% elif member.is_native %}
     if (p.has_{{ member.proto_name}}())
       res.{{ member.name }} = p.{{ member.proto_name }}();
@@ -33,6 +34,7 @@ namespace {{ namespace }}
   {
     {% for member in class.members %}
     {% if member.is_enum %}
+    {% elif member.is_flag %}
     {% elif member.is_native %}
     p->set_{{ member.proto_name }}(v.{{ member.name }});
     {% elif member.is_bytes %}

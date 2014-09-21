@@ -85,6 +85,15 @@ message FloatAnim
 {
   optional AnimHeader header = 1;
   repeated FloatKeyframe keyframe = 2;
+
+  enum ValueFlags {
+    UseMinValue = 0;
+    UseMaxValue = 1;
+  }
+
+  optional uint32 value_flags = 3 [default = 0];
+  optional float min_value = 4;
+  optional float max_value = 5;
 }
 
 //message Vector3Keyframe

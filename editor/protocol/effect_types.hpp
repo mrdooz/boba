@@ -26,6 +26,7 @@ namespace editor
 
   struct EffectSettings
   {
+
     vector<EffectSetting> effectSetting;
     string soundtrack;
   };

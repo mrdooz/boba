@@ -53,6 +53,7 @@ const ::google::protobuf::EnumDescriptor* AnimHeader_LoopType_descriptor_ = NULL
 const ::google::protobuf::Descriptor* FloatAnim_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   FloatAnim_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* FloatAnim_ValueFlags_descriptor_ = NULL;
 
 }  // namespace
 
@@ -219,9 +220,12 @@ void protobuf_AssignDesc_common_2eproto() {
   AnimHeader_AnimType_descriptor_ = AnimHeader_descriptor_->enum_type(0);
   AnimHeader_LoopType_descriptor_ = AnimHeader_descriptor_->enum_type(1);
   FloatAnim_descriptor_ = file->message_type(9);
-  static const int FloatAnim_offsets_[2] = {
+  static const int FloatAnim_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, header_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, keyframe_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, value_flags_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, min_value_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, max_value_),
   };
   FloatAnim_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -234,6 +238,7 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(FloatAnim));
+  FloatAnim_ValueFlags_descriptor_ = FloatAnim_descriptor_->enum_type(0);
 }
 
 namespace {
@@ -318,15 +323,18 @@ void protobuf_AddDesc_common_2eproto() {
     "frame\022&\n\003key\030\001 \001(\0132\031.protocol.common.Flo"
     "atKey\022(\n\005cp_in\030\002 \001(\0132\031.protocol.common.F"
     "loatKey\022)\n\006cp_out\030\003 \001(\0132\031.protocol.commo"
-    "n.FloatKey\"\355\001\n\nAnimHeader\022\?\n\004type\030\001 \001(\0162"
+    "n.FloatKey\"\356\001\n\nAnimHeader\022\?\n\004type\030\001 \001(\0162"
     "$.protocol.common.AnimHeader.AnimType:\013C"
     "ATMULL_ROM\0228\n\004loop\030\002 \001(\0162$.protocol.comm"
     "on.AnimHeader.LoopType:\004LOOP\"3\n\010AnimType"
     "\022\n\n\006LINEAR\020\000\022\n\n\006BEZIER\020\001\022\017\n\013CATMULL_ROM\020"
-    "\002\"/\n\010LoopType\022\010\n\004STOP\020\000\022\010\n\004LOOP\020\001\022\017\n\013LOO"
-    "P_SMOOTH\020\002\"j\n\tFloatAnim\022+\n\006header\030\001 \001(\0132"
-    "\033.protocol.common.AnimHeader\0220\n\010keyframe"
-    "\030\002 \003(\0132\036.protocol.common.FloatKeyframe", 1078);
+    "\002\"0\n\010LoopType\022\t\n\005CLAMP\020\000\022\010\n\004LOOP\020\001\022\017\n\013LO"
+    "OP_SMOOTH\020\002\"\330\001\n\tFloatAnim\022+\n\006header\030\001 \001("
+    "\0132\033.protocol.common.AnimHeader\0220\n\010keyfra"
+    "me\030\002 \003(\0132\036.protocol.common.FloatKeyframe"
+    "\022\026\n\013value_flags\030\003 \001(\r:\0010\022\021\n\tmin_value\030\004 "
+    "\001(\002\022\021\n\tmax_value\030\005 \001(\002\".\n\nValueFlags\022\017\n\013"
+    "UseMinValue\020\000\022\017\n\013UseMaxValue\020\001", 1190);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "common.proto", &protobuf_RegisterTypes);
   Color4::default_instance_ = new Color4();
@@ -2774,7 +2782,7 @@ bool AnimHeader_LoopType_IsValid(int value) {
 }
 
 #ifndef _MSC_VER
-const AnimHeader_LoopType AnimHeader::STOP;
+const AnimHeader_LoopType AnimHeader::CLAMP;
 const AnimHeader_LoopType AnimHeader::LOOP;
 const AnimHeader_LoopType AnimHeader::LOOP_SMOOTH;
 const AnimHeader_LoopType AnimHeader::LoopType_MIN;
@@ -3041,9 +3049,33 @@ void AnimHeader::Swap(AnimHeader* other) {
 
 // ===================================================================
 
+const ::google::protobuf::EnumDescriptor* FloatAnim_ValueFlags_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return FloatAnim_ValueFlags_descriptor_;
+}
+bool FloatAnim_ValueFlags_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const FloatAnim_ValueFlags FloatAnim::UseMinValue;
+const FloatAnim_ValueFlags FloatAnim::UseMaxValue;
+const FloatAnim_ValueFlags FloatAnim::ValueFlags_MIN;
+const FloatAnim_ValueFlags FloatAnim::ValueFlags_MAX;
+const int FloatAnim::ValueFlags_ARRAYSIZE;
+#endif  // _MSC_VER
 #ifndef _MSC_VER
 const int FloatAnim::kHeaderFieldNumber;
 const int FloatAnim::kKeyframeFieldNumber;
+const int FloatAnim::kValueFlagsFieldNumber;
+const int FloatAnim::kMinValueFieldNumber;
+const int FloatAnim::kMaxValueFieldNumber;
 #endif  // !_MSC_VER
 
 FloatAnim::FloatAnim()
@@ -3064,6 +3096,9 @@ FloatAnim::FloatAnim(const FloatAnim& from)
 void FloatAnim::SharedCtor() {
   _cached_size_ = 0;
   header_ = NULL;
+  value_flags_ = 0u;
+  min_value_ = 0;
+  max_value_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -3103,6 +3138,9 @@ void FloatAnim::Clear() {
     if (has_header()) {
       if (header_ != NULL) header_->::protocol::common::AnimHeader::Clear();
     }
+    value_flags_ = 0u;
+    min_value_ = 0;
+    max_value_ = 0;
   }
   keyframe_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -3139,6 +3177,54 @@ bool FloatAnim::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(18)) goto parse_keyframe;
+        if (input->ExpectTag(24)) goto parse_value_flags;
+        break;
+      }
+
+      // optional uint32 value_flags = 3 [default = 0];
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_value_flags:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &value_flags_)));
+          set_has_value_flags();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(37)) goto parse_min_value;
+        break;
+      }
+
+      // optional float min_value = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_min_value:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &min_value_)));
+          set_has_min_value();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(45)) goto parse_max_value;
+        break;
+      }
+
+      // optional float max_value = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_max_value:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &max_value_)));
+          set_has_max_value();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -3173,6 +3259,21 @@ void FloatAnim::SerializeWithCachedSizes(
       2, this->keyframe(i), output);
   }
 
+  // optional uint32 value_flags = 3 [default = 0];
+  if (has_value_flags()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->value_flags(), output);
+  }
+
+  // optional float min_value = 4;
+  if (has_min_value()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->min_value(), output);
+  }
+
+  // optional float max_value = 5;
+  if (has_max_value()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(5, this->max_value(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -3195,6 +3296,21 @@ void FloatAnim::SerializeWithCachedSizes(
         2, this->keyframe(i), target);
   }
 
+  // optional uint32 value_flags = 3 [default = 0];
+  if (has_value_flags()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->value_flags(), target);
+  }
+
+  // optional float min_value = 4;
+  if (has_min_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->min_value(), target);
+  }
+
+  // optional float max_value = 5;
+  if (has_max_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(5, this->max_value(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -3211,6 +3327,23 @@ int FloatAnim::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->header());
+    }
+
+    // optional uint32 value_flags = 3 [default = 0];
+    if (has_value_flags()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->value_flags());
+    }
+
+    // optional float min_value = 4;
+    if (has_min_value()) {
+      total_size += 1 + 4;
+    }
+
+    // optional float max_value = 5;
+    if (has_max_value()) {
+      total_size += 1 + 4;
     }
 
   }
@@ -3252,6 +3385,15 @@ void FloatAnim::MergeFrom(const FloatAnim& from) {
     if (from.has_header()) {
       mutable_header()->::protocol::common::AnimHeader::MergeFrom(from.header());
     }
+    if (from.has_value_flags()) {
+      set_value_flags(from.value_flags());
+    }
+    if (from.has_min_value()) {
+      set_min_value(from.min_value());
+    }
+    if (from.has_max_value()) {
+      set_max_value(from.max_value());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -3277,6 +3419,9 @@ void FloatAnim::Swap(FloatAnim* other) {
   if (other != this) {
     std::swap(header_, other->header_);
     keyframe_.Swap(&other->keyframe_);
+    std::swap(value_flags_, other->value_flags_);
+    std::swap(min_value_, other->min_value_);
+    std::swap(max_value_, other->max_value_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
