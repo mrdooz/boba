@@ -23,6 +23,7 @@
 #include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
+#include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 
@@ -42,8 +43,49 @@ class Matrix3x3;
 class Matrix4x4;
 class FloatKey;
 class FloatKeyframe;
+class AnimHeader;
 class FloatAnim;
 
+enum AnimHeader_AnimType {
+  AnimHeader_AnimType_LINEAR = 0,
+  AnimHeader_AnimType_BEZIER = 1,
+  AnimHeader_AnimType_CATMULL_ROM = 2
+};
+bool AnimHeader_AnimType_IsValid(int value);
+const AnimHeader_AnimType AnimHeader_AnimType_AnimType_MIN = AnimHeader_AnimType_LINEAR;
+const AnimHeader_AnimType AnimHeader_AnimType_AnimType_MAX = AnimHeader_AnimType_CATMULL_ROM;
+const int AnimHeader_AnimType_AnimType_ARRAYSIZE = AnimHeader_AnimType_AnimType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* AnimHeader_AnimType_descriptor();
+inline const ::std::string& AnimHeader_AnimType_Name(AnimHeader_AnimType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    AnimHeader_AnimType_descriptor(), value);
+}
+inline bool AnimHeader_AnimType_Parse(
+    const ::std::string& name, AnimHeader_AnimType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<AnimHeader_AnimType>(
+    AnimHeader_AnimType_descriptor(), name, value);
+}
+enum AnimHeader_LoopType {
+  AnimHeader_LoopType_STOP = 0,
+  AnimHeader_LoopType_LOOP = 1,
+  AnimHeader_LoopType_LOOP_SMOOTH = 2
+};
+bool AnimHeader_LoopType_IsValid(int value);
+const AnimHeader_LoopType AnimHeader_LoopType_LoopType_MIN = AnimHeader_LoopType_STOP;
+const AnimHeader_LoopType AnimHeader_LoopType_LoopType_MAX = AnimHeader_LoopType_LOOP_SMOOTH;
+const int AnimHeader_LoopType_LoopType_ARRAYSIZE = AnimHeader_LoopType_LoopType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* AnimHeader_LoopType_descriptor();
+inline const ::std::string& AnimHeader_LoopType_Name(AnimHeader_LoopType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    AnimHeader_LoopType_descriptor(), value);
+}
+inline bool AnimHeader_LoopType_Parse(
+    const ::std::string& name, AnimHeader_LoopType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<AnimHeader_LoopType>(
+    AnimHeader_LoopType_descriptor(), name, value);
+}
 // ===================================================================
 
 class Color4 : public ::google::protobuf::Message {
@@ -892,6 +934,148 @@ class FloatKeyframe : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class AnimHeader : public ::google::protobuf::Message {
+ public:
+  AnimHeader();
+  virtual ~AnimHeader();
+
+  AnimHeader(const AnimHeader& from);
+
+  inline AnimHeader& operator=(const AnimHeader& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const AnimHeader& default_instance();
+
+  void Swap(AnimHeader* other);
+
+  // implements Message ----------------------------------------------
+
+  AnimHeader* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const AnimHeader& from);
+  void MergeFrom(const AnimHeader& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef AnimHeader_AnimType AnimType;
+  static const AnimType LINEAR = AnimHeader_AnimType_LINEAR;
+  static const AnimType BEZIER = AnimHeader_AnimType_BEZIER;
+  static const AnimType CATMULL_ROM = AnimHeader_AnimType_CATMULL_ROM;
+  static inline bool AnimType_IsValid(int value) {
+    return AnimHeader_AnimType_IsValid(value);
+  }
+  static const AnimType AnimType_MIN =
+    AnimHeader_AnimType_AnimType_MIN;
+  static const AnimType AnimType_MAX =
+    AnimHeader_AnimType_AnimType_MAX;
+  static const int AnimType_ARRAYSIZE =
+    AnimHeader_AnimType_AnimType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  AnimType_descriptor() {
+    return AnimHeader_AnimType_descriptor();
+  }
+  static inline const ::std::string& AnimType_Name(AnimType value) {
+    return AnimHeader_AnimType_Name(value);
+  }
+  static inline bool AnimType_Parse(const ::std::string& name,
+      AnimType* value) {
+    return AnimHeader_AnimType_Parse(name, value);
+  }
+
+  typedef AnimHeader_LoopType LoopType;
+  static const LoopType STOP = AnimHeader_LoopType_STOP;
+  static const LoopType LOOP = AnimHeader_LoopType_LOOP;
+  static const LoopType LOOP_SMOOTH = AnimHeader_LoopType_LOOP_SMOOTH;
+  static inline bool LoopType_IsValid(int value) {
+    return AnimHeader_LoopType_IsValid(value);
+  }
+  static const LoopType LoopType_MIN =
+    AnimHeader_LoopType_LoopType_MIN;
+  static const LoopType LoopType_MAX =
+    AnimHeader_LoopType_LoopType_MAX;
+  static const int LoopType_ARRAYSIZE =
+    AnimHeader_LoopType_LoopType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  LoopType_descriptor() {
+    return AnimHeader_LoopType_descriptor();
+  }
+  static inline const ::std::string& LoopType_Name(LoopType value) {
+    return AnimHeader_LoopType_Name(value);
+  }
+  static inline bool LoopType_Parse(const ::std::string& name,
+      LoopType* value) {
+    return AnimHeader_LoopType_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .protocol.common.AnimHeader.AnimType type = 1 [default = CATMULL_ROM];
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::protocol::common::AnimHeader_AnimType type() const;
+  inline void set_type(::protocol::common::AnimHeader_AnimType value);
+
+  // optional .protocol.common.AnimHeader.LoopType loop = 2 [default = LOOP];
+  inline bool has_loop() const;
+  inline void clear_loop();
+  static const int kLoopFieldNumber = 2;
+  inline ::protocol::common::AnimHeader_LoopType loop() const;
+  inline void set_loop(::protocol::common::AnimHeader_LoopType value);
+
+  // @@protoc_insertion_point(class_scope:protocol.common.AnimHeader)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_loop();
+  inline void clear_has_loop();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  int type_;
+  int loop_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_common_2eproto();
+  friend void protobuf_AssignDesc_common_2eproto();
+  friend void protobuf_ShutdownFile_common_2eproto();
+
+  void InitAsDefaultInstance();
+  static AnimHeader* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class FloatAnim : public ::google::protobuf::Message {
  public:
   FloatAnim();
@@ -946,12 +1130,14 @@ class FloatAnim : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional uint32 type = 1 [default = 2];
-  inline bool has_type() const;
-  inline void clear_type();
-  static const int kTypeFieldNumber = 1;
-  inline ::google::protobuf::uint32 type() const;
-  inline void set_type(::google::protobuf::uint32 value);
+  // optional .protocol.common.AnimHeader header = 1;
+  inline bool has_header() const;
+  inline void clear_header();
+  static const int kHeaderFieldNumber = 1;
+  inline const ::protocol::common::AnimHeader& header() const;
+  inline ::protocol::common::AnimHeader* mutable_header();
+  inline ::protocol::common::AnimHeader* release_header();
+  inline void set_allocated_header(::protocol::common::AnimHeader* header);
 
   // repeated .protocol.common.FloatKeyframe keyframe = 2;
   inline int keyframe_size() const;
@@ -967,13 +1153,13 @@ class FloatAnim : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:protocol.common.FloatAnim)
  private:
-  inline void set_has_type();
-  inline void clear_has_type();
+  inline void set_has_header();
+  inline void clear_has_header();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::protocol::common::AnimHeader* header_;
   ::google::protobuf::RepeatedPtrField< ::protocol::common::FloatKeyframe > keyframe_;
-  ::google::protobuf::uint32 type_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -1732,28 +1918,94 @@ inline void FloatKeyframe::set_allocated_cp_out(::protocol::common::FloatKey* cp
 
 // -------------------------------------------------------------------
 
-// FloatAnim
+// AnimHeader
 
-// optional uint32 type = 1 [default = 2];
-inline bool FloatAnim::has_type() const {
+// optional .protocol.common.AnimHeader.AnimType type = 1 [default = CATMULL_ROM];
+inline bool AnimHeader::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void FloatAnim::set_has_type() {
+inline void AnimHeader::set_has_type() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void FloatAnim::clear_has_type() {
+inline void AnimHeader::clear_has_type() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void FloatAnim::clear_type() {
-  type_ = 2u;
+inline void AnimHeader::clear_type() {
+  type_ = 2;
   clear_has_type();
 }
-inline ::google::protobuf::uint32 FloatAnim::type() const {
-  return type_;
+inline ::protocol::common::AnimHeader_AnimType AnimHeader::type() const {
+  return static_cast< ::protocol::common::AnimHeader_AnimType >(type_);
 }
-inline void FloatAnim::set_type(::google::protobuf::uint32 value) {
+inline void AnimHeader::set_type(::protocol::common::AnimHeader_AnimType value) {
+  assert(::protocol::common::AnimHeader_AnimType_IsValid(value));
   set_has_type();
   type_ = value;
+}
+
+// optional .protocol.common.AnimHeader.LoopType loop = 2 [default = LOOP];
+inline bool AnimHeader::has_loop() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void AnimHeader::set_has_loop() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void AnimHeader::clear_has_loop() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void AnimHeader::clear_loop() {
+  loop_ = 1;
+  clear_has_loop();
+}
+inline ::protocol::common::AnimHeader_LoopType AnimHeader::loop() const {
+  return static_cast< ::protocol::common::AnimHeader_LoopType >(loop_);
+}
+inline void AnimHeader::set_loop(::protocol::common::AnimHeader_LoopType value) {
+  assert(::protocol::common::AnimHeader_LoopType_IsValid(value));
+  set_has_loop();
+  loop_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// FloatAnim
+
+// optional .protocol.common.AnimHeader header = 1;
+inline bool FloatAnim::has_header() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void FloatAnim::set_has_header() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void FloatAnim::clear_has_header() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void FloatAnim::clear_header() {
+  if (header_ != NULL) header_->::protocol::common::AnimHeader::Clear();
+  clear_has_header();
+}
+inline const ::protocol::common::AnimHeader& FloatAnim::header() const {
+  return header_ != NULL ? *header_ : *default_instance_->header_;
+}
+inline ::protocol::common::AnimHeader* FloatAnim::mutable_header() {
+  set_has_header();
+  if (header_ == NULL) header_ = new ::protocol::common::AnimHeader;
+  return header_;
+}
+inline ::protocol::common::AnimHeader* FloatAnim::release_header() {
+  clear_has_header();
+  ::protocol::common::AnimHeader* temp = header_;
+  header_ = NULL;
+  return temp;
+}
+inline void FloatAnim::set_allocated_header(::protocol::common::AnimHeader* header) {
+  delete header_;
+  header_ = header;
+  if (header) {
+    set_has_header();
+  } else {
+    clear_has_header();
+  }
 }
 
 // repeated .protocol.common.FloatKeyframe keyframe = 2;
@@ -1791,6 +2043,14 @@ FloatAnim::mutable_keyframe() {
 namespace google {
 namespace protobuf {
 
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protocol::common::AnimHeader_AnimType>() {
+  return ::protocol::common::AnimHeader_AnimType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::protocol::common::AnimHeader_LoopType>() {
+  return ::protocol::common::AnimHeader_LoopType_descriptor();
+}
 
 }  // namespace google
 }  // namespace protobuf

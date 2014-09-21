@@ -48,6 +48,24 @@ void PropertyWindow::Draw()
   const protocol::editor::Settings& settings = EDITOR.Settings();
 
   _texture.draw(CreateRect(_pos, _size, ::FromProtocol(settings.timeline_view_background_color())));
+
+  static bool xx = true;
+  ImGui::Begin("Properties", &xx, ImVec2(200, 100));
+
+  if (_anim)
+  {
+    static const char* interpolationTypes[] = { "Linear", "Bezier", "Catmull Rom" };
+    ImGui::Combo("Interpolation", (int*)&_anim->header.type, interpolationTypes, 3);
+
+    static const char* loopTypes[] = { "Clamp", "Loop", "Loop Smooth" };
+    ImGui::Combo("Loop", (int*)&_anim->header.loop, loopTypes, 3);
+  }
+  else if (_keyframe)
+  {
+
+  }
+  ImGui::End();
+
 /*
   _gui.BeginFrame();
 

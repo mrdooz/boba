@@ -2,6 +2,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/Window/Mouse.hpp>
+#include <SFML/OpenGL.hpp>
 
 #include <atomic>
 #include <condition_variable>
@@ -149,3 +150,6 @@ namespace editor
 #else
 #pragma comment(lib, "libboost_date_time-vc120-mt-s-1_55.lib")
 #endif
+
+#include "imgui/stb_image.h"                  // for .png loading
+#include "imgui/imgui.h"

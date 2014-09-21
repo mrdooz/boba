@@ -60,9 +60,30 @@ message FloatKeyframe
   optional FloatKey cp_out = 3;
 }
 
+// animation type
+
+message AnimHeader
+{
+  enum AnimType {
+    LINEAR = 0;
+    BEZIER = 1;
+    CATMULL_ROM = 2;
+  }
+  
+  enum LoopType {
+    CLAMP = 0;
+    LOOP = 1;
+    // meh, i'll probably not implement this..
+    LOOP_SMOOTH = 2;
+  }
+  
+  optional AnimType type = 1 [default = CATMULL_ROM];
+  optional LoopType loop = 2 [default = LOOP];
+}
+
 message FloatAnim
 {
-  optional uint32 type = 1 [default = 2];
+  optional AnimHeader header = 1;
   repeated FloatKeyframe keyframe = 2;
 }
 

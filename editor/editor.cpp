@@ -3,14 +3,7 @@
 #include "timeline_window.hpp"
 #include "webby/webby.h"
 #include "row_var.hpp"
-#include <SFML/OpenGL.hpp>
 
-//#define GLEW_STATIC
-//#include "glew/include/GL/glew.h"
-//#include "glfw/include/GLFW/glfw3.h"
-//#define STB_IMAGE_IMPLEMENTATION
-#include "imgui/stb_image.h"                  // for .png loading
-#include "imgui/imgui.h"
 #ifdef _MSC_VER
 #pragma warning (disable: 4996)         // 'This function or variable may be unsafe': strcpy, strdup, sprintf, vsnprintf, sscanf, fopen
 #endif
@@ -535,23 +528,12 @@ void Editor::Render()
 {
   _renderWindow->clear();
 
+  UpdateImGui();
+
   _renderWindow->pushGLStates();
   _virtualWindowManager->Draw();
   _renderWindow->popGLStates();
 
-  ImGuiIO& io = ImGui::GetIO();
-
-  UpdateImGui();
-
-  io.MouseWheel = 0;
-  //glfwPollEvents();
-
-  static bool xx = true;
-  ImGui::Begin("Another Window", &xx, ImVec2(200, 100));
-  ImGui::Text("Hello");
-  ImGui::End();
-
-  // Rendering
   ImGui::Render();
 
   _renderWindow->display();

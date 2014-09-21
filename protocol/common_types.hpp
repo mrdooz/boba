@@ -8,6 +8,7 @@ namespace boba
   struct Vector4;
   struct FloatKey;
   struct FloatKeyframe;
+  struct AnimHeader;
   struct FloatAnim;
     
   struct FloatKey
@@ -23,9 +24,29 @@ namespace boba
     FloatKey cpOut;
   };
 
+  struct AnimHeader
+  {
+    enum class AnimType
+    {
+      LINEAR = 0,
+      BEZIER = 1,
+      CATMULL_ROM = 2,
+    };
+
+    enum class LoopType
+    {
+      STOP = 0,
+      LOOP = 1,
+      LOOP_SMOOTH = 2,
+    };
+
+    AnimHeader::AnimType type = AnimType::CATMULL_ROM;
+    AnimHeader::LoopType loop = LoopType::LOOP;
+  };
+
   struct FloatAnim
   {
-    u32 type = 2;
+    AnimHeader header;
     vector<FloatKeyframe> keyframe;
   };
 

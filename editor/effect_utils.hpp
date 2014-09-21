@@ -222,17 +222,17 @@ namespace editor
 
     float t = (time_ms - lower.key.time) / (float)(upper.key.time - lower.key.time);
 
-    if (anim.type == 0 || keyframes.size() <= 2)
+    if (anim.header.type == AnimHeader::AnimType::LINEAR || keyframes.size() <= 2)
     {
       // linear interpolation
       return lower.key.value + t * (upper.key.value - lower.key.value);
     }
-    else if (anim.type == 1)
+    else if (anim.header.type == AnimHeader::AnimType::BEZIER)
     {
       // bezier splines
       return Bezier(lower.key.value, lower.cpOut.value, upper.cpIn.value, upper.key.value, t);
     }
-    else if (anim.type == 2)
+    else if (anim.header.type == AnimHeader::AnimType::CATMULL_ROM)
     {
       // catmul rom spline
       const Keyframe& p0 = keyframes[max(0, (s32)idxLower-1)];

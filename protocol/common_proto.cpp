@@ -42,11 +42,25 @@ namespace boba
     ToProtocol(v.cpOut, p->mutable_cp_out());
   }
 
+  AnimHeader FromProtocol(const protocol::common::AnimHeader& p)
+  {
+    AnimHeader res;
+    res.type = (AnimHeader::AnimType)p.type();
+
+    res.loop = (AnimHeader::LoopType)p.loop();
+
+    return res;
+  }
+
+  void ToProtocol(const AnimHeader& v, protocol::common::AnimHeader* p)
+  {
+  }
+
   FloatAnim FromProtocol(const protocol::common::FloatAnim& p)
   {
     FloatAnim res;
-    if (p.has_type())
-      res.type = p.type();
+    if (p.has_header())
+      res.header = FromProtocol(p.header());
 
     for (const auto& x : p.keyframe() )
       res.keyframe.push_back(FromProtocol(x));
@@ -56,7 +70,7 @@ namespace boba
 
   void ToProtocol(const FloatAnim& v, protocol::common::FloatAnim* p)
   {
-    p->set_type(v.type);
+    ToProtocol(v.header, p->mutable_header());
     for (const auto& x : v.keyframe)
       ToProtocol(x, p->add_keyframe());
   }

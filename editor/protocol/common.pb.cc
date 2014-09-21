@@ -45,6 +45,11 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* FloatKeyframe_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   FloatKeyframe_reflection_ = NULL;
+const ::google::protobuf::Descriptor* AnimHeader_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  AnimHeader_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* AnimHeader_AnimType_descriptor_ = NULL;
+const ::google::protobuf::EnumDescriptor* AnimHeader_LoopType_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* FloatAnim_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   FloatAnim_reflection_ = NULL;
@@ -195,9 +200,27 @@ void protobuf_AssignDesc_common_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(FloatKeyframe));
-  FloatAnim_descriptor_ = file->message_type(8);
+  AnimHeader_descriptor_ = file->message_type(8);
+  static const int AnimHeader_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AnimHeader, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AnimHeader, loop_),
+  };
+  AnimHeader_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      AnimHeader_descriptor_,
+      AnimHeader::default_instance_,
+      AnimHeader_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AnimHeader, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(AnimHeader, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(AnimHeader));
+  AnimHeader_AnimType_descriptor_ = AnimHeader_descriptor_->enum_type(0);
+  AnimHeader_LoopType_descriptor_ = AnimHeader_descriptor_->enum_type(1);
+  FloatAnim_descriptor_ = file->message_type(9);
   static const int FloatAnim_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, header_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(FloatAnim, keyframe_),
   };
   FloatAnim_reflection_ =
@@ -240,6 +263,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     FloatKeyframe_descriptor_, &FloatKeyframe::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    AnimHeader_descriptor_, &AnimHeader::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     FloatAnim_descriptor_, &FloatAnim::default_instance());
 }
 
@@ -262,6 +287,8 @@ void protobuf_ShutdownFile_common_2eproto() {
   delete FloatKey_reflection_;
   delete FloatKeyframe::default_instance_;
   delete FloatKeyframe_reflection_;
+  delete AnimHeader::default_instance_;
+  delete AnimHeader_reflection_;
   delete FloatAnim::default_instance_;
   delete FloatAnim_reflection_;
 }
@@ -291,9 +318,15 @@ void protobuf_AddDesc_common_2eproto() {
     "frame\022&\n\003key\030\001 \001(\0132\031.protocol.common.Flo"
     "atKey\022(\n\005cp_in\030\002 \001(\0132\031.protocol.common.F"
     "loatKey\022)\n\006cp_out\030\003 \001(\0132\031.protocol.commo"
-    "n.FloatKey\"N\n\tFloatAnim\022\017\n\004type\030\001 \001(\r:\0012"
-    "\0220\n\010keyframe\030\002 \003(\0132\036.protocol.common.Flo"
-    "atKeyframe", 810);
+    "n.FloatKey\"\355\001\n\nAnimHeader\022\?\n\004type\030\001 \001(\0162"
+    "$.protocol.common.AnimHeader.AnimType:\013C"
+    "ATMULL_ROM\0228\n\004loop\030\002 \001(\0162$.protocol.comm"
+    "on.AnimHeader.LoopType:\004LOOP\"3\n\010AnimType"
+    "\022\n\n\006LINEAR\020\000\022\n\n\006BEZIER\020\001\022\017\n\013CATMULL_ROM\020"
+    "\002\"/\n\010LoopType\022\010\n\004STOP\020\000\022\010\n\004LOOP\020\001\022\017\n\013LOO"
+    "P_SMOOTH\020\002\"j\n\tFloatAnim\022+\n\006header\030\001 \001(\0132"
+    "\033.protocol.common.AnimHeader\0220\n\010keyframe"
+    "\030\002 \003(\0132\036.protocol.common.FloatKeyframe", 1078);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "common.proto", &protobuf_RegisterTypes);
   Color4::default_instance_ = new Color4();
@@ -304,6 +337,7 @@ void protobuf_AddDesc_common_2eproto() {
   Matrix4x4::default_instance_ = new Matrix4x4();
   FloatKey::default_instance_ = new FloatKey();
   FloatKeyframe::default_instance_ = new FloatKeyframe();
+  AnimHeader::default_instance_ = new AnimHeader();
   FloatAnim::default_instance_ = new FloatAnim();
   Color4::default_instance_->InitAsDefaultInstance();
   Vector2::default_instance_->InitAsDefaultInstance();
@@ -313,6 +347,7 @@ void protobuf_AddDesc_common_2eproto() {
   Matrix4x4::default_instance_->InitAsDefaultInstance();
   FloatKey::default_instance_->InitAsDefaultInstance();
   FloatKeyframe::default_instance_->InitAsDefaultInstance();
+  AnimHeader::default_instance_->InitAsDefaultInstance();
   FloatAnim::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_common_2eproto);
 }
@@ -2700,8 +2735,314 @@ void FloatKeyframe::Swap(FloatKeyframe* other) {
 
 // ===================================================================
 
+const ::google::protobuf::EnumDescriptor* AnimHeader_AnimType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return AnimHeader_AnimType_descriptor_;
+}
+bool AnimHeader_AnimType_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
+
 #ifndef _MSC_VER
-const int FloatAnim::kTypeFieldNumber;
+const AnimHeader_AnimType AnimHeader::LINEAR;
+const AnimHeader_AnimType AnimHeader::BEZIER;
+const AnimHeader_AnimType AnimHeader::CATMULL_ROM;
+const AnimHeader_AnimType AnimHeader::AnimType_MIN;
+const AnimHeader_AnimType AnimHeader::AnimType_MAX;
+const int AnimHeader::AnimType_ARRAYSIZE;
+#endif  // _MSC_VER
+const ::google::protobuf::EnumDescriptor* AnimHeader_LoopType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return AnimHeader_LoopType_descriptor_;
+}
+bool AnimHeader_LoopType_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const AnimHeader_LoopType AnimHeader::STOP;
+const AnimHeader_LoopType AnimHeader::LOOP;
+const AnimHeader_LoopType AnimHeader::LOOP_SMOOTH;
+const AnimHeader_LoopType AnimHeader::LoopType_MIN;
+const AnimHeader_LoopType AnimHeader::LoopType_MAX;
+const int AnimHeader::LoopType_ARRAYSIZE;
+#endif  // _MSC_VER
+#ifndef _MSC_VER
+const int AnimHeader::kTypeFieldNumber;
+const int AnimHeader::kLoopFieldNumber;
+#endif  // !_MSC_VER
+
+AnimHeader::AnimHeader()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void AnimHeader::InitAsDefaultInstance() {
+}
+
+AnimHeader::AnimHeader(const AnimHeader& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void AnimHeader::SharedCtor() {
+  _cached_size_ = 0;
+  type_ = 2;
+  loop_ = 1;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+AnimHeader::~AnimHeader() {
+  SharedDtor();
+}
+
+void AnimHeader::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void AnimHeader::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* AnimHeader::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return AnimHeader_descriptor_;
+}
+
+const AnimHeader& AnimHeader::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_common_2eproto();
+  return *default_instance_;
+}
+
+AnimHeader* AnimHeader::default_instance_ = NULL;
+
+AnimHeader* AnimHeader::New() const {
+  return new AnimHeader;
+}
+
+void AnimHeader::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    type_ = 2;
+    loop_ = 1;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool AnimHeader::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional .protocol.common.AnimHeader.AnimType type = 1 [default = CATMULL_ROM];
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::protocol::common::AnimHeader_AnimType_IsValid(value)) {
+            set_type(static_cast< ::protocol::common::AnimHeader_AnimType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_loop;
+        break;
+      }
+
+      // optional .protocol.common.AnimHeader.LoopType loop = 2 [default = LOOP];
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_loop:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::protocol::common::AnimHeader_LoopType_IsValid(value)) {
+            set_loop(static_cast< ::protocol::common::AnimHeader_LoopType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(2, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void AnimHeader::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional .protocol.common.AnimHeader.AnimType type = 1 [default = CATMULL_ROM];
+  if (has_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->type(), output);
+  }
+
+  // optional .protocol.common.AnimHeader.LoopType loop = 2 [default = LOOP];
+  if (has_loop()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      2, this->loop(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* AnimHeader::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional .protocol.common.AnimHeader.AnimType type = 1 [default = CATMULL_ROM];
+  if (has_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->type(), target);
+  }
+
+  // optional .protocol.common.AnimHeader.LoopType loop = 2 [default = LOOP];
+  if (has_loop()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      2, this->loop(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int AnimHeader::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional .protocol.common.AnimHeader.AnimType type = 1 [default = CATMULL_ROM];
+    if (has_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
+    }
+
+    // optional .protocol.common.AnimHeader.LoopType loop = 2 [default = LOOP];
+    if (has_loop()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->loop());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void AnimHeader::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const AnimHeader* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const AnimHeader*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void AnimHeader::MergeFrom(const AnimHeader& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_type()) {
+      set_type(from.type());
+    }
+    if (from.has_loop()) {
+      set_loop(from.loop());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void AnimHeader::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void AnimHeader::CopyFrom(const AnimHeader& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool AnimHeader::IsInitialized() const {
+
+  return true;
+}
+
+void AnimHeader::Swap(AnimHeader* other) {
+  if (other != this) {
+    std::swap(type_, other->type_);
+    std::swap(loop_, other->loop_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata AnimHeader::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = AnimHeader_descriptor_;
+  metadata.reflection = AnimHeader_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int FloatAnim::kHeaderFieldNumber;
 const int FloatAnim::kKeyframeFieldNumber;
 #endif  // !_MSC_VER
 
@@ -2711,6 +3052,7 @@ FloatAnim::FloatAnim()
 }
 
 void FloatAnim::InitAsDefaultInstance() {
+  header_ = const_cast< ::protocol::common::AnimHeader*>(&::protocol::common::AnimHeader::default_instance());
 }
 
 FloatAnim::FloatAnim(const FloatAnim& from)
@@ -2721,7 +3063,7 @@ FloatAnim::FloatAnim(const FloatAnim& from)
 
 void FloatAnim::SharedCtor() {
   _cached_size_ = 0;
-  type_ = 2u;
+  header_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2731,6 +3073,7 @@ FloatAnim::~FloatAnim() {
 
 void FloatAnim::SharedDtor() {
   if (this != default_instance_) {
+    delete header_;
   }
 }
 
@@ -2757,7 +3100,9 @@ FloatAnim* FloatAnim::New() const {
 
 void FloatAnim::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    type_ = 2u;
+    if (has_header()) {
+      if (header_ != NULL) header_->::protocol::common::AnimHeader::Clear();
+    }
   }
   keyframe_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2770,14 +3115,12 @@ bool FloatAnim::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional uint32 type = 1 [default = 2];
+      // optional .protocol.common.AnimHeader header = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &type_)));
-          set_has_type();
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_header()));
         } else {
           goto handle_uninterpreted;
         }
@@ -2818,9 +3161,10 @@ bool FloatAnim::MergePartialFromCodedStream(
 
 void FloatAnim::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional uint32 type = 1 [default = 2];
-  if (has_type()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->type(), output);
+  // optional .protocol.common.AnimHeader header = 1;
+  if (has_header()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->header(), output);
   }
 
   // repeated .protocol.common.FloatKeyframe keyframe = 2;
@@ -2837,9 +3181,11 @@ void FloatAnim::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* FloatAnim::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional uint32 type = 1 [default = 2];
-  if (has_type()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->type(), target);
+  // optional .protocol.common.AnimHeader header = 1;
+  if (has_header()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->header(), target);
   }
 
   // repeated .protocol.common.FloatKeyframe keyframe = 2;
@@ -2860,11 +3206,11 @@ int FloatAnim::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional uint32 type = 1 [default = 2];
-    if (has_type()) {
+    // optional .protocol.common.AnimHeader header = 1;
+    if (has_header()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->type());
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->header());
     }
 
   }
@@ -2903,8 +3249,8 @@ void FloatAnim::MergeFrom(const FloatAnim& from) {
   GOOGLE_CHECK_NE(&from, this);
   keyframe_.MergeFrom(from.keyframe_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_type()) {
-      set_type(from.type());
+    if (from.has_header()) {
+      mutable_header()->::protocol::common::AnimHeader::MergeFrom(from.header());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -2929,7 +3275,7 @@ bool FloatAnim::IsInitialized() const {
 
 void FloatAnim::Swap(FloatAnim* other) {
   if (other != this) {
-    std::swap(type_, other->type_);
+    std::swap(header_, other->header_);
     keyframe_.Swap(&other->keyframe_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

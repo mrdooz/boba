@@ -17,10 +17,6 @@ namespace
   const u32 SELECTED_CP_OUT   = 1u << 31;
   const u32 SELECTED_CP_MASK  = ~(SELECTED_CP_IN | SELECTED_CP_OUT);
 
-  const u32 ANIM_TYPE_LINEAR      = 0;
-  const u32 ANIM_TYPE_BEZIER      = 1;
-  const u32 ANIM_TYPE_CATMULL_ROM  = 2;
-
   //----------------------------------------------------------------------------------
   bool IsControlPoint(u32 idx)
   {
@@ -186,7 +182,7 @@ void RowVar::DrawKeyframes(RenderTexture& texture)
   {
     const FloatKeyframe& keyframe = _anim->keyframe[i];
     int keyX = TimelineWindow::_instance->TimeToPixel(keyframe.key.time);
-    if (keyX >= settings.effect_view_width() && keyX < windowSize.x)
+    if (keyX >= (int)settings.effect_view_width() && keyX < windowSize.x)
     {
       ApplyStyle(i == _selectedKeyframe ? selectedStyle : defaultStyle, &_keyframeRect._rect);
 
@@ -264,14 +260,14 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
       float y = event.mouseButton.y - timeline->GetPosition().y;
       float v = PixelToValue(y);
 
-      switch (_anim->type)
+      switch (_anim->header.type)
       {
-        case ANIM_TYPE_LINEAR:
-        case ANIM_TYPE_CATMULL_ROM:
+        case AnimHeader::AnimType::LINEAR:
+        case AnimHeader::AnimType::CATMULL_ROM:
           AddKeyframe<float>(milliseconds(t), v, true, _anim);
           break;
 
-        case ANIM_TYPE_BEZIER:
+        case AnimHeader::AnimType::BEZIER:
         {
           // In bezier mode, evaluate the spline slightly before/after the new keyframe
           // to get good values for the control points..
@@ -293,10 +289,10 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
     }
 
     // check for hit on keyframe/control point
-    switch (_anim->type)
+    switch (_anim->header.type)
     {
-      case ANIM_TYPE_LINEAR:
-      case ANIM_TYPE_CATMULL_ROM:
+      case AnimHeader::AnimType::LINEAR:
+      case AnimHeader::AnimType::CATMULL_ROM:
         for (u32 i = 0; i < _anim->keyframe.size(); ++i)
         {
           FloatKeyframe &keyframe = _anim->keyframe[i];
@@ -309,7 +305,7 @@ bool RowVar::OnMouseButtonPressed(const Event &event)
         }
         break;
 
-      case ANIM_TYPE_BEZIER:
+      case AnimHeader::AnimType::BEZIER:
         // if in bezier, check for hits on control points
         for (u32 i = 0; i < _anim->keyframe.size(); ++i)
         {
@@ -394,9 +390,9 @@ bool RowVar::OnMouseMoved(const Event &event)
       // handle graph mode
       if (_flags.IsSet(VarFlagsF::GraphMode))
       {
-        switch (_anim->type)
+        switch (_anim->header.type)
         {
-          case ANIM_TYPE_LINEAR:
+          case AnimHeader::AnimType::LINEAR:
           {
             // if moving past the previous or next keyframe, swap to it
             if (_selectedKeyframe > 0 && t < keyframes[_selectedKeyframe-1].key.time)
@@ -416,8 +412,8 @@ bool RowVar::OnMouseMoved(const Event &event)
             break;
           }
 
-          case ANIM_TYPE_BEZIER:
-          case ANIM_TYPE_CATMULL_ROM:
+          case AnimHeader::AnimType::BEZIER:
+          case AnimHeader::AnimType::CATMULL_ROM:
           {
             float y = event.mouseMove.y - timeline->GetPosition().y;
             u32 k = _selectedKeyframe & SELECTED_CP_MASK;
@@ -609,15 +605,15 @@ void RowVar::VisibleKeyframes(
     Vector2f p = Vector2f(timeline->TimeToPixel(keyframe->key.time), ValueToPixel(keyframe->key.value));
     keyframes->push_back({p, keyframe, flags});
 
-    switch (_anim->type)
+    switch (_anim->header.type)
     {
-      case ANIM_TYPE_LINEAR:
-      case ANIM_TYPE_CATMULL_ROM:
+      case AnimHeader::AnimType::LINEAR:
+      case AnimHeader::AnimType::CATMULL_ROM:
         _minValue = min(_minValue, keyframe->key.value);
         _maxValue = max(_maxValue, keyframe->key.value);
         break;
 
-      case ANIM_TYPE_BEZIER:
+      case AnimHeader::AnimType::BEZIER:
         if (flags & VisibleKeyframe::FLAG_FIRST)
         {
           _minValue = min3(_minValue, keyframe->key.value, keyframe->cpOut.value);
@@ -713,9 +709,9 @@ void RowVar::DrawGraph(RenderTexture& texture)
   const StyleSetting* selectedStyle = STYLE_FACTORY.GetStyle("keyframe_style_selected");
 
   // draw the keyframes normalized to the min/max values
-  switch (_anim->type)
+  switch (_anim->header.type)
   {
-    case ANIM_TYPE_LINEAR:
+    case AnimHeader::AnimType::LINEAR:
     {
       VertexArray curLine(sf::LinesStrip);
 
@@ -736,7 +732,7 @@ void RowVar::DrawGraph(RenderTexture& texture)
       break;
     }
 
-    case ANIM_TYPE_BEZIER:
+    case AnimHeader::AnimType::BEZIER:
     {
       VertexArray controlPoints(sf::Lines);
       Color c = ::FromProtocol(settings.keyframe_control_color());
@@ -804,7 +800,7 @@ void RowVar::DrawGraph(RenderTexture& texture)
       break;
     }
 
-    case ANIM_TYPE_CATMULL_ROM:
+    case AnimHeader::AnimType::CATMULL_ROM:
     {
       LineStrip curve(4, ::FromProtocol(settings.graph_color()));
 
