@@ -698,6 +698,9 @@ void RowVar::DrawGraph(RenderTexture& texture)
     texture.draw(label);
 
     curY -= _step;
+
+    if (fabs(_step) < 1e-5)
+      break;
   }
 
   texture.draw(gridLines);

@@ -29,13 +29,9 @@ namespace editor
     bool OnKeyReleased(const Event& event);
     bool OnTextEntered(const Event& event);
 
-    string _varTime;
-    string _varValue;
     RowVar* _var;
     FloatAnim* _anim;
     FloatKeyframe* _keyframe;
-
-//    ImGui _gui;
 
     bool _keyboardFocus = false;
   };
