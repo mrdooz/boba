@@ -11,9 +11,9 @@ namespace boba
 
   struct WebbyBuffer
   {
-    WebbyBuffer() { Reset(); data.resize(64 * 1024); }
-    void Reset() { readOfs = 0; writeOfs = 0; }
-    bool BufferFull() { return writeOfs == data.size(); }
+    WebbyBuffer();
+    void Reset();
+    bool BufferFull();
     int readOfs;
     int writeOfs;
     vector<u8> data;
@@ -57,7 +57,6 @@ namespace boba
     u32 _payloadStart;
     string _host;
     string _serviceName;
-    TimeStamp _lastPing;
     TimeStamp _lastReconnect;
     bool _connected;
     struct addrinfo* _addrinfo;

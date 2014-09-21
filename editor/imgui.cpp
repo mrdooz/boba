@@ -1,6 +1,7 @@
 #include "imgui.hpp"
 #include "effect_utils.hpp"
 
+#if 0
 
 using namespace editor;
 
@@ -244,3 +245,5 @@ void ImGui::ResetState()
   _uiState.key = Keyboard::Key::Unknown;
   _nextWidgetId = 1;
 }
+
+#endif

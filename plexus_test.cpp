@@ -30,7 +30,7 @@ namespace boba
   struct PathGenerator
   {
     virtual ~PathGenerator() {}
-    virtual void GeneratePoints(const UpdateState& state, vector<Vector3>* verts) = 0;
+    virtual void GeneratePoints(const UpdateState& state, vector<Vector3>* vertices, vector<u32>* indices) = 0;
     virtual void ApplyConfig(const TextPathConfig& config) {}
   };
 
@@ -162,10 +162,10 @@ namespace boba
       _numIndices = (u32)_indices.size();
     }
 
-    void GeneratePoints(const UpdateState& state, vector<Vector3>* verts)
+    void GeneratePoints(const UpdateState& state, vector<Vector3>* verts, vector<u32>* indices)
     {
-      verts->clear();
-      verts->resize(_numVerts * 6);
+      verts->resize(_numVerts * 4);
+      indices->resize(_numVerts * 6);
 
       // 1 2
       // 0 3
@@ -176,20 +176,24 @@ namespace boba
       Vector3 ofs2(+s, +s, 0);
       Vector3 ofs3(+s, -s, 0);
 
+      Vector3* vertOut = verts->data();
+      u32* idxOut = indices->data();
+
       for (u32 i = 0; i < _numVerts; ++i)
       {
         Vector3 b = Vector3(_verts[i*3+0], _verts[i*3+1], _verts[i*3+2]);
-        Vector3 v0 = b + ofs0;
-        Vector3 v1 = b + ofs1;
-        Vector3 v2 = b + ofs2;
-        Vector3 v3 = b + ofs3;
 
-        (*verts)[i*6+0] = v0;
-        (*verts)[i*6+1] = v1;
-        (*verts)[i*6+2] = v2;
-        (*verts)[i*6+3] = v0;
-        (*verts)[i*6+4] = v2;
-        (*verts)[i*6+5] = v3;
+        *vertOut++ = b + ofs0;
+        *vertOut++ = b + ofs1;
+        *vertOut++ = b + ofs2;
+        *vertOut++ = b + ofs3;
+
+        *idxOut++ = i*4 + 0;
+        *idxOut++ = i*4 + 1;
+        *idxOut++ = i*4 + 2;
+        *idxOut++ = i*4 + 0;
+        *idxOut++ = i*4 + 2;
+        *idxOut++ = i*4 + 3;
       }
     }
 
@@ -218,7 +222,7 @@ namespace boba
     Renderer(DeferredContext* ctx) : _ctx(ctx) {}
 
     virtual bool Init() { return true; }
-    virtual void Render(const Matrix& viewProj, const vector<Vector3>& verts) = 0;
+    virtual void Render(const Matrix& viewProj, const vector<Vector3>& verts, const vector<u32>& indices) = 0;
 
     DeferredContext* _ctx;
   };
@@ -241,7 +245,7 @@ namespace boba
       depthDesc.DepthEnable = FALSE;
 
       INIT(_gpuState.Create(depthDesc, blendDesc, CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT())));
-      INIT(_gpuObjects.CreateDynamicVb(1024 * 1024, sizeof(Vector3)));
+      INIT(_gpuObjects.CreateDynamic(1024 * 1024, DXGI_FORMAT_R32_UINT, nullptr, 1024 * 1024, sizeof(Vector3), nullptr));
       INIT(_cb.Create());
       INIT_ASSIGN(_particleTexture, GRAPHICS.LoadTexture("gfx/particle1.png"));
       INIT(_gpuObjects.LoadShadersFromFile("shaders/particle", "VsMain", "PsMain", VF_POS));
@@ -249,7 +253,7 @@ namespace boba
       END_INIT_SEQUENCE();
     }
 
-    void Render(const Matrix& viewProj, const vector<Vector3>& verts)
+    void Render(const Matrix& viewProj, const vector<Vector3>& verts, const vector<u32>& indices)
     {
       GPU_BeginEvent(0xffffffff, L"PointRenderer");
 
@@ -259,6 +263,7 @@ namespace boba
       _ctx->BeginFrame();
 
       _ctx->CopyToBuffer(_gpuObjects._vb, verts.data(), (u32)verts.size() * sizeof(Vector3));
+      _ctx->CopyToBuffer(_gpuObjects._ib, indices.data(), (u32)indices.size() * sizeof(u32));
 
       _cb.data.viewProj = viewProj.Transpose();
       _ctx->SetCBuffer(_cb, ShaderType::VertexShader, 0);
@@ -269,7 +274,7 @@ namespace boba
 
       _ctx->SetCBuffer(_cb, ShaderType::VertexShader, 0);
       _ctx->SetShaderResource(_particleTexture, ShaderType::PixelShader);
-      _ctx->Draw((u32)verts.size(), 0);
+      _ctx->DrawIndexed((u32)indices.size(), 0, 0);
 
       _ctx->EndFrame();
 
@@ -319,9 +324,11 @@ namespace boba
     {
       if (_offsets.size() != verts->size())
       {
-        _offsets.resize(verts->size());
+        // we want each of the 4 verts in the particle to be affected by the same amount
+        // to avoid tearing and weird artifacts
+        _offsets.resize(verts->size() / 4);
 
-        for (size_t i = 0, e = verts->size(); i < e; ++i)
+        for (size_t i = 0, e = verts->size() / 4; i < e; ++i)
         {
           _offsets[i] = Vector3(randf(-1.f, 1.f), randf(-1.f, 1.f), randf(-1.f, 1.f));
         }
@@ -336,9 +343,9 @@ namespace boba
       for (size_t i = 0, e = verts->size(); i < e; ++i)
       {
         Vector3& v = (*verts)[i];
-        v.x += x * _offsets[i].x;
-        v.y += y * _offsets[i].y;
-        v.z += z * _offsets[i].z;
+        v.x += x * _offsets[i/4].x;
+        v.y += y * _offsets[i/4].y;
+        v.z += z * _offsets[i/4].z;
       }
     }
 
@@ -361,6 +368,7 @@ namespace boba
     void ApplyConfig(const PlexusConfig& config);
 
     vector<Vector3> _verts;
+    vector<u32> _indices;
     vector<PathGenerator*> _paths;
     vector<Effector*> _effectors;
     vector<Renderer*> _renderers;
@@ -415,7 +423,7 @@ namespace boba
     _verts.clear();
     for (PathGenerator* path : _paths)
     {
-      path->GeneratePoints(state, &_verts);
+      path->GeneratePoints(state, &_verts, &_indices);
     }
 
     for (Effector* e : _effectors)
@@ -429,7 +437,7 @@ namespace boba
   {
     for (Renderer* r : _renderers)
     {
-      r->Render(viewProj, _verts);
+      r->Render(viewProj, _verts, _indices);
     }
   }
 

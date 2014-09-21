@@ -35,7 +35,7 @@ namespace editor
     FloatAnim* _anim;
     FloatKeyframe* _keyframe;
 
-    ImGui _gui;
+//    ImGui _gui;
 
     bool _keyboardFocus = false;
   };

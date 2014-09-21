@@ -583,7 +583,7 @@ void RowVar::VisibleKeyframes(
   if (addBorderPoints)
     keyframes->push_back({Vector2f(ofs, ValueToPixel(value0)), nullptr, VisibleKeyframe::FLAG_VIRTUAL});
 
-  u32 numKeyframes = _anim->keyframe.size();
+  u32 numKeyframes = (u32)_anim->keyframe.size();
   for (u32 i = 0; i < numKeyframes; ++i, prevFrame = keyframe, prevFlags = flags)
   {
     // set flag/last flag
@@ -808,7 +808,7 @@ void RowVar::DrawGraph(RenderTexture& texture)
     {
       LineStrip curve(4, ::FromProtocol(settings.graph_color()));
 
-      u32 lastIdx = keyframes.size() - 1;
+      u32 lastIdx = (u32)(keyframes.size() - 1);
       for (u32 i = 0; i < keyframes.size(); ++i)
       {
         u32 flags = keyframes[i].flags;

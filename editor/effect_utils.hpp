@@ -210,7 +210,7 @@ namespace editor
     if (keyframes.empty())
       return T();
 
-    u32 lastIdx = keyframes.size() - 1;
+    u32 lastIdx = (u32)(keyframes.size() - 1);
     u32 idxLower, idxUpper;
     if (!FindKeyframePair<T>(keyframes, time_ms, &idxLower, &idxUpper))
     {

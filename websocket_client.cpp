@@ -118,6 +118,26 @@ static int scan_websocket_frame(const struct WebbyBuffer *buf, struct WebbyWsFra
 }
 
 //------------------------------------------------------------------------------
+WebbyBuffer::WebbyBuffer()
+{ 
+  Reset(); 
+  data.resize(4 * 1024);
+}
+
+//------------------------------------------------------------------------------
+void WebbyBuffer::Reset()
+{ 
+  readOfs = 0;
+  writeOfs = 0;
+}
+
+//------------------------------------------------------------------------------
+bool WebbyBuffer::BufferFull()
+{ 
+  return writeOfs == data.size();
+}
+
+//------------------------------------------------------------------------------
 WebsocketClient::WebsocketClient()
   : _readState(ReadState::ReadHeader)
   , _sockfd(0)
@@ -191,8 +211,6 @@ bool WebsocketClient::Connect(const char* host, const char* serviceName)
     if (_cbConnected)
     _cbConnected();
 
-  _lastPing = TimeStamp::Now();
-
   _readState = ReadState::ReadHeader;
   _readBuffer.Reset();
 
@@ -217,31 +235,15 @@ void WebsocketClient::Process()
   }
 
   int res = recv(_sockfd, (char*)&_readBuffer.data[_readBuffer.writeOfs], (int)_readBuffer.data.size() - _readBuffer.writeOfs, 0);
-  if (res == -1)
+  if (res <= 0)
   {
-    // Check if we should send a ping
-    if (now - _lastPing > TimeDuration::Seconds(5))
+    if (res == 0)
     {
-      u8 header[10];
-      SetBlockingIo(true);
-      size_t headerLen = make_websocket_header(header, WEBBY_WS_OP_PING, 0, 1);
-      int res = send(_sockfd, (const char*)header, (int)headerLen, 0);
-      SetBlockingIo(false);
-      if (res < 0)
-        Disconnect();
-
-      _lastPing = now;
+      // 0 indicates orderly shutdown, -1 indicates an error
+      Disconnect();
     }
-
     return;
   }
-  else if (res == 0)
-  {
-    Disconnect();
-    return;
-  }
-
-  _lastPing = now;
 
   _readBuffer.writeOfs += res;
 
@@ -256,12 +258,13 @@ void WebsocketClient::Process()
         int frameRes = scan_websocket_frame(&_readBuffer, &_curFrame);
         if (frameRes < 0)
         {
-          if (_readBuffer.BufferFull())
-          {
-            // if at end of buffer, discard current frame, and reset the buffer
-            LOG_INFO("Discarding frame due to full read buffer");
-            _readBuffer.Reset();
-          }
+          // An error occurs if there isn't enough data read to parse a full header. In this case, we copy
+          // the partial header to the front of the read buffer, and set the read/write offsets to point correctly
+          u32 unreadBytes = _readBuffer.writeOfs - _readBuffer.readOfs;
+          u8* ptr = _readBuffer.data.data();
+          memcpy(ptr, ptr + _readBuffer.readOfs, unreadBytes);
+          _readBuffer.readOfs = 0;
+          _readBuffer.writeOfs = unreadBytes;
           goto DONE;
         }
 
@@ -279,12 +282,11 @@ void WebsocketClient::Process()
         int bytesInBuffer = _readBuffer.writeOfs - _readBuffer.readOfs;
         if (bytesInBuffer < _curFrame.payload_length)
         {
-          if (_readBuffer.BufferFull())
-          {
-            // if at end of buffer, discard current frame, and reset the buffer
-            LOG_INFO("Discarding frame due to full read buffer");
-            _readBuffer.Reset();
-          }
+          // copy any incomplete frames to the start of the buffer
+          u8* ptr = _readBuffer.data.data();
+          memcpy(ptr, ptr + _readBuffer.readOfs, bytesInBuffer);
+          _readBuffer.readOfs = 0;
+          _readBuffer.writeOfs = bytesInBuffer;
           goto DONE;
         }
 

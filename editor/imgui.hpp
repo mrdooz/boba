@@ -1,5 +1,7 @@
 #pragma once
 
+#if 0
+
 namespace editor
 {
   struct UiState
@@ -70,3 +72,4 @@ namespace editor
   };
 
 }
+#endif

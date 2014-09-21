@@ -17,7 +17,7 @@ PropertyWindow::PropertyWindow(
     , _var(nullptr)
     , _anim(nullptr)
     , _keyframe(nullptr)
-    , _gui(_texture, _font)
+//    , _gui(_texture, _font)
     , _keyboardFocus(false)
 {
 }
@@ -48,7 +48,7 @@ void PropertyWindow::Draw()
   const protocol::editor::Settings& settings = EDITOR.Settings();
 
   _texture.draw(CreateRect(_pos, _size, ::FromProtocol(settings.timeline_view_background_color())));
-
+/*
   _gui.BeginFrame();
 
   if (_anim)
@@ -84,16 +84,19 @@ void PropertyWindow::Draw()
   }
 
   _gui.EndFrame();
+*/
   _texture.display();
 }
 
 //----------------------------------------------------------------------------------
 void PropertyWindow::Update()
 {
+/*
   _gui._uiState.keyMod =
       Keyboard::isKeyPressed(Keyboard::Key::LShift) ? UiState::KEYBOARD_SHIFT : 0 |
       Keyboard::isKeyPressed(Keyboard::Key::LControl) ? UiState::KEYBOARD_CONTROL : 0 |
       Keyboard::isKeyPressed(Keyboard::Key::LAlt) ? UiState::KEYBOARD_ALT : 0;
+*/
 }
 
 //----------------------------------------------------------------------------------
@@ -124,23 +127,25 @@ void PropertyWindow::SendEffectEvent(RowVar* sender, const EffectRowEvent& event
 //----------------------------------------------------------------------------------
 bool PropertyWindow::OnMouseButtonPressed(const Event& event)
 {
+/*
   _gui._uiState.mouseButton |= (1 << event.mouseButton.button);
   _gui._uiState.mousePos = Vector2i(event.mouseButton.x, event.mouseButton.y);
+*/
   return false;
 }
 
 //----------------------------------------------------------------------------------
 bool PropertyWindow::OnMouseMoved(const Event& event)
 {
-  _gui._uiState.mousePos = Vector2i(event.mouseMove.x, event.mouseMove.y);
+//   _gui._uiState.mousePos = Vector2i(event.mouseMove.x, event.mouseMove.y);
   return false;
 }
 
 //----------------------------------------------------------------------------------
 bool PropertyWindow::OnMouseButtonReleased(const Event& event)
 {
-  _gui._uiState.mouseButton &= ~(1 << event.mouseButton.button);
-  _gui._uiState.mousePos = Vector2i(event.mouseButton.x, event.mouseButton.y);
+//   _gui._uiState.mouseButton &= ~(1 << event.mouseButton.button);
+//   _gui._uiState.mousePos = Vector2i(event.mouseButton.x, event.mouseButton.y);
 
   return false;
 }
@@ -148,16 +153,18 @@ bool PropertyWindow::OnMouseButtonReleased(const Event& event)
 //----------------------------------------------------------------------------------
 bool PropertyWindow::OnKeyReleased(const Event& event)
 {
-  _gui._uiState.key = event.key.code;
+//   _gui._uiState.key = event.key.code;
   return _keyboardFocus;
 }
 
 //----------------------------------------------------------------------------------
 bool PropertyWindow::OnTextEntered(const Event& event)
 {
+/*
   u32 k = event.text.unicode;
   if ((k & 0xff80) == 0)
     _gui._uiState.keyChar = k & 0x7f;
+*/
 
   return _keyboardFocus;
 }

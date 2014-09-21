@@ -22,19 +22,16 @@ VsOut VsMain(VsIn v)
 {
   // 1, 2
   // 0, 3
-  // output verts in order 0, 1, 2, 0, 2, 3
 
   VsOut res;
   res.pos = mul(float4(v.pos, 1), viewProj);
   
-  switch (v.vertexId % 6)
+  switch (v.vertexId % 4)
   {
     case 0: res.uv = float2(0, 1); break;
     case 1: res.uv = float2(0, 0); break;
     case 2: res.uv = float2(1, 0); break;
-    case 3: res.uv = float2(0, 1); break;
-    case 4: res.uv = float2(1, 0); break;
-    case 5: res.uv = float2(1, 1); break;
+    case 3: res.uv = float2(1, 1); break;
   }
   return res;
 }
