@@ -48,8 +48,8 @@ void PropertyWindow::Draw()
 
   _texture.draw(CreateRect(_pos, _size, ::FromProtocol(settings.timeline_view_background_color())));
 
-  static bool xx = true;
-  ImGui::Begin("Properties", &xx, ImVec2(200, 100));
+  static bool open = true;
+  ImGui::Begin("Properties", &open, ImVec2(200, 100));
 
   if (_anim)
   {
@@ -66,7 +66,6 @@ void PropertyWindow::Draw()
 
     if (ImGui::Checkbox("Use Max Value", &useMaxValue)) _anim->valueFlags.Toggle(FloatAnim::ValueFlagsF::UseMaxValue);
     if (useMaxValue) ImGui::InputFloat("Max Value", &_anim->maxValue);
-
   }
   else if (_keyframe)
   {

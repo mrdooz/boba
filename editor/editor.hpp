@@ -63,6 +63,7 @@ namespace editor
     bool OnGainedFocus(const Event& event);
     bool OnKeyPressed(const Event& event);
     bool OnKeyReleased(const Event& event);
+    bool OnTextEntered(const Event& event);
 
     bool OnMouseButtonReleased(const Event& event);
 

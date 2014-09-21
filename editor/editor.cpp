@@ -311,6 +311,7 @@ bool Editor::Init()
 
   _eventManager->RegisterHandler(Event::KeyPressed, bind(&Editor::OnKeyPressed, this, _1));
   _eventManager->RegisterHandler(Event::KeyReleased, bind(&Editor::OnKeyReleased, this, _1));
+  _eventManager->RegisterHandler(Event::TextEntered, bind(&Editor::OnTextEntered, this, _1));
   _eventManager->RegisterHandler(Event::LostFocus, bind(&Editor::OnLostFocus, this, _1));
   _eventManager->RegisterHandler(Event::GainedFocus, bind(&Editor::OnGainedFocus, this, _1));
   _eventManager->RegisterHandler(Event::MouseButtonReleased, bind(&Editor::OnMouseButtonReleased, this, _1));
@@ -464,6 +465,18 @@ bool Editor::OnGainedFocus(const Event& event)
 bool Editor::OnKeyPressed(const Event& event)
 {
   Keyboard::Key key = event.key.code;
+
+  ImGuiIO& io = ImGui::GetIO();
+  io.KeysDown[key] = true;
+
+  //   ImGuiIO& io = ImGui::GetIO();
+//   if (action == GLFW_PRESS)
+//     io.KeysDown[key] = true;
+//   if (action == GLFW_RELEASE)
+//     io.KeysDown[key] = false;
+//   io.KeyCtrl = (mods & GLFW_MOD_CONTROL) != 0;
+//   io.KeyShift = (mods & GLFW_MOD_SHIFT) != 0;
+
   switch (key)
   {
     case Keyboard::Escape: _stateFlags.Set(StateFlagsF::Done); return true;
@@ -472,9 +485,24 @@ bool Editor::OnKeyPressed(const Event& event)
 }
 
 //----------------------------------------------------------------------------------
+bool Editor::OnTextEntered(const Event& event)
+{
+  u32 c = event.text.unicode;
+  if (c <= 255)
+    ImGui::GetIO().AddInputCharacter((char)c);
+
+  return false;
+}
+
+//----------------------------------------------------------------------------------
 bool Editor::OnKeyReleased(const Event& event)
 {
-  switch (event.key.code)
+  Keyboard::Key key = event.key.code;
+
+  ImGuiIO& io = ImGui::GetIO();
+  io.KeysDown[key] = false;
+
+  switch (key)
   {
     case Keyboard::Key::Space: _stateFlags.Toggle(StateFlagsF::Paused); return true;
   }

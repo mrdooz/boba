@@ -520,7 +520,10 @@ float RowVar::PixelToValue(float y) const
   float bottom = size.y - 1 - settings.status_bar_height();
 
   float span = _maxValue - _minValue;
-  return (bottom - y) * span / h + _minValue;
+  float t = (bottom - y) * span / h + _minValue;
+  if (_anim->valueFlags.IsSet(FloatAnim::ValueFlagsF::UseMinValue)) t = max(t, _anim->minValue);
+  if (_anim->valueFlags.IsSet(FloatAnim::ValueFlagsF::UseMaxValue)) t = min(t, _anim->maxValue);
+  return t;
 }
 
 //----------------------------------------------------------------------------------
