@@ -33,7 +33,7 @@ namespace boba
     virtual ~Effect();
     virtual bool Show();
     virtual bool Hide();
-    virtual bool Init(const char* config);
+    virtual bool Init(const protocol::effect::EffectSetting& config);
     virtual bool Update(const UpdateState& state);
     virtual bool SaveSettings();
     virtual bool Render();

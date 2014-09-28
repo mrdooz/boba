@@ -5,7 +5,7 @@
 
 #pragma warning(push)
 #pragma warning(disable: 4244 4267)
-#include "protocol/generator.pb.h"
+#include "protocol/effect_settings_generator.pb.h"
 #pragma warning(pop)
 
 #include "protocol/effect_plexus_types.hpp"
@@ -23,7 +23,7 @@ namespace boba
   public:
     GeneratorTest(const string& name, u32 id);
     ~GeneratorTest();
-    virtual bool Init(const char* config) override;
+    virtual bool Init(const protocol::effect::EffectSetting& config) override;
     virtual bool Update(const UpdateState& state) override;
     virtual bool Render() override;
     virtual bool Close() override;
@@ -44,8 +44,8 @@ namespace boba
     void InitGeneratorScript();
 
     string _configName;
-    generator::Spiky _spikyConfig;
-    generator::Plane _planeConfig;
+    ::protocol::effect::generator::SpikyConfig _spikyConfig;
+    ::protocol::effect::generator::PlaneConfig _planeConfig;
 
     Matrix _view;
     Matrix _invView;

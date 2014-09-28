@@ -4,9 +4,11 @@
 
 #pragma warning(push)
 #pragma warning(disable: 4244 4267)
-#include "protocol/particle.pb.h"
+#include "protocol/effect_settings_particle.pb.h"
+#include "protocol/effect_particle_proto.hpp"
 #pragma warning(pop)
 
+#include "protocol/effect_particle_types.hpp"
 
 namespace boba
 {
@@ -18,7 +20,7 @@ namespace boba
 
     SceneTest(const string& name, u32 id);
     ~SceneTest();
-    virtual bool Init(const char* config) override;
+    virtual bool Init(const protocol::effect::EffectSetting& config) override;
     virtual bool Update(const UpdateState& state) override;
     virtual bool Render() override;
     virtual bool Close() override;
@@ -35,8 +37,7 @@ namespace boba
 
     virtual void WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 
-    string _configName;
-    particle::Config _config;
+    effect::particle::ParticleConfig _config;
     ObjectHandle _texture;
     ObjectHandle _vs;
     ObjectHandle _ps;

@@ -17,8 +17,7 @@ namespace boba
   {
 
     float Interpolate(ObjectHandle h, u32 time_ms);
-    ObjectHandle AddAnimation(const FloatAnim& animation, const ObjectHandle& prevHandle = ObjectHandle());
-    void FindLastAnimation();
+    ObjectHandle AddAnimation(const common::FloatAnim& animation, const ObjectHandle& prevHandle = ObjectHandle());
 
     static AnimationManager& Instance();
     static bool Create();
@@ -31,7 +30,7 @@ namespace boba
       u32 lastKeyframe;
     };
 
-    typedef AnimData<FloatAnim> AnimDataFloat;
+    typedef AnimData<common::FloatAnim> AnimDataFloat;
     vector<AnimDataFloat> _floatAnimations;
     static AnimationManager* _instance;
   };

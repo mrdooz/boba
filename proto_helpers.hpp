@@ -23,17 +23,39 @@ namespace boba
   }
 
   //------------------------------------------------------------------------------
-  void FromProtocol(const ::google::protobuf::RepeatedField<float>& protocol, Vector3* out);
-  void FromProtocol(const ::google::protobuf::RepeatedField<float>& protocol, Vector4* out);
+  template <typename ProtoType, typename NativeType>
+  bool LoadProtoToNative(const char* filename, NativeType* msg)
+  {
+    vector<char> buf;
+    if (!RESOURCE_MANAGER.LoadFile(filename, &buf))
+    {
+      return false;
+    }
 
-  Vector2 FromProtocol(const protocol::common::Vector2& v);
-  Vector3 FromProtocol(const protocol::common::Vector3& v);
-  Vector4 FromProtocol(const protocol::common::Vector4& v);
-  //Matrix FromProtocol(const protocol::common::Matrix3x3& v);
-  Matrix FromProtocol(const protocol::common::Matrix4x4& m);
+    string str(buf.data(), buf.size());
+    ProtoType proto;
+    if (!google::protobuf::TextFormat::ParseFromString(str, &proto))
+      return false;
 
-  void ToProtocol(const Vector2& v, protocol::common::Vector2* out);
-  void ToProtocol(const Vector3& v, protocol::common::Vector3* out);
-  void ToProtocol(const Vector4& v, protocol::common::Vector4* out);
-  void ToProtocol(const Matrix& m, protocol::common::Matrix4x4* out);
+    ToProtocol(proto, msg);
+    return true;
+  }
+
+  //------------------------------------------------------------------------------
+  namespace common
+  {
+    void FromProtocol(const ::google::protobuf::RepeatedField<float>& protocol, Vector3* out);
+    void FromProtocol(const ::google::protobuf::RepeatedField<float>& protocol, Vector4* out);
+
+    Vector2 FromProtocol(const ::protocol::common::Vector2& v);
+    Vector3 FromProtocol(const ::protocol::common::Vector3& v);
+    Vector4 FromProtocol(const ::protocol::common::Vector4& v);
+    //Matrix FromProtocol(const protocol::common::Matrix3x3& v);
+    Matrix FromProtocol(const ::protocol::common::Matrix4x4& m);
+
+    void ToProtocol(const Vector2& v, ::protocol::common::Vector2* out);
+    void ToProtocol(const Vector3& v, ::protocol::common::Vector3* out);
+    void ToProtocol(const Vector4& v, ::protocol::common::Vector4* out);
+    void ToProtocol(const Matrix& m, ::protocol::common::Matrix4x4* out);
+  }
 }

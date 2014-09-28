@@ -4,14 +4,14 @@
 #include "editor_types.hpp"
 #include "common_types.hpp"
 
-namespace boba
-{
+namespace boba { namespace editor { 
   struct Settings;
   struct StyleSetting;
   struct StyleSettings;
     
   struct Settings
   {
+
     u32 tickerHeight = 50;
     u32 tickerInterval = 20;
     u32 ticksPerInterval = 4;
@@ -42,20 +42,19 @@ namespace boba
     Color effectIconExpandedColor;
     Color effectIconCollapsedColor;
   };
-
   struct StyleSetting
   {
+
     string id;
     Color fillColor;
     Color outlineColor;
     float outlineThickness = 0;
     u32 fontStyle;
   };
-
   struct StyleSettings
   {
+
     vector<StyleSetting> styleSetting;
   };
-
   
-}
+} } 

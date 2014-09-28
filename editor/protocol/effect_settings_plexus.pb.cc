@@ -198,6 +198,7 @@ const int PlexusConfig::kNoiseEffectorsFieldNumber;
 PlexusConfig::PlexusConfig()
   : ::google::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:protocol.effect.plexus.PlexusConfig)
 }
 
 void PlexusConfig::InitAsDefaultInstance() {
@@ -207,6 +208,7 @@ PlexusConfig::PlexusConfig(const PlexusConfig& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:protocol.effect.plexus.PlexusConfig)
 }
 
 void PlexusConfig::SharedCtor() {
@@ -215,6 +217,7 @@ void PlexusConfig::SharedCtor() {
 }
 
 PlexusConfig::~PlexusConfig() {
+  // @@protoc_insertion_point(destructor:protocol.effect.plexus.PlexusConfig)
   SharedDtor();
 }
 
@@ -253,19 +256,22 @@ void PlexusConfig::Clear() {
 
 bool PlexusConfig::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:protocol.effect.plexus.PlexusConfig)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // repeated .protocol.effect.plexus.TextPathConfig text_paths = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 10) {
          parse_text_paths:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_text_paths()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(10)) goto parse_text_paths;
         if (input->ExpectTag(18)) goto parse_noise_effectors;
@@ -274,24 +280,24 @@ bool PlexusConfig::MergePartialFromCodedStream(
 
       // repeated .protocol.effect.plexus.NoiseEffectorConfig noise_effectors = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 18) {
          parse_noise_effectors:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_noise_effectors()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(18)) goto parse_noise_effectors;
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -299,12 +305,18 @@ bool PlexusConfig::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:protocol.effect.plexus.PlexusConfig)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:protocol.effect.plexus.PlexusConfig)
+  return false;
 #undef DO_
 }
 
 void PlexusConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:protocol.effect.plexus.PlexusConfig)
   // repeated .protocol.effect.plexus.TextPathConfig text_paths = 1;
   for (int i = 0; i < this->text_paths_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -321,10 +333,12 @@ void PlexusConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:protocol.effect.plexus.PlexusConfig)
 }
 
 ::google::protobuf::uint8* PlexusConfig::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:protocol.effect.plexus.PlexusConfig)
   // repeated .protocol.effect.plexus.TextPathConfig text_paths = 1;
   for (int i = 0; i < this->text_paths_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -343,6 +357,7 @@ void PlexusConfig::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:protocol.effect.plexus.PlexusConfig)
   return target;
 }
 
@@ -440,6 +455,7 @@ const int TextPathConfig::kTextFieldNumber;
 TextPathConfig::TextPathConfig()
   : ::google::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:protocol.effect.plexus.TextPathConfig)
 }
 
 void TextPathConfig::InitAsDefaultInstance() {
@@ -449,20 +465,23 @@ TextPathConfig::TextPathConfig(const TextPathConfig& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:protocol.effect.plexus.TextPathConfig)
 }
 
 void TextPathConfig::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  text_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  text_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 TextPathConfig::~TextPathConfig() {
+  // @@protoc_insertion_point(destructor:protocol.effect.plexus.TextPathConfig)
   SharedDtor();
 }
 
 void TextPathConfig::SharedDtor() {
-  if (text_ != &::google::protobuf::internal::kEmptyString) {
+  if (text_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete text_;
   }
   if (this != default_instance_) {
@@ -491,11 +510,9 @@ TextPathConfig* TextPathConfig::New() const {
 }
 
 void TextPathConfig::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_text()) {
-      if (text_ != &::google::protobuf::internal::kEmptyString) {
-        text_->clear();
-      }
+  if (has_text()) {
+    if (text_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      text_->clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -504,31 +521,36 @@ void TextPathConfig::Clear() {
 
 bool TextPathConfig::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:protocol.effect.plexus.TextPathConfig)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional string text = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 10) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_text()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->text().data(), this->text().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "text");
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -536,18 +558,25 @@ bool TextPathConfig::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:protocol.effect.plexus.TextPathConfig)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:protocol.effect.plexus.TextPathConfig)
+  return false;
 #undef DO_
 }
 
 void TextPathConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:protocol.effect.plexus.TextPathConfig)
   // optional string text = 1;
   if (has_text()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->text().data(), this->text().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "text");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->text(), output);
   }
 
@@ -555,15 +584,18 @@ void TextPathConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:protocol.effect.plexus.TextPathConfig)
 }
 
 ::google::protobuf::uint8* TextPathConfig::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:protocol.effect.plexus.TextPathConfig)
   // optional string text = 1;
   if (has_text()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->text().data(), this->text().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "text");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->text(), target);
@@ -573,6 +605,7 @@ void TextPathConfig::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:protocol.effect.plexus.TextPathConfig)
   return target;
 }
 
@@ -667,6 +700,7 @@ const int Displacement::kZFieldNumber;
 Displacement::Displacement()
   : ::google::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:protocol.effect.plexus.Displacement)
 }
 
 void Displacement::InitAsDefaultInstance() {
@@ -679,6 +713,7 @@ Displacement::Displacement(const Displacement& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:protocol.effect.plexus.Displacement)
 }
 
 void Displacement::SharedCtor() {
@@ -690,6 +725,7 @@ void Displacement::SharedCtor() {
 }
 
 Displacement::~Displacement() {
+  // @@protoc_insertion_point(destructor:protocol.effect.plexus.Displacement)
   SharedDtor();
 }
 
@@ -723,7 +759,7 @@ Displacement* Displacement::New() const {
 }
 
 void Displacement::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & 7) {
     if (has_x()) {
       if (x_ != NULL) x_->::protocol::common::FloatAnim::Clear();
     }
@@ -740,18 +776,21 @@ void Displacement::Clear() {
 
 bool Displacement::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:protocol.effect.plexus.Displacement)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional .protocol.common.FloatAnim x = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 10) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_x()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(18)) goto parse_y;
         break;
@@ -759,13 +798,12 @@ bool Displacement::MergePartialFromCodedStream(
 
       // optional .protocol.common.FloatAnim y = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 18) {
          parse_y:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_y()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(26)) goto parse_z;
         break;
@@ -773,23 +811,23 @@ bool Displacement::MergePartialFromCodedStream(
 
       // optional .protocol.common.FloatAnim z = 3;
       case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 26) {
          parse_z:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_z()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -797,12 +835,18 @@ bool Displacement::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:protocol.effect.plexus.Displacement)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:protocol.effect.plexus.Displacement)
+  return false;
 #undef DO_
 }
 
 void Displacement::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:protocol.effect.plexus.Displacement)
   // optional .protocol.common.FloatAnim x = 1;
   if (has_x()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -825,10 +869,12 @@ void Displacement::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:protocol.effect.plexus.Displacement)
 }
 
 ::google::protobuf::uint8* Displacement::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:protocol.effect.plexus.Displacement)
   // optional .protocol.common.FloatAnim x = 1;
   if (has_x()) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -854,6 +900,7 @@ void Displacement::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:protocol.effect.plexus.Displacement)
   return target;
 }
 
@@ -990,6 +1037,7 @@ const int NoiseEffectorConfig::kDisplacementFieldNumber;
 NoiseEffectorConfig::NoiseEffectorConfig()
   : ::google::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:protocol.effect.plexus.NoiseEffectorConfig)
 }
 
 void NoiseEffectorConfig::InitAsDefaultInstance() {
@@ -1000,6 +1048,7 @@ NoiseEffectorConfig::NoiseEffectorConfig(const NoiseEffectorConfig& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:protocol.effect.plexus.NoiseEffectorConfig)
 }
 
 void NoiseEffectorConfig::SharedCtor() {
@@ -1010,6 +1059,7 @@ void NoiseEffectorConfig::SharedCtor() {
 }
 
 NoiseEffectorConfig::~NoiseEffectorConfig() {
+  // @@protoc_insertion_point(destructor:protocol.effect.plexus.NoiseEffectorConfig)
   SharedDtor();
 }
 
@@ -1041,7 +1091,7 @@ NoiseEffectorConfig* NoiseEffectorConfig::New() const {
 }
 
 void NoiseEffectorConfig::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & 3) {
     apply_to_ = 1;
     if (has_displacement()) {
       if (displacement_ != NULL) displacement_->::protocol::effect::plexus::Displacement::Clear();
@@ -1053,14 +1103,17 @@ void NoiseEffectorConfig::Clear() {
 
 bool NoiseEffectorConfig::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:protocol.effect.plexus.NoiseEffectorConfig)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional .protocol.effect.plexus.NoiseEffectorConfig.ApplyTo apply_to = 1 [default = Position];
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 8) {
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
@@ -1071,7 +1124,7 @@ bool NoiseEffectorConfig::MergePartialFromCodedStream(
             mutable_unknown_fields()->AddVarint(1, value);
           }
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(18)) goto parse_displacement;
         break;
@@ -1079,23 +1132,23 @@ bool NoiseEffectorConfig::MergePartialFromCodedStream(
 
       // optional .protocol.effect.plexus.Displacement displacement = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 18) {
          parse_displacement:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_displacement()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -1103,12 +1156,18 @@ bool NoiseEffectorConfig::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:protocol.effect.plexus.NoiseEffectorConfig)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:protocol.effect.plexus.NoiseEffectorConfig)
+  return false;
 #undef DO_
 }
 
 void NoiseEffectorConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:protocol.effect.plexus.NoiseEffectorConfig)
   // optional .protocol.effect.plexus.NoiseEffectorConfig.ApplyTo apply_to = 1 [default = Position];
   if (has_apply_to()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
@@ -1125,10 +1184,12 @@ void NoiseEffectorConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:protocol.effect.plexus.NoiseEffectorConfig)
 }
 
 ::google::protobuf::uint8* NoiseEffectorConfig::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:protocol.effect.plexus.NoiseEffectorConfig)
   // optional .protocol.effect.plexus.NoiseEffectorConfig.ApplyTo apply_to = 1 [default = Position];
   if (has_apply_to()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
@@ -1146,6 +1207,7 @@ void NoiseEffectorConfig::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:protocol.effect.plexus.NoiseEffectorConfig)
   return target;
 }
 

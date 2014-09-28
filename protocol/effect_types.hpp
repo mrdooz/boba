@@ -1,8 +1,10 @@
 #pragma once
 
+#include "effect_plexus_types.hpp"
+#include "effect_generator_types.hpp"
+#include "effect_particle_types.hpp"
 
-namespace boba
-{
+namespace boba { namespace effect { 
   struct EffectSetting;
   struct EffectSettings;
     
@@ -12,23 +14,25 @@ namespace boba
     {
       Unknown = 0,
       Plexus = 1,
+      Particle = 2,
+      Generator = 3,
     };
 
     EffectSetting::Type type;
-    string effectClass;
     u32 id;
     string name;
     u32 startTime;
     u32 endTime;
-    vector<uint8_t> configMsg;
-    string configFile;
+    ::boba::effect::plexus::PlexusConfig plexusConfig;
+    ::boba::effect::generator::PlaneConfig generatorPlaneConfig;
+    ::boba::effect::generator::SpikyConfig generatorSpikyConfig;
+    ::boba::effect::particle::ParticleConfig particleConfig;
   };
-
   struct EffectSettings
   {
+
     vector<EffectSetting> effectSetting;
     string soundtrack;
   };
-
   
-}
+} } 

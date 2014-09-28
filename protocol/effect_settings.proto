@@ -1,15 +1,20 @@
 package protocol.effect;
 
+import "effect_settings_plexus.proto";
+import "effect_settings_generator.proto";
+import "effect_settings_particle.proto";
+
 message EffectSetting
 {
 	enum Type {
 		Unknown = 0;
 		Plexus = 1;
+		Particle = 2;
+		Generator = 3;
 	};
 
 	// Identify the effect either by type or by class
 	optional Type type = 1;
-	optional string effect_class = 2;
 
 	// If id is 0, one will be assinged
 	optional uint32 id = 3;
@@ -18,9 +23,15 @@ message EffectSetting
 	optional uint32 start_time = 5;
 	optional uint32 end_time = 6;
 
+	oneof config {
+		protocol.effect.plexus.PlexusConfig plexus_config = 100;
+		protocol.effect.generator.PlaneConfig generator_plane_config = 101;
+		protocol.effect.generator.SpikyConfig generator_spiky_config = 102;
+		protocol.effect.particle.ParticleConfig particle_config = 103;
+	}
 	// Config, either as a encoded protobuf, or as a filename containing the config
-	optional bytes config_msg = 7;
-	optional string config_file = 8;
+//	optional bytes config_msg = 7;
+//	optional string config_file = 8;
 }
 
 message EffectSettings

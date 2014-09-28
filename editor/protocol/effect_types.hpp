@@ -1,8 +1,10 @@
 #pragma once
 
+#include "effect_plexus_types.hpp"
+#include "effect_generator_types.hpp"
+#include "effect_particle_types.hpp"
 
-namespace editor
-{
+namespace editor { namespace effect { 
   struct EffectSetting;
   struct EffectSettings;
     
@@ -12,24 +14,25 @@ namespace editor
     {
       Unknown = 0,
       Plexus = 1,
+      Particle = 2,
+      Generator = 3,
     };
 
     EffectSetting::Type type;
-    string effectClass;
     u32 id;
     string name;
     u32 startTime;
     u32 endTime;
-    vector<uint8_t> configMsg;
-    string configFile;
+    ::editor::effect::plexus::PlexusConfig plexusConfig;
+    ::editor::effect::generator::PlaneConfig generatorPlaneConfig;
+    ::editor::effect::generator::SpikyConfig generatorSpikyConfig;
+    ::editor::effect::particle::ParticleConfig particleConfig;
   };
-
   struct EffectSettings
   {
 
     vector<EffectSetting> effectSetting;
     string soundtrack;
   };
-
   
-}
+} } 

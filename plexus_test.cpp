@@ -8,7 +8,7 @@
 #include "init_sequence.hpp"
 
 #include "boba_loader.hpp"
-#include "protocol/generator_bindings.hpp"
+#include "protocol/effect_settings_generator_bindings.hpp"
 #include "scene.hpp"
 #include "dynamic_mesh.hpp"
 #include "animation.hpp"
@@ -31,7 +31,7 @@ namespace boba
   {
     virtual ~PathGenerator() {}
     virtual void GeneratePoints(const UpdateState& state, vector<Vector3>* vertices, vector<u32>* indices) = 0;
-    virtual void ApplyConfig(const TextPathConfig& config) {}
+    virtual void ApplyConfig(const effect::plexus::TextPathConfig& config) {}
   };
 
   struct TextPathGenerator : public PathGenerator
@@ -43,7 +43,7 @@ namespace boba
       WriteText("NEUROTICA EFS");
     }
 
-    void ApplyConfig(const TextPathConfig& config)
+    void ApplyConfig(const effect::plexus::TextPathConfig& config)
     {
       _config = config;
     }
@@ -214,7 +214,7 @@ namespace boba
     vector<Letter> _letters;
     BobaLoader _loader;
 
-    TextPathConfig _config;
+    effect::plexus::TextPathConfig _config;
   };
 
   struct Renderer
@@ -307,12 +307,12 @@ namespace boba
   struct Effector
   {
     virtual void Apply(const UpdateState& state, vector<Vector3>* verts) = 0;
-    virtual void ApplyConfig(const NoiseEffectorConfig& config) {}
+    virtual void ApplyConfig(const effect::plexus::NoiseEffectorConfig& config) {}
   };
 
   struct NoiseEffector : public Effector
   {
-    virtual void ApplyConfig(const NoiseEffectorConfig& config)
+    virtual void ApplyConfig(const effect::plexus::NoiseEffectorConfig& config)
     {
       _config = config;
       _displacementX = ANIMATION.AddAnimation(config.displacement.x, _displacementX);
@@ -353,7 +353,7 @@ namespace boba
     ObjectHandle _displacementX;
     ObjectHandle _displacementY;
     ObjectHandle _displacementZ;
-    NoiseEffectorConfig _config;
+    effect::plexus::NoiseEffectorConfig _config;
   };
 
   //------------------------------------------------------------------------------
@@ -365,14 +365,14 @@ namespace boba
     bool Init();
     void Update(const UpdateState& state);
     void Render(const Matrix& viewProj);
-    void ApplyConfig(const PlexusConfig& config);
+    void ApplyConfig(const effect::plexus::PlexusConfig& config);
 
     vector<Vector3> _verts;
     vector<u32> _indices;
     vector<PathGenerator*> _paths;
     vector<Effector*> _effectors;
     vector<Renderer*> _renderers;
-    PlexusConfig _config;
+    effect::plexus::PlexusConfig _config;
   };
 
   //------------------------------------------------------------------------------
@@ -403,7 +403,7 @@ namespace boba
   }
 
   //------------------------------------------------------------------------------
-  void Plexus::ApplyConfig(const PlexusConfig& config)
+  void Plexus::ApplyConfig(const effect::plexus::PlexusConfig& config)
   {
     _config = config;
     for (size_t i = 0; i < config.textPaths.size(); ++i)
@@ -619,18 +619,19 @@ PlexusTest::~PlexusTest()
 }
 
 //------------------------------------------------------------------------------
-bool PlexusTest::Init(const char* config)
+bool PlexusTest::Init(const protocol::effect::EffectSetting& config)
 {
   BEGIN_INIT_SEQUENCE();
 
-  _configName = config;
+  //_configName = config;
+  _planeConfig = config.generator_plane_config();
 
-  if (_planeConfig.has_camera_pos()) _cameraPos = ::FromProtocol(_planeConfig.camera_pos());
-  if (_planeConfig.has_camera_dir()) _cameraDir = ::FromProtocol(_planeConfig.camera_dir());
+  if (_planeConfig.has_camera_pos()) _cameraPos = ::boba::common::FromProtocol(_planeConfig.camera_pos());
+  if (_planeConfig.has_camera_dir()) _cameraDir = ::boba::common::FromProtocol(_planeConfig.camera_dir());
 
   //BindSpiky(&_spikyConfig, &_dirtyFlag);
   static bool tmp;
-  BindPlane(&_planeConfig, &tmp);
+  BindPlaneConfig(&_planeConfig, &tmp);
 
   INIT(_meshObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosNormal)));
   INIT(_cb.Create());
@@ -670,7 +671,7 @@ bool PlexusTest::Init(const char* config)
 
   _plexus = new Plexus(_ctx);
   _plexusConfig.textPaths.push_back({"NEUROTICA EFS"});
-  _plexusConfig.noiseEffectors.push_back(NoiseEffectorConfig());
+  _plexusConfig.noiseEffectors.push_back(effect::plexus::NoiseEffectorConfig());
 
   INIT(_plexus->Init());
 
@@ -754,11 +755,11 @@ bool PlexusTest::SaveSettings()
 {
   if (FILE* f = fopen(_configName.c_str() ,"wt"))
   {
-    ::ToProtocol(_cameraPos, _planeConfig.mutable_camera_pos());
-    ::ToProtocol(_cameraDir, _planeConfig.mutable_camera_dir());
+    ::boba::common::ToProtocol(_cameraPos, _planeConfig.mutable_camera_pos());
+    ::boba::common::ToProtocol(_cameraDir, _planeConfig.mutable_camera_dir());
 
-    ::ToProtocol(g_mesh.translation, _planeConfig.mutable_obj_t());
-    ::ToProtocol(g_mesh.rotation, _planeConfig.mutable_obj_r());
+    ::boba::common::ToProtocol(g_mesh.translation, _planeConfig.mutable_obj_t());
+    ::boba::common::ToProtocol(g_mesh.rotation, _planeConfig.mutable_obj_r());
 
     fprintf(f, "%s", _planeConfig.DebugString().c_str());
     fclose(f);
@@ -784,8 +785,10 @@ void PlexusTest::ToProtocol(protocol::effect::EffectSetting* settings) const
   settings->set_type(protocol::effect::EffectSetting_Type_Plexus);
 
   protocol::effect::plexus::PlexusConfig plexusConfig;
-  ::ToProtocol(_plexusConfig, &plexusConfig);
-  settings->set_config_msg(plexusConfig.SerializeAsString());
+  boba::effect::plexus::ToProtocol(_plexusConfig, &plexusConfig);
+
+  // TODO:
+  //settings->set_config_msg(plexusConfig.SerializeAsString());
 }
 
 //------------------------------------------------------------------------------
@@ -794,7 +797,7 @@ void PlexusTest::FromProtocol(const std::string& str)
   protocol::effect::plexus::PlexusConfig p;
   p.ParseFromString(str);
 
-  _plexusConfig = ::FromProtocol(p);
+  _plexusConfig = boba::effect::plexus::FromProtocol(p);
   _plexus->ApplyConfig(_plexusConfig);
 }
 

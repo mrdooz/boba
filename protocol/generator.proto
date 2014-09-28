@@ -11,11 +11,11 @@ message Spiky
   optional uint32 radial_segments       = 3;
   optional uint32 height_segments       = 4;
   
-  optional common.protocol.Vector3 camera_pos    = 5 [(anttweak.nobind) = true];
-  optional common.protocol.Vector3 camera_dir    = 6 [(anttweak.nobind) = true];
+  optional protocol.common.Vector3 camera_pos    = 5 [(anttweak.nobind) = true];
+  optional protocol.common.Vector3 camera_dir    = 6 [(anttweak.nobind) = true];
   
-  optional common.protocol.Vector3 obj_t         = 7 [(anttweak.nobind) = true];
-  optional common.protocol.Matrix4x4 obj_r       = 8 [(anttweak.nobind) = true];
+  optional protocol.common.Vector3 obj_t         = 7 [(anttweak.nobind) = true];
+  optional protocol.common.Matrix4x4 obj_r       = 8 [(anttweak.nobind) = true];
 }
 
 message Plane
@@ -27,11 +27,11 @@ message Plane
   optional uint32 width_segments        = 3;
   optional uint32 height_segments       = 4;
   
-  optional common.protocol.Vector3 camera_pos    = 5 [(anttweak.nobind) = true];
-  optional common.protocol.Vector3 camera_dir    = 6 [(anttweak.nobind) = true];
+  optional protocol.common.Vector3 camera_pos    = 5 [(anttweak.nobind) = true];
+  optional protocol.common.Vector3 camera_dir    = 6 [(anttweak.nobind) = true];
   
-  optional common.protocol.Vector3 obj_t         = 7 [(anttweak.nobind) = true];
-  optional common.protocol.Matrix4x4 obj_r       = 8 [(anttweak.nobind) = true];
+  optional protocol.common.Vector3 obj_t         = 7 [(anttweak.nobind) = true];
+  optional protocol.common.Matrix4x4 obj_r       = 8 [(anttweak.nobind) = true];
   
   optional float tau                    = 9 [(anttweak.minF) = 0.01, (anttweak.maxF) = 2, (anttweak.stepF) = 0.01, default = 0.5];
   optional float key                    = 10 [(anttweak.minF) = 0.01, (anttweak.maxF) = 1, (anttweak.stepF) = 0.01, default = 0.18];

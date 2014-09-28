@@ -38,7 +38,7 @@ bool Effect::Hide()
 }
 
 //------------------------------------------------------------------------------
-bool Effect::Init(const char* config)
+bool Effect::Init(const protocol::effect::EffectSetting& config)
 {
   return true;
 }

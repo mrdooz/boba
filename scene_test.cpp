@@ -38,7 +38,7 @@ SceneTest::~SceneTest()
 }
 
 //------------------------------------------------------------------------------
-bool SceneTest::Init(const char* config)
+bool SceneTest::Init(const protocol::effect::EffectSetting& config)
 {
   BobaLoader loader;
   loader.Load("D:\\projects\\model\\thing1.lxo.boba");
@@ -51,10 +51,7 @@ bool SceneTest::Init(const char* config)
   if (!GRAPHICS.LoadShadersFromFile("shaders/simple_mesh", &_vs, &_ps, &mesh._layout, vertexFlags))
     return false;
 
-  _configName = config;
-
-  if (!LoadProto(config, &_config))
-    return false;
+  _config = effect::particle::FromProtocol(config.particle_config());
 
 //  BindConfig(&_config);
 
@@ -117,11 +114,11 @@ bool SceneTest::Close()
 //------------------------------------------------------------------------------
 bool SceneTest::SaveSettings()
 {
-  if (FILE* f = fopen(_configName.c_str() ,"wt"))
-  {
-    fprintf(f, "%s", _config.DebugString().c_str());
-    fclose(f);
-  }
+//   if (FILE* f = fopen(_configName.c_str() ,"wt"))
+//   {
+//     fprintf(f, "%s", _config.DebugString().c_str());
+//     fclose(f);
+//   }
   return true;
 }
 

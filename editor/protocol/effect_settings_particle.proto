@@ -1,0 +1,13 @@
+package protocol.effect.particle;
+import "anttweak.proto";
+
+message ParticleConfig
+{
+  option (anttweak.is_effect) = true;
+
+	optional uint32 num_particles = 1;
+	repeated float bb_col3f = 3 [(anttweak.color3f) = true];
+	repeated float bb_col4f = 4 [(anttweak.color4f) = true];
+	repeated float bb_dir3f = 5 [(anttweak.dir3f) = true];
+	optional bool cc = 6;
+}

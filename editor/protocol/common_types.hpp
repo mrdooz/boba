@@ -1,11 +1,7 @@
 #pragma once
 
 
-namespace editor
-{
-  struct Vector2;
-  struct Vector3;
-  struct Vector4;
+namespace editor { namespace common { 
   struct FloatKey;
   struct FloatKeyframe;
   struct AnimHeader;
@@ -17,7 +13,6 @@ namespace editor
     s64 time;
     float value;
   };
-
   struct FloatKeyframe
   {
 
@@ -25,7 +20,6 @@ namespace editor
     FloatKey cpIn;
     FloatKey cpOut;
   };
-
   struct AnimHeader
   {
     enum class AnimType
@@ -44,7 +38,6 @@ namespace editor
     AnimHeader::AnimType type = AnimType::CATMULL_ROM;
     AnimHeader::LoopType loop = LoopType::LOOP;
   };
-
   struct FloatAnim
   {
 
@@ -56,9 +49,8 @@ namespace editor
     AnimHeader header;
     vector<FloatKeyframe> keyframe;
     ValueFlags valueFlags;
-    float minValue;
-    float maxValue;
+    float minValue = 0;
+    float maxValue = 10;
   };
-
   
-}
+} } 

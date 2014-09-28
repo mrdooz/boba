@@ -4,7 +4,7 @@
 
 #pragma warning(push)
 #pragma warning(disable: 4244 4267)
-#include "protocol/particle.pb.h"
+#include "protocol/effect_settings_particle.pb.h"
 #pragma warning(pop)
 
 namespace boba
@@ -19,7 +19,7 @@ namespace boba
     ~ParticleTest();
     virtual bool Show();
     virtual bool Hide();
-    virtual bool Init(const char* config) override;
+    virtual bool Init(const protocol::effect::EffectSetting& config) override;
     virtual bool Update(const UpdateState& state) override;
     virtual bool Render() override;
     virtual bool Close() override;
@@ -31,7 +31,7 @@ namespace boba
 
   private:
     string _configName;
-    particle::Config _config;
+    protocol::effect::particle::ParticleConfig _config;
     ObjectHandle _texture;
     ObjectHandle _vs;
     ObjectHandle _ps;

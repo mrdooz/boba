@@ -5,6 +5,8 @@ import os
 from collections import defaultdict
 from jinja2 import Environment, PackageLoader, Template
 
+VERBOSE = False
+
 EXCLUDE_MESSAGES = set([
     'Color4',
 #    'Settings',
@@ -24,7 +26,14 @@ ENGINE_NATIVE_MESSAGE_TYPES = {
     'Vector3'   : 'Vector3',
     'Vector4'   : 'Vector4', 
     'Color4'    : 'Color', 
+    'Matrix4x4' : 'Matrix', 
 }
+
+EXCLUDE_FORWARD_DECL = set([
+    'Vector2',
+    'Vector3',
+    'Vector4',
+    ])
 
 FORWARD_DECL = {
 #    'Vector3f FromProtocol(const common::Vector3& p);',
@@ -65,15 +74,16 @@ def underscore_to_title_case(str):
 def package_to_filename(package):
     return '_'.join(package.split('.')[1:])
 
-
-def parse_descriptor_set(cmdargs):
-
+def is_package_blacklisted(package):
+    package_split = package.split('.')
+    blacklist = ['anttweak']
+    return any([x in package_split for x in blacklist])
+    
+def parse_descriptor_set(cmdargs, NATIVE_MESSAGE_TYPES):
     try: 
         os.makedirs(cmdargs.outdir); 
     except: 
         pass
-
-    NATIVE_MESSAGE_TYPES = ENGINE_NATIVE_MESSAGE_TYPES if cmdargs.engine else EDITOR_NATIVE_MESSAGE_TYPES
 
     # todo: this is causing everything to be run twice!
     env = Environment(
@@ -85,7 +95,7 @@ def parse_descriptor_set(cmdargs):
     fds.ParseFromString(open('effects.desc', 'rb').read())
 
     file_to_package = {}
-    # group the types by package
+    # group the files by package
     desc_by_package = defaultdict(list)
     for file_desc in fds.file:
         desc_by_package[file_desc.package].append(file_desc)
@@ -93,9 +103,16 @@ def parse_descriptor_set(cmdargs):
 
     for package, file_descs in desc_by_package.iteritems():
 
-        package_namespace = '::'.join(package.split('.'))
-        out_name = package_to_filename(package)
+        if is_package_blacklisted(package):
+            continue
 
+        package_split = package.split('.')
+        package_namespace = '::'.join(package_split)
+        out_name = package_to_filename(package)
+        
+        # the 'protocol' tag shouldn't be a part of the namespace
+        ns = package.split('.')[1:]
+        
         args = { 
             'classes' : [], 
             'all_classes' : [], 
@@ -104,16 +121,18 @@ def parse_descriptor_set(cmdargs):
             'hpp_file' : file_descs[0].name.replace('.proto', '.pb.h'),
             'out_name' : out_name,
             'namespace' : cmdargs.namespace,
+            'namespace_open' : 'namespace ' + cmdargs.namespace + ' { ' + ''.join(['namespace ' + x + ' { ' for x in ns]),
+            'namespace_close' : '} ' * (1 + len(ns))
          }
 
         # iterate over FileDescriptor in the current package
         for file_desc in file_descs:
-
-            # import pdb; pdb.set_trace()
+        
             # add the dependencies (imports)
             for dep in file_desc.dependency:
-                pkg = file_to_package[dep]
-                args['dependencies'].append(package_to_filename(pkg))
+                if not is_package_blacklisted(dep):
+                    pkg = file_to_package[dep]
+                    args['dependencies'].append(package_to_filename(pkg))
 
             flag_vars = set()
 
@@ -123,7 +142,8 @@ def parse_descriptor_set(cmdargs):
                 if msg_desc.name in EXCLUDE_MESSAGES:
                     continue
 
-                args['all_classes'].append(msg_desc.name)
+                if msg_desc.name not in EXCLUDE_FORWARD_DECL:
+                    args['all_classes'].append(msg_desc.name)
                 args['forward_decls'] = FORWARD_DECL
 
                 # don't create structs for message types we have native implementations for
@@ -134,9 +154,9 @@ def parse_descriptor_set(cmdargs):
                     'members' : [], 
                     'enums' : [],
                     'flags' : [],
-                    'proto_type' : package_namespace + '::' + msg_desc.name,
+                    'proto_type' : '::' + package_namespace + '::' + msg_desc.name,
                     }
-
+                    
                 cur_class['name'] = msg_desc.name
                 args['classes'].append(cur_class)
 
@@ -161,8 +181,6 @@ def parse_descriptor_set(cmdargs):
                 idx = 0
                 for field_desc in msg_desc.field:
                     type_number = field_desc.type
-                    # type_name = .effect.protocol.plexus.NoiseEffector.ApplyTo
-                    # import pdb; pdb.set_trace()
 
                     is_msg = type_number == 11
                     is_bytes = type_number == 12
@@ -178,6 +196,8 @@ def parse_descriptor_set(cmdargs):
                     proto_field_name = field_desc.name
                     field_name = underscore_to_camel_case(field_desc.name)
                     name_title = underscore_to_title_case(field_desc.name)
+                    s = field_desc.type_name.split('.')[1:]
+                    field_namespace = '::' + cmdargs.namespace + '::' + '::'.join(s[1:-1]) + '::'
 
                     default_value = None
                     if len(field_desc.default_value) > 0:
@@ -185,7 +205,11 @@ def parse_descriptor_set(cmdargs):
                         if is_enum:
                             default_value = field_desc.type_name.split('.')[-1] + '::' + field_desc.default_value
                         else:
-                            default_value = field_desc.default_value
+                            # add trailing 'f' to float values to avoid compiler warnings
+                            if field_type == 'float' and '.' in field_desc.default_value:
+                                default_value = field_desc.default_value + 'f'
+                            else:
+                                default_value = field_desc.default_value
 
                     if type_number in NATIVE_TYPES:
                         # check if the var is a flag, instead of a normal type
@@ -198,11 +222,15 @@ def parse_descriptor_set(cmdargs):
                             field_type = NATIVE_TYPES[type_number]
                             base_type = field_type
                     elif is_msg:
-                        s = field_desc.type_name.split('.')
                         proto_type = ''.join(s[1:])
                         suffix = field_desc.type_name.split('.')[-1]
-                        # use the native message type if one exists
                         field_type = NATIVE_MESSAGE_TYPES.get(suffix, suffix)
+                        
+                        # use the native message type if one exists
+                        if suffix in NATIVE_MESSAGE_TYPES or package_split == s[:-1]:
+                            field_type = NATIVE_MESSAGE_TYPES.get(suffix, suffix)
+                        else:
+                            field_type = '::' + cmdargs.namespace + '::' + '::'.join(s[1:-1]) + '::' + NATIVE_MESSAGE_TYPES.get(suffix, suffix)
                         base_type = field_type
                     elif is_enum:
                         s = field_desc.type_name.split('.')
@@ -220,7 +248,6 @@ def parse_descriptor_set(cmdargs):
                         base_type = field_type
                         field_type = 'vector<%s>' % field_type
 
-
                     cur_member = { 
                         'name' : field_name,
                         'name_title' : name_title,
@@ -236,6 +263,7 @@ def parse_descriptor_set(cmdargs):
                         'proto_type' : proto_type,
                         'idx' : idx,
                         'default_value' : default_value,
+                        'namespace' : field_namespace,
                         }
                     idx += 1
                     cur_class['members'].append(cur_member)
@@ -260,4 +288,5 @@ parser.add_argument('--outdir', action='store', default='.')
 parser.add_argument('--engine', action='store_true')
 args = parser.parse_args()
 
-parse_descriptor_set(args)
+native_types = ENGINE_NATIVE_MESSAGE_TYPES if args.engine else EDITOR_NATIVE_MESSAGE_TYPES
+parse_descriptor_set(args, native_types)

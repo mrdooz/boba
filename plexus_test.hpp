@@ -5,10 +5,12 @@
 
 #pragma warning(push)
 #pragma warning(disable: 4244 4267)
-#include "protocol/generator.pb.h"
+#include "protocol/effect_settings_generator.pb.h"
+#include "protocol/effect_settings.pb.h"
 #pragma warning(pop)
 
 #include "protocol/effect_plexus_types.hpp"
+#include "protocol/effect_generator_types.hpp"
 
 #include "gpu_objects.hpp"
 #include "post_process.hpp"
@@ -25,13 +27,13 @@ namespace boba
 
     PlexusTest(const string& name, u32 id);
     ~PlexusTest();
-    virtual bool Init(const char* config) override;
+    virtual bool Init(const protocol::effect::EffectSetting& config) override;
     virtual bool Update(const UpdateState& state) override;
     virtual bool Render() override;
     virtual bool Close() override;
 
     virtual bool SaveSettings() override;
-    virtual void ToProtocol(protocol::effect::EffectSetting* settings) const;
+    virtual void ToProtocol(::protocol::effect::EffectSetting* settings) const;
     virtual void FromProtocol(const std::string& str);
 
     static const char* Name();
@@ -44,8 +46,8 @@ namespace boba
     void RenderText();
 
     string _configName;
-    generator::Spiky _spikyConfig;
-    generator::Plane _planeConfig;
+    protocol::effect::generator::SpikyConfig _spikyConfig;
+    protocol::effect::generator::PlaneConfig _planeConfig;
 
     Matrix _view;
     Matrix _invView;
@@ -125,7 +127,7 @@ namespace boba
 
     ObjectHandle _psEdgeDetect;
 
-    PlexusConfig _plexusConfig;
+    effect::plexus::PlexusConfig _plexusConfig;
     Plexus* _plexus;
   };
 

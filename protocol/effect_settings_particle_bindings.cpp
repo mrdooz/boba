@@ -1,11 +1,15 @@
-#include "particle_bindings.hpp"
+#include "effect_settings_particle_bindings.hpp"
+namespace protocol
+{
+namespace effect
+{
 namespace particle
 {
-void BindConfig(particle::Config* data, bool *dirty)
+void BindParticleConfig(protocol::effect::particle::ParticleConfig* data, bool *dirty)
 {
   struct Cfg
   {
-    Config* data;
+    ParticleConfig* data;
       bool *dirty;
   };
 
@@ -14,7 +18,7 @@ void BindConfig(particle::Config* data, bool *dirty)
   cfg.dirty = dirty;
 
 #if WITH_ANT_TWEAK_BAR
-  TwBar* bar = TwNewBar("particle.Config");
+  TwBar* bar = TwNewBar("protocol.effect.particle.ParticleConfig");
   // Add num_particles
   TwAddVarCB(bar, "num_particles", TW_TYPE_UINT32,
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_num_particles(*(uint32_t*)value); if (cfg->dirty) *cfg->dirty = true; },
@@ -41,5 +45,7 @@ void BindConfig(particle::Config* data, bool *dirty)
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(bool*)value = cfg->data->cc(); }, (void*)&cfg, nullptr);
 
 #endif
+}
+}
 }
 }

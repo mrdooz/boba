@@ -7,7 +7,7 @@
 #include "resource_manager.hpp"
 
 #include "boba_loader.hpp"
-#include "protocol/generator_bindings.hpp"
+#include "protocol/effect_settings_generator_bindings.hpp"
 #include "debug_drawer.hpp"
 #include "scene.hpp"
 #include "dynamic_mesh.hpp"
@@ -36,9 +36,10 @@ GeneratorTest::~GeneratorTest()
 }
 
 //------------------------------------------------------------------------------
-bool GeneratorTest::Init(const char* config)
+bool GeneratorTest::Init(const protocol::effect::EffectSetting& config)
 {
-  _configName = config;
+  _planeConfig = config.generator_plane_config();
+  //_configName = config;
 
 //   if (!LoadProto(config, &_planeConfig))
 //   {
@@ -46,12 +47,12 @@ bool GeneratorTest::Init(const char* config)
 //     return false;
 //   }
 
-  if (_planeConfig.has_camera_pos()) _cameraPos = ::FromProtocol(_planeConfig.camera_pos());
-  if (_planeConfig.has_camera_dir()) _cameraDir = ::FromProtocol(_planeConfig.camera_dir());
+  if (_planeConfig.has_camera_pos()) _cameraPos = ::boba::common::FromProtocol(_planeConfig.camera_pos());
+  if (_planeConfig.has_camera_dir()) _cameraDir = ::boba::common::FromProtocol(_planeConfig.camera_dir());
 
   //BindSpiky(&_spikyConfig, &_dirtyFlag);
   static bool tmp;
-  BindPlane(&_planeConfig, &tmp);
+  protocol::effect::generator::BindPlaneConfig(&_planeConfig, &tmp);
 
   _meshObjects.CreateDynamic(64 * 1024, DXGI_FORMAT_R32_UINT, 64 * 1024, sizeof(PosNormal));
   _cb.Create();
@@ -520,11 +521,11 @@ bool GeneratorTest::SaveSettings()
 {
   if (FILE* f = fopen(_configName.c_str() ,"wt"))
   {
-    ::ToProtocol(_cameraPos, _planeConfig.mutable_camera_pos());
-    ::ToProtocol(_cameraDir, _planeConfig.mutable_camera_dir());
+    ::boba::common::ToProtocol(_cameraPos, _planeConfig.mutable_camera_pos());
+    ::boba::common::ToProtocol(_cameraDir, _planeConfig.mutable_camera_dir());
 
-    ::ToProtocol(g_mesh.translation, _planeConfig.mutable_obj_t());
-    ::ToProtocol(g_mesh.rotation, _planeConfig.mutable_obj_r());
+    ::boba::common::ToProtocol(g_mesh.translation, _planeConfig.mutable_obj_t());
+    ::boba::common::ToProtocol(g_mesh.rotation, _planeConfig.mutable_obj_r());
 
     fprintf(f, "%s", _planeConfig.DebugString().c_str());
     fclose(f);

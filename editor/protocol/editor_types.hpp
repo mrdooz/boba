@@ -4,8 +4,7 @@
 #include "editor_types.hpp"
 #include "common_types.hpp"
 
-namespace editor
-{
+namespace editor { namespace editor { 
   struct Settings;
   struct StyleSetting;
   struct StyleSettings;
@@ -43,7 +42,6 @@ namespace editor
     Color effectIconExpandedColor;
     Color effectIconCollapsedColor;
   };
-
   struct StyleSetting
   {
 
@@ -53,12 +51,10 @@ namespace editor
     float outlineThickness = 0;
     u32 fontStyle;
   };
-
   struct StyleSettings
   {
 
     vector<StyleSetting> styleSetting;
   };
-
   
-}
+} } 

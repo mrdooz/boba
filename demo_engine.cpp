@@ -4,6 +4,7 @@
 #include "proto_helpers.hpp"
 #include "resource_manager.hpp"
 #include "app.hpp"
+#include "init_sequence.hpp"
 
 #pragma warning(push)
 #pragma warning(disable: 4244 4267)
@@ -241,23 +242,28 @@ void DemoEngine::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 //------------------------------------------------------------------------------
 bool DemoEngine::Init(const char* config, HINSTANCE instance)
 {
-  if (!LoadProto(config, &_config))
-    return false;
+  BEGIN_INIT_SEQUENCE();
+  _configFile = config;
+
+  INIT_FATAL(LoadProto(config, &_config));
 
   for (const protocol::effect::EffectSetting& effect : _config.effect_setting())
   {
     // Look up the factory
-    auto factoryIt = _effectFactories.find(effect.effect_class());
+    effect::EffectSetting::Type type = (effect::EffectSetting::Type)effect.type();
+    auto factoryIt = _effectFactories.find(type);
     if (factoryIt != _effectFactories.end())
     {
       const char* name = effect.name().c_str();
-
       EffectFactory factory = factoryIt->second;
       Effect* newEffect = factory(name, _nextEffectId++);
       newEffect->SetDuration(TimeDuration::Milliseconds(effect.start_time()), TimeDuration::Milliseconds(effect.end_time()));
-      if (!newEffect->Init(effect.config_file().c_str()))
+
+      switch (type)
       {
-        return false;
+        case effect::EffectSetting::Type::Generator: INIT(newEffect->Init(effect)); break;
+        case effect::EffectSetting::Type::Particle: INIT(newEffect->Init(effect)); break;
+        case effect::EffectSetting::Type::Plexus: INIT(newEffect->Init(effect)); break;
       }
       _effects.push_back(newEffect);
     }
@@ -269,13 +275,13 @@ bool DemoEngine::Init(const char* config, HINSTANCE instance)
   }
 
   ReclassifyEffects();
-  return true;
+  END_INIT_SEQUENCE();
 }
 
 //------------------------------------------------------------------------------
-void DemoEngine::RegisterFactory(const char* demoClass, const EffectFactory& factory)
+void DemoEngine::RegisterFactory(effect::EffectSetting::Type type, const EffectFactory& factory)
 {
-  _effectFactories[demoClass] = factory;
+  _effectFactories[type] = factory;
 }
 
 //------------------------------------------------------------------------------
@@ -287,36 +293,39 @@ LRESULT DemoEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 //------------------------------------------------------------------------------
 void DemoEngine::SaveSettings()
 {
-  for (Effect* effect : _effects)
+  if (FILE* f = fopen("config/config.tmp", "wt"))
   {
-    effect->SaveSettings();
+    fprintf(f, "%s", _config.DebugString().c_str());
+    fclose(f);
   }
+
+//   for (Effect* effect : _effects)
+//   {
+//     effect->SaveSettings();
+//   }
 }
 
 //------------------------------------------------------------------------------
 void DemoEngine::Connected()
 {
   // send current config to the editor
-  protocol::effect::EffectSettings settings;
-
   for (const Effect* effect : _effects)
   {
-    protocol::effect::EffectSetting* setting = settings.add_effect_setting();
+    protocol::effect::EffectSetting* setting = _config.add_effect_setting();
     setting->set_id(effect->GetId());
     effect->ToProtocol(setting);
   }
 
-  string str = settings.SerializeAsString();
+  string str = _config.SerializeAsString();
   APP.SendWebsocketFrame((const u8*)str.data(), (int)str.size());
 }
 
 //------------------------------------------------------------------------------
 void DemoEngine::ProcessPayload(const void* payload, u32 size)
 {
-  protocol::effect::EffectSettings settings;
-  if (settings.ParseFromArray(payload, size))
+  if (_config.ParseFromArray(payload, size))
   {
-    for (const protocol::effect::EffectSetting& setting : settings.effect_setting())
+    for (const protocol::effect::EffectSetting& setting : _config.effect_setting())
     {
       u32 id = setting.id();
 
@@ -330,7 +339,8 @@ void DemoEngine::ProcessPayload(const void* payload, u32 size)
         auto it = find_if(_effects.begin(), _effects.end(), [=](const Effect* e) { return e->GetId() == id; });
         if (it != _effects.end())
         {
-          (*it)->FromProtocol(setting.config_msg());
+          // TODO:
+          //(*it)->FromProtocol(setting.config_msg());
         }
       }
     }

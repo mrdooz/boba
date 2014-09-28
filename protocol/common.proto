@@ -1,4 +1,4 @@
-package common.protocol;
+package protocol.common;
 
 message Color4
 {
@@ -33,6 +33,7 @@ message Matrix3x3
 {
   optional Vector3 row_1 = 1;
   optional Vector3 row_2 = 2;
+
   optional Vector3 row_3 = 3;
 }
 
@@ -59,27 +60,51 @@ message FloatKeyframe
   optional FloatKey cp_out = 3;
 }
 
+// animation type
+
+message AnimHeader
+{
+  enum AnimType {
+    LINEAR = 0;
+    BEZIER = 1;
+    CATMULL_ROM = 2;
+  }
+  
+  enum LoopType {
+    CLAMP = 0;
+    LOOP = 1;
+    // meh, i'll probably not implement this..
+    LOOP_SMOOTH = 2;
+  }
+  
+  optional AnimType type = 1 [default = CATMULL_ROM];
+  optional LoopType loop = 2 [default = LOOP];
+}
+
 message FloatAnim
 {
-  optional uint32 type = 1 [default = 1];
+  optional AnimHeader header = 1;
   repeated FloatKeyframe keyframe = 2;
-  optional float min_value = 3;
-  optional float max_value = 4;
-  optional float step = 5;
+
+  enum ValueFlags {
+    UseMinValue = 0;
+    UseMaxValue = 1;
+  }
+
+  optional uint32 value_flags = 3 [default = 0];
+  optional float min_value = 4 [default = 0];
+  optional float max_value = 5 [default = 10];
 }
 
-message Vector3Keyframe
-{
+//message Vector3Keyframe
+//{
 //  option (common.protocol.context) = "void* context";
-  optional int32 time = 1;
-  optional Vector3 value = 2;
-}
+//  optional int32 time = 1;
+//  optional Vector3 value = 2;
+//}
 
-message Vector3Anim
-{
-  optional uint32 type = 1;
-  repeated Vector3Keyframe keyframe = 2;
-  optional Vector3 min_value = 3;
-  optional Vector3 max_value = 4;
-  optional Vector3 step = 5;
-}
+//message Vector3Anim
+//{
+//  optional uint32 type = 1;
+//  repeated Vector3Keyframe keyframe = 2;
+//}

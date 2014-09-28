@@ -2,8 +2,7 @@
 
 #include "common_types.hpp"
 
-namespace editor
-{
+namespace editor { namespace effect { namespace plexus { 
   struct PlexusConfig;
   struct TextPathConfig;
   struct Displacement;
@@ -15,21 +14,18 @@ namespace editor
     vector<TextPathConfig> textPaths;
     vector<NoiseEffectorConfig> noiseEffectors;
   };
-
   struct TextPathConfig
   {
 
     string text;
   };
-
   struct Displacement
   {
 
-    FloatAnim x;
-    FloatAnim y;
-    FloatAnim z;
+    ::editor::common::FloatAnim x;
+    ::editor::common::FloatAnim y;
+    ::editor::common::FloatAnim z;
   };
-
   struct NoiseEffectorConfig
   {
     enum class ApplyTo
@@ -41,6 +37,5 @@ namespace editor
     NoiseEffectorConfig::ApplyTo applyTo = ApplyTo::Position;
     Displacement displacement;
   };
-
   
-}
+} } } 

@@ -7,7 +7,7 @@
 #include "resource_manager.hpp"
 
 #if WITH_ANT_TWEAK_BAR
-#include "protocol/particle_bindings.hpp"
+#include "protocol/effect_settings_particle_bindings.hpp"
 #endif
 
 
@@ -44,15 +44,15 @@ bool ParticleTest::Hide()
 }
 
 //------------------------------------------------------------------------------
-bool ParticleTest::Init(const char* config)
+bool ParticleTest::Init(const protocol::effect::EffectSetting& config)
 {
-  _configName = config;
-
-  if (!LoadProto(config, &_config))
-    return false;
+  _config = config.particle_config();
+//   _configName = config;
+//   if (!LoadProto(config, &_config))
+//     return false;
 
 #if WITH_ANT_TWEAK_BAR
-  BindConfig(&_config, nullptr);
+  BindParticleConfig(&_config, nullptr);
   TwDefine("particle.Config visible=false");
 #endif
 
@@ -89,7 +89,7 @@ bool ParticleTest::Render()
   _ctx->BeginFrame();
 
   CBufferPerFrame cb;
-  ::FromProtocol(_config.bb_col4f(), &cb.col);
+  ::boba::common::FromProtocol(_config.bb_col4f(), &cb.col);
   _ctx->SetCBuffer(_cbuffer, &cb, sizeof(cb), ShaderType::PixelShader, 0);
 
   _ctx->SetVS(_vs);

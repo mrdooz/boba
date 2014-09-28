@@ -1,0 +1,44 @@
+package protocol.effect.generator;
+import "anttweak.proto";
+import "common.proto";
+
+message SpikyConfig
+{
+  option (anttweak.is_effect) = true;
+  
+  optional float radius                 = 1;
+  optional float height                 = 2;
+  optional uint32 radial_segments       = 3;
+  optional uint32 height_segments       = 4;
+  
+  optional protocol.common.Vector3 camera_pos    = 5 [(anttweak.nobind) = true];
+  optional protocol.common.Vector3 camera_dir    = 6 [(anttweak.nobind) = true];
+  
+  optional protocol.common.Vector3 obj_t         = 7 [(anttweak.nobind) = true];
+  optional protocol.common.Matrix4x4 obj_r       = 8 [(anttweak.nobind) = true];
+}
+
+message PlaneConfig
+{
+  option (anttweak.is_effect) = true;
+
+  optional float width                  = 1;
+  optional float height                 = 2;
+  optional uint32 width_segments        = 3;
+  optional uint32 height_segments       = 4;
+  
+  optional protocol.common.Vector3 camera_pos    = 5 [(anttweak.nobind) = true];
+  optional protocol.common.Vector3 camera_dir    = 6 [(anttweak.nobind) = true];
+  
+  optional protocol.common.Vector3 obj_t         = 7 [(anttweak.nobind) = true];
+  optional protocol.common.Matrix4x4 obj_r       = 8 [(anttweak.nobind) = true];
+  
+  optional float tau                    = 9 [(anttweak.minF) = 0.01, (anttweak.maxF) = 2, (anttweak.stepF) = 0.01, default = 0.5];
+  optional float key                    = 10 [(anttweak.minF) = 0.01, (anttweak.maxF) = 1, (anttweak.stepF) = 0.01, default = 0.18];
+  optional float ofs                    = 11 [(anttweak.minF) = 0.01, (anttweak.maxF) = 1, (anttweak.stepF) = 0.01, default = 0.18];
+  optional float blur_radius            = 12 [(anttweak.minF) = 0, (anttweak.maxF) = 200, (anttweak.stepF) = 1, default = 10];
+  optional float bloom_threshold        = 13 [(anttweak.minF) = 0, (anttweak.maxF) = 1, (anttweak.stepF) = 0.01, default = 0.8];
+  optional float bloom_multiplier       = 14 [(anttweak.minF) = 0, (anttweak.maxF) = 5, (anttweak.stepF) = 0.1, default = 1.0];
+  
+  optional bool transpose               = 15 [default = true];
+}

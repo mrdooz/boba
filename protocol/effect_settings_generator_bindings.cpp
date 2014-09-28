@@ -1,11 +1,15 @@
-#include "generator_bindings.hpp"
+#include "effect_settings_generator_bindings.hpp"
+namespace protocol
+{
+namespace effect
+{
 namespace generator
 {
-void BindSpiky(generator::Spiky* data, bool *dirty)
+void BindSpikyConfig(protocol::effect::generator::SpikyConfig* data, bool *dirty)
 {
   struct Cfg
   {
-    Spiky* data;
+    SpikyConfig* data;
       bool *dirty;
   };
 
@@ -14,7 +18,7 @@ void BindSpiky(generator::Spiky* data, bool *dirty)
   cfg.dirty = dirty;
 
 #if WITH_ANT_TWEAK_BAR
-  TwBar* bar = TwNewBar("generator.Spiky");
+  TwBar* bar = TwNewBar("protocol.effect.generator.SpikyConfig");
   // Add radius
   TwAddVarCB(bar, "radius", TW_TYPE_FLOAT,
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_radius(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
@@ -37,11 +41,11 @@ void BindSpiky(generator::Spiky* data, bool *dirty)
 
 #endif
 }
-void BindPlane(generator::Plane* data, bool *dirty)
+void BindPlaneConfig(protocol::effect::generator::PlaneConfig* data, bool *dirty)
 {
   struct Cfg
   {
-    Plane* data;
+    PlaneConfig* data;
       bool *dirty;
   };
 
@@ -50,7 +54,7 @@ void BindPlane(generator::Plane* data, bool *dirty)
   cfg.dirty = dirty;
 
 #if WITH_ANT_TWEAK_BAR
-  TwBar* bar = TwNewBar("generator.Plane");
+  TwBar* bar = TwNewBar("protocol.effect.generator.PlaneConfig");
   // Add width
   TwAddVarCB(bar, "width", TW_TYPE_FLOAT,
     [](const void* value, void* data) { Cfg* cfg = (Cfg*)data; cfg->data->set_width(*(float*)value); if (cfg->dirty) *cfg->dirty = true; },
@@ -107,5 +111,7 @@ void BindPlane(generator::Plane* data, bool *dirty)
     [](void* value, void* data) { Cfg* cfg = (Cfg*)data; *(bool*)value = cfg->data->transpose(); }, (void*)&cfg, nullptr);
 
 #endif
+}
+}
 }
 }

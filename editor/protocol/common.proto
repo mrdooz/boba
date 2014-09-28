@@ -92,8 +92,8 @@ message FloatAnim
   }
 
   optional uint32 value_flags = 3 [default = 0];
-  optional float min_value = 4;
-  optional float max_value = 5;
+  optional float min_value = 4 [default = 0];
+  optional float max_value = 5 [default = 10];
 }
 
 //message Vector3Keyframe

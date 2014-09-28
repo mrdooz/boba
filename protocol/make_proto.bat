@@ -1,5 +1,3 @@
-protoc --cpp_out=. --proto_path=/projects/protobuf-2.5.0/src --proto_path=. *.proto
-protoc --plugin=protoc-gen-ANT=comptest.exe --ANT_out=. --proto_path=/projects/protobuf-2.5.0/src --proto_path=. generator.proto particle.proto
-rem protoc --descriptor_set_out=desc.pb --include_imports --include_source_info --proto_path=/projects/protobuf-2.5.0/src --proto_path=. *.proto
-
+protoc --cpp_out=. --proto_path=/projects/protobuf-2.6.0/src --proto_path=. *.proto
+protoc --plugin=protoc-gen-ANT=comptest.exe --ANT_out=. --proto_path=/projects/protobuf-2.6.0/src --proto_path=. effect_settings_generator.proto effect_settings_particle.proto
 pause

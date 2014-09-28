@@ -8,6 +8,8 @@
 #include "protocol/effect_settings.pb.h"
 #pragma warning(pop)
 
+#include "protocol/effect_types.hpp"
+
 namespace boba
 {
   class Effect;
@@ -23,7 +25,7 @@ namespace boba
     static bool Destroy();
 
     bool Init(const char* config, HINSTANCE instance);
-    void RegisterFactory(const char* demoClass, const EffectFactory& factory);
+    void RegisterFactory(effect::EffectSetting::Type type, const EffectFactory& factory);
 
     void SaveSettings();
 
@@ -66,8 +68,9 @@ namespace boba
 
     Timer _timer;
 
+    string _configFile;
     protocol::effect::EffectSettings _config;
-    unordered_map<string, EffectFactory> _effectFactories;
+    unordered_map<effect::EffectSetting::Type, EffectFactory> _effectFactories;
     u32 _nextEffectId;
   };
 

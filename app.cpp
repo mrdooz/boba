@@ -137,10 +137,10 @@ bool App::Init(HINSTANCE hinstance)
   if (!AnimationManager::Create())
     return false;
 
-  DEMO_ENGINE.RegisterFactory(ParticleTest::Name(), ParticleTest::Create);
-  DEMO_ENGINE.RegisterFactory(SceneTest::Name(), SceneTest::Create);
-  DEMO_ENGINE.RegisterFactory(GeneratorTest::Name(), GeneratorTest::Create);
-  DEMO_ENGINE.RegisterFactory(PlexusTest::Name(), PlexusTest::Create);
+  DEMO_ENGINE.RegisterFactory(effect::EffectSetting::Type::Particle, ParticleTest::Create);
+  DEMO_ENGINE.RegisterFactory(effect::EffectSetting::Type::Particle, SceneTest::Create);
+  DEMO_ENGINE.RegisterFactory(effect::EffectSetting::Type::Generator, GeneratorTest::Create);
+  DEMO_ENGINE.RegisterFactory(effect::EffectSetting::Type::Plexus, PlexusTest::Create);
 
 #if WITH_ANT_TWEAK_BAR
   TwInit(TW_DIRECT3D11, GRAPHICS.Device());

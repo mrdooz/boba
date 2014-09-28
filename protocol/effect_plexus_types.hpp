@@ -2,8 +2,7 @@
 
 #include "common_types.hpp"
 
-namespace boba
-{
+namespace boba { namespace effect { namespace plexus { 
   struct PlexusConfig;
   struct TextPathConfig;
   struct Displacement;
@@ -11,22 +10,22 @@ namespace boba
     
   struct PlexusConfig
   {
+
     vector<TextPathConfig> textPaths;
     vector<NoiseEffectorConfig> noiseEffectors;
   };
-
   struct TextPathConfig
   {
+
     string text;
   };
-
   struct Displacement
   {
-    FloatAnim x;
-    FloatAnim y;
-    FloatAnim z;
-  };
 
+    ::boba::common::FloatAnim x;
+    ::boba::common::FloatAnim y;
+    ::boba::common::FloatAnim z;
+  };
   struct NoiseEffectorConfig
   {
     enum class ApplyTo
@@ -38,6 +37,5 @@ namespace boba
     NoiseEffectorConfig::ApplyTo applyTo = ApplyTo::Position;
     Displacement displacement;
   };
-
   
-}
+} } } 

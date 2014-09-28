@@ -503,17 +503,47 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\protocol\anttweak.pb.cc" />
-    <ClCompile Include="..\protocol\common.pb.cc" />
-    <ClCompile Include="..\protocol\common_proto.cpp" />
-    <ClCompile Include="..\protocol\effect_plexus_proto.cpp" />
-    <ClCompile Include="..\protocol\effect_proto.cpp" />
-    <ClCompile Include="..\protocol\effect_settings.pb.cc" />
-    <ClCompile Include="..\protocol\effect_settings_plexus.pb.cc" />
-    <ClCompile Include="..\protocol\generator.pb.cc" />
-    <ClCompile Include="..\protocol\generator_bindings.cpp" />
-    <ClCompile Include="..\protocol\particle.pb.cc" />
-    <ClCompile Include="..\protocol\particle_bindings.cpp" />
+    <ClCompile Include="..\protocol\anttweak.pb.cc">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996; 4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4996; 4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\protocol\common.pb.cc">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996; 4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4996; 4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\protocol\common_proto.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996; 4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\protocol\effect_generator_proto.cpp" />
+    <ClCompile Include="..\protocol\effect_particle_proto.cpp" />
+    <ClCompile Include="..\protocol\effect_plexus_proto.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996; 4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\protocol\effect_proto.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996; 4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\protocol\effect_settings.pb.cc">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996; 4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4996; 4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\protocol\effect_settings_generator.pb.cc">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996; 4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4996; 4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\protocol\effect_settings_generator_bindings.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996; 4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\protocol\effect_settings_particle.pb.cc">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996; 4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4996; 4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\protocol\effect_settings_particle_bindings.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996; 4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="..\protocol\effect_settings_plexus.pb.cc">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4996; 4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4996; 4267</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="..\proto_helpers.cpp" />
     <ClCompile Include="..\resource_manager.cpp" />
     <ClCompile Include="..\scene.cpp" />
@@ -570,16 +600,20 @@
     <ClInclude Include="..\protocol\common.pb.h" />
     <ClInclude Include="..\protocol\common_proto.hpp" />
     <ClInclude Include="..\protocol\common_types.hpp" />
+    <ClInclude Include="..\protocol\effect_generator_proto.hpp" />
+    <ClInclude Include="..\protocol\effect_generator_types.hpp" />
+    <ClInclude Include="..\protocol\effect_particle_proto.hpp" />
+    <ClInclude Include="..\protocol\effect_particle_types.hpp" />
     <ClInclude Include="..\protocol\effect_plexus_proto.hpp" />
     <ClInclude Include="..\protocol\effect_plexus_types.hpp" />
     <ClInclude Include="..\protocol\effect_proto.hpp" />
     <ClInclude Include="..\protocol\effect_settings.pb.h" />
+    <ClInclude Include="..\protocol\effect_settings_generator.pb.h" />
+    <ClInclude Include="..\protocol\effect_settings_generator_bindings.hpp" />
+    <ClInclude Include="..\protocol\effect_settings_particle.pb.h" />
+    <ClInclude Include="..\protocol\effect_settings_particle_bindings.hpp" />
     <ClInclude Include="..\protocol\effect_settings_plexus.pb.h" />
     <ClInclude Include="..\protocol\effect_types.hpp" />
-    <ClInclude Include="..\protocol\generator.pb.h" />
-    <ClInclude Include="..\protocol\generator_bindings.hpp" />
-    <ClInclude Include="..\protocol\particle.pb.h" />
-    <ClInclude Include="..\protocol\particle_bindings.hpp" />
     <ClInclude Include="..\proto_helpers.hpp" />
     <ClInclude Include="..\resource_manager.hpp" />
     <ClInclude Include="..\scene.hpp" />
@@ -595,9 +629,9 @@
     <None Include="..\protocol\anttweak.proto" />
     <None Include="..\protocol\common.proto" />
     <None Include="..\protocol\effect_settings.proto" />
+    <None Include="..\protocol\effect_settings_generator.proto" />
+    <None Include="..\protocol\effect_settings_particle.proto" />
     <None Include="..\protocol\effect_settings_plexus.proto" />
-    <None Include="..\protocol\generator.proto" />
-    <None Include="..\protocol\particle.proto" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\shaders\blur.hlsl">
@@ -705,7 +739,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ANTTWEAKBAR_ROOT)/include;$(FW1);D:\projects\bristol;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ANTTWEAKBAR_ROOT)/lib/$(Configuration);$(FW1)/x86;D:\projects\protobuf-2.5.0\vsprojects\x64\Debug;D:\projects\bristol\Debug;C:\Program Files (x86)\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ANTTWEAKBAR_ROOT)/lib/$(Configuration);$(FW1)/x86;D:\projects\protobuf-2.6.0\vsprojects\x64\Debug;D:\projects\bristol\Debug;C:\Program Files (x86)\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

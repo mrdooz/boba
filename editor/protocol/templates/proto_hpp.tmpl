@@ -15,8 +15,7 @@
 #pragma warning(pop)
 #endif
 
-namespace {{ namespace }}
-{
+{{ namespace_open }}
   {% for class in all_classes %}
   struct {{ class }};
   {% endfor %}
@@ -29,5 +28,4 @@ namespace {{ namespace }}
   {{ fwd }}
 
   {% endfor %}
-}
-
+{{ namespace_close }}

@@ -3,6 +3,7 @@
 
 using namespace boba;
 using namespace bristol;
+using namespace boba::common;
 
 AnimationManager* AnimationManager::_instance;
 
@@ -42,6 +43,13 @@ float AnimationManager::Interpolate(ObjectHandle h, u32 time_ms)
 
   if (keyframes.empty())
     return 0;
+
+  // convert time to local time, depending on loop settings
+  if (anim.header.loop == AnimHeader::LoopType::LOOP)
+  {
+    s64 lastFrameTime = keyframes.back().key.time;
+    time_ms = lastFrameTime > 0 ? time_ms % lastFrameTime : time_ms;
+  }
 
   if (time_ms <= keyframes.front().key.time || keyframes.size() == 1)
     return keyframes.front().key.value;
@@ -99,7 +107,6 @@ ObjectHandle AnimationManager::AddAnimation(const FloatAnim& animation, const Ob
     if (id < _floatAnimations.size())
     {
       _floatAnimations[id] = {animation, 0};
-      FindLastAnimation();
       return prevHandle;
     }
   }
@@ -107,24 +114,8 @@ ObjectHandle AnimationManager::AddAnimation(const FloatAnim& animation, const Ob
   // Add new animation
   u32 id = (u32)_floatAnimations.size();
   _floatAnimations.push_back({animation, 0});
-  FindLastAnimation();
 
   return ObjectHandle(ObjectHandle::kAnimation, id);
-}
-
-//----------------------------------------------------------------------------------
-void AnimationManager::FindLastAnimation()
-{
-  s64 lastTime = 0;
-  for (const AnimDataFloat& a : _floatAnimations)
-  {
-    for (const FloatKeyframe& k : a.anim.keyframe)
-    {
-      lastTime = max(lastTime, k.key.time);
-    }
-  }
-
-  DEMO_ENGINE.SetDuration(TimeDuration::Milliseconds(lastTime));
 }
 
 //----------------------------------------------------------------------------------

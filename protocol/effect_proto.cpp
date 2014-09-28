@@ -1,14 +1,12 @@
 #include "effect_proto.hpp"
+#include "effect_types.hpp"
+#include "../proto_helpers.hpp"
 
-namespace boba
-{
-  EffectSetting FromProtocol(const protocol::effect::EffectSetting& p)
+namespace boba { namespace effect { 
+  EffectSetting FromProtocol(const ::protocol::effect::EffectSetting& p)
   {
     EffectSetting res;
     res.type = (EffectSetting::Type)p.type();
-
-    if (p.has_effect_class())
-      res.effectClass = p.effect_class();
 
     if (p.has_id())
       res.id = p.id();
@@ -22,30 +20,38 @@ namespace boba
     if (p.has_end_time())
       res.endTime = p.end_time();
 
-    res.configMsg.resize(p.config_msg().size());
-    memcpy(res.configMsg.data(), p.config_msg().data(), p.config_msg().size());
+    if (p.has_plexus_config())
+      res.plexusConfig = ::boba::effect::plexus::FromProtocol(p.plexus_config());
 
-    if (p.has_config_file())
-      res.configFile = p.config_file();
+    if (p.has_generator_plane_config())
+      res.generatorPlaneConfig = ::boba::effect::generator::FromProtocol(p.generator_plane_config());
+
+    if (p.has_generator_spiky_config())
+      res.generatorSpikyConfig = ::boba::effect::generator::FromProtocol(p.generator_spiky_config());
+
+    if (p.has_particle_config())
+      res.particleConfig = ::boba::effect::particle::FromProtocol(p.particle_config());
 
     return res;
   }
 
-  void ToProtocol(const EffectSetting& v, protocol::effect::EffectSetting* p)
+  void ToProtocol(const EffectSetting& v, ::protocol::effect::EffectSetting* p)
   {
-    p->set_effect_class(v.effectClass);
     p->set_id(v.id);
     p->set_name(v.name);
     p->set_start_time(v.startTime);
     p->set_end_time(v.endTime);
-    p->set_config_file(v.configFile);
+    ::boba::effect::plexus::ToProtocol(v.plexusConfig, p->mutable_plexus_config());
+    ::boba::effect::generator::ToProtocol(v.generatorPlaneConfig, p->mutable_generator_plane_config());
+    ::boba::effect::generator::ToProtocol(v.generatorSpikyConfig, p->mutable_generator_spiky_config());
+    ::boba::effect::particle::ToProtocol(v.particleConfig, p->mutable_particle_config());
   }
 
-  EffectSettings FromProtocol(const protocol::effect::EffectSettings& p)
+  EffectSettings FromProtocol(const ::protocol::effect::EffectSettings& p)
   {
     EffectSettings res;
     for (const auto& x : p.effect_setting() )
-      res.effectSetting.push_back(FromProtocol(x));
+      res.effectSetting.push_back(::boba::effect::FromProtocol(x));
 
     if (p.has_soundtrack())
       res.soundtrack = p.soundtrack();
@@ -53,12 +59,12 @@ namespace boba
     return res;
   }
 
-  void ToProtocol(const EffectSettings& v, protocol::effect::EffectSettings* p)
+  void ToProtocol(const EffectSettings& v, ::protocol::effect::EffectSettings* p)
   {
     for (const auto& x : v.effectSetting)
-      ToProtocol(x, p->add_effect_setting());
+      ::boba::effect::ToProtocol(x, p->add_effect_setting());
     p->set_soundtrack(v.soundtrack);
   }
 
 	
-}
+} } 

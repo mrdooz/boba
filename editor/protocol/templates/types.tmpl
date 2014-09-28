@@ -4,8 +4,7 @@
 #include "{{ dep }}_types.hpp"
 {% endfor %}
 
-namespace {{ namespace }}
-{
+{{ namespace_open }}
   {% for class in all_classes %}
   struct {{ class }};
   {% endfor %}
@@ -37,6 +36,5 @@ namespace {{ namespace }}
     {% endif %}
     {% endfor %}
   };
-
   {% endfor %}  
-}
+{{ namespace_close }}

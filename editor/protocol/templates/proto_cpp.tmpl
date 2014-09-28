@@ -1,7 +1,8 @@
 #include "{{ out_name }}_proto.hpp"
+#include "{{ out_name }}_types.hpp"
+#include "../proto_helpers.hpp"
 
-namespace {{ namespace }}
-{
+{{ namespace_open }}
   {% for class in classes %}
   {{ class.name }} FromProtocol(const {{ class.proto_type }}& p)
   {
@@ -11,18 +12,23 @@ namespace {{ namespace }}
     res.{{ member.name }} = ({{ member.type}})p.{{ member.proto_name }}();
     {% elif member.is_flag %}
     {% elif member.is_native %}
+    {% if member.is_repeated %}
+    for (const auto& x : p.{{ member.proto_name}}() )
+      res.{{ member.name }}.push_back(x);
+    {% else %}
     if (p.has_{{ member.proto_name}}())
       res.{{ member.name }} = p.{{ member.proto_name }}();
+    {% endif %}
     {% elif member.is_bytes %}
     res.{{ member.name }}.resize(p.{{ member.proto_name }}().size());
     memcpy(res.{{ member.name }}.data(), p.{{ member.proto_name }}().data(), p.{{ member.proto_name }}().size());
     {% else %}
     {% if member.is_repeated %}
     for (const auto& x : p.{{ member.proto_name}}() )
-      res.{{ member.name }}.push_back(FromProtocol(x));
+      res.{{ member.name }}.push_back({{member.namespace}}FromProtocol(x));
     {% else %}
     if (p.has_{{ member.proto_name}}())
-      res.{{ member.name }} = FromProtocol(p.{{ member.proto_name }}());
+      res.{{ member.name }} = {{member.namespace}}FromProtocol(p.{{ member.proto_name }}());
     {% endif %}
     {% endif %}
 
@@ -36,19 +42,24 @@ namespace {{ namespace }}
     {% if member.is_enum %}
     {% elif member.is_flag %}
     {% elif member.is_native %}
+    {% if member.is_repeated %}
+    for (const auto& x : v.{{ member.name }})
+      p->add_{{ member.proto_name}}(x);
+    {% else %}
     p->set_{{ member.proto_name }}(v.{{ member.name }});
+    {% endif %}
     {% elif member.is_bytes %}
     {% else %}
     {% if member.is_repeated %}
     for (const auto& x : v.{{ member.name }})
-      ToProtocol(x, p->add_{{ member.proto_name}}());
+      {{member.namespace}}ToProtocol(x, p->add_{{ member.proto_name}}());
     {% else %}
-    ToProtocol(v.{{ member.name }}, p->mutable_{{ member.proto_name }}());
+    {{member.namespace}}ToProtocol(v.{{ member.name }}, p->mutable_{{ member.proto_name }}());
     {% endif %}
     {% endif %}
     {% endfor %}
   }
 
   {% endfor %}	
-}
+{{ namespace_close }}
 

@@ -127,18 +127,18 @@ void protobuf_AddDesc_generator_2eproto() {
     "roto\032\014common.proto\"\247\002\n\005Spiky\022\016\n\006radius\030\001"
     " \001(\002\022\016\n\006height\030\002 \001(\002\022\027\n\017radial_segments\030"
     "\003 \001(\r\022\027\n\017height_segments\030\004 \001(\r\0222\n\ncamera"
-    "_pos\030\005 \001(\0132\030.common.protocol.Vector3B\004\230\265"
-    "\030\001\0222\n\ncamera_dir\030\006 \001(\0132\030.common.protocol"
-    ".Vector3B\004\230\265\030\001\022-\n\005obj_t\030\007 \001(\0132\030.common.p"
-    "rotocol.Vector3B\004\230\265\030\001\022/\n\005obj_r\030\010 \001(\0132\032.c"
-    "ommon.protocol.Matrix4x4B\004\230\265\030\001:\004\360\266\030\001\"\324\004\n"
+    "_pos\030\005 \001(\0132\030.protocol.common.Vector3B\004\230\265"
+    "\030\001\0222\n\ncamera_dir\030\006 \001(\0132\030.protocol.common"
+    ".Vector3B\004\230\265\030\001\022-\n\005obj_t\030\007 \001(\0132\030.protocol"
+    ".common.Vector3B\004\230\265\030\001\022/\n\005obj_r\030\010 \001(\0132\032.p"
+    "rotocol.common.Matrix4x4B\004\230\265\030\001:\004\360\266\030\001\"\324\004\n"
     "\005Plane\022\r\n\005width\030\001 \001(\002\022\016\n\006height\030\002 \001(\002\022\026\n"
     "\016width_segments\030\003 \001(\r\022\027\n\017height_segments"
-    "\030\004 \001(\r\0222\n\ncamera_pos\030\005 \001(\0132\030.common.prot"
-    "ocol.Vector3B\004\230\265\030\001\0222\n\ncamera_dir\030\006 \001(\0132\030"
-    ".common.protocol.Vector3B\004\230\265\030\001\022-\n\005obj_t\030"
-    "\007 \001(\0132\030.common.protocol.Vector3B\004\230\265\030\001\022/\n"
-    "\005obj_r\030\010 \001(\0132\032.common.protocol.Matrix4x4"
+    "\030\004 \001(\r\0222\n\ncamera_pos\030\005 \001(\0132\030.protocol.co"
+    "mmon.Vector3B\004\230\265\030\001\0222\n\ncamera_dir\030\006 \001(\0132\030"
+    ".protocol.common.Vector3B\004\230\265\030\001\022-\n\005obj_t\030"
+    "\007 \001(\0132\030.protocol.common.Vector3B\004\230\265\030\001\022/\n"
+    "\005obj_r\030\010 \001(\0132\032.protocol.common.Matrix4x4"
     "B\004\230\265\030\001\022\'\n\003tau\030\t \001(\002:\0030.5B\025\245\265\030\n\327#<\255\265\030\000\000\000@"
     "\265\265\030\n\327#<\022(\n\003key\030\n \001(\002:\0040.18B\025\245\265\030\n\327#<\255\265\030\000\000"
     "\200\?\265\265\030\n\327#<\022(\n\003ofs\030\013 \001(\002:\0040.18B\025\245\265\030\n\327#<\255\265\030"
@@ -179,6 +179,7 @@ const int Spiky::kObjRFieldNumber;
 Spiky::Spiky()
   : ::google::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:generator.Spiky)
 }
 
 void Spiky::InitAsDefaultInstance() {
@@ -192,6 +193,7 @@ Spiky::Spiky(const Spiky& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:generator.Spiky)
 }
 
 void Spiky::SharedCtor() {
@@ -208,6 +210,7 @@ void Spiky::SharedCtor() {
 }
 
 Spiky::~Spiky() {
+  // @@protoc_insertion_point(destructor:generator.Spiky)
   SharedDtor();
 }
 
@@ -242,11 +245,18 @@ Spiky* Spiky::New() const {
 }
 
 void Spiky::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    radius_ = 0;
-    height_ = 0;
-    radial_segments_ = 0u;
-    height_segments_ = 0u;
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<Spiky*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 255) {
+    ZR_(radius_, height_segments_);
     if (has_camera_pos()) {
       if (camera_pos_ != NULL) camera_pos_->::protocol::common::Vector3::Clear();
     }
@@ -260,26 +270,33 @@ void Spiky::Clear() {
       if (obj_r_ != NULL) obj_r_->::protocol::common::Matrix4x4::Clear();
     }
   }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
 bool Spiky::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:generator.Spiky)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional float radius = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 13) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &radius_)));
           set_has_radius();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(21)) goto parse_height;
         break;
@@ -287,15 +304,14 @@ bool Spiky::MergePartialFromCodedStream(
 
       // optional float height = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 21) {
          parse_height:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &height_)));
           set_has_height();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(24)) goto parse_radial_segments;
         break;
@@ -303,15 +319,14 @@ bool Spiky::MergePartialFromCodedStream(
 
       // optional uint32 radial_segments = 3;
       case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 24) {
          parse_radial_segments:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &radial_segments_)));
           set_has_radial_segments();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(32)) goto parse_height_segments;
         break;
@@ -319,81 +334,77 @@ bool Spiky::MergePartialFromCodedStream(
 
       // optional uint32 height_segments = 4;
       case 4: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 32) {
          parse_height_segments:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &height_segments_)));
           set_has_height_segments();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(42)) goto parse_camera_pos;
         break;
       }
 
-      // optional .common.protocol.Vector3 camera_pos = 5;
+      // optional .protocol.common.Vector3 camera_pos = 5;
       case 5: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 42) {
          parse_camera_pos:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_camera_pos()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(50)) goto parse_camera_dir;
         break;
       }
 
-      // optional .common.protocol.Vector3 camera_dir = 6;
+      // optional .protocol.common.Vector3 camera_dir = 6;
       case 6: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 50) {
          parse_camera_dir:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_camera_dir()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(58)) goto parse_obj_t;
         break;
       }
 
-      // optional .common.protocol.Vector3 obj_t = 7;
+      // optional .protocol.common.Vector3 obj_t = 7;
       case 7: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 58) {
          parse_obj_t:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_obj_t()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(66)) goto parse_obj_r;
         break;
       }
 
-      // optional .common.protocol.Matrix4x4 obj_r = 8;
+      // optional .protocol.common.Matrix4x4 obj_r = 8;
       case 8: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 66) {
          parse_obj_r:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_obj_r()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -401,12 +412,18 @@ bool Spiky::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:generator.Spiky)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:generator.Spiky)
+  return false;
 #undef DO_
 }
 
 void Spiky::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:generator.Spiky)
   // optional float radius = 1;
   if (has_radius()) {
     ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->radius(), output);
@@ -427,25 +444,25 @@ void Spiky::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->height_segments(), output);
   }
 
-  // optional .common.protocol.Vector3 camera_pos = 5;
+  // optional .protocol.common.Vector3 camera_pos = 5;
   if (has_camera_pos()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       5, this->camera_pos(), output);
   }
 
-  // optional .common.protocol.Vector3 camera_dir = 6;
+  // optional .protocol.common.Vector3 camera_dir = 6;
   if (has_camera_dir()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       6, this->camera_dir(), output);
   }
 
-  // optional .common.protocol.Vector3 obj_t = 7;
+  // optional .protocol.common.Vector3 obj_t = 7;
   if (has_obj_t()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       7, this->obj_t(), output);
   }
 
-  // optional .common.protocol.Matrix4x4 obj_r = 8;
+  // optional .protocol.common.Matrix4x4 obj_r = 8;
   if (has_obj_r()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       8, this->obj_r(), output);
@@ -455,10 +472,12 @@ void Spiky::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:generator.Spiky)
 }
 
 ::google::protobuf::uint8* Spiky::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:generator.Spiky)
   // optional float radius = 1;
   if (has_radius()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->radius(), target);
@@ -479,28 +498,28 @@ void Spiky::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->height_segments(), target);
   }
 
-  // optional .common.protocol.Vector3 camera_pos = 5;
+  // optional .protocol.common.Vector3 camera_pos = 5;
   if (has_camera_pos()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         5, this->camera_pos(), target);
   }
 
-  // optional .common.protocol.Vector3 camera_dir = 6;
+  // optional .protocol.common.Vector3 camera_dir = 6;
   if (has_camera_dir()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         6, this->camera_dir(), target);
   }
 
-  // optional .common.protocol.Vector3 obj_t = 7;
+  // optional .protocol.common.Vector3 obj_t = 7;
   if (has_obj_t()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         7, this->obj_t(), target);
   }
 
-  // optional .common.protocol.Matrix4x4 obj_r = 8;
+  // optional .protocol.common.Matrix4x4 obj_r = 8;
   if (has_obj_r()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -511,6 +530,7 @@ void Spiky::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:generator.Spiky)
   return target;
 }
 
@@ -542,28 +562,28 @@ int Spiky::ByteSize() const {
           this->height_segments());
     }
 
-    // optional .common.protocol.Vector3 camera_pos = 5;
+    // optional .protocol.common.Vector3 camera_pos = 5;
     if (has_camera_pos()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->camera_pos());
     }
 
-    // optional .common.protocol.Vector3 camera_dir = 6;
+    // optional .protocol.common.Vector3 camera_dir = 6;
     if (has_camera_dir()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->camera_dir());
     }
 
-    // optional .common.protocol.Vector3 obj_t = 7;
+    // optional .protocol.common.Vector3 obj_t = 7;
     if (has_obj_t()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->obj_t());
     }
 
-    // optional .common.protocol.Matrix4x4 obj_r = 8;
+    // optional .protocol.common.Matrix4x4 obj_r = 8;
     if (has_obj_r()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -690,6 +710,7 @@ const int Plane::kTransposeFieldNumber;
 Plane::Plane()
   : ::google::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:generator.Plane)
 }
 
 void Plane::InitAsDefaultInstance() {
@@ -703,6 +724,7 @@ Plane::Plane(const Plane& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:generator.Plane)
 }
 
 void Plane::SharedCtor() {
@@ -726,6 +748,7 @@ void Plane::SharedCtor() {
 }
 
 Plane::~Plane() {
+  // @@protoc_insertion_point(destructor:generator.Plane)
   SharedDtor();
 }
 
@@ -760,11 +783,18 @@ Plane* Plane::New() const {
 }
 
 void Plane::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    width_ = 0;
-    height_ = 0;
-    width_segments_ = 0u;
-    height_segments_ = 0u;
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<Plane*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 255) {
+    ZR_(width_, height_segments_);
     if (has_camera_pos()) {
       if (camera_pos_ != NULL) camera_pos_->::protocol::common::Vector3::Clear();
     }
@@ -778,7 +808,7 @@ void Plane::Clear() {
       if (obj_r_ != NULL) obj_r_->::protocol::common::Matrix4x4::Clear();
     }
   }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+  if (_has_bits_[8 / 32] & 32512) {
     tau_ = 0.5f;
     key_ = 0.18f;
     ofs_ = 0.18f;
@@ -787,26 +817,33 @@ void Plane::Clear() {
     bloom_multiplier_ = 1;
     transpose_ = true;
   }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
 bool Plane::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:generator.Plane)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional float width = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 13) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &width_)));
           set_has_width();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(21)) goto parse_height;
         break;
@@ -814,15 +851,14 @@ bool Plane::MergePartialFromCodedStream(
 
       // optional float height = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 21) {
          parse_height:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &height_)));
           set_has_height();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(24)) goto parse_width_segments;
         break;
@@ -830,15 +866,14 @@ bool Plane::MergePartialFromCodedStream(
 
       // optional uint32 width_segments = 3;
       case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 24) {
          parse_width_segments:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &width_segments_)));
           set_has_width_segments();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(32)) goto parse_height_segments;
         break;
@@ -846,71 +881,66 @@ bool Plane::MergePartialFromCodedStream(
 
       // optional uint32 height_segments = 4;
       case 4: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 32) {
          parse_height_segments:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &height_segments_)));
           set_has_height_segments();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(42)) goto parse_camera_pos;
         break;
       }
 
-      // optional .common.protocol.Vector3 camera_pos = 5;
+      // optional .protocol.common.Vector3 camera_pos = 5;
       case 5: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 42) {
          parse_camera_pos:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_camera_pos()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(50)) goto parse_camera_dir;
         break;
       }
 
-      // optional .common.protocol.Vector3 camera_dir = 6;
+      // optional .protocol.common.Vector3 camera_dir = 6;
       case 6: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 50) {
          parse_camera_dir:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_camera_dir()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(58)) goto parse_obj_t;
         break;
       }
 
-      // optional .common.protocol.Vector3 obj_t = 7;
+      // optional .protocol.common.Vector3 obj_t = 7;
       case 7: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 58) {
          parse_obj_t:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_obj_t()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(66)) goto parse_obj_r;
         break;
       }
 
-      // optional .common.protocol.Matrix4x4 obj_r = 8;
+      // optional .protocol.common.Matrix4x4 obj_r = 8;
       case 8: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 66) {
          parse_obj_r:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_obj_r()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(77)) goto parse_tau;
         break;
@@ -918,15 +948,14 @@ bool Plane::MergePartialFromCodedStream(
 
       // optional float tau = 9 [default = 0.5];
       case 9: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 77) {
          parse_tau:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &tau_)));
           set_has_tau();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(85)) goto parse_key;
         break;
@@ -934,15 +963,14 @@ bool Plane::MergePartialFromCodedStream(
 
       // optional float key = 10 [default = 0.18];
       case 10: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 85) {
          parse_key:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &key_)));
           set_has_key();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(93)) goto parse_ofs;
         break;
@@ -950,15 +978,14 @@ bool Plane::MergePartialFromCodedStream(
 
       // optional float ofs = 11 [default = 0.18];
       case 11: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 93) {
          parse_ofs:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &ofs_)));
           set_has_ofs();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(101)) goto parse_blur_radius;
         break;
@@ -966,15 +993,14 @@ bool Plane::MergePartialFromCodedStream(
 
       // optional float blur_radius = 12 [default = 10];
       case 12: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 101) {
          parse_blur_radius:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &blur_radius_)));
           set_has_blur_radius();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(109)) goto parse_bloom_threshold;
         break;
@@ -982,15 +1008,14 @@ bool Plane::MergePartialFromCodedStream(
 
       // optional float bloom_threshold = 13 [default = 0.8];
       case 13: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 109) {
          parse_bloom_threshold:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &bloom_threshold_)));
           set_has_bloom_threshold();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(117)) goto parse_bloom_multiplier;
         break;
@@ -998,15 +1023,14 @@ bool Plane::MergePartialFromCodedStream(
 
       // optional float bloom_multiplier = 14 [default = 1];
       case 14: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+        if (tag == 117) {
          parse_bloom_multiplier:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &bloom_multiplier_)));
           set_has_bloom_multiplier();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(120)) goto parse_transpose;
         break;
@@ -1014,25 +1038,25 @@ bool Plane::MergePartialFromCodedStream(
 
       // optional bool transpose = 15 [default = true];
       case 15: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 120) {
          parse_transpose:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &transpose_)));
           set_has_transpose();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -1040,12 +1064,18 @@ bool Plane::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:generator.Plane)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:generator.Plane)
+  return false;
 #undef DO_
 }
 
 void Plane::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:generator.Plane)
   // optional float width = 1;
   if (has_width()) {
     ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->width(), output);
@@ -1066,25 +1096,25 @@ void Plane::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->height_segments(), output);
   }
 
-  // optional .common.protocol.Vector3 camera_pos = 5;
+  // optional .protocol.common.Vector3 camera_pos = 5;
   if (has_camera_pos()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       5, this->camera_pos(), output);
   }
 
-  // optional .common.protocol.Vector3 camera_dir = 6;
+  // optional .protocol.common.Vector3 camera_dir = 6;
   if (has_camera_dir()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       6, this->camera_dir(), output);
   }
 
-  // optional .common.protocol.Vector3 obj_t = 7;
+  // optional .protocol.common.Vector3 obj_t = 7;
   if (has_obj_t()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       7, this->obj_t(), output);
   }
 
-  // optional .common.protocol.Matrix4x4 obj_r = 8;
+  // optional .protocol.common.Matrix4x4 obj_r = 8;
   if (has_obj_r()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       8, this->obj_r(), output);
@@ -1129,10 +1159,12 @@ void Plane::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:generator.Plane)
 }
 
 ::google::protobuf::uint8* Plane::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:generator.Plane)
   // optional float width = 1;
   if (has_width()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->width(), target);
@@ -1153,28 +1185,28 @@ void Plane::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->height_segments(), target);
   }
 
-  // optional .common.protocol.Vector3 camera_pos = 5;
+  // optional .protocol.common.Vector3 camera_pos = 5;
   if (has_camera_pos()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         5, this->camera_pos(), target);
   }
 
-  // optional .common.protocol.Vector3 camera_dir = 6;
+  // optional .protocol.common.Vector3 camera_dir = 6;
   if (has_camera_dir()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         6, this->camera_dir(), target);
   }
 
-  // optional .common.protocol.Vector3 obj_t = 7;
+  // optional .protocol.common.Vector3 obj_t = 7;
   if (has_obj_t()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         7, this->obj_t(), target);
   }
 
-  // optional .common.protocol.Matrix4x4 obj_r = 8;
+  // optional .protocol.common.Matrix4x4 obj_r = 8;
   if (has_obj_r()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1220,6 +1252,7 @@ void Plane::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:generator.Plane)
   return target;
 }
 
@@ -1251,28 +1284,28 @@ int Plane::ByteSize() const {
           this->height_segments());
     }
 
-    // optional .common.protocol.Vector3 camera_pos = 5;
+    // optional .protocol.common.Vector3 camera_pos = 5;
     if (has_camera_pos()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->camera_pos());
     }
 
-    // optional .common.protocol.Vector3 camera_dir = 6;
+    // optional .protocol.common.Vector3 camera_dir = 6;
     if (has_camera_dir()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->camera_dir());
     }
 
-    // optional .common.protocol.Vector3 obj_t = 7;
+    // optional .protocol.common.Vector3 obj_t = 7;
     if (has_obj_t()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->obj_t());
     }
 
-    // optional .common.protocol.Matrix4x4 obj_r = 8;
+    // optional .protocol.common.Matrix4x4 obj_r = 8;
     if (has_obj_r()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
