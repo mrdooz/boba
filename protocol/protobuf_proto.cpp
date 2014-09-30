@@ -1,6 +1,5 @@
 #include "protobuf_proto.hpp"
 #include "protobuf_types.hpp"
-#include "../proto_helpers.hpp"
 
 namespace boba { namespace protobuf { 
   FileDescriptorSet FromProtocol(const ::google::protobuf::FileDescriptorSet& p)
@@ -100,6 +99,9 @@ namespace boba { namespace protobuf {
     for (const auto& x : p.extension_range() )
       res.extensionRange.push_back(::boba::protobuf::DescriptorProto::FromProtocol(x));
 
+    for (const auto& x : p.oneof_decl() )
+      res.oneofDecl.push_back(::boba::protobuf::FromProtocol(x));
+
     if (p.has_options())
       res.options = ::boba::protobuf::FromProtocol(p.options());
 
@@ -119,6 +121,8 @@ namespace boba { namespace protobuf {
       ::boba::protobuf::ToProtocol(x, p->add_enum_type());
     for (const auto& x : v.extensionRange)
       ::boba::protobuf::DescriptorProto::ToProtocol(x, p->add_extension_range());
+    for (const auto& x : v.oneofDecl)
+      ::boba::protobuf::ToProtocol(x, p->add_oneof_decl());
     ::boba::protobuf::ToProtocol(v.options, p->mutable_options());
   }
 
@@ -144,6 +148,9 @@ namespace boba { namespace protobuf {
     if (p.has_default_value())
       res.defaultValue = p.default_value();
 
+    if (p.has_oneof_index())
+      res.oneofIndex = p.oneof_index();
+
     if (p.has_options())
       res.options = ::boba::protobuf::FromProtocol(p.options());
 
@@ -157,7 +164,22 @@ namespace boba { namespace protobuf {
     p->set_type_name(v.typeName);
     p->set_extendee(v.extendee);
     p->set_default_value(v.defaultValue);
+    p->set_oneof_index(v.oneofIndex);
     ::boba::protobuf::ToProtocol(v.options, p->mutable_options());
+  }
+
+  OneofDescriptorProto FromProtocol(const ::google::protobuf::OneofDescriptorProto& p)
+  {
+    OneofDescriptorProto res;
+    if (p.has_name())
+      res.name = p.name();
+
+    return res;
+  }
+
+  void ToProtocol(const OneofDescriptorProto& v, ::google::protobuf::OneofDescriptorProto* p)
+  {
+    p->set_name(v.name);
   }
 
   EnumDescriptorProto FromProtocol(const ::google::protobuf::EnumDescriptorProto& p)
@@ -269,6 +291,9 @@ namespace boba { namespace protobuf {
     if (p.has_java_generate_equals_and_hash())
       res.javaGenerateEqualsAndHash = p.java_generate_equals_and_hash();
 
+    if (p.has_java_string_check_utf8())
+      res.javaStringCheckUtf8 = p.java_string_check_utf8();
+
     res.optimizeFor = (FileOptions::OptimizeMode)p.optimize_for();
 
     if (p.has_go_package())
@@ -283,6 +308,9 @@ namespace boba { namespace protobuf {
     if (p.has_py_generic_services())
       res.pyGenericServices = p.py_generic_services();
 
+    if (p.has_deprecated())
+      res.deprecated = p.deprecated();
+
     for (const auto& x : p.uninterpreted_option() )
       res.uninterpretedOption.push_back(::boba::protobuf::FromProtocol(x));
 
@@ -295,10 +323,12 @@ namespace boba { namespace protobuf {
     p->set_java_outer_classname(v.javaOuterClassname);
     p->set_java_multiple_files(v.javaMultipleFiles);
     p->set_java_generate_equals_and_hash(v.javaGenerateEqualsAndHash);
+    p->set_java_string_check_utf8(v.javaStringCheckUtf8);
     p->set_go_package(v.goPackage);
     p->set_cc_generic_services(v.ccGenericServices);
     p->set_java_generic_services(v.javaGenericServices);
     p->set_py_generic_services(v.pyGenericServices);
+    p->set_deprecated(v.deprecated);
     for (const auto& x : v.uninterpretedOption)
       ::boba::protobuf::ToProtocol(x, p->add_uninterpreted_option());
   }
@@ -312,6 +342,9 @@ namespace boba { namespace protobuf {
     if (p.has_no_standard_descriptor_accessor())
       res.noStandardDescriptorAccessor = p.no_standard_descriptor_accessor();
 
+    if (p.has_deprecated())
+      res.deprecated = p.deprecated();
+
     for (const auto& x : p.uninterpreted_option() )
       res.uninterpretedOption.push_back(::boba::protobuf::FromProtocol(x));
 
@@ -322,6 +355,7 @@ namespace boba { namespace protobuf {
   {
     p->set_message_set_wire_format(v.messageSetWireFormat);
     p->set_no_standard_descriptor_accessor(v.noStandardDescriptorAccessor);
+    p->set_deprecated(v.deprecated);
     for (const auto& x : v.uninterpretedOption)
       ::boba::protobuf::ToProtocol(x, p->add_uninterpreted_option());
   }
@@ -369,6 +403,9 @@ namespace boba { namespace protobuf {
     if (p.has_allow_alias())
       res.allowAlias = p.allow_alias();
 
+    if (p.has_deprecated())
+      res.deprecated = p.deprecated();
+
     for (const auto& x : p.uninterpreted_option() )
       res.uninterpretedOption.push_back(::boba::protobuf::FromProtocol(x));
 
@@ -378,6 +415,7 @@ namespace boba { namespace protobuf {
   void ToProtocol(const EnumOptions& v, ::google::protobuf::EnumOptions* p)
   {
     p->set_allow_alias(v.allowAlias);
+    p->set_deprecated(v.deprecated);
     for (const auto& x : v.uninterpretedOption)
       ::boba::protobuf::ToProtocol(x, p->add_uninterpreted_option());
   }
@@ -385,6 +423,9 @@ namespace boba { namespace protobuf {
   EnumValueOptions FromProtocol(const ::google::protobuf::EnumValueOptions& p)
   {
     EnumValueOptions res;
+    if (p.has_deprecated())
+      res.deprecated = p.deprecated();
+
     for (const auto& x : p.uninterpreted_option() )
       res.uninterpretedOption.push_back(::boba::protobuf::FromProtocol(x));
 
@@ -393,6 +434,7 @@ namespace boba { namespace protobuf {
 
   void ToProtocol(const EnumValueOptions& v, ::google::protobuf::EnumValueOptions* p)
   {
+    p->set_deprecated(v.deprecated);
     for (const auto& x : v.uninterpretedOption)
       ::boba::protobuf::ToProtocol(x, p->add_uninterpreted_option());
   }
@@ -400,6 +442,9 @@ namespace boba { namespace protobuf {
   ServiceOptions FromProtocol(const ::google::protobuf::ServiceOptions& p)
   {
     ServiceOptions res;
+    if (p.has_deprecated())
+      res.deprecated = p.deprecated();
+
     for (const auto& x : p.uninterpreted_option() )
       res.uninterpretedOption.push_back(::boba::protobuf::FromProtocol(x));
 
@@ -408,6 +453,7 @@ namespace boba { namespace protobuf {
 
   void ToProtocol(const ServiceOptions& v, ::google::protobuf::ServiceOptions* p)
   {
+    p->set_deprecated(v.deprecated);
     for (const auto& x : v.uninterpretedOption)
       ::boba::protobuf::ToProtocol(x, p->add_uninterpreted_option());
   }
@@ -415,6 +461,9 @@ namespace boba { namespace protobuf {
   MethodOptions FromProtocol(const ::google::protobuf::MethodOptions& p)
   {
     MethodOptions res;
+    if (p.has_deprecated())
+      res.deprecated = p.deprecated();
+
     for (const auto& x : p.uninterpreted_option() )
       res.uninterpretedOption.push_back(::boba::protobuf::FromProtocol(x));
 
@@ -423,6 +472,7 @@ namespace boba { namespace protobuf {
 
   void ToProtocol(const MethodOptions& v, ::google::protobuf::MethodOptions* p)
   {
+    p->set_deprecated(v.deprecated);
     for (const auto& x : v.uninterpretedOption)
       ::boba::protobuf::ToProtocol(x, p->add_uninterpreted_option());
   }

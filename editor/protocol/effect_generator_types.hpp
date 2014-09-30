@@ -16,7 +16,7 @@ namespace editor { namespace effect { namespace generator {
     Vector3f cameraPos;
     Vector3f cameraDir;
     Vector3f objT;
-    ::editor::common::Matrix4x4 objR;
+    Transform objR;
   };
   struct PlaneConfig
   {
@@ -28,7 +28,7 @@ namespace editor { namespace effect { namespace generator {
     Vector3f cameraPos;
     Vector3f cameraDir;
     Vector3f objT;
-    ::editor::common::Matrix4x4 objR;
+    Transform objR;
     float tau = 0.5;
     float key = 0.18f;
     float ofs = 0.18f;

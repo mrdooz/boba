@@ -1,6 +1,5 @@
 #include "effect_plexus_proto.hpp"
 #include "effect_plexus_types.hpp"
-#include "../proto_helpers.hpp"
 
 namespace editor { namespace effect { namespace plexus { 
   PlexusConfig FromProtocol(const ::protocol::effect::plexus::PlexusConfig& p)

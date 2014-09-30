@@ -2,7 +2,6 @@
 
 #include "common_types.hpp"
 #include "editor_types.hpp"
-#include "common_types.hpp"
 
 namespace boba { namespace editor { 
   struct Settings;

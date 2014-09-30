@@ -7,15 +7,15 @@
 
 #include "common_proto.hpp"
 #include "editor_proto.hpp"
-#include "common_proto.hpp"
 #include "editor_settings.pb.h"
-#include "proto_helpers.hpp"
+#include "editor_styles.pb.h"
+#include "../proto_helpers.hpp"
 
 #ifdef _WIN32
 #pragma warning(pop)
 #endif
 
-namespace editor { namespace editor { 
+namespace editor { 
   struct Settings;
   struct StyleSetting;
   struct StyleSettings;
@@ -26,4 +26,4 @@ namespace editor { namespace editor {
   void ToProtocol(const StyleSetting& v, ::protocol::editor::StyleSetting* p);
   StyleSettings FromProtocol(const ::protocol::editor::StyleSettings& p);
   void ToProtocol(const StyleSettings& v, ::protocol::editor::StyleSettings* p);
-} } 
+}

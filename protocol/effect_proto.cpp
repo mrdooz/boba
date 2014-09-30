@@ -1,6 +1,5 @@
 #include "effect_proto.hpp"
 #include "effect_types.hpp"
-#include "../proto_helpers.hpp"
 
 namespace boba { namespace effect { 
   EffectSetting FromProtocol(const ::protocol::effect::EffectSetting& p)

@@ -65,8 +65,8 @@ namespace editor
   template<> struct KeyframeTraits<float>
   {
     typedef float Value;
-    typedef FloatAnim Anim;
-    typedef FloatKeyframe Keyframe;
+    typedef common::FloatAnim Anim;
+    typedef common::FloatKeyframe Keyframe;
     typedef vector<Keyframe> Keyframes;
   };
 /*

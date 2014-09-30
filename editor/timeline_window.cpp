@@ -3,10 +3,12 @@
 
 #include "effect_row.hpp"
 #include "row_var.hpp"
-#include "protocol/proto_helpers.hpp"
+#include "proto_helpers.hpp"
 
 using namespace editor;
 using namespace bristol;
+using namespace editor::effect::plexus;
+using namespace editor::common;
 
 #pragma warning(disable: 4244)
 
@@ -612,10 +614,7 @@ void TimelineWindow::Reset(const protocol::effect::EffectSettings& settings)
         break;
 
       case 1:
-        protocol::effect::plexus::PlexusConfig p;
-        const string& str = setting.config_msg();
-        p.ParseFromArray(str.data(), (int)str.size());
-
+        const protocol::effect::plexus::PlexusConfig& p = setting.plexus_config();
         EffectRow* parent = new EffectRowPlexus(_font, "PLEXUS");
         parent->_id = setting.id();
         _effectRows.push_back(parent);

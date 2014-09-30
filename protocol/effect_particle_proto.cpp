@@ -1,6 +1,5 @@
 #include "effect_particle_proto.hpp"
 #include "effect_particle_types.hpp"
-#include "../proto_helpers.hpp"
 
 namespace boba { namespace effect { namespace particle { 
   ParticleConfig FromProtocol(const ::protocol::effect::particle::ParticleConfig& p)

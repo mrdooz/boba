@@ -1,6 +1,5 @@
 #include "common_proto.hpp"
 #include "common_types.hpp"
-#include "../proto_helpers.hpp"
 
 namespace editor { namespace common { 
   FloatKey FromProtocol(const ::protocol::common::FloatKey& p)

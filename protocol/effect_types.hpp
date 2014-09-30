@@ -1,8 +1,8 @@
 #pragma once
 
+#include "effect_particle_types.hpp"
 #include "effect_plexus_types.hpp"
 #include "effect_generator_types.hpp"
-#include "effect_particle_types.hpp"
 
 namespace boba { namespace effect { 
   struct EffectSetting;

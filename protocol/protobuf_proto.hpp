@@ -6,7 +6,7 @@
 #endif
 
 #include "google/protobuf/descriptor.pb.h"
-#include "proto_helpers.hpp"
+#include "../proto_helpers.hpp"
 
 #ifdef _WIN32
 #pragma warning(pop)
@@ -17,6 +17,7 @@ namespace boba { namespace protobuf {
   struct FileDescriptorProto;
   struct DescriptorProto;
   struct FieldDescriptorProto;
+  struct OneofDescriptorProto;
   struct EnumDescriptorProto;
   struct EnumValueDescriptorProto;
   struct ServiceDescriptorProto;
@@ -39,6 +40,8 @@ namespace boba { namespace protobuf {
   void ToProtocol(const DescriptorProto& v, ::google::protobuf::DescriptorProto* p);
   FieldDescriptorProto FromProtocol(const ::google::protobuf::FieldDescriptorProto& p);
   void ToProtocol(const FieldDescriptorProto& v, ::google::protobuf::FieldDescriptorProto* p);
+  OneofDescriptorProto FromProtocol(const ::google::protobuf::OneofDescriptorProto& p);
+  void ToProtocol(const OneofDescriptorProto& v, ::google::protobuf::OneofDescriptorProto* p);
   EnumDescriptorProto FromProtocol(const ::google::protobuf::EnumDescriptorProto& p);
   void ToProtocol(const EnumDescriptorProto& v, ::google::protobuf::EnumDescriptorProto* p);
   EnumValueDescriptorProto FromProtocol(const ::google::protobuf::EnumValueDescriptorProto& p);

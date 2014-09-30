@@ -103,7 +103,7 @@ namespace editor
   //----------------------------------------------------------------------------------
   struct RowVar
   {
-    RowVar(const Font& font, const string& name, FloatAnim* anim);
+    RowVar(const Font& font, const string& name, common::FloatAnim* anim);
 
     struct VarFlagsF
     {
@@ -126,14 +126,14 @@ namespace editor
 
     float PixelToValue(float value) const;
     float ValueToPixel(float value) const;
-    FloatRect KeyframeRect(const FloatKey& k, float ofs);
-    Vector2f KeyToPoint(const FloatKey& k);
+    FloatRect KeyframeRect(const common::FloatKey& k, float ofs);
+    Vector2f KeyToPoint(const common::FloatKey& k);
 
     struct VisibleKeyframe
     {
       enum { FLAG_FIRST = 1 << 0, FLAG_LAST = 1 << 1, FLAG_VIRTUAL = 1 << 2, FLAG_SELECTED = 1 << 3};
       Vector2f p;
-      const FloatKeyframe* keyframe;
+      const common::FloatKeyframe* keyframe;
       u32 flags;
     };
 
@@ -153,11 +153,11 @@ namespace editor
     string _name;
     // value is used when changing the keyframe value by dragging on the text field
     float _value;
-    FloatAnim* _anim;
+    common::FloatAnim* _anim;
     VarFlags _flags;
     StyledRect _keyframeRect;
     u32 _selectedKeyframe;
-    FloatKeyframe _prevKeyframe;
+    common::FloatKeyframe _prevKeyframe;
     Vector2f _prevPos;
 
     TextStylePredicate _animationText;

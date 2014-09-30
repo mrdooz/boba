@@ -2,10 +2,11 @@
 #include "editor.hpp"
 #include "timeline_window.hpp"
 #include "property_window.hpp"
-#include "protocol/proto_helpers.hpp"
+#include "proto_helpers.hpp"
 
 using namespace editor;
 using namespace bristol;
+using namespace editor::common;
 
 #pragma warning(disable: 4244)
 

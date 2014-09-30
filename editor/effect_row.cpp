@@ -214,7 +214,7 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
   }
 
   const protocol::editor::Settings& settings = EDITOR.Settings();
-  Color bgCol = ::FromProtocol(settings.effect_view_background_color());
+  Color bgCol = common::FromProtocol(settings.effect_view_background_color());
 
   // draw background
   float w = (float)settings.effect_view_width();
@@ -227,11 +227,12 @@ void EffectRow::Draw(RenderTexture& texture, bool drawKeyframes)
   // draw text
   _text.setString(_str);
   _text.setPosition(_rect._rect.getPosition() + Vector2f(20.f + _level * 15.f, 0.f) );
-  _text.setColor(::FromProtocol(settings.var_text_color()));
+  _text.setColor(common::FromProtocol(settings.var_text_color()));
   texture.draw(_text);
 
   FloatRect bounds = _rect._rect.getGlobalBounds();
-  DrawRow(texture, bounds.left, bounds.top, drawKeyframes ? windowSize.x : w, bounds.height, ::FromProtocol(settings.effect_line_color()));
+  DrawRow(texture, bounds.left, bounds.top, drawKeyframes ? windowSize.x : w, bounds.height,
+    common::FromProtocol(settings.effect_line_color()));
 
   // draw expanded indicator
   VertexArray tri(sf::Triangles);
@@ -304,13 +305,11 @@ bool EffectRowPlexus::ToProtocol(google::protobuf::Message* msg) const
   assert(!_parent);
   proto->set_type(protocol::effect::EffectSetting_Type_Plexus);
 
-  protocol::effect::plexus::PlexusConfig plexus;
+  protocol::effect::plexus::PlexusConfig* plexus = proto->mutable_plexus_config();
   for (const EffectRow* row : _children)
   {
-    row->ToProtocol(&plexus);
+    row->ToProtocol(plexus);
   }
-
-  proto->set_config_msg(plexus.SerializeAsString());
 
   return true;
 }
@@ -364,7 +363,7 @@ bool EffectRowTextPath::FromProtocol(const google::protobuf::Message& proto)
 {
   const protocol::effect::plexus::TextPathConfig& p 
     = static_cast<const protocol::effect::plexus::TextPathConfig&>(proto);
-  _textPath = ::FromProtocol(p);
+  _textPath = effect::plexus::FromProtocol(p);
   return true;
 }
 
@@ -385,7 +384,7 @@ bool EffectRowNoise::FromProtocol(const google::protobuf::Message& proto)
 {
   const protocol::effect::plexus::NoiseEffectorConfig& p 
     = static_cast<const protocol::effect::plexus::NoiseEffectorConfig&>(proto);
-  _effector = ::FromProtocol(p);
+  _effector = effect::plexus::FromProtocol(p);
   return true;
 }
 
@@ -395,6 +394,6 @@ bool EffectRowNoise::ToProtocol(google::protobuf::Message* msg) const
   protocol::effect::plexus::PlexusConfig* proto 
     = static_cast<protocol::effect::plexus::PlexusConfig*>(msg);
 
-  ::ToProtocol(_effector, proto->add_noise_effectors());
+  effect::plexus::ToProtocol(_effector, proto->add_noise_effectors());
   return true;
 }

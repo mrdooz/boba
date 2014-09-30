@@ -1,8 +1,7 @@
 #include "editor_proto.hpp"
 #include "editor_types.hpp"
-#include "../proto_helpers.hpp"
 
-namespace editor { namespace editor { 
+namespace editor { 
   Settings FromProtocol(const ::protocol::editor::Settings& p)
   {
     Settings res;
@@ -163,7 +162,7 @@ namespace editor { namespace editor {
   {
     StyleSettings res;
     for (const auto& x : p.style_setting() )
-      res.styleSetting.push_back(::editor::editor::FromProtocol(x));
+      res.styleSetting.push_back(FromProtocol(x));
 
     return res;
   }
@@ -171,8 +170,8 @@ namespace editor { namespace editor {
   void ToProtocol(const StyleSettings& v, ::protocol::editor::StyleSettings* p)
   {
     for (const auto& x : v.styleSetting)
-      ::editor::editor::ToProtocol(x, p->add_style_setting());
+      ToProtocol(x, p->add_style_setting());
   }
 
 	
-} } 
+}

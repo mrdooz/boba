@@ -2,9 +2,8 @@
 
 #include "common_types.hpp"
 #include "editor_types.hpp"
-#include "common_types.hpp"
 
-namespace editor { namespace editor { 
+namespace editor { 
   struct Settings;
   struct StyleSetting;
   struct StyleSettings;
@@ -57,4 +56,4 @@ namespace editor { namespace editor {
     vector<StyleSetting> styleSetting;
   };
   
-} } 
+}

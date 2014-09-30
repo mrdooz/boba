@@ -1,6 +1,5 @@
 #include "editor_proto.hpp"
 #include "editor_types.hpp"
-#include "../proto_helpers.hpp"
 
 namespace boba { namespace editor { 
   Settings FromProtocol(const ::protocol::editor::Settings& p)

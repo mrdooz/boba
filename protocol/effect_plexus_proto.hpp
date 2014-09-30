@@ -7,7 +7,7 @@
 
 #include "common_proto.hpp"
 #include "effect_settings_plexus.pb.h"
-#include "proto_helpers.hpp"
+#include "../proto_helpers.hpp"
 
 #ifdef _WIN32
 #pragma warning(pop)

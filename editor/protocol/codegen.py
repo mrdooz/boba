@@ -19,6 +19,7 @@ EDITOR_NATIVE_MESSAGE_TYPES = {
     'Vector3'   : 'Vector3f',
     'Vector4'   : 'Vector4f', 
     'Color4'    : 'Color', 
+    'Matrix4x4' : 'Transform', 
 }
 
 ENGINE_NATIVE_MESSAGE_TYPES = {
@@ -76,7 +77,7 @@ def package_to_filename(package):
 
 def is_package_blacklisted(package):
     package_split = package.split('.')
-    blacklist = ['anttweak']
+    blacklist = ['anttweak', 'protobuf']
     return any([x in package_split for x in blacklist])
     
 def parse_descriptor_set(cmdargs, NATIVE_MESSAGE_TYPES):
@@ -117,22 +118,32 @@ def parse_descriptor_set(cmdargs, NATIVE_MESSAGE_TYPES):
             'classes' : [], 
             'all_classes' : [], 
             'dependencies' : [],
-            'cpp_file' : file_descs[0].name.replace('.proto', '.pb.cc'),
-            'hpp_file' : file_descs[0].name.replace('.proto', '.pb.h'),
+            'cpp_files' : [],
+            'hpp_files' : [],
             'out_name' : out_name,
             'namespace' : cmdargs.namespace,
             'namespace_open' : 'namespace ' + cmdargs.namespace + ' { ' + ''.join(['namespace ' + x + ' { ' for x in ns]),
             'namespace_close' : '} ' * (1 + len(ns))
          }
 
+        # if the package namespace is the same as the command line namespace, don't duplicate
+        if len(ns) == 1 and ns[0] == cmdargs.namespace:
+            args['namespace_open'] = 'namespace ' + cmdargs.namespace + ' { '
+            args['namespace_close'] = '}'
+
         # iterate over FileDescriptor in the current package
         for file_desc in file_descs:
         
             # add the dependencies (imports)
+            dep_set = set()
             for dep in file_desc.dependency:
                 if not is_package_blacklisted(dep):
                     pkg = file_to_package[dep]
-                    args['dependencies'].append(package_to_filename(pkg))
+                    dep_set.add(package_to_filename(pkg))
+            args['dependencies'] = set(args['dependencies']).union(dep_set)
+
+            args['cpp_files'].append(file_desc.name.replace('.proto', '.pb.cc'))
+            args['hpp_files'].append(file_desc.name.replace('.proto', '.pb.h'))
 
             flag_vars = set()
 
@@ -156,7 +167,7 @@ def parse_descriptor_set(cmdargs, NATIVE_MESSAGE_TYPES):
                     'flags' : [],
                     'proto_type' : '::' + package_namespace + '::' + msg_desc.name,
                     }
-                    
+
                 cur_class['name'] = msg_desc.name
                 args['classes'].append(cur_class)
 
@@ -197,7 +208,13 @@ def parse_descriptor_set(cmdargs, NATIVE_MESSAGE_TYPES):
                     field_name = underscore_to_camel_case(field_desc.name)
                     name_title = underscore_to_title_case(field_desc.name)
                     s = field_desc.type_name.split('.')[1:]
-                    field_namespace = '::' + cmdargs.namespace + '::' + '::'.join(s[1:-1]) + '::'
+
+                    # if the package is of the form 'protocol::namespace::type', the c++ namespace can
+                    # be omitted
+                    if len(s) == 3 and s[1] == cmdargs.namespace:
+                        field_namespace = ''
+                    else:
+                        field_namespace = '::' + cmdargs.namespace + '::' + '::'.join(s[1:-1]) + '::'
 
                     default_value = None
                     if len(field_desc.default_value) > 0:

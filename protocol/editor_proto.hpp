@@ -7,9 +7,9 @@
 
 #include "common_proto.hpp"
 #include "editor_proto.hpp"
-#include "common_proto.hpp"
 #include "editor_settings.pb.h"
-#include "proto_helpers.hpp"
+#include "editor_styles.pb.h"
+#include "../proto_helpers.hpp"
 
 #ifdef _WIN32
 #pragma warning(pop)

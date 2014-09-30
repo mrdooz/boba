@@ -5,11 +5,11 @@
 #pragma warning(disable: 4244 4267)
 #endif
 
+#include "effect_particle_proto.hpp"
 #include "effect_plexus_proto.hpp"
 #include "effect_generator_proto.hpp"
-#include "effect_particle_proto.hpp"
 #include "effect_settings.pb.h"
-#include "proto_helpers.hpp"
+#include "../proto_helpers.hpp"
 
 #ifdef _WIN32
 #pragma warning(pop)

@@ -6,6 +6,7 @@ namespace boba { namespace protobuf {
   struct FileDescriptorProto;
   struct DescriptorProto;
   struct FieldDescriptorProto;
+  struct OneofDescriptorProto;
   struct EnumDescriptorProto;
   struct EnumValueDescriptorProto;
   struct ServiceDescriptorProto;
@@ -49,6 +50,7 @@ namespace boba { namespace protobuf {
     vector<DescriptorProto> nestedType;
     vector<EnumDescriptorProto> enumType;
     vector<::boba::protobuf::DescriptorProto::ExtensionRange> extensionRange;
+    vector<OneofDescriptorProto> oneofDecl;
     MessageOptions options;
   };
   struct FieldDescriptorProto
@@ -88,7 +90,13 @@ namespace boba { namespace protobuf {
     string typeName;
     string extendee;
     string defaultValue;
+    s32 oneofIndex;
     FieldOptions options;
+  };
+  struct OneofDescriptorProto
+  {
+
+    string name;
   };
   struct EnumDescriptorProto
   {
@@ -132,11 +140,13 @@ namespace boba { namespace protobuf {
     string javaOuterClassname;
     bool javaMultipleFiles = false;
     bool javaGenerateEqualsAndHash = false;
+    bool javaStringCheckUtf8 = false;
     FileOptions::OptimizeMode optimizeFor = OptimizeMode::SPEED;
     string goPackage;
     bool ccGenericServices = false;
     bool javaGenericServices = false;
     bool pyGenericServices = false;
+    bool deprecated = false;
     vector<UninterpretedOption> uninterpretedOption;
   };
   struct MessageOptions
@@ -144,6 +154,7 @@ namespace boba { namespace protobuf {
 
     bool messageSetWireFormat = false;
     bool noStandardDescriptorAccessor = false;
+    bool deprecated = false;
     vector<UninterpretedOption> uninterpretedOption;
   };
   struct FieldOptions
@@ -166,22 +177,26 @@ namespace boba { namespace protobuf {
   struct EnumOptions
   {
 
-    bool allowAlias = true;
+    bool allowAlias;
+    bool deprecated = false;
     vector<UninterpretedOption> uninterpretedOption;
   };
   struct EnumValueOptions
   {
 
+    bool deprecated = false;
     vector<UninterpretedOption> uninterpretedOption;
   };
   struct ServiceOptions
   {
 
+    bool deprecated = false;
     vector<UninterpretedOption> uninterpretedOption;
   };
   struct MethodOptions
   {
 
+    bool deprecated = false;
     vector<UninterpretedOption> uninterpretedOption;
   };
   struct UninterpretedOption

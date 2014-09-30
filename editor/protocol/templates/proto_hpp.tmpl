@@ -8,8 +8,10 @@
 {% for dep in dependencies %}
 #include "{{ dep }}_proto.hpp"
 {% endfor %}
-#include "{{ hpp_file }}"
-#include "proto_helpers.hpp"
+{% for hpp in hpp_files %}
+#include "{{ hpp }}"
+{% endfor %}
+#include "../proto_helpers.hpp"
 
 #ifdef _WIN32
 #pragma warning(pop)

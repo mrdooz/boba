@@ -1,10 +1,12 @@
 #include "property_window.hpp"
 #include "editor.hpp"
 #include "row_var.hpp"
-#include "protocol/proto_helpers.hpp"
+#include "proto_helpers.hpp"
 
 using namespace editor;
 using namespace bristol;
+
+using namespace editor::common;
 
 #pragma warning(disable: 4244)
 

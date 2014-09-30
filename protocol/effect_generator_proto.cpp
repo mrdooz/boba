@@ -1,6 +1,5 @@
 #include "effect_generator_proto.hpp"
 #include "effect_generator_types.hpp"
-#include "../proto_helpers.hpp"
 
 namespace boba { namespace effect { namespace generator { 
   SpikyConfig FromProtocol(const ::protocol::effect::generator::SpikyConfig& p)

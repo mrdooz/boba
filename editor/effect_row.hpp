@@ -80,7 +80,7 @@ namespace editor
     virtual bool ToProtocol(google::protobuf::Message* msg) const;
     virtual bool FromProtocol(const google::protobuf::Message& msg);
 
-    TextPathConfig _textPath;
+    effect::plexus::TextPathConfig _textPath;
   };
 
   //----------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ namespace editor
     virtual bool FromProtocol(const google::protobuf::Message& msg);
     virtual bool ToProtocol(google::protobuf::Message* msg) const;
 
-    NoiseEffectorConfig _effector;
+    effect::plexus::NoiseEffectorConfig _effector;
   };
 
 }
